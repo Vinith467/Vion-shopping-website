@@ -1,0 +1,884 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../services/supabaseClient';
+import { uploadImage } from '../../services/storageService';
+import toast from 'react-hot-toast';
+import { Plus, Trash2, Edit2, X, Check, Image as ImageIcon, Package, DollarSign, Copy, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const skinTonesMap = [
+  { id: 'all', color: 'linear-gradient(135deg, #F9E4D4 0%, #6A3B18 100%)' },
+  { id: 'Very Light', color: '#F9E4D4' },
+  { id: 'Light', color: '#F4D3B6' },
+  { id: 'Medium Light', color: '#E6B999' },
+  { id: 'Medium', color: '#C28E66' },
+  { id: 'Medium Deep', color: '#985F35' },
+  { id: 'Deep', color: '#6A3B18' }
+];
+
+const bodyShapesMap = [
+  { id: 'Hourglass', name: 'Hourglass', img: '/images/shapes/hourglass.png' },
+  { id: 'Pear', name: 'Pear', img: '/images/shapes/pear.png' },
+  { id: 'Apple', name: 'Apple', img: '/images/shapes/apple.png' },
+  { id: 'Rectangle', name: 'Rectangle', img: '/images/shapes/rectangle.png' },
+  { id: 'Inverted Triangle', name: 'Inverted', img: '/images/shapes/inverted_triangle.png' }
+];
+
+export default function AdminInventory() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [variationImages, setVariationImages] = useState({});
+
+  const initialForm = {
+    title: '',
+    description: '',
+    price: '',
+    compare_at_price: '',
+    sku: '',
+    quantity: '0',
+    category_id: '',
+    status: 'draft',
+    image_url: '',
+    is_featured: false,
+    is_new_arrival: false,
+    body_shape: 'all',
+    variations: []
+  };
+
+  const [formData, setFormData] = useState(initialForm);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    // Fetch Products
+    const { data: prodData, error: prodError } = await supabase
+      .from('products')
+      .select('*, category:categories(name)')
+      .order('created_at', { ascending: false });
+
+    if (prodError) {
+      toast.error('Failed to load products');
+    } else {
+      // Map DB schema to frontend expected schema
+      const mappedProducts = (prodData || []).map(p => ({
+        ...p,
+        image_url: p.images && Array.isArray(p.images) ? p.images.join(',') : '',
+        quantity: p.quantity || 0,
+        status: p.status || 'draft',
+        is_featured: p.is_featured || false,
+        is_new_arrival: p.is_new_arrival || false,
+        sku: p.sku || ''
+      }));
+      setProducts(mappedProducts);
+    }
+
+    // Fetch Categories for dropdown
+    const { data: catData } = await supabase.from('categories').select('id, name');
+    setCategories(catData || []);
+
+    setIsLoading(false);
+  };
+
+  const handleCloseModal = () => {
+    productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    Object.values(variationImages).forEach(vArr => {
+      vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    });
+    setShowModal(false);
+  };
+
+  const handleOpenModal = (prod = null) => {
+    // Also clean up any lingering URLs if reopening without properly closing
+    productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    Object.values(variationImages).forEach(vArr => {
+      vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    });
+
+    setProductImages([]);
+    setVariationImages({});
+    if (prod) {
+      setEditingId(prod.id);
+      setFormData({
+        title: prod.title,
+        description: prod.description || '',
+        price: prod.price || '',
+        compare_at_price: prod.compare_at_price || '',
+        sku: prod.sku || '',
+        quantity: prod.quantity || '0',
+        category_id: prod.category_id || '',
+        status: prod.status || 'draft',
+        image_url: prod.image_url || '',
+        is_featured: prod.is_featured || false,
+        is_new_arrival: prod.is_new_arrival || false,
+        body_shape: prod.body_shape || 'all',
+        variations: prod.variations || []
+      });
+    } else {
+      setEditingId(null);
+      setFormData(initialForm);
+    }
+    
+    // Initialize productImages from existing urls
+    if (prod && prod.image_url) {
+      const urls = prod.image_url.split(',').filter(Boolean);
+      setProductImages(urls.map(url => ({ type: 'existing', url })));
+    }
+    
+    // Initialize variationImages from existing urls
+    if (prod && prod.variations) {
+      const vImages = {};
+      prod.variations.forEach((v, idx) => {
+        if (v.image_urls && v.image_urls.length > 0) {
+          vImages[idx] = v.image_urls.map(url => ({ type: 'existing', url }));
+        }
+      });
+      setVariationImages(vImages);
+    }
+
+    setShowModal(true);
+  };
+
+  const handleDuplicateProduct = (prod) => {
+    // Also clean up any lingering URLs if reopening without properly closing
+    productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    Object.values(variationImages).forEach(vArr => {
+      vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    });
+
+    setProductImages([]);
+    setVariationImages({});
+    setEditingId(null); // Explicitly null to create a NEW product
+    setFormData({
+      title: prod.title + ' (Copy)',
+      description: prod.description || '',
+      price: prod.price || '',
+      compare_at_price: prod.compare_at_price || '',
+      sku: (prod.sku || '') + '-COPY',
+      quantity: prod.quantity || '0',
+      category_id: prod.category_id || '',
+      status: 'draft',
+      image_url: prod.image_url || '',
+      is_featured: prod.is_featured || false,
+      is_new_arrival: prod.is_new_arrival || false,
+      body_shape: prod.body_shape || 'all',
+      variations: prod.variations || []
+    });
+    
+    // Initialize productImages from existing urls
+    if (prod && prod.image_url) {
+      const urls = prod.image_url.split(',').filter(Boolean);
+      setProductImages(urls.map(url => ({ type: 'existing', url })));
+    }
+    
+    // Initialize variationImages from existing urls
+    if (prod && prod.variations) {
+      const vImages = {};
+      prod.variations.forEach((v, idx) => {
+        if (v.image_urls && v.image_urls.length > 0) {
+          vImages[idx] = v.image_urls.map(url => ({ type: 'existing', url }));
+        }
+      });
+      setVariationImages(vImages);
+    }
+
+    setShowModal(true);
+  };
+
+  const handleMoveImage = (images, setImages, index, direction) => {
+    const newImages = [...images];
+    if (direction === -1 && index > 0) {
+      [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
+    } else if (direction === 1 && index < newImages.length - 1) {
+      [newImages[index + 1], newImages[index]] = [newImages[index], newImages[index + 1]];
+    }
+    setImages(newImages);
+  };
+
+  const handleRemoveImage = (images, setImages, index) => {
+    const newImages = [...images];
+    const removed = newImages.splice(index, 1)[0];
+    if (removed.type === 'new') URL.revokeObjectURL(removed.preview);
+    setImages(newImages);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.title || !formData.price || !formData.category_id) {
+      toast.error('Title, Price, and Collection are required');
+      return;
+    }
+
+    setIsSubmitting(true);
+    // Main Product Images
+    const finalImagesArray = [];
+    for (const img of productImages) {
+      if (img.type === 'existing') {
+        finalImagesArray.push(img.url);
+      } else if (img.type === 'new') {
+        try {
+          const uploadedUrl = await uploadImage(img.file, 'products', 'public-images');
+          finalImagesArray.push(uploadedUrl);
+        } catch (err) {
+          toast.error('Failed to upload product image');
+          console.error(err);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+    }
+
+    // Variations Images
+    const updatedVariations = [...formData.variations];
+    for (let i = 0; i < updatedVariations.length; i++) {
+      const vImages = variationImages[i] || [];
+      const varFinalUrls = [];
+      for (const img of vImages) {
+        if (img.type === 'existing') {
+          varFinalUrls.push(img.url);
+        } else if (img.type === 'new') {
+          try {
+            const uploadedUrl = await uploadImage(img.file, `products/variations`, 'public-images');
+            varFinalUrls.push(uploadedUrl);
+          } catch (err) {
+            toast.error('Failed to upload variation image');
+            console.error(err);
+            setIsSubmitting(false);
+            return;
+          }
+        }
+      }
+      updatedVariations[i].image_urls = varFinalUrls;
+    }
+    
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      price: parseFloat(formData.price),
+      compare_at_price: formData.compare_at_price ? parseFloat(formData.compare_at_price) : null,
+      quantity: parseInt(formData.quantity) || 0,
+      sku: formData.sku,
+      status: formData.status,
+      is_featured: formData.is_featured,
+      is_new_arrival: formData.is_new_arrival,
+      category_id: formData.category_id,
+      body_shape: formData.body_shape,
+      variations: updatedVariations,
+      images: finalImagesArray
+    };
+
+    if (editingId) {
+      const { error } = await supabase.from('products').update(payload).eq('id', editingId);
+      if (error) toast.error(error.message);
+      else {
+        toast.success('Product updated!');
+        setShowModal(false);
+        fetchData();
+      }
+    } else {
+      const { error } = await supabase.from('products').insert([payload]);
+      if (error) toast.error(error.message);
+      else {
+        toast.success('Product created!');
+        setShowModal(false);
+        fetchData();
+      }
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) toast.error(error.message);
+    else {
+      toast.success('Product deleted!');
+      fetchData();
+    }
+  };
+
+  return (
+    <div className="p-8 max-w-7xl mx-auto animate-fade-in">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold font-serif text-gray-900">Inventory</h1>
+          <p className="text-gray-600 mt-1">Manage your product catalog</p>
+        </div>
+        <button
+          onClick={() => handleOpenModal()}
+          className="glass-button px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2"
+        >
+          <Plus size={18} /> Add Product
+        </button>
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-4 border-gray-200 border-t-[#3A10E5] rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="glass-panel rounded-3xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-white/30 border-b border-white/50 backdrop-blur-md">
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider">Product</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider">Collection</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider">Price</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider">Inventory</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/20">
+                {products.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-12 text-center text-gray-600 font-medium bg-white/20">
+                      No products found. Add your first product!
+                    </td>
+                  </tr>
+                ) : (
+                  products.map((prod) => (
+                    <tr key={prod.id} className="hover:bg-white/40 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0 border border-gray-200">
+                            {prod.image_url ? (
+                              <img src={prod.image_url.split(',')[0]} alt={prod.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                            ) : (
+                              <ImageIcon size={20} className="text-gray-400" />
+                            )}
+                          </div>
+                          <div>
+                            <span className="font-bold text-gray-900 block">{prod.title}</span>
+                            <span className="text-xs text-gray-500 font-mono mt-0.5 block">{prod.sku ? `SKU: ${prod.sku}` : 'No SKU'}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm font-medium text-gray-700 bg-gray-100 px-2.5 py-1 rounded-md">
+                          {prod.category?.name || 'No Collection'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gray-900">₹{parseFloat(prod.price).toLocaleString()}</span>
+                          {prod.compare_at_price && (
+                            <span className="text-xs text-gray-400 line-through">₹{parseFloat(prod.compare_at_price).toLocaleString()}</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5">
+                          <Package size={14} className={prod.quantity > 0 ? "text-emerald-500" : "text-red-500"} />
+                          <span className={`text-sm font-bold ${prod.quantity > 0 ? "text-emerald-700" : "text-red-600"}`}>
+                            {prod.quantity} in stock
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded ${prod.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                          }`}>
+                          {prod.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleOpenModal(prod)}
+                            className="p-2 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-lg transition-colors"
+                            title="Edit Product"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDuplicateProduct(prod)}
+                            className="p-2 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-lg transition-colors"
+                            title="Duplicate Product"
+                          >
+                            <Copy size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(prod.id)}
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-gray-50 rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 shadow-2xl">
+            <div className="shrink-0 flex items-center justify-between p-5 border-b border-gray-200 bg-white z-10">
+              <h2 className="text-xl font-bold text-gray-900">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
+              <button onClick={handleCloseModal} className="p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                {/* Left Column (Main Info) */}
+                <div className="md:col-span-2 space-y-4">
+                  {/* Basic Details */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Basic Details</h3>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Product Title *</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Description</label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none text-sm text-gray-900 min-h-[60px]"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Pricing</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Price (₹) *</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <DollarSign size={14} className="text-gray-600" />
+                          </div>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={formData.price}
+                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                            className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Compare at Price (₹)</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <DollarSign size={14} className="text-gray-600" />
+                          </div>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={formData.compare_at_price}
+                            onChange={(e) => setFormData({ ...formData, compare_at_price: e.target.value })}
+                            className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Inventory */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Inventory</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">SKU</label>
+                        <input
+                          type="text"
+                          value={formData.sku}
+                          onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                          className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-mono text-sm text-gray-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Quantity</label>
+                        <input
+                          type="number"
+                          value={formData.quantity}
+                          onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                          className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column (Organization & Media) */}
+                <div className="space-y-4">
+                  {/* Status & Organization */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Organization</h3>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Status</label>
+                      <select
+                        value={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                      >
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="archived">Archived</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection *</label>
+                      <select
+                        value={formData.category_id}
+                        onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                        required
+                      >
+                        <option value="">Select Collection</option>
+                        {categories.map(c => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Body Shape Match</label>
+                      <select
+                        value={formData.body_shape}
+                        onChange={(e) => setFormData({ ...formData, body_shape: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                      >
+                        <option value="all">All Shapes</option>
+                        <option value="hourglass">Hourglass</option>
+                        <option value="pear">Pear</option>
+                        <option value="apple">Apple</option>
+                        <option value="rectangle">Rectangle</option>
+                        <option value="inverted-triangle">Inverted Triangle</option>
+                      </select>
+                    </div>
+
+                    <div className="pt-2">
+                      <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-white hover:border-[#3A10E5] transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={formData.is_featured}
+                          onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
+                          className="w-4 h-4 text-[#3A10E5] rounded border-gray-300 focus:ring-[#3A10E5]"
+                        />
+                        <span className="text-sm font-bold text-gray-700">Featured Product</span>
+                      </label>
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-white hover:border-[#3A10E5] transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={formData.is_new_arrival}
+                          onChange={(e) => setFormData({ ...formData, is_new_arrival: e.target.checked })}
+                          className="w-4 h-4 text-[#3A10E5] rounded border-gray-300 focus:ring-[#3A10E5]"
+                        />
+                        <span className="text-sm font-bold text-gray-800">New Arrival</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Media */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Media</h3>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Product Images</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            const newFiles = Array.from(e.target.files);
+                            const newImageObjects = newFiles.map(f => ({ type: 'new', file: f, preview: URL.createObjectURL(f) }));
+                            setProductImages(prev => [...prev, ...newImageObjects]);
+                            e.target.value = ''; // reset so same files can be uploaded again
+                          }
+                        }}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-black file:text-white hover:file:bg-gray-800 transition-all cursor-pointer"
+                      />
+                    </div>
+
+                    {productImages.length > 0 && (
+                      <div className="flex gap-4 mt-4 overflow-x-auto pb-4 custom-scrollbar">
+                        {productImages.map((img, idx) => (
+                          <div key={idx} className="relative group shrink-0 w-28 flex flex-col gap-2">
+                            <div className="relative w-28 h-36 rounded-xl bg-gray-100 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#3A10E5] transition-colors">
+                              <img src={img.type === 'new' ? img.preview : img.url} alt={`Slot ${idx}`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                              
+                              {/* Hover Controls */}
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                                <div className="flex justify-end">
+                                  <button type="button" onClick={() => handleRemoveImage(productImages, setProductImages, idx)} className="w-6 h-6 bg-red-500 text-white rounded flex items-center justify-center hover:bg-red-600 transition-colors">
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                                <div className="flex justify-between mt-auto gap-1">
+                                  <button type="button" disabled={idx === 0} onClick={() => handleMoveImage(productImages, setProductImages, idx, -1)} className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${idx === 0 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'}`}>
+                                    <ChevronLeft size={16} />
+                                  </button>
+                                  <button type="button" disabled={idx === productImages.length - 1} onClick={() => handleMoveImage(productImages, setProductImages, idx, 1)} className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${idx === productImages.length - 1 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'}`}>
+                                    <ChevronRight size={16} />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Variations Manager */}
+              <div className="mt-6 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                  <h3 className="text-sm font-bold text-gray-900">Product Variations</h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        variations: [...prev.variations, { id: Date.now(), bodyShape: 'Hourglass', skinTone: 'all', heightRange: 'all', colorName: '', image_urls: [] }]
+                      }));
+                    }}
+                    className="text-xs font-bold bg-gray-100 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-gray-200 text-[#3A10E5]"
+                  >
+                    <Plus size={14} /> Add Variation
+                  </button>
+                </div>
+
+                {formData.variations.length === 0 ? (
+                  <div className="text-sm text-gray-500 text-center py-4 italic">No variations added. Add one to target specific skin tones and heights.</div>
+                ) : (
+                  <div className="space-y-4 pr-2">
+                    {formData.variations.map((v, index) => (
+                      <div key={v.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex gap-4">
+                        <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-100 pb-4">
+                            <div>
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-2">Body Shape</label>
+                              <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                {bodyShapesMap.map((type) => (
+                                  <button
+                                    key={type.id}
+                                    type="button"
+                                    onClick={() => {
+                                      const newVars = [...formData.variations];
+                                      newVars[index].bodyShape = type.id;
+                                      setFormData({ ...formData, variations: newVars });
+                                    }}
+                                    className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl border transition-all min-w-[70px] shrink-0 ${(v.bodyShape || 'Hourglass') === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 hover:border-[#3A10E5]/50'
+                                      }`}
+                                  >
+                                    {type.img ? (
+                                      <div className="w-full h-14 bg-gray-50 flex items-center justify-center p-1">
+                                        <img src={type.img} alt={type.name} className="h-full w-auto object-contain" />
+                                      </div>
+                                    ) : (
+                                      <div className="w-full h-14 bg-gray-50 flex items-center justify-center text-[10px] text-gray-400 font-bold tracking-wider">ALL</div>
+                                    )}
+                                    <div className={`w-full py-1 text-center border-t ${(v.bodyShape || 'Hourglass') === type.id ? 'bg-[#3A10E5]/10 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
+                                      <span className={`text-[9px] font-bold tracking-wide uppercase ${(v.bodyShape || 'Hourglass') === type.id ? 'text-[#3A10E5]' : 'text-gray-600'}`}>{type.name}</span>
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-2">Skin Tone</label>
+                              <div className="flex gap-2 flex-wrap pb-1">
+                                {skinTonesMap.map((tone) => (
+                                  <button
+                                    key={tone.id}
+                                    title={tone.id}
+                                    type="button"
+                                    onClick={() => {
+                                      const newVars = [...formData.variations];
+                                      newVars[index].skinTone = tone.id;
+                                      setFormData({ ...formData, variations: newVars });
+                                    }}
+                                    className={`w-10 h-10 rounded-full border-2 transition-all shrink-0 flex items-center justify-center ${(v.skinTone || 'all') === tone.id ? 'border-[#3A10E5] scale-110 shadow-sm' : 'border-gray-200 hover:scale-105 shadow-sm'}`}
+                                    style={{ background: tone.color }}
+                                  >
+                                    {tone.id === 'all' && <span className="text-[10px] font-bold text-white drop-shadow-md">ALL</span>}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Height Range</label>
+                            <select
+                              value={v.heightRange}
+                              onChange={(e) => {
+                                const newVars = [...formData.variations];
+                                newVars[index].heightRange = e.target.value;
+                                setFormData({ ...formData, variations: newVars });
+                              }}
+                              className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs"
+                            >
+                              <option value="all">All Heights</option>
+                              <option value="Short">Short (&lt;160cm)</option>
+                              <option value="Average">Average (160-170cm)</option>
+                              <option value="Tall">Tall (&gt;170cm)</option>
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Color Name</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. Lavender"
+                                value={v.colorName}
+                                onChange={(e) => {
+                                  const newVars = [...formData.variations];
+                                  newVars[index].colorName = e.target.value;
+                                  setFormData({ ...formData, variations: newVars });
+                                }}
+                                className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-[11px]"
+                              />
+                            </div>
+                            <div className="w-12 shrink-0">
+                               <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Shade</label>
+                               <input
+                                type="color"
+                                value={v.colorHex || '#000000'}
+                                onChange={(e) => {
+                                  const newVars = [...formData.variations];
+                                  newVars[index].colorHex = e.target.value;
+                                  setFormData({ ...formData, variations: newVars });
+                                }}
+                                className="w-full h-[32px] p-0.5 rounded-lg bg-white border border-gray-200 cursor-pointer"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Images</label>
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                  const newFiles = Array.from(e.target.files);
+                                  const newImageObjects = newFiles.map(f => ({ type: 'new', file: f, preview: URL.createObjectURL(f) }));
+                                  setVariationImages(prev => ({
+                                    ...prev,
+                                    [index]: [...(prev[index] || []), ...newImageObjects]
+                                  }));
+                                  e.target.value = '';
+                                }
+                              }}
+                              className="w-full text-[10px] file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-gray-200"
+                            />
+                            <div className="text-[9px] text-gray-500 mt-1 pl-1">Hold Ctrl/Cmd to select multiple files</div>
+                          </div>
+                        </div>
+
+                        <div className="w-32 shrink-0 flex flex-col items-center gap-2">
+                          {variationImages[index] && variationImages[index].length > 0 ? (
+                            <div className="flex gap-1 overflow-x-auto pb-1 custom-scrollbar w-full">
+                              {variationImages[index].map((img, idx) => (
+                                <div key={idx} className="relative group shrink-0 w-12 h-16 rounded-lg bg-gray-100 overflow-hidden border border-gray-200 shadow-sm">
+                                  <img src={img.type === 'new' ? img.preview : img.url} loading="lazy" alt="preview" className="w-full h-full object-cover" />
+                                  
+                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col justify-between p-0.5 transition-opacity">
+                                    <button type="button" onClick={() => {
+                                      const newArr = [...variationImages[index]];
+                                      const removed = newArr.splice(idx, 1)[0];
+                                      if (removed.type === 'new') URL.revokeObjectURL(removed.preview);
+                                      setVariationImages(prev => ({...prev, [index]: newArr}));
+                                    }} className="self-end text-white hover:text-red-400 p-0.5"><X size={10}/></button>
+                                    <div className="flex justify-between w-full pb-0.5">
+                                      <button type="button" disabled={idx === 0} onClick={() => {
+                                        const newArr = [...variationImages[index]];
+                                        [newArr[idx-1], newArr[idx]] = [newArr[idx], newArr[idx-1]];
+                                        setVariationImages(prev => ({...prev, [index]: newArr}));
+                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronLeft size={12}/></button>
+                                      <button type="button" disabled={idx === variationImages[index].length - 1} onClick={() => {
+                                        const newArr = [...variationImages[index]];
+                                        [newArr[idx+1], newArr[idx]] = [newArr[idx], newArr[idx+1]];
+                                        setVariationImages(prev => ({...prev, [index]: newArr}));
+                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronRight size={12}/></button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="w-12 h-16 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center">
+                              <ImageIcon size={14} className="text-gray-300" />
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              v.imagePreviews?.forEach(url => URL.revokeObjectURL(url));
+                              const newVars = formData.variations.filter((_, i) => i !== index);
+                              setFormData({ ...formData, variations: newVars });
+                            }}
+                            className="text-[10px] text-red-500 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 mt-6 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-6 py-2.5 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="glass-button px-8 py-2.5 rounded-xl text-sm font-bold disabled:opacity-70 flex items-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <Check size={18} />
+                  )}
+                  {editingId ? 'Save Changes' : 'Create Product'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}

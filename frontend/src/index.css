@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+}
+
+body {
+  @apply font-sans antialiased overflow-x-hidden;
+}
+
+/* Reset some vite defaults just in case */
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: left;
+  border: none;
+  min-height: 100vh;
+  display: block;
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Glassmorphism Utilities */
+  .glass-panel {
+    @apply bg-white/40 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+  
+  .glass-panel-darker {
+    @apply bg-white/60 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)];
+  }
+
+  .glass-input {
+    @apply bg-white/40 backdrop-blur-md border border-white/50 focus:bg-white/60 focus:border-white focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-gray-500;
+  }
+  
+  .glass-button {
+    @apply bg-gradient-to-r from-[#6344D4]/90 to-[#9D44D4]/90 hover:from-[#6344D4] hover:to-[#9D44D4] text-white shadow-lg shadow-[#6344D4]/30 backdrop-blur-md border border-white/20 transition-all hover:-translate-y-0.5;
+  }
+}
+
+/* Animated Mesh Gradient Background */
+.bg-mesh-animated {
+  background: linear-gradient(-45deg, #f3e8ff, #fbcfe8, #e0e7ff, #fae8ff);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
