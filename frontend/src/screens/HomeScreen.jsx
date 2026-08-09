@@ -82,30 +82,6 @@ export default function HomeScreen() {
 
   return (
     <>
-      {/* MOBILE LAYOUT (Unchanged) */}
-      <div className="block md:hidden w-full flex flex-col bg-white min-h-full">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-12 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0 border border-gray-200 shadow-sm">
-              <img src={primaryMember?.image || "/images/body_hourglass_1785826886362.jpg"} alt="User" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 font-medium">Welcome back,</p>
-              <h2 className="text-lg font-bold text-gray-900 leading-tight">{profile?.firstName || 'Guest'}</h2>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="p-2 bg-gray-50 rounded-full relative">
-              <Bell size={20} className="text-gray-900" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-          </div>
-        </div>
-
-        <div className="px-6 flex-1 flex flex-col">
-          {/* Search Bar */}
-      {/* --- DESKTOP VIEW --- */}
       <div className="flex w-full flex-col bg-white overflow-x-hidden">
         
         {/* Hero Section */}
