@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Box, Tags, Settings, ShoppingCart, ArrowLeft, Grid, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Box, Tags, Settings, ShoppingCart, ArrowLeft, Grid, Menu, X, Store } from 'lucide-react';
 
 export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -86,9 +86,31 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-x-hidden min-h-screen">
+      <main className="flex-1 overflow-x-hidden min-h-screen pb-20 md:pb-0">
         <Outlet />
       </main>
+
+      {/* Mobile Bottom Navbar (Admin) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 px-2 py-2 z-40 flex items-center justify-around shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+        <NavLink to="/admin" end className={({isActive}) => `flex flex-col items-center gap-1 p-2 transition-colors ${isActive ? 'text-[#6344D4]' : 'text-gray-500'}`}>
+          <LayoutDashboard size={20} />
+          <span className="text-[10px] font-bold">Dashboard</span>
+        </NavLink>
+        <NavLink to="/admin/orders" className={({isActive}) => `flex flex-col items-center gap-1 p-2 transition-colors ${isActive ? 'text-[#6344D4]' : 'text-gray-500'}`}>
+          <ShoppingCart size={20} />
+          <span className="text-[10px] font-bold">Orders</span>
+        </NavLink>
+        <NavLink to="/admin/inventory" className={({isActive}) => `flex flex-col items-center gap-1 p-2 transition-colors ${isActive ? 'text-[#6344D4]' : 'text-gray-500'}`}>
+          <Box size={20} />
+          <span className="text-[10px] font-bold">Inventory</span>
+        </NavLink>
+        
+        {/* Switch to Customer View */}
+        <NavLink to="/home" className="flex flex-col items-center gap-1 p-2 text-gray-500 hover:text-gray-900 transition-colors">
+          <Store size={20} />
+          <span className="text-[10px] font-bold text-center leading-tight">Customer<br/>View</span>
+        </NavLink>
+      </div>
     </div>
   );
 }
