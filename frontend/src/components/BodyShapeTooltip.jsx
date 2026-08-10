@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 const tooltipData = {
   'Hourglass': {
@@ -67,31 +67,45 @@ const BodyShapeTooltip = ({ id, img, children }) => {
               y: '-50%',
               zIndex: 999999
             }}
-            className="w-[500px] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-none"
+            className="w-[850px] max-w-[95vw] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-auto flex flex-col md:flex-row"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Header / Image area */}
-            <div className="bg-gradient-to-br from-purple-50/50 to-white pt-8 pb-6 border-b border-gray-100 flex flex-col items-center justify-center text-center">
-              <div className="w-56 h-56 flex items-center justify-center mb-6">
+            {/* Close button */}
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsHovered(false);
+              }}
+              className="absolute top-5 right-5 p-2 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-10 cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Left: Image area */}
+            <div className="w-full md:w-[45%] bg-gradient-to-br from-purple-50/80 to-purple-100/30 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
+              <div className="w-64 h-64 flex items-center justify-center mb-6">
                 <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-2xl" />
               </div>
-              <div>
+              <div className="text-center">
                 <h3 className="text-4xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
                 <p className="text-sm font-bold text-[#3A10E5] uppercase tracking-wider mt-2">Shape Guide</p>
               </div>
             </div>
 
-            {/* Content area */}
-            <div className="p-6 space-y-5">
+            {/* Right: Content area */}
+            <div className="w-full md:w-[55%] p-8 space-y-6 flex flex-col justify-center">
               
               {/* How to identify */}
               <div>
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-[#3A10E5]" /> How to identify
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                  <CheckCircle2 size={16} className="text-[#3A10E5]" /> How to identify
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {data.how.map((point, i) => (
-                    <li key={i} className="text-sm text-gray-700 flex items-start gap-2 leading-tight">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-1.5 shrink-0" />
+                    <li key={i} className="text-[15px] text-gray-700 flex items-start gap-3 leading-tight">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-2 shrink-0" />
                       {point}
                     </li>
                   ))}
@@ -99,21 +113,21 @@ const BodyShapeTooltip = ({ id, img, children }) => {
               </div>
 
               {/* Quick check */}
-              <div className="bg-purple-50/80 rounded-xl p-3 border border-purple-100">
-                <h4 className="text-[10px] font-bold text-[#3A10E5] uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                  <AlertCircle size={12} /> Quick check
+              <div className="bg-purple-50/80 rounded-2xl p-4 border border-purple-100">
+                <h4 className="text-[11px] font-bold text-[#3A10E5] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <AlertCircle size={14} /> Quick check
                 </h4>
-                <p className="text-xs font-medium text-purple-900 leading-snug">
+                <p className="text-sm font-medium text-purple-900 leading-snug">
                   {data.quick}
                 </p>
               </div>
 
               {/* Best way to choose */}
               <div>
-                <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                  <Info size={12} className="text-gray-400" /> Best way to choose
+                <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Info size={14} className="text-gray-400" /> Best way to choose
                 </h4>
-                <p className="text-xs text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {data.best}
                 </p>
               </div>
