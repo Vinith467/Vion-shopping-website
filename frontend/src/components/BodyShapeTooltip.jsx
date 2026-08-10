@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Info, X, Check } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 const tooltipData = {
   'Hourglass': {
@@ -33,22 +33,6 @@ const tooltipData = {
 
 const BodyShapeTooltip = ({ id, img, children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const hoverTimeout = useRef(null);
-  const cooldown = useRef(false);
-  const wrapperRef = useRef(null);
-
-  const handleMouseEnter = () => {
-    if (cooldown.current) return;
-    hoverTimeout.current = setTimeout(() => {
-      setIsOpen(true);
-    }, 400); // 400ms delay to prevent accidental opens and allow user to just click
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimeout.current) {
-      clearTimeout(hoverTimeout.current);
-    }
-  };
 
   const handleClose = (e) => {
     if (e) {
@@ -56,18 +40,6 @@ const BodyShapeTooltip = ({ id, img, children }) => {
       e.stopPropagation();
     }
     setIsOpen(false);
-    cooldown.current = true;
-    setTimeout(() => {
-      cooldown.current = false;
-    }, 1000); // 1 second cooldown before hover triggers again
-  };
-
-  const handleSelectShape = (e) => {
-    handleClose(e);
-    if (wrapperRef.current) {
-      const clickableChild = wrapperRef.current.querySelector('div');
-      if (clickableChild) clickableChild.click();
-    }
   };
 
   const data = tooltipData[id];
@@ -75,9 +47,7 @@ const BodyShapeTooltip = ({ id, img, children }) => {
   return (
     <div 
       className="relative flex flex-col h-full w-full"
-      ref={wrapperRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onClick={() => setIsOpen(true)}
     >
       {children}
       
@@ -165,18 +135,7 @@ const BodyShapeTooltip = ({ id, img, children }) => {
                   </p>
                 </div>
               </div>
-
-              {/* Select Button */}
-              <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
-                <button 
-                  onClick={handleSelectShape}
-                  className="flex items-center gap-2 bg-[#3A10E5] hover:bg-[#2A08B5] text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md shadow-[#3A10E5]/20 hover:shadow-lg hover:shadow-[#3A10E5]/30 hover:-translate-y-0.5"
-                >
-                  <Check size={18} strokeWidth={3} />
-                  Select this Shape
-                </button>
               </div>
-
             </div>
           </motion.div>
         </AnimatePresence>,
