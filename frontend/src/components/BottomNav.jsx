@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, Compass, Sparkles, ShoppingBag, User, Shield } from "lucide-react";
+import { Home, Compass, ShoppingBag, User, Shield } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 
 export default function BottomNav() {
@@ -9,7 +9,6 @@ export default function BottomNav() {
   const navItems = [
     { to: "/home", icon: Home, label: "Home" },
     { to: "/explore", icon: Compass, label: "Explore" },
-    { to: "/ai-try-on", icon: Sparkles, label: "Try On", isPrimary: true },
     { to: "/wardrobe", icon: ShoppingBag, label: "Wardrobe" },
     isAdmin 
       ? { to: "/admin", icon: Shield, label: "Admin" }

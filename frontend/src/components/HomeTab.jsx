@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { generateVtonImage } from '../services/vtonApi';
 import { Users, Sparkles, Heart, ChevronRight, Star, UserCheck, RefreshCcw, ShoppingBag, ChevronLeft, Camera, Loader2, X, AlertCircle, Edit2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../services/supabaseClient';
@@ -32,20 +31,10 @@ const RECOMMENDED_PRODUCTS = [
 
 export default function HomeTab({ customConsumer, onBack }) {
   const navigate = useNavigate();
-  const { members, updateMemberVtonImage, updateMemberImage } = useAppContext();
+  const { members, updateMemberImage } = useAppContext();
 
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isVtonModalOpen, setIsVtonModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const fileInputRef = useRef(null);
   const avatarInputRef = useRef(null);
-  
-  // VTON API State
-  const [isGeneratingVton, setIsGeneratingVton] = useState(false);
-  const [vtonResult, setVtonResult] = useState(null);
-  const [vtonError, setVtonError] = useState(null);
 
   // Find the selected consumer
   const consumer = customConsumer || members.find(m => m.isPrimary) || members[0] || {
@@ -54,23 +43,6 @@ export default function HomeTab({ customConsumer, onBack }) {
     height: '',
     bodyShape: '',
     age: ''
-  };
-
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setIsUploading(true);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTimeout(() => {
-          updateMemberVtonImage(consumer.id, reader.result).then(() => {
-            setIsUploading(false);
-            setIsUploadModalOpen(false);
-          });
-        }, 1500); // Simulate processing delay
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleAvatarUpload = async (e) => {
@@ -108,28 +80,6 @@ export default function HomeTab({ customConsumer, onBack }) {
       toast.error("Failed to update profile picture");
     } finally {
       setIsUploadingAvatar(false);
-    }
-  };
-
-  const openVton = async (product) => {
-    if (!consumer.vtonImage) {
-      setIsUploadModalOpen(true);
-    } else {
-      setSelectedProduct(product);
-      setIsVtonModalOpen(true);
-      setVtonResult(null);
-      setVtonError(null);
-      setIsGeneratingVton(true);
-      
-      try {
-        const resultUrl = await generateVtonImage(consumer.vtonImage, product.image, product.name);
-        setVtonResult(resultUrl);
-      } catch (err) {
-        console.error("VTON Error:", err);
-        setVtonError("Failed to connect to HuggingFace AI. The server might be busy or offline.");
-      } finally {
-        setIsGeneratingVton(false);
-      }
     }
   };
 
@@ -227,25 +177,7 @@ export default function HomeTab({ customConsumer, onBack }) {
         </div>
       </div>
 
-      {/* VTON Banner */}
-      {!consumer.vtonImage && (
-        <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between border border-pink-100 gap-6">
-          <div>
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-              <Camera className="text-pink-500" /> Virtual Try-On
-            </h3>
-            <p className="text-gray-600 text-sm md:text-base max-w-md">
-              Want to see these outfits on you? Upload a photo to enable instant AI Try-On.
-            </p>
-          </div>
-          <button 
-            onClick={() => setIsUploadModalOpen(true)}
-            className="shrink-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
-          >
-            Upload Photo
-          </button>
-        </div>
-      )}
+
 
       {/* Body Type Match Banner */}
       <div className="bg-gradient-to-r from-[#F3F0FF] to-[#FAF8FF] rounded-2xl overflow-hidden flex flex-col md:flex-row items-center justify-between border border-purple-100/50 relative">
@@ -308,15 +240,7 @@ export default function HomeTab({ customConsumer, onBack }) {
               <div className="relative aspect-[3/4] w-full bg-gray-100 overflow-hidden group/img">
                 <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 
-                {/* VTON Overlay Button */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center z-10">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); openVton(product); }}
-                    className="bg-white/90 backdrop-blur-md text-gray-900 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg hover:bg-white transition-colors"
-                  >
-                    <Camera size={16} className="text-purple-600" /> See on Me
-                  </button>
-                </div>
+
 
                 <button 
                   onClick={(e) => e.stopPropagation()}
@@ -350,25 +274,7 @@ export default function HomeTab({ customConsumer, onBack }) {
           </div>
         </div>
         
-        <div className="flex items-start gap-4 flex-1">
-          <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center shrink-0">
-            <Sparkles size={18} />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-gray-900 mb-1">AI-Powered Matching</h4>
-            <p className="text-xs text-gray-500 leading-relaxed">Advanced AI finds the best styles that flatter you</p>
-          </div>
-        </div>
 
-        <div className="flex items-start gap-4 flex-1">
-          <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center shrink-0">
-            <ShoppingBag size={18} />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-gray-900 mb-1">Try Before You Buy</h4>
-            <p className="text-xs text-gray-500 leading-relaxed">Virtually try on outfits and shop with confidence</p>
-          </div>
-        </div>
 
         <div className="flex items-start gap-4 flex-1">
           <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center shrink-0">
@@ -381,124 +287,7 @@ export default function HomeTab({ customConsumer, onBack }) {
         </div>
       </div>
 
-      {/* Upload Modal */}
-      {isUploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full relative shadow-2xl">
-            <button 
-              onClick={() => setIsUploadModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-            >
-              <X size={24} />
-            </button>
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Camera size={32} />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Virtual Try-On</h3>
-              <p className="text-gray-500 text-sm">Upload a clear, front-facing photo to see outfits mapped to your body type.</p>
-            </div>
-            
-            <input 
-              type="file" 
-              accept="image/*" 
-              className="hidden" 
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-            />
-            
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isUploading}
-              className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 disabled:bg-gray-400"
-            >
-              {isUploading ? (
-                <><Loader2 className="animate-spin" /> Analyzing Photo...</>
-              ) : (
-                "Choose Photo"
-              )}
-            </button>
-          </div>
-        </div>
-      )}
 
-      {/* VTON Result Modal */}
-      {isVtonModalOpen && selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 md:p-8 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] max-w-5xl w-full h-[85vh] md:h-[90vh] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
-            <button 
-              onClick={() => setIsVtonModalOpen(false)}
-              className="absolute top-4 right-4 z-50 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center text-gray-800 hover:bg-white"
-            >
-              <X size={24} />
-            </button>
-            
-            {/* Simulation Area */}
-            <div className="flex-1 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-              
-              {isGeneratingVton && (
-                <div className="absolute inset-0 z-40 bg-gray-900/90 backdrop-blur-md flex flex-col items-center justify-center text-white p-8 text-center">
-                  <div className="w-20 h-20 relative mb-6">
-                    <div className="absolute inset-0 border-4 border-purple-500/30 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-purple-500 rounded-full border-t-transparent animate-spin"></div>
-                    <Sparkles className="absolute inset-0 m-auto text-purple-400" size={24} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">IDM-VTON AI is working...</h3>
-                  <p className="text-gray-300 max-w-sm mb-4">
-                    Sending your photo to HuggingFace. This process involves complex diffusion models and may take up to 60 seconds.
-                  </p>
-                  <p className="text-purple-400 text-sm font-medium animate-pulse">Please wait, do not close this window...</p>
-                </div>
-              )}
-
-              {vtonError && (
-                <div className="absolute inset-0 z-40 bg-gray-100 flex flex-col items-center justify-center p-8 text-center">
-                  <AlertCircle className="text-red-500 mb-4" size={48} />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Connection Error</h3>
-                  <p className="text-gray-600 mb-6">{vtonError}</p>
-                  <button 
-                    onClick={() => openVton(selectedProduct)}
-                    className="bg-black text-white px-6 py-2 rounded-full font-medium"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              )}
-
-              {vtonResult ? (
-                <img src={vtonResult} alt="VTON Result" className="w-full h-full object-contain" />
-              ) : (
-                <img src={selectedProduct.image} alt="Original Product" className={`w-full h-full object-contain ${isGeneratingVton ? 'opacity-30 blur-sm' : ''}`} />
-              )}
-              
-            </div>
-
-            {/* Product Info Side */}
-            <div className="w-full md:w-[400px] bg-white p-8 flex flex-col shrink-0 overflow-y-auto z-30">
-              <div className="mb-8">
-                <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">Perfect Fit</span>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedProduct.name}</h3>
-                <p className="text-2xl font-semibold text-gray-700 mb-1">₹{selectedProduct.price}</p>
-                <p className="text-gray-400 text-sm line-through">₹{selectedProduct.originalPrice}</p>
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Why it works for you</h4>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li className="flex items-center gap-2"><Sparkles size={14} className="text-purple-500" /> Flattering on {consumer.bodyShape} body shapes</li>
-                    <li className="flex items-center gap-2"><Sparkles size={14} className="text-purple-500" /> Compliments your height ({consumer.height})</li>
-                  </ul>
-                </div>
-
-                <button className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors mt-auto shadow-lg">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );

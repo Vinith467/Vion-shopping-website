@@ -5,132 +5,15 @@ import { supabase } from "../services/supabaseClient";
 import SizeSelectionModal from "../components/SizeSelectionModal";
 import { useAppContext } from "../context/AppContext";
 
-function MissingProfileDataModal({ isOpen, onClose, onSave, defaultValues }) {
-  const [selectedTone, setSelectedTone] = useState(defaultValues?.skinTone || "Light");
-  const [selectedShape, setSelectedShape] = useState(defaultValues?.bodyShape || "Hourglass");
-  const [heightCm, setHeightCm] = useState(defaultValues?.height ? parseInt(defaultValues.height) : 165);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto hide-scrollbar shadow-2xl p-6">
-        <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">Personalize Your View</h3>
-        <p className="text-sm text-gray-600 mb-6">Complete your profile to see the best color matches and fits for this product.</p>
-        
-        {/* Skin Tone */}
-        <div className="mb-6">
-          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">Skin Tone</label>
-          <div className="flex justify-between gap-2">
-            {[
-              { id: 'Very Light', color: '#F5D0B5' },
-              { id: 'Light', color: '#E8BE95' },
-              { id: 'Medium Light', color: '#D89F70' },
-              { id: 'Medium', color: '#B57B52' },
-              { id: 'Medium Deep', color: '#8B5A33' },
-              { id: 'Deep', color: '#5C3A21' }
-            ].map(tone => (
-              <button 
-                key={tone.id}
-                onClick={() => setSelectedTone(tone.id)}
-                className={`w-12 h-12 rounded-full shadow-sm flex items-center justify-center transition-all ${selectedTone === tone.id ? 'ring-2 ring-offset-2 ring-[#4328eb]' : 'hover:scale-105'}`}
-                style={{ backgroundColor: tone.color }}
-              >
-                {selectedTone === tone.id && (
-                  <svg className="w-5 h-5 text-[#4328eb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Body Shape */}
-        <div className="mb-6">
-          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">Body Shape</label>
-          <div className="grid grid-cols-5 gap-2 overflow-x-auto pb-2">
-            {[
-              { id: "Inverted Triangle", image: "/images/shapes/inverted_triangle.png" },
-              { id: "Apple", name: "Apple", image: "/images/shapes/apple.png" },
-              { id: "Hourglass", image: "/images/shapes/hourglass.png" },
-              { id: "Pear", image: "/images/shapes/pear.png" },
-              { id: "Rectangle", image: "/images/shapes/rectangle.png" }
-            ].map(shape => (
-              <button 
-                key={shape.id}
-                onClick={() => setSelectedShape(shape.id)}
-                className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all min-w-[70px] flex-1 ${selectedShape === shape.id ? 'border-[#4328eb] ring-1 ring-[#4328eb]' : 'border-gray-200 hover:border-gray-300'}`}
-              >
-                <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                  <img src={shape.image} alt={shape.name || shape.id} className="object-cover h-full w-full" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
-                  <div className="hidden text-[8px] text-gray-400 text-center leading-tight">Image here</div>
-                </div>
-                <div className={`w-full py-1.5 text-center border-t ${selectedShape === shape.id ? 'bg-[#F8F6FF] border-[#4328eb]/20' : 'bg-white border-gray-100'}`}>
-                  <span className="text-[9px] font-bold text-gray-700 leading-tight">{shape.name || shape.id}</span>
-                </div>
-                {selectedShape === shape.id && (
-                  <div className="absolute top-1 right-1 w-4 h-4 bg-[#4328eb] rounded-full flex items-center justify-center text-white shadow-sm">
-                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Height */}
-        <div className="mb-8">
-          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">Height</label>
-          <div className="space-y-2">
-            {[
-              { value: 155, label: "5'3\" and less", sub: "(160cm and less)" },
-              { value: 165, label: "5'3.1\" - 5'6\"", sub: "(161cm - 168cm)" },
-              { value: 175, label: "5'6.1\" and above", sub: "(169cm and above)" }
-            ].map(range => (
-              <button 
-                key={range.value}
-                onClick={() => setHeightCm(range.value)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all ${heightCm === range.value ? 'border-[#4328eb] bg-[#F8F6FF]' : 'border-gray-100 bg-white hover:border-gray-200'}`}
-              >
-                <div className="flex flex-col items-start">
-                  <span className={`text-sm font-bold ${heightCm === range.value ? 'text-[#4328eb]' : 'text-gray-700'}`}>{range.label}</span>
-                  <span className="text-[10px] text-gray-500">{range.sub}</span>
-                </div>
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${heightCm === range.value ? 'border-[#4328eb]' : 'border-gray-300'}`}>
-                  {heightCm === range.value && <div className="w-2.5 h-2.5 rounded-full bg-[#4328eb]"></div>}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-        
-        <button 
-          onClick={async () => {
-            setIsSubmitting(true);
-            await onSave({ skinTone: selectedTone, bodyShape: selectedShape, height: heightCm });
-            setIsSubmitting(false);
-            onClose();
-          }}
-          disabled={isSubmitting}
-          className="w-full bg-[#6344D4] text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-[#5235B8] transition-colors flex justify-center"
-        >
-          {isSubmitting ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : "Save & View Product"}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 export default function ProductDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Try On");
   const [activeView, setActiveView] = useState("Front");
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
   const [product, setProduct] = useState(null);
   const { members, updateMember } = useAppContext();
   const primaryMember = members?.find(m => m.isPrimary);
-  const [showProfileModal, setShowProfileModal] = useState(false);
   const [activeVariationIndex, setActiveVariationIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -147,11 +30,7 @@ export default function ProductDetailScreen() {
     loadProduct();
   }, [id]);
 
-  useEffect(() => {
-    if (product && primaryMember && !primaryMember.skinTone && activeTab === "Try On") {
-      setShowProfileModal(true);
-    }
-  }, [product, primaryMember, activeTab]);
+
 
   useEffect(() => {
     if (product?.variations && product.variations.length > 0 && primaryMember) {
@@ -175,17 +54,9 @@ export default function ProductDetailScreen() {
         setActiveVariationIndex(bestMatchIndex);
       }
     }
-  }, [product, primaryMember, showProfileModal]);
+  }, [product, primaryMember]);
 
-  const handleSaveProfile = async (data) => {
-    if (!primaryMember) return;
-    await updateMember(primaryMember.id, {
-      ...primaryMember,
-      height: data.height,
-      bodyShape: data.bodyShape,
-      skinTone: data.skinTone
-    });
-  };
+
 
   if (!product) return <div className="p-10 text-center">Loading...</div>;
 
@@ -211,16 +82,7 @@ export default function ProductDetailScreen() {
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col bg-white min-h-screen">
       
-      <MissingProfileDataModal 
-        isOpen={showProfileModal} 
-        onClose={() => setShowProfileModal(false)}
-        onSave={handleSaveProfile}
-        defaultValues={{
-          skinTone: primaryMember?.skinTone,
-          bodyShape: primaryMember?.bodyShape,
-          height: primaryMember?.height
-        }}
-      />
+
       
       {/* Mobile Top App Bar (Hidden on Desktop) */}
       <div className="md:hidden flex items-center justify-between px-6 pt-12 pb-4 sticky top-0 bg-white/90 backdrop-blur-md z-50">
@@ -246,23 +108,6 @@ export default function ProductDetailScreen() {
         {/* LEFT COLUMN: Media / Try On Viewer (Expands on Desktop) */}
         <div className="w-full md:w-[60%] flex flex-col">
           
-          {/* Mobile Only Tabs (On desktop, these are above the viewer) */}
-          <div className="flex items-center justify-between border-b border-gray-100 px-6 md:px-0 mb-6">
-            {["Product", "3D Avatar", "Try On"].map((tab) => (
-              <button 
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 pb-4 text-sm font-bold text-center border-b-2 transition-colors ${
-                  activeTab === tab ? "border-[#6344D4] text-[#6344D4]" : "border-transparent text-gray-400 hover:text-gray-700"
-                }`}
-              >
-                {tab === "Try On" ? "Try On (You)" : tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Try On Viewer Container */}
-          {activeTab === "Try On" && (
             <div className="flex flex-col md:flex-row gap-4 px-6 md:px-0">
               
               {/* Vertical Views Selector (Left of image) */}
@@ -343,9 +188,7 @@ export default function ProductDetailScreen() {
                   )}
                 </div>
               </div>
-
             </div>
-          )}
 
           {/* Mobile "Try different looks" Horizontal Carousel (Below image) */}
           <div className="md:hidden mt-6 px-6">
@@ -434,17 +277,7 @@ export default function ProductDetailScreen() {
             )}
           </div>
 
-          {/* Desktop "Why this looks perfect" & Actions */}
-          <div className="mt-10 bg-[#F8F6FF] rounded-2xl p-5 flex gap-4 border border-[#6344D4]/10 items-start">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-              <Sparkles size={24} className="text-[#6344D4]" />
-            </div>
-            <div>
-              <h4 className="text-base font-bold text-gray-900">Why this looks perfect on you</h4>
-              <p className="text-sm text-gray-600 mt-1 leading-relaxed font-medium">This image specifically demonstrates how it will fit {primaryMember?.height ? `your ${primaryMember.height}` : 'you'} and complements your {primaryMember?.skinTone || 'selected'} skin tone.</p>
-              <button className="text-sm font-bold text-[#6344D4] mt-3 hover:underline underline-offset-4">View AI Details</button>
-            </div>
-          </div>
+
 
           {/* Desktop Add to Bag (Inline) */}
           <div className="hidden md:flex items-center gap-4 mt-8 pt-8 border-t border-gray-100">

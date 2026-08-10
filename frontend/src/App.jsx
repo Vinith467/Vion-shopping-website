@@ -68,7 +68,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, logout, profile } = useAppContext();
-  const isMainTab = ['/home', '/explore', '/ai-try-on', '/wardrobe', '/account'].includes(location.pathname);
+  const isMainTab = ['/home', '/explore', '/wardrobe', '/account'].includes(location.pathname);
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -191,7 +191,7 @@ function App() {
           {/* Protected Routes */}
           <Route path="/account" element={<ProtectedRoute><AccountScreen /></ProtectedRoute>} />
           <Route path="/add-consumer" element={<ProtectedRoute><PlaceholderScreen title="Add Consumer" /></ProtectedRoute>} />
-          <Route path="/ai-try-on" element={<ProtectedRoute><PlaceholderScreen title="AI Try On" /></ProtectedRoute>} />
+
           <Route path="/select-size" element={<ProtectedRoute><PlaceholderScreen title="Size Selection" /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartScreen /></ProtectedRoute>} />
           <Route path="/explore" element={<ExploreScreen />} />
