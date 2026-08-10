@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   User, Ruler, Users, ShoppingBag, Heart, 
   Sliders, Sparkles, MapPin, CreditCard, 
-  Settings, HelpCircle, LogOut, ArrowRight, Home as HomeIcon
+  Settings, HelpCircle, LogOut, ArrowRight, Home as HomeIcon,
+  Menu, X, ArrowLeft
 } from 'lucide-react';
 import HomeTab from '../components/HomeTab';
 import MyMeasurementsTab from '../components/MyMeasurementsTab';
@@ -35,6 +36,7 @@ const sidebarItems = [
 export default function AccountScreen() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAppContext();
 
@@ -45,6 +47,7 @@ export default function AccountScreen() {
   }, [location.state]);
 
   const handleTabClick = async (id) => {
+    setIsMobileMenuOpen(false);
     if (id === 'logout') {
       await logout();
       toast.success('Logged out successfully!');
@@ -55,14 +58,53 @@ export default function AccountScreen() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] pt-4 md:pt-8 pb-12">
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+    <div className="w-full min-h-screen bg-[#F9FAFB] pb-12">
+      
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/home')} className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors shadow-sm">
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <h2 className="text-lg font-bold font-serif text-gray-900 tracking-wide leading-none">
+              {sidebarItems.find(i => i.id === activeTab)?.label || 'Account'}
+            </h2>
+          </div>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="p-2 bg-gray-100 rounded-lg text-gray-700 shadow-sm"
+        >
+          <Menu size={24} />
+        </button>
+      </div>
+
+      {/* Mobile Drawer Backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 md:hidden transition-opacity" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-4 md:mt-8">
         
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
           
-          {/* Left Sidebar */}
-          <div className="w-full md:w-64 shrink-0 flex flex-col gap-1 md:sticky md:top-24 md:h-fit z-10">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 overflow-y-auto max-h-[85vh] hide-scrollbar flex flex-col gap-1">
+          {/* Left Sidebar / Mobile Drawer */}
+          <div className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 w-72 md:w-64 bg-[#F9FAFB] md:bg-transparent shrink-0 flex flex-col gap-1 md:sticky md:top-24 md:h-fit z-50 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none overflow-y-auto md:overflow-visible h-full md:h-auto`}>
+            
+            <div className="md:hidden flex items-center justify-between p-6 border-b border-gray-200 bg-white">
+               <div>
+                 <h2 className="text-xl font-bold font-serif text-gray-900 tracking-wide">MY ACCOUNT</h2>
+               </div>
+               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-gray-900 bg-gray-100 rounded-lg transition-colors">
+                 <X size={20} />
+               </button>
+            </div>
+
+            <div className="bg-white md:rounded-2xl md:shadow-sm md:border border-gray-100 p-3 overflow-y-auto md:max-h-[85vh] hide-scrollbar flex flex-col gap-1 flex-1 md:flex-none">
               
               {sidebarItems.map((item) => {
                 const Icon = item.icon;
@@ -76,7 +118,7 @@ export default function AccountScreen() {
                       isActive 
                         ? 'bg-[#F8F6FF] text-[#3A10E5]' 
                         : item.isDanger 
-                          ? 'text-red-500 hover:bg-red-50' 
+                          ? 'text-red-500 hover:bg-red-50 mt-auto md:mt-0 border-t border-gray-100 md:border-none' 
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
                   >
@@ -89,7 +131,7 @@ export default function AccountScreen() {
             </div>
 
             {/* Unlock More Benefits Promo Card */}
-            <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-gray-100 mt-2 flex flex-col gap-3">
+            <div className="bg-[#F8F9FA] md:rounded-2xl p-5 border-t md:border border-gray-100 mt-auto md:mt-2 flex flex-col gap-3 shrink-0">
               <div className="flex items-center gap-2 text-[#3A10E5] font-bold text-sm">
                 <Sparkles size={16} />
                 Unlock More Benefits
