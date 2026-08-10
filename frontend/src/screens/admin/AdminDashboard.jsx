@@ -106,7 +106,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 animate-fade-in">
       
       {/* Header */}
       <div>

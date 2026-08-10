@@ -47,7 +47,7 @@ export default function AdminUsers() {
   );
 
   return (
-    <div className="p-8 max-w-7xl mx-auto animate-fade-in">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto animate-fade-in">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold font-serif text-gray-900">Users & Consumers</h1>

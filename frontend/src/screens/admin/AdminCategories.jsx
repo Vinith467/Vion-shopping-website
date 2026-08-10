@@ -138,7 +138,7 @@ export default function AdminCategories() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto animate-fade-in">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto animate-fade-in">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold font-serif text-gray-900">Collections</h1>
