@@ -1,13 +1,19 @@
 import { NavLink } from "react-router-dom";
-import { Home, Compass, Sparkles, ShoppingBag, User } from "lucide-react";
+import { Home, Compass, Sparkles, ShoppingBag, User, Shield } from "lucide-react";
+import { useAppContext } from "../context/AppContext";
 
 export default function BottomNav() {
+  const { profile } = useAppContext();
+  const isAdmin = profile?.email === 'admin@gmail.com';
+
   const navItems = [
     { to: "/home", icon: Home, label: "Home" },
     { to: "/explore", icon: Compass, label: "Explore" },
     { to: "/ai-try-on", icon: Sparkles, label: "Try On", isPrimary: true },
     { to: "/wardrobe", icon: ShoppingBag, label: "Wardrobe" },
-    { to: "/account", icon: User, label: "Account" },
+    isAdmin 
+      ? { to: "/admin", icon: Shield, label: "Admin" }
+      : { to: "/account", icon: User, label: "Account" },
   ];
 
   return (
