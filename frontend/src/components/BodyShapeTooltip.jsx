@@ -33,69 +33,50 @@ const tooltipData = {
 
 const BodyShapeTooltip = ({ id, img, children }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const triggerRef = useRef(null);
-
-  const handleMouseEnter = () => {
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      
-      // Attempt to place it above, or below if not enough space
-      let top = rect.top - 420; // Tooltip is ~380px tall
-      let left = rect.left + rect.width / 2;
-      
-      if (top < 20) {
-        top = rect.bottom + 20; // place below
-      }
-      
-      // Ensure it doesn't go off screen horizontally
-      if (left < 200) left = 200;
-      if (left > window.innerWidth - 200) left = window.innerWidth - 200;
-
-      setCoords({ x: left, y: top });
-    }
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
 
   const data = tooltipData[id];
 
   return (
     <div 
       className="relative flex flex-col h-full w-full"
-      ref={triggerRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {children}
       
       {isHovered && data && createPortal(
         <AnimatePresence>
+          {/* Subtle backdrop overlay for better focus */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-white/30 backdrop-blur-[2px] z-[999998] pointer-events-none"
+          />
           <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             style={{ 
               position: 'fixed',
-              top: coords.y,
-              left: coords.x,
-              transform: 'translateX(-50%)',
+              top: '50%',
+              left: '50%',
+              x: '-50%',
+              y: '-50%',
               zIndex: 999999
             }}
-            className="w-[380px] bg-white/95 backdrop-blur-2xl border border-white/60 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden pointer-events-none"
+            className="w-[450px] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-none"
           >
             {/* Header / Image area */}
-            <div className="bg-gradient-to-br from-purple-50 to-white p-6 pb-4 border-b border-gray-100 flex items-end gap-4">
-              <div className="w-24 h-28 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center p-2 shrink-0">
-                <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-md" />
+            <div className="bg-gradient-to-br from-purple-50 to-white p-8 pb-6 border-b border-gray-100 flex items-center gap-6">
+              <div className="w-32 h-40 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center p-3 shrink-0">
+                <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-xl" />
               </div>
               <div>
-                <h3 className="text-2xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
-                <p className="text-xs font-semibold text-[#3A10E5] uppercase tracking-wider mt-1">Shape Guide</p>
+                <h3 className="text-3xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
+                <p className="text-sm font-semibold text-[#3A10E5] uppercase tracking-wider mt-1">Shape Guide</p>
               </div>
             </div>
 
