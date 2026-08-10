@@ -4,6 +4,7 @@ import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
 import toast from 'react-hot-toast';
 import heic2any from 'heic2any';
+import BodyShapeTooltip from './BodyShapeTooltip';
 
 const bodyTypes = [
   { id: 'Inverted Triangle', img: '/images/shapes/inverted_triangle.png' },
@@ -317,23 +318,24 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Body Shape</label>
                 <div className="grid grid-cols-3 gap-2 flex-1">
                   {bodyTypes.map((type) => (
-                    <div 
-                      key={type.id} 
-                      onClick={() => handleChange({ target: { name: 'bodyShape', value: type.id } })}
-                      className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer h-full ${formData.bodyShape === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 bg-white hover:border-gray-300 shadow-sm'}`}
-                    >
-                      <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                        <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
-                      </div>
-                      <div className={`w-full py-1 text-center border-t ${formData.bodyShape === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
-                        <span className={`text-[8px] font-bold uppercase tracking-wider ${formData.bodyShape === type.id ? 'text-[#3A10E5]' : 'text-gray-500'}`}>{type.id}</span>
-                      </div>
-                      {formData.bodyShape === type.id && (
-                        <div className="absolute top-1 right-1 bg-[#3A10E5] text-white rounded-full p-0.5 shadow-sm">
-                          <Check size={10} strokeWidth={3} />
+                    <BodyShapeTooltip key={type.id} id={type.id} img={type.img}>
+                      <div 
+                        onClick={() => handleChange({ target: { name: 'bodyShape', value: type.id } })}
+                        className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer h-full ${formData.bodyShape === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 bg-white hover:border-gray-300 shadow-sm'}`}
+                      >
+                        <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
+                          <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
                         </div>
-                      )}
-                    </div>
+                        <div className={`w-full py-1 text-center border-t ${formData.bodyShape === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
+                          <span className={`text-[8px] font-bold uppercase tracking-wider ${formData.bodyShape === type.id ? 'text-[#3A10E5]' : 'text-gray-500'}`}>{type.id}</span>
+                        </div>
+                        {formData.bodyShape === type.id && (
+                          <div className="absolute top-1 right-1 bg-[#3A10E5] text-white rounded-full p-0.5 shadow-sm">
+                            <Check size={10} strokeWidth={3} />
+                          </div>
+                        )}
+                      </div>
+                    </BodyShapeTooltip>
                   ))}
                 </div>
               </div>

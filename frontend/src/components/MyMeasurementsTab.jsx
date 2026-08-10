@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Ruler, Edit2, CheckCircle2, ChevronRight, Save, Camera, ChevronDown, Check, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
+import { Camera, CheckCircle2, Ruler, Weight, User, Save, Upload, AlertCircle, ArrowRight, Check, Target, ChevronDown, Sparkles, Loader2 } from 'lucide-react';
+import BodyShapeTooltip from './BodyShapeTooltip';
 import { useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
@@ -336,23 +337,24 @@ export default function MyMeasurementsTab() {
           <p className="text-xs text-gray-500 mb-4">Select the option that best represents you</p>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {bodyTypes.map((type) => (
-              <div 
-                key={type.id} 
-                onClick={() => setSelectedBodyType(type.id)}
-                className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer ${selectedBodyType === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 hover:border-gray-300'}`}
-              >
-                <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                  <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
-                </div>
-                <div className={`w-full py-1.5 text-center border-t ${selectedBodyType === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
-                  <span className={`text-[10px] font-bold uppercase tracking-wide ${selectedBodyType === type.id ? 'text-[#3A10E5]' : 'text-gray-600'}`}>{type.id}</span>
-                </div>
-                {selectedBodyType === type.id && (
-                  <div className="absolute top-1.5 right-1.5 bg-[#3A10E5] text-white rounded-full p-1 shadow-sm">
-                    <Check size={12} strokeWidth={3} />
+              <BodyShapeTooltip key={type.id} id={type.id} img={type.img}>
+                <div 
+                  onClick={() => setSelectedBodyType(type.id)}
+                  className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer h-full ${selectedBodyType === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 hover:border-gray-300'}`}
+                >
+                  <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
+                    <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
                   </div>
-                )}
-              </div>
+                  <div className={`w-full py-1.5 text-center border-t ${selectedBodyType === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-wide ${selectedBodyType === type.id ? 'text-[#3A10E5]' : 'text-gray-600'}`}>{type.id}</span>
+                  </div>
+                  {selectedBodyType === type.id && (
+                    <div className="absolute top-1.5 right-1.5 bg-[#3A10E5] text-white rounded-full p-1 shadow-sm">
+                      <Check size={12} strokeWidth={3} />
+                    </div>
+                  )}
+                </div>
+              </BodyShapeTooltip>
             ))}
           </div>
         </div>

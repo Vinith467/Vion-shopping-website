@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { User, Mail, Lock, EyeOff, Eye, ChevronDown, Check, ShieldCheck, Heart, Sparkles, X, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import BodyShapeTooltip from './BodyShapeTooltip';
 
 import toast from 'react-hot-toast';
 import { supabase } from '../services/supabaseClient';
@@ -265,26 +266,27 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Body Type</h3>
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {bodyTypes.map((type) => (
-                      <button
-                        key={type.id}
-                        type="button"
-                        onClick={() => setSelectedBody(type.id)}
-                        className={`relative flex flex-col overflow-hidden rounded-xl border transition-all min-w-[70px] flex-1 shrink-0 ${
-                          selectedBody === type.id ? 'border-purple-600 ring-1 ring-purple-600' : 'border-gray-200 hover:border-purple-300'
-                        }`}
-                      >
-                        <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                          <img src={type.img} alt={type.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className={`w-full py-1 text-center border-t ${selectedBody === type.id ? 'bg-purple-50/50 border-purple-600/20' : 'bg-white border-gray-100'}`}>
-                          <span className={`text-[9px] font-bold tracking-wide uppercase ${selectedBody === type.id ? 'text-purple-700' : 'text-gray-600'}`}>{type.name}</span>
-                        </div>
-                        {selectedBody === type.id && (
-                          <div className="absolute top-1 right-1 bg-purple-600 text-white rounded-full p-0.5 shadow-sm">
-                            <Check size={10} strokeWidth={3} />
+                      <BodyShapeTooltip key={type.id} id={type.name} img={type.img}>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBody(type.id)}
+                          className={`relative flex flex-col overflow-hidden rounded-xl border transition-all min-w-[70px] flex-1 shrink-0 ${
+                            selectedBody === type.id ? 'border-purple-600 ring-1 ring-purple-600' : 'border-gray-200 hover:border-purple-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
+                            <img src={type.img} alt={type.name} className="w-full h-full object-cover" />
                           </div>
-                        )}
-                      </button>
+                          <div className={`w-full py-1 text-center border-t ${selectedBody === type.id ? 'bg-purple-50/50 border-purple-600/20' : 'bg-white border-gray-100'}`}>
+                            <span className={`text-[9px] font-bold tracking-wide uppercase ${selectedBody === type.id ? 'text-purple-700' : 'text-gray-600'}`}>{type.name}</span>
+                          </div>
+                          {selectedBody === type.id && (
+                            <div className="absolute top-1 right-1 bg-purple-600 text-white rounded-full p-0.5 shadow-sm">
+                              <Check size={10} strokeWidth={3} />
+                            </div>
+                          )}
+                        </button>
+                      </BodyShapeTooltip>
                     ))}
                   </div>
                 </div>
