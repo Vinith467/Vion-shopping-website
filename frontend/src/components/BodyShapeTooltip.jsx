@@ -135,7 +135,6 @@ const BodyShapeTooltip = ({ id, img, children }) => {
                   </p>
                 </div>
               </div>
-              </div>
             </div>
           </motion.div>
         </AnimatePresence>,
