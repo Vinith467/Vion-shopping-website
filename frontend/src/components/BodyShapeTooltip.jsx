@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Info, X, Check } from 'lucide-react';
 
 const tooltipData = {
   'Hourglass': {
@@ -32,27 +32,65 @@ const tooltipData = {
 };
 
 const BodyShapeTooltip = ({ id, img, children }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const hoverTimeout = useRef(null);
+  const cooldown = useRef(false);
+  const wrapperRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (cooldown.current) return;
+    hoverTimeout.current = setTimeout(() => {
+      setIsOpen(true);
+    }, 400); // 400ms delay to prevent accidental opens and allow user to just click
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+    }
+  };
+
+  const handleClose = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setIsOpen(false);
+    cooldown.current = true;
+    setTimeout(() => {
+      cooldown.current = false;
+    }, 1000); // 1 second cooldown before hover triggers again
+  };
+
+  const handleSelectShape = (e) => {
+    handleClose(e);
+    if (wrapperRef.current) {
+      const clickableChild = wrapperRef.current.querySelector('div');
+      if (clickableChild) clickableChild.click();
+    }
+  };
 
   const data = tooltipData[id];
 
   return (
     <div 
       className="relative flex flex-col h-full w-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={wrapperRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {children}
       
-      {isHovered && data && createPortal(
+      {isOpen && data && createPortal(
         <AnimatePresence>
-          {/* Subtle backdrop overlay for better focus */}
+          {/* Backdrop overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-white/30 backdrop-blur-[2px] z-[999998] pointer-events-none"
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[999998] pointer-events-auto"
+            onClick={handleClose}
           />
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -68,16 +106,10 @@ const BodyShapeTooltip = ({ id, img, children }) => {
               zIndex: 999999
             }}
             className="w-[850px] max-w-[95vw] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-auto flex flex-col md:flex-row"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
           >
             {/* Close button */}
             <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsHovered(false);
-              }}
+              onClick={handleClose}
               className="absolute top-5 right-5 p-2 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-600 rounded-full transition-colors z-10 cursor-pointer"
             >
               <X size={20} />
@@ -95,41 +127,54 @@ const BodyShapeTooltip = ({ id, img, children }) => {
             </div>
 
             {/* Right: Content area */}
-            <div className="w-full md:w-[55%] p-8 space-y-6 flex flex-col justify-center">
+            <div className="w-full md:w-[55%] p-8 flex flex-col justify-between">
               
-              {/* How to identify */}
-              <div>
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                  <CheckCircle2 size={16} className="text-[#3A10E5]" /> How to identify
-                </h4>
-                <ul className="space-y-3">
-                  {data.how.map((point, i) => (
-                    <li key={i} className="text-[15px] text-gray-700 flex items-start gap-3 leading-tight">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-2 shrink-0" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+              <div className="space-y-6">
+                {/* How to identify */}
+                <div>
+                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <CheckCircle2 size={16} className="text-[#3A10E5]" /> How to identify
+                  </h4>
+                  <ul className="space-y-3">
+                    {data.how.map((point, i) => (
+                      <li key={i} className="text-[15px] text-gray-700 flex items-start gap-3 leading-tight">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-2 shrink-0" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Quick check */}
+                <div className="bg-purple-50/80 rounded-2xl p-4 border border-purple-100">
+                  <h4 className="text-[11px] font-bold text-[#3A10E5] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <AlertCircle size={14} /> Quick check
+                  </h4>
+                  <p className="text-sm font-medium text-purple-900 leading-snug">
+                    {data.quick}
+                  </p>
+                </div>
+
+                {/* Best way to choose */}
+                <div>
+                  <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Info size={14} className="text-gray-400" /> Best way to choose
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {data.best}
+                  </p>
+                </div>
               </div>
 
-              {/* Quick check */}
-              <div className="bg-purple-50/80 rounded-2xl p-4 border border-purple-100">
-                <h4 className="text-[11px] font-bold text-[#3A10E5] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <AlertCircle size={14} /> Quick check
-                </h4>
-                <p className="text-sm font-medium text-purple-900 leading-snug">
-                  {data.quick}
-                </p>
-              </div>
-
-              {/* Best way to choose */}
-              <div>
-                <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Info size={14} className="text-gray-400" /> Best way to choose
-                </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {data.best}
-                </p>
+              {/* Select Button */}
+              <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                <button 
+                  onClick={handleSelectShape}
+                  className="flex items-center gap-2 bg-[#3A10E5] hover:bg-[#2A08B5] text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md shadow-[#3A10E5]/20 hover:shadow-lg hover:shadow-[#3A10E5]/30 hover:-translate-y-0.5"
+                >
+                  <Check size={18} strokeWidth={3} />
+                  Select this Shape
+                </button>
               </div>
 
             </div>
