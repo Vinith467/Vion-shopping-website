@@ -67,16 +67,16 @@ const BodyShapeTooltip = ({ id, img, children }) => {
               y: '-50%',
               zIndex: 999999
             }}
-            className="w-[450px] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-none"
+            className="w-[500px] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-none"
           >
             {/* Header / Image area */}
-            <div className="bg-gradient-to-br from-purple-50 to-white p-8 pb-6 border-b border-gray-100 flex items-center gap-6">
-              <div className="w-32 h-40 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center p-3 shrink-0">
-                <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-xl" />
+            <div className="bg-gradient-to-br from-purple-50/50 to-white pt-8 pb-6 border-b border-gray-100 flex flex-col items-center justify-center text-center">
+              <div className="w-56 h-56 flex items-center justify-center mb-6">
+                <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-2xl" />
               </div>
               <div>
-                <h3 className="text-3xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
-                <p className="text-sm font-semibold text-[#3A10E5] uppercase tracking-wider mt-1">Shape Guide</p>
+                <h3 className="text-4xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
+                <p className="text-sm font-bold text-[#3A10E5] uppercase tracking-wider mt-2">Shape Guide</p>
               </div>
             </div>
 
