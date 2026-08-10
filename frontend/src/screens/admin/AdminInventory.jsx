@@ -124,13 +124,13 @@ export default function AdminInventory() {
       setEditingId(null);
       setFormData(initialForm);
     }
-    
+
     // Initialize productImages from existing urls
     if (prod && prod.image_url) {
       const urls = prod.image_url.split(',').filter(Boolean);
       setProductImages(urls.map(url => ({ type: 'existing', url })));
     }
-    
+
     // Initialize variationImages from existing urls
     if (prod && prod.variations) {
       const vImages = {};
@@ -170,13 +170,13 @@ export default function AdminInventory() {
       body_shape: prod.body_shape || 'all',
       variations: prod.variations || []
     });
-    
+
     // Initialize productImages from existing urls
     if (prod && prod.image_url) {
       const urls = prod.image_url.split(',').filter(Boolean);
       setProductImages(urls.map(url => ({ type: 'existing', url })));
     }
-    
+
     // Initialize variationImages from existing urls
     if (prod && prod.variations) {
       const vImages = {};
@@ -256,7 +256,7 @@ export default function AdminInventory() {
       }
       updatedVariations[i].image_urls = varFinalUrls;
     }
-    
+
     const payload = {
       title: formData.title,
       description: formData.description,
@@ -626,7 +626,7 @@ export default function AdminInventory() {
                           <div key={idx} className="relative group shrink-0 w-28 flex flex-col gap-2">
                             <div className="relative w-28 h-36 rounded-xl bg-gray-100 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#3A10E5] transition-colors">
                               <img src={img.type === 'new' ? img.preview : img.url} alt={`Slot ${idx}`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
-                              
+
                               {/* Hover Controls */}
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                                 <div className="flex justify-end">
@@ -765,8 +765,8 @@ export default function AdminInventory() {
                               />
                             </div>
                             <div className="w-12 shrink-0">
-                               <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Shade</label>
-                               <input
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Shade</label>
+                              <input
                                 type="color"
                                 value={v.colorHex || '#000000'}
                                 onChange={(e) => {
@@ -807,25 +807,25 @@ export default function AdminInventory() {
                               {variationImages[index].map((img, idx) => (
                                 <div key={idx} className="relative group shrink-0 w-12 h-16 rounded-lg bg-gray-100 overflow-hidden border border-gray-200 shadow-sm">
                                   <img src={img.type === 'new' ? img.preview : img.url} loading="lazy" alt="preview" className="w-full h-full object-cover" />
-                                  
+
                                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col justify-between p-0.5 transition-opacity">
                                     <button type="button" onClick={() => {
                                       const newArr = [...variationImages[index]];
                                       const removed = newArr.splice(idx, 1)[0];
                                       if (removed.type === 'new') URL.revokeObjectURL(removed.preview);
-                                      setVariationImages(prev => ({...prev, [index]: newArr}));
-                                    }} className="self-end text-white hover:text-red-400 p-0.5"><X size={10}/></button>
+                                      setVariationImages(prev => ({ ...prev, [index]: newArr }));
+                                    }} className="self-end text-white hover:text-red-400 p-0.5"><X size={10} /></button>
                                     <div className="flex justify-between w-full pb-0.5">
                                       <button type="button" disabled={idx === 0} onClick={() => {
                                         const newArr = [...variationImages[index]];
-                                        [newArr[idx-1], newArr[idx]] = [newArr[idx], newArr[idx-1]];
-                                        setVariationImages(prev => ({...prev, [index]: newArr}));
-                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronLeft size={12}/></button>
+                                        [newArr[idx - 1], newArr[idx]] = [newArr[idx], newArr[idx - 1]];
+                                        setVariationImages(prev => ({ ...prev, [index]: newArr }));
+                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronLeft size={12} /></button>
                                       <button type="button" disabled={idx === variationImages[index].length - 1} onClick={() => {
                                         const newArr = [...variationImages[index]];
-                                        [newArr[idx+1], newArr[idx]] = [newArr[idx], newArr[idx+1]];
-                                        setVariationImages(prev => ({...prev, [index]: newArr}));
-                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronRight size={12}/></button>
+                                        [newArr[idx + 1], newArr[idx]] = [newArr[idx], newArr[idx + 1]];
+                                        setVariationImages(prev => ({ ...prev, [index]: newArr }));
+                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronRight size={12} /></button>
                                     </div>
                                   </div>
                                 </div>
