@@ -79,6 +79,16 @@ export default function ProductDetailScreen() {
   const currentImage = variationImages[activeImageIndex] || variationImages[0];
   const currentColorName = activeVariation?.colorName || 'Standard';
 
+  const price = parseFloat(product.price);
+  const compareAtPrice = product.compare_at_price ? parseFloat(product.compare_at_price) : null;
+  const discountPercent = (compareAtPrice && compareAtPrice > price) 
+    ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) 
+    : null;
+
+  const fitScore = product.score ? `${Math.min(100, Math.round((product.score / 5) * 100))}%` : '95%';
+  const recommendedSize = primaryMember?.recommendedSize || 'M';
+  const bodyShape = primaryMember?.bodyShape || 'Hourglass';
+
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col bg-white min-h-screen">
       
@@ -133,7 +143,7 @@ export default function ProductDetailScreen() {
               </div>
 
               {/* Main Image Area */}
-              <div className="flex-1 aspect-[3/4] md:aspect-auto md:min-h-[600px] bg-gray-50 rounded-3xl relative overflow-hidden flex items-center justify-center border border-gray-100">
+              <div className="flex-1 aspect-[3/4] md:aspect-auto md:min-h-[650px] bg-[#F8F8F8] rounded-3xl relative overflow-hidden flex items-center justify-center">
                 <img src={currentImage} className="w-full h-full object-cover mix-blend-multiply" />
                 
                 {/* Image Navigation Arrows */}
@@ -178,10 +188,10 @@ export default function ProductDetailScreen() {
                     {product.variations.map((v, i) => {
                       const thumb = (v.image_urls && v.image_urls.length > 0) ? v.image_urls[0] : (v.image_url || currentImage);
                       return (
-                        <div key={i} onClick={() => setActiveVariationIndex(i)} className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden border-[3px] cursor-pointer hover:opacity-80 transition-opacity ${i === activeVariationIndex ? 'border-[#6344D4]' : 'border-transparent'}`}>
+                        <div key={i} onClick={() => setActiveVariationIndex(i)} className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer hover:opacity-90 transition-all shadow-sm ${i === activeVariationIndex ? 'ring-2 ring-offset-2 ring-[#6344D4]' : 'border border-gray-200'}`}>
                           <img src={thumb} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
                           {i === activeVariationIndex && (
-                            <div className="absolute inset-0 bg-[#6344D4]/10"></div>
+                            <div className="absolute inset-0 bg-[#6344D4]/5"></div>
                           )}
                         </div>
                       );
@@ -226,36 +236,49 @@ export default function ProductDetailScreen() {
             </div>
 
             <div className="flex items-baseline gap-3 pt-2">
-              <span className="text-3xl font-bold text-gray-900">₹{parseFloat(product.price).toLocaleString()}</span>
-              <span className="text-lg text-gray-400 line-through font-medium">₹3,999</span>
-              <span className="text-sm font-bold text-[#D93025] bg-red-50 px-2 py-1 rounded">37% OFF</span>
+              <span className="text-3xl font-bold text-gray-900">₹{price.toLocaleString()}</span>
+              {compareAtPrice && compareAtPrice > price && (
+                <>
+                  <span className="text-lg text-gray-400 line-through font-medium">₹{compareAtPrice.toLocaleString()}</span>
+                  <span className="text-sm font-bold text-[#D93025] bg-red-50 px-2 py-1 rounded">{discountPercent}% OFF</span>
+                </>
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-8">
-            <div className="bg-[#F8F6FF] rounded-2xl p-5 flex flex-col items-center justify-center border border-[#6344D4]/15 shadow-sm">
-              <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-1">Fit Score</p>
-              <p className="text-3xl font-black text-[#6344D4]">{product.score ? `${Math.min(100, Math.round((product.score / 5) * 100))}%` : '95%'}</p>
+            <div className="bg-gradient-to-br from-[#F8F6FF] to-white rounded-3xl p-6 flex flex-col items-center justify-center border border-[#6344D4]/20 shadow-[0_4px_20px_-4px_rgba(99,68,212,0.1)] relative overflow-hidden group hover:border-[#6344D4]/40 transition-colors">
+              <div className="absolute inset-0 bg-[#6344D4]/5 group-hover:bg-[#6344D4]/10 transition-colors"></div>
+              <p className="text-[10px] md:text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-2 z-10">Fit Score</p>
+              <p className="text-4xl font-black text-[#6344D4] z-10 drop-shadow-sm">{fitScore}</p>
             </div>
-            <div className="bg-gray-50 rounded-2xl p-5 flex flex-col items-center justify-center border border-gray-200 relative shadow-sm">
-              <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-1">Recommended Size</p>
-              <p className="text-3xl font-black text-gray-900">M</p>
-              <Info size={16} className="absolute top-4 right-4 text-gray-400 cursor-pointer hover:text-gray-900" />
-            </div>
-          </div>
-
-          <div className="space-y-3 mt-8 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-            <div className="flex items-start gap-3 text-sm text-gray-700">
-              <User2 size={18} className="text-[#6344D4] mt-0.5" />
-              <p className="font-medium leading-relaxed">Perfect fit for your body type <span className="font-bold text-gray-900">(Hourglass)</span></p>
-            </div>
-            <div className="flex items-start gap-3 text-sm text-gray-700">
-              <Sparkles size={18} className="text-[#6344D4] mt-0.5" />
-              <p className="font-medium leading-relaxed">Looks great in this color palette</p>
+            <div className="bg-white rounded-3xl p-6 flex flex-col items-center justify-center border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:border-gray-300 transition-colors">
+              <p className="text-[10px] md:text-xs text-gray-500 font-extrabold uppercase tracking-widest mb-2 z-10">Suggested Size</p>
+              <p className="text-4xl font-black text-gray-900 z-10">{recommendedSize}</p>
+              <Info size={18} className="absolute top-4 right-4 text-gray-300 group-hover:text-gray-500 cursor-pointer transition-colors z-10" />
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="space-y-4 mt-8 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
+            <div className="flex items-start gap-4 text-sm text-gray-700">
+              <div className="w-8 h-8 rounded-full bg-[#6344D4]/10 flex items-center justify-center shrink-0">
+                <User2 size={16} className="text-[#6344D4]" />
+              </div>
+              <div className="flex flex-col justify-center h-8">
+                <p className="font-medium leading-relaxed">Perfect fit for your body type <span className="font-bold text-gray-900">({bodyShape})</span></p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 text-sm text-gray-700">
+              <div className="w-8 h-8 rounded-full bg-[#6344D4]/10 flex items-center justify-center shrink-0">
+                <Sparkles size={16} className="text-[#6344D4]" />
+              </div>
+              <div className="flex flex-col justify-center h-8">
+                <p className="font-medium leading-relaxed">Looks great in this color palette</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10">
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm font-bold text-gray-900">Color: <span className="text-gray-600 font-medium">{currentColorName}</span></p>
             </div>
@@ -280,15 +303,15 @@ export default function ProductDetailScreen() {
           <div className="hidden md:flex items-center gap-4 mt-8 pt-8 border-t border-gray-100">
             <button 
               onClick={() => toggleWishlist(product.id)}
-              className="w-14 h-14 rounded-2xl border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors shadow-sm"
+              className={`w-14 h-14 rounded-2xl border-2 flex items-center justify-center transition-all shadow-sm ${isInWishlist(product?.id) ? 'border-red-100 bg-red-50 hover:bg-red-100' : 'border-gray-200 bg-white hover:border-gray-300'}`}
             >
-              <Heart size={24} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart size={24} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
             </button>
             <button 
               onClick={() => setIsSizeModalOpen(true)}
-              className="flex-1 bg-[#6344D4] text-white h-14 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl shadow-[#6344D4]/30 hover:bg-[#5235B8] hover:-translate-y-0.5 transition-all"
+              className="flex-1 bg-gradient-to-r from-[#6344D4] to-[#4c2bb8] text-white h-14 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-[0_8px_25px_-8px_rgba(99,68,212,0.6)] hover:shadow-[0_12px_35px_-12px_rgba(99,68,212,0.8)] hover:-translate-y-1 transition-all group"
             >
-              <ShoppingBag size={22} />
+              <ShoppingBag size={22} className="group-hover:scale-110 transition-transform" />
               Add to Bag
             </button>
           </div>
@@ -297,18 +320,18 @@ export default function ProductDetailScreen() {
       </div>
 
       {/* Mobile Sticky Bottom Action Bar (Hidden on Desktop) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 p-4 pb-6 z-50 flex items-center gap-4 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 p-4 pb-6 z-50 flex items-center gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
         <button 
           onClick={() => toggleWishlist(product.id)}
-          className="flex flex-col items-center justify-center w-12 h-12 bg-gray-50 rounded-full border border-gray-200 text-gray-700"
+          className={`flex items-center justify-center w-14 h-14 rounded-full border-2 transition-colors ${isInWishlist(product?.id) ? 'border-red-100 bg-red-50' : 'border-gray-200 bg-white'}`}
         >
-          <Heart size={20} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : ''}`} />
+          <Heart size={22} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
         </button>
         <button 
           onClick={() => setIsSizeModalOpen(true)}
-          className="flex-1 bg-[#6344D4] text-white h-12 rounded-full font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#6344D4]/30"
+          className="flex-1 bg-gradient-to-r from-[#6344D4] to-[#4c2bb8] text-white h-14 rounded-full font-bold text-lg flex items-center justify-center gap-2 shadow-[0_8px_20px_-8px_rgba(99,68,212,0.6)] active:scale-95 transition-all"
         >
-          <ShoppingBag size={18} />
+          <ShoppingBag size={20} />
           Add to Bag
         </button>
       </div>
