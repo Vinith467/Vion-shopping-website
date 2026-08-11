@@ -110,7 +110,7 @@ function App() {
               New Arrivals
             </button>
             <button 
-              onClick={() => navigate('/home')} 
+              onClick={() => navigate('/home#collections')} 
               className="hover:text-[#E5B8D9] transition-colors"
             >
               Collections

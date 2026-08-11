@@ -118,7 +118,7 @@ export default function HomeScreen() {
         </section>
 
         {/* Collections Section */}
-        <div className="w-full shrink-0 px-6 lg:px-10 pt-6 pb-8 xl:pt-8 xl:pb-12 flex flex-col bg-white z-10 justify-center">
+        <div id="collections" className="w-full shrink-0 px-6 lg:px-10 pt-6 pb-8 xl:pt-8 xl:pb-12 flex flex-col bg-white z-10 justify-center scroll-mt-24">
           
           <div className="w-full flex flex-col gap-3 xl:gap-5">
             
