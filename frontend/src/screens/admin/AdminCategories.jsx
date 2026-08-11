@@ -177,54 +177,84 @@ export default function AdminCategories() {
                     </td>
                   </tr>
                 ) : (
-                  categories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-white/40 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0 border border-gray-200">
-                            {cat.image_url ? (
-                              <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <ImageIcon size={16} className="text-gray-400" />
-                            )}
-                          </div>
-                          <span className="font-bold text-gray-900">{cat.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700 font-mono bg-white/30">
-                        {cat.slug ? cat.slug.split('___GENDER_')[0] : ''}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1.5 items-start">
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded text-[#3A10E5] bg-[#3A10E5]/10 border border-[#3A10E5]/20">
-                            Gender: {cat.slug ? (cat.slug.match(/___GENDER_([a-zA-Z0-9\-]+)/)?.[1] || 'women') : 'women'}
-                          </span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded text-pink-600 bg-pink-100 border border-pink-200">
-                            Shape: {cat.slug ? (cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/)?.[1] || 'all') : 'all'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 font-medium">
-                        {cat.parent_id ? categories.find(c => c.id === cat.parent_id)?.name || cat.parent_id : '-'}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button 
-                            onClick={() => handleOpenModal(cat)}
-                            className="p-2 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-lg transition-colors"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(cat.id)}
-                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  (() => {
+                    const getShape = (slug) => {
+                      const match = slug ? slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                      return match ? match[1] : 'all';
+                    };
+
+                    const groupedCategories = categories.reduce((acc, cat) => {
+                      const shape = getShape(cat.slug);
+                      if (!acc[shape]) acc[shape] = [];
+                      acc[shape].push(cat);
+                      return acc;
+                    }, {});
+
+                    const shapeOrder = ['all', 'hourglass', 'pear', 'apple', 'rectangle', 'inverted-triangle'];
+                    const sortedShapes = Object.keys(groupedCategories).sort((a, b) => {
+                      const idxA = shapeOrder.indexOf(a);
+                      const idxB = shapeOrder.indexOf(b);
+                      return (idxA !== -1 ? idxA : 99) - (idxB !== -1 ? idxB : 99);
+                    });
+
+                    return sortedShapes.map(shape => (
+                      <React.Fragment key={shape}>
+                        <tr className="bg-[#f0eaff]">
+                          <td colSpan="5" className="px-6 py-3 font-black text-[#3A10E5] uppercase tracking-wider text-xs border-y border-[#3A10E5]/10">
+                            {shape === 'all' ? 'All Shapes / General' : `${shape} Body Shape`}
+                          </td>
+                        </tr>
+                        {groupedCategories[shape].map((cat) => (
+                          <tr key={cat.id} className="hover:bg-white/40 transition-colors">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0 border border-gray-200">
+                                  {cat.image_url ? (
+                                    <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <ImageIcon size={16} className="text-gray-400" />
+                                  )}
+                                </div>
+                                <span className="font-bold text-gray-900">{cat.name}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-700 font-mono bg-white/30">
+                              {cat.slug ? cat.slug.split('___GENDER_')[0] : ''}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col gap-1.5 items-start">
+                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded text-[#3A10E5] bg-[#3A10E5]/10 border border-[#3A10E5]/20">
+                                  Gender: {cat.slug ? (cat.slug.match(/___GENDER_([a-zA-Z0-9\-]+)/)?.[1] || 'women') : 'women'}
+                                </span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded text-pink-600 bg-pink-100 border border-pink-200">
+                                  Shape: {cat.slug ? (cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/)?.[1] || 'all') : 'all'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-600 font-medium">
+                              {cat.parent_id ? categories.find(c => c.id === cat.parent_id)?.name || cat.parent_id : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <button 
+                                  onClick={() => handleOpenModal(cat)}
+                                  className="p-2 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-lg transition-colors"
+                                >
+                                  <Edit2 size={16} />
+                                </button>
+                                <button 
+                                  onClick={() => handleDelete(cat.id)}
+                                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </React.Fragment>
+                    ));
+                  })()
                 )}
               </tbody>
             </table>
