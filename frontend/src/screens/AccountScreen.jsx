@@ -20,7 +20,8 @@ import toast from 'react-hot-toast';
 import { useAppContext } from '../context/AppContext';
 
 const sidebarItems = [
-  { id: 'home', label: 'Home', icon: HomeIcon },
+  { id: 'app_home', label: 'Home', icon: HomeIcon },
+  { id: 'home', label: 'Profile', icon: User },
   { id: 'members', label: 'Members', icon: Users },
   { id: 'measurements', label: 'Measurements', icon: Ruler },
   { id: 'orders', label: 'My Orders', icon: ShoppingBag },
@@ -51,6 +52,8 @@ export default function AccountScreen() {
     if (id === 'logout') {
       await logout();
       toast.success('Logged out successfully!');
+      navigate('/home');
+    } else if (id === 'app_home') {
       navigate('/home');
     } else {
       setActiveTab(id);

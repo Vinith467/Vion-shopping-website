@@ -15,6 +15,7 @@ import AdminOrders from './screens/admin/AdminOrders';
 import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
+import ScrollToTop from './components/ScrollToTop';
 import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Toaster } from 'react-hot-toast';
@@ -81,6 +82,7 @@ function App() {
 
   return (
     <div className="bg-white min-h-screen w-full flex flex-col">
+      <ScrollToTop />
       <Toaster position="top-center" />
       {/* Desktop Top Navigation (Hidden on Mobile or when not on a main tab) */}
       {isMainTab && (
@@ -95,18 +97,24 @@ function App() {
 
           {/* Centered Navigation */}
           <div className="flex items-center gap-6 lg:gap-8 text-sm font-semibold">
-            {["Women", "Men", "Kids", "Ethnic"].map(item => (
-              <button 
-                key={item} 
-                onClick={() => !isLoggedIn && setShowSignupModal(true)}
-                className="flex items-center gap-1 hover:text-[#E5B8D9] transition-colors"
-              >
-                {item} <ChevronDown size={14} className="text-gray-500" />
-              </button>
-            ))}
-            <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors">Accessories</button>
-            <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors">New Arrivals</button>
-            <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors">Collections</button>
+            <button 
+              onClick={() => navigate('/explore')}
+              className="flex items-center gap-1 hover:text-[#E5B8D9] transition-colors"
+            >
+              Women <ChevronDown size={14} className="text-gray-500" />
+            </button>
+            <button 
+              onClick={() => navigate('/explore')} 
+              className="hover:text-[#E5B8D9] transition-colors"
+            >
+              New Arrivals
+            </button>
+            <button 
+              onClick={() => navigate('/home')} 
+              className="hover:text-[#E5B8D9] transition-colors"
+            >
+              Collections
+            </button>
           </div>
 
           {/* Right Actions */}
