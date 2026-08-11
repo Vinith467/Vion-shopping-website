@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Filter, Heart, Search } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
+import { useAppContext } from '../context/AppContext';
 
 export default function ExploreScreen() {
   const [searchParams] = useSearchParams();
@@ -9,6 +10,8 @@ export default function ExploreScreen() {
   const bodyShapeParam = searchParams.get('body_shape');
   
   const navigate = useNavigate();
+  const { toggleWishlist, isInWishlist } = useAppContext();
+  
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryName, setCategoryName] = useState('All Products');
@@ -107,10 +110,12 @@ export default function ExploreScreen() {
                   <button 
                     onClick={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
+                      toggleWishlist(product.id);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
+                    className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"
                   >
-                    <Heart size={16} className="text-gray-400 hover:text-red-500 transition-colors" />
+                    <Heart size={16} className={`transition-colors ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`} />
                   </button>
                   {product.is_new_arrival && (
                     <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-wider text-gray-900 shadow-sm">

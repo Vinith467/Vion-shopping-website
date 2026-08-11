@@ -12,7 +12,7 @@ export default function ProductDetailScreen() {
   const [activeView, setActiveView] = useState("Front");
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
   const [product, setProduct] = useState(null);
-  const { members, updateMember } = useAppContext();
+  const { members, updateMember, toggleWishlist, isInWishlist } = useAppContext();
   const primaryMember = members?.find(m => m.isPrimary);
   const [activeVariationIndex, setActiveVariationIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -90,7 +90,12 @@ export default function ProductDetailScreen() {
           <ArrowLeft size={20} className="text-gray-900" />
         </button>
         <div className="flex items-center gap-3">
-          <button className="p-2 bg-gray-50 rounded-full"><Heart size={20} className="text-gray-900" /></button>
+          <button 
+            onClick={() => toggleWishlist(product.id)}
+            className="p-2 bg-gray-50 rounded-full"
+          >
+            <Heart size={20} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : 'text-gray-900'}`} />
+          </button>
           <button className="p-2 bg-gray-50 rounded-full"><MoreVertical size={20} className="text-gray-900" /></button>
         </div>
       </div>
@@ -273,8 +278,11 @@ export default function ProductDetailScreen() {
 
           {/* Desktop Add to Bag (Inline) */}
           <div className="hidden md:flex items-center gap-4 mt-8 pt-8 border-t border-gray-100">
-            <button className="w-14 h-14 rounded-2xl border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors shadow-sm">
-              <Heart size={24} />
+            <button 
+              onClick={() => toggleWishlist(product.id)}
+              className="w-14 h-14 rounded-2xl border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors shadow-sm"
+            >
+              <Heart size={24} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : ''}`} />
             </button>
             <button 
               onClick={() => setIsSizeModalOpen(true)}
@@ -290,8 +298,11 @@ export default function ProductDetailScreen() {
 
       {/* Mobile Sticky Bottom Action Bar (Hidden on Desktop) */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 p-4 pb-6 z-50 flex items-center gap-4 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
-        <button className="flex flex-col items-center justify-center w-12 h-12 bg-gray-50 rounded-full border border-gray-200 text-gray-700">
-          <Heart size={20} />
+        <button 
+          onClick={() => toggleWishlist(product.id)}
+          className="flex flex-col items-center justify-center w-12 h-12 bg-gray-50 rounded-full border border-gray-200 text-gray-700"
+        >
+          <Heart size={20} className={`transition-colors ${isInWishlist(product?.id) ? 'fill-red-500 text-red-500' : ''}`} />
         </button>
         <button 
           onClick={() => setIsSizeModalOpen(true)}

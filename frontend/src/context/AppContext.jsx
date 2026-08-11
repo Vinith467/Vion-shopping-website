@@ -39,6 +39,34 @@ export function AppProvider({ children }) {
 
   // Cart State
   const [cart, setCart] = useState([]);
+  
+  // Global Wishlist State
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vion_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vion_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const toggleWishlist = (productId) => {
+    setWishlist(prev => {
+      if (prev.includes(productId)) {
+        toast.success("Removed from wishlist");
+        return prev.filter(id => id !== productId);
+      } else {
+        toast.success("Saved to wishlist");
+        return [...prev, productId];
+      }
+    });
+  };
+
+  const isInWishlist = (productId) => wishlist.includes(productId);
 
   const addToCart = (product, size, variation = null, customMeasurements = null) => {
     setCart(prev => {
@@ -412,7 +440,10 @@ export function AppProvider({ children }) {
       addToCart,
       removeFromCart,
       updateCartQuantity,
-      clearCart
+      clearCart,
+      wishlist,
+      toggleWishlist,
+      isInWishlist
     }}>
       {children}
     </AppContext.Provider>
