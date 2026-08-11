@@ -227,6 +227,19 @@ export default function AdminOrders() {
                                         {variation?.skinTone && variation.skinTone !== 'all' && <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-700 px-2 py-1 rounded">Tone: {variation.skinTone}</span>}
                                         {variation?.heightRange && variation.heightRange !== 'all' && <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 px-2 py-1 rounded">Height: {variation.heightRange}</span>}
                                       </div>
+                                      {item.customMeasurements && (
+                                        <div className="mt-4 p-3 bg-indigo-50/50 rounded-xl border border-indigo-100">
+                                          <h6 className="text-xs font-bold text-indigo-900 mb-2 uppercase tracking-wide">Custom Stitching Measurements (inches)</h6>
+                                          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+                                            {Object.entries(item.customMeasurements).map(([key, value]) => value ? (
+                                              <div key={key} className="bg-white p-2 rounded-lg border border-indigo-50 flex flex-col items-center justify-center text-center shadow-sm">
+                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                                <span className="text-sm font-bold text-indigo-700">{value}</span>
+                                              </div>
+                                            ) : null)}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                     <div className="text-right flex flex-col justify-between">
                                       <span className="font-bold text-gray-900">₹{(item.product.price * item.quantity).toLocaleString()}</span>

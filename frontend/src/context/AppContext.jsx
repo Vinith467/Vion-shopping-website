@@ -40,18 +40,19 @@ export function AppProvider({ children }) {
   // Cart State
   const [cart, setCart] = useState([]);
 
-  const addToCart = (product, size, variation = null) => {
+  const addToCart = (product, size, variation = null, customMeasurements = null) => {
     setCart(prev => {
       // Also match by variation.id if variation exists
       const existing = prev.find(item => 
         item.product.id === product.id && 
         item.size === size && 
-        (variation ? item.variation?.id === variation.id : true)
+        (variation ? item.variation?.id === variation.id : true) &&
+        (!customMeasurements && !item.customMeasurements) // Don't group custom measured items unless they are identically matched (for simplicity, we just don't group custom measured items)
       );
-      if (existing) {
+      if (existing && !customMeasurements) {
         return prev.map(item => item === existing ? { ...item, quantity: item.quantity + 1 } : item);
       }
-      return [...prev, { product, size, variation, quantity: 1, id: Date.now().toString() }];
+      return [...prev, { product, size, variation, customMeasurements, quantity: 1, id: Date.now().toString() }];
     });
     toast.success("Added to bag!");
   };
