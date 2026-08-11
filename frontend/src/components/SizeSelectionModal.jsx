@@ -133,26 +133,28 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
                   <Sparkles size={16} className="text-[#6344D4]" />
                   Best Stitching - Give Measurement
                 </h3>
-                <div className="flex gap-4">
+                <div className="w-full">
                   <button 
                     onClick={() => {
                       setSelectedSize("Custom");
                       setIsManualMode(true);
                     }}
-                    className={`flex-1 flex flex-col items-center justify-center gap-2 h-24 rounded-2xl transition-colors border-2 ${selectedSize === "Custom" ? "bg-[#F8F6FF] border-[#6344D4]" : "bg-gray-50 border-gray-100 hover:border-gray-300"}`}
+                    className={`w-full flex items-center justify-between p-4 h-auto rounded-2xl transition-all border-2 group ${selectedSize === "Custom" ? "bg-gradient-to-r from-[#F8F6FF] to-white border-[#6344D4] shadow-md shadow-[#6344D4]/10" : "bg-white border-gray-100 hover:border-[#6344D4]/50 hover:shadow-sm"}`}
                   >
-                    <Pencil size={24} className={selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-600"} />
-                    <span className={`text-xs font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-700"}`}>Enter Manually</span>
-                  </button>
-                  <button className="flex-1 flex flex-col items-center justify-center gap-2 h-24 bg-gray-50 border border-gray-100 rounded-2xl hover:border-gray-300 transition-colors relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#6344D4]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <Camera size={24} className="text-gray-600 group-hover:text-[#6344D4] transition-colors" />
-                    <span className="text-xs font-bold text-gray-700 group-hover:text-[#6344D4] relative z-10 transition-colors">Scan with Camera</span>
+                    <div className="flex items-center gap-4 text-left">
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-full transition-colors ${selectedSize === "Custom" ? "bg-[#6344D4] text-white" : "bg-gray-50 text-gray-400 group-hover:bg-[#F8F6FF] group-hover:text-[#6344D4]"}`}>
+                        <Ruler size={22} />
+                      </div>
+                      <div>
+                        <span className={`block text-sm font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-900 group-hover:text-[#6344D4]"}`}>Add Custom Measurements</span>
+                        <span className="block text-xs font-medium text-gray-500 mt-0.5">We will stitch this garment exactly to your size</span>
+                      </div>
+                    </div>
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-colors ${selectedSize === "Custom" ? "border-[#6344D4] bg-[#6344D4] text-white" : "border-gray-200 text-transparent"}`}>
+                      <Check size={14} strokeWidth={4} />
+                    </div>
                   </button>
                 </div>
-                {selectedSize === "Custom" && !isManualMode && (
-                  <p className="text-xs text-gray-500 mt-2 text-center">Click 'Enter Manually' to provide your measurements.</p>
-                )}
               </div>
 
               {/* Separator */}
