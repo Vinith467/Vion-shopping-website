@@ -299,7 +299,7 @@ export default function SavedOutfitsTab() {
               }`}>
                 <div>
                   <h5 className={`text-3xl font-black mb-1 ${member.isPrimary ? 'text-[#3A10E5]' : 'text-[#3A10E5]'}`}>
-                    {member.gender === 'Male' ? mockMenOutfits.length : mockWomenOutfits.length}
+                    {savedProducts.length}
                   </h5>
                   <p className="text-xs font-medium text-gray-500">Saved Outfits</p>
                 </div>
