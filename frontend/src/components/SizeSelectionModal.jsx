@@ -10,6 +10,8 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
   const [isRendered, setIsRendered] = useState(false);
   const [isManualMode, setIsManualMode] = useState(false);
 
+  const hasMeasurements = measurements && Object.keys(measurements).some(key => !['heightUnit', 'bodyShape'].includes(key) && measurements[key]);
+
   // Form state for 11 measurements
   const [customMeasurements, setCustomMeasurements] = useState({
     height: measurements?.height || "",
@@ -140,7 +142,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
               <div className="px-6 mt-6 mb-6">
                 <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <Sparkles size={16} className="text-[#6344D4]" />
-                  Best Stitching - Give Measurement
+                  {hasMeasurements ? "Best Stitching - Edit Saved Measurements" : "Best Stitching - Give Measurement"}
                 </h3>
                 <div className="w-full">
                   <button 
@@ -155,8 +157,8 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
                         <Ruler size={22} />
                       </div>
                       <div>
-                        <span className={`block text-sm font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-900 group-hover:text-[#6344D4]"}`}>Add Custom Measurements</span>
-                        <span className="block text-xs font-medium text-gray-500 mt-0.5">We will stitch this garment exactly to your size</span>
+                        <span className={`block text-sm font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-900 group-hover:text-[#6344D4]"}`}>{hasMeasurements ? "Edit Custom Measurements" : "Add Custom Measurements"}</span>
+                        <span className="block text-xs font-medium text-gray-500 mt-0.5">{hasMeasurements ? "Review or update your saved fit for this order" : "We will stitch this garment exactly to your size"}</span>
                       </div>
                     </div>
                     <div className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-colors ${selectedSize === "Custom" ? "border-[#6344D4] bg-[#6344D4] text-white" : "border-gray-200 text-transparent"}`}>
