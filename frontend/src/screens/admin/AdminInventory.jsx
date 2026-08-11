@@ -54,6 +54,21 @@ export default function AdminInventory() {
     fetchData();
   }, []);
 
+  // Validate category_id against selected body_shape
+  useEffect(() => {
+    if (formData.category_id && categories.length > 0) {
+      const validCategoryIds = categories.filter(c => {
+        const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+        const catShape = shapeMatch ? shapeMatch[1] : 'all';
+        return formData.body_shape === 'all' || catShape === 'all' || catShape === formData.body_shape;
+      }).map(c => c.id);
+
+      if (!validCategoryIds.includes(formData.category_id)) {
+        setFormData(prev => ({ ...prev, category_id: '' }));
+      }
+    }
+  }, [formData.body_shape, categories]);
+
   const fetchData = async () => {
     setIsLoading(true);
 
@@ -568,9 +583,17 @@ export default function AdminInventory() {
                         required
                       >
                         <option value="">Select Collection</option>
-                        {categories.map(c => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
+                        {categories.map(c => {
+                          const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                          const catShape = shapeMatch ? shapeMatch[1] : 'all';
+                          let displayName = c.name;
+                          if (catShape !== 'all') {
+                            displayName = `${c.name} (${catShape.charAt(0).toUpperCase() + catShape.slice(1)})`;
+                          }
+                          return (
+                            <option key={c.id} value={c.id}>{displayName}</option>
+                          );
+                        })}
                       </select>
                     </div>
 

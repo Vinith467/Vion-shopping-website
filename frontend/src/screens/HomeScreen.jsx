@@ -53,14 +53,20 @@ export default function HomeScreen() {
     loadData();
   }, []);
 
-  // Filter categories by gender from slug metadata
+  // Filter categories by gender and body shape from slug metadata
   const desktopCategories = categories.filter(cat => {
     // Decode metadata from slug
     const genderMatch = cat.slug ? cat.slug.match(/___GENDER_([a-zA-Z0-9\-]+)/) : null;
+    const bodyShapeMatch = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+    
     const catGender = genderMatch ? genderMatch[1] : 'women'; // Default to women if no tag
+    const catBodyShape = bodyShapeMatch ? bodyShapeMatch[1] : 'all'; // Default to all if no tag
 
     // Filter by Gender
     if (catGender !== selectedGender && catGender !== 'unisex') return false;
+
+    // Filter by Body Shape
+    if (selectedBodyShape !== 'all' && catBodyShape !== 'all' && catBodyShape !== selectedBodyShape) return false;
 
     return true;
   }).sort((a, b) => a.name.localeCompare(b.name));
@@ -158,6 +164,60 @@ export default function HomeScreen() {
               {desktopCategories.length === 0 ? (
                 <div className="p-4 text-sm text-gray-500 italic border border-dashed border-gray-300 rounded-lg w-full max-w-md text-center mx-auto">
                   No collections created yet. Create them in the Admin Panel!
+                </div>
+              ) : selectedBodyShape === 'all' ? (
+                <div className="w-full flex flex-col gap-12">
+                  {BODY_SHAPES.filter(s => s.id !== 'all').map(shape => {
+                    const shapeCats = desktopCategories.filter(cat => {
+                      const match = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                      return (match ? match[1] : 'all') === shape.id;
+                    });
+                    
+                    if (shapeCats.length === 0) return null;
+                    
+                    return (
+                      <div key={shape.id} className="w-full flex flex-col items-center border-t border-gray-100 pt-8 first:border-0 first:pt-0">
+                        <h3 className="text-xl md:text-2xl font-serif font-bold text-gray-800 mb-6 tracking-wide">{shape.label} Body Type Collection</h3>
+                        <div className="w-full flex flex-wrap justify-center gap-4 xl:gap-6 items-start py-2 px-4">
+                          {shapeCats.map((cat, i) => (
+                            <Link to={`/explore?category=${cat.id}&body_shape=${shape.id}`} key={i} className="flex flex-col gap-3 shrink-0 group cursor-pointer snap-start" style={{ width: 'clamp(140px, 12vw, 200px)' }}>
+                              <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-md border border-gray-100 relative w-full bg-gray-50">
+                                <img src={cat.image_url || '/images/silk-wrap-dress.jpg'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                              </div>
+                              <div className="text-center w-full px-1">
+                                <span className="text-sm xl:text-base font-serif font-bold text-gray-900 leading-snug tracking-wide">{cat.name}</span>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  
+                  {/* General / Unassigned Collections */}
+                  {desktopCategories.filter(cat => {
+                    const match = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                    return (match ? match[1] : 'all') === 'all';
+                  }).length > 0 && (
+                    <div className="w-full flex flex-col items-center border-t border-gray-100 pt-8 first:border-0 first:pt-0">
+                      <h3 className="text-xl md:text-2xl font-serif font-bold text-gray-800 mb-6 tracking-wide">General Collection</h3>
+                      <div className="w-full flex flex-wrap justify-center gap-4 xl:gap-6 items-start py-2 px-4">
+                        {desktopCategories.filter(cat => {
+                          const match = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                          return (match ? match[1] : 'all') === 'all';
+                        }).map((cat, i) => (
+                          <Link to={`/explore?category=${cat.id}&body_shape=all`} key={i} className="flex flex-col gap-3 shrink-0 group cursor-pointer snap-start" style={{ width: 'clamp(140px, 12vw, 200px)' }}>
+                            <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-md border border-gray-100 relative w-full bg-gray-50">
+                              <img src={cat.image_url || '/images/silk-wrap-dress.jpg'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            </div>
+                            <div className="text-center w-full px-1">
+                              <span className="text-sm xl:text-base font-serif font-bold text-gray-900 leading-snug tracking-wide">{cat.name}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="w-full flex flex-wrap justify-center gap-4 xl:gap-6 items-start py-2 px-4">
