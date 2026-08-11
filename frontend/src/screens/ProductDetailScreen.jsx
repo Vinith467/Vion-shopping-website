@@ -246,12 +246,7 @@ export default function ProductDetailScreen() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-8">
-            <div className="bg-gradient-to-br from-[#F8F6FF] to-white rounded-3xl p-6 flex flex-col items-center justify-center border border-[#6344D4]/20 shadow-[0_4px_20px_-4px_rgba(99,68,212,0.1)] relative overflow-hidden group hover:border-[#6344D4]/40 transition-colors">
-              <div className="absolute inset-0 bg-[#6344D4]/5 group-hover:bg-[#6344D4]/10 transition-colors"></div>
-              <p className="text-[10px] md:text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-2 z-10">Fit Score</p>
-              <p className="text-4xl font-black text-[#6344D4] z-10 drop-shadow-sm">{fitScore}</p>
-            </div>
+          <div className="grid grid-cols-1 gap-4 mt-8">
             <div className="bg-white rounded-3xl p-6 flex flex-col items-center justify-center border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:border-gray-300 transition-colors">
               <p className="text-[10px] md:text-xs text-gray-500 font-extrabold uppercase tracking-widest mb-2 z-10">Suggested Size</p>
               <p className="text-4xl font-black text-gray-900 z-10">{recommendedSize}</p>
