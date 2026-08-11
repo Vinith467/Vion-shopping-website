@@ -29,7 +29,7 @@ export default function ExploreScreen() {
       }
       
       if (bodyShapeParam && bodyShapeParam !== 'all') {
-        query = query.eq('body_shape', bodyShapeParam);
+        query = query.in('body_shape', [bodyShapeParam, 'all']);
       }
       
       const { data } = await query;

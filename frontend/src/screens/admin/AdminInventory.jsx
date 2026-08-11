@@ -544,25 +544,10 @@ export default function AdminInventory() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection *</label>
-                      <select
-                        value={formData.category_id}
-                        onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
-                        required
-                      >
-                        <option value="">Select Collection</option>
-                        {categories.map(c => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
                       <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Body Shape Match</label>
                       <select
                         value={formData.body_shape}
-                        onChange={(e) => setFormData({ ...formData, body_shape: e.target.value })}
+                        onChange={(e) => setFormData({ ...formData, body_shape: e.target.value, category_id: '' })}
                         className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
                       >
                         <option value="all">All Shapes</option>
@@ -571,6 +556,25 @@ export default function AdminInventory() {
                         <option value="apple">Apple</option>
                         <option value="rectangle">Rectangle</option>
                         <option value="inverted-triangle">Inverted Triangle</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection *</label>
+                      <select
+                        value={formData.category_id}
+                        onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
+                        required
+                      >
+                        <option value="">Select Collection</option>
+                        {categories.filter(c => {
+                          const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                          const catShape = shapeMatch ? shapeMatch[1] : 'all';
+                          return formData.body_shape === 'all' || catShape === 'all' || catShape === formData.body_shape;
+                        }).map(c => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
                       </select>
                     </div>
 

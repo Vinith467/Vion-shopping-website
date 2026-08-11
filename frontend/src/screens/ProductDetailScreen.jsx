@@ -166,50 +166,42 @@ export default function ProductDetailScreen() {
               </div>
 
               {/* "Try different looks" Vertical Carousel (Right of image) */}
-              <div className="hidden md:flex flex-col gap-3 w-24 shrink-0">
-                <span className="text-xs font-bold text-gray-900 text-center bg-gray-50 py-2 rounded-lg border border-gray-100">Different<br/>Looks</span>
-                <div className="flex flex-col gap-3 overflow-y-auto hide-scrollbar pb-4">
-                    {product.variations && product.variations.length > 0 ? (
-                      product.variations.map((v, i) => {
-                        const thumb = (v.image_urls && v.image_urls.length > 0) ? v.image_urls[0] : (v.image_url || currentImage);
-                        return (
-                          <div key={i} onClick={() => setActiveVariationIndex(i)} className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden border-[3px] cursor-pointer hover:opacity-80 transition-opacity ${i === activeVariationIndex ? 'border-[#6344D4]' : 'border-transparent'}`}>
-                            <img src={thumb} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
-                            {i === activeVariationIndex && (
-                              <div className="absolute inset-0 bg-[#6344D4]/10"></div>
-                            )}
-                          </div>
-                        );
-                      })
-                  ) : (
-                    <div className={`w-full aspect-[3/4] rounded-2xl overflow-hidden border-[3px] border-[#6344D4] cursor-pointer`}>
-                      <img src={currentImage} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
-                    </div>
-                  )}
+              {product.variations && product.variations.length > 1 && (
+                <div className="hidden md:flex flex-col gap-3 w-24 shrink-0">
+                  <span className="text-xs font-bold text-gray-900 text-center bg-gray-50 py-2 rounded-lg border border-gray-100">Different<br/>Looks</span>
+                  <div className="flex flex-col gap-3 overflow-y-auto hide-scrollbar pb-4">
+                    {product.variations.map((v, i) => {
+                      const thumb = (v.image_urls && v.image_urls.length > 0) ? v.image_urls[0] : (v.image_url || currentImage);
+                      return (
+                        <div key={i} onClick={() => setActiveVariationIndex(i)} className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden border-[3px] cursor-pointer hover:opacity-80 transition-opacity ${i === activeVariationIndex ? 'border-[#6344D4]' : 'border-transparent'}`}>
+                          <img src={thumb} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
+                          {i === activeVariationIndex && (
+                            <div className="absolute inset-0 bg-[#6344D4]/10"></div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
           {/* Mobile "Try different looks" Horizontal Carousel (Below image) */}
-          <div className="md:hidden mt-6 px-6">
-            <h4 className="text-sm font-bold text-gray-900 mb-3">Try different looks</h4>
-            <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-              {product.variations && product.variations.length > 0 ? (
-                product.variations.map((v, i) => {
+          {product.variations && product.variations.length > 1 && (
+            <div className="md:hidden mt-6 px-6">
+              <h4 className="text-sm font-bold text-gray-900 mb-3">Try different looks</h4>
+              <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
+                {product.variations.map((v, i) => {
                   const thumb = (v.image_urls && v.image_urls.length > 0) ? v.image_urls[0] : (v.image_url || currentImage);
                   return (
                     <div key={i} onClick={() => setActiveVariationIndex(i)} className={`relative w-20 shrink-0 aspect-[3/4] rounded-xl overflow-hidden border-2 ${i === activeVariationIndex ? 'border-[#6344D4]' : 'border-transparent'}`}>
                       <img src={thumb} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
                     </div>
                   );
-                })
-              ) : (
-                <div className={`w-20 shrink-0 aspect-[3/4] rounded-xl overflow-hidden border-2 border-[#6344D4]`}>
-                  <img src={currentImage} className="w-full h-full object-cover bg-gray-50 mix-blend-multiply" />
-                </div>
-              )}
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
 
