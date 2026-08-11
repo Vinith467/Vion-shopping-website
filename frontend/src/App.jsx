@@ -200,6 +200,39 @@ function App() {
         </nav>
       )}
 
+      {/* Mobile Top Navigation (Visible only on Mobile) */}
+      {isMainTab && (
+        <nav className="md:hidden flex items-center justify-between px-5 py-3 sticky top-0 bg-[#0A0A0A] text-white z-50 border-b border-gray-800">
+          <Link to="/home" className="flex flex-col cursor-pointer">
+            <span className="text-lg font-serif font-bold tracking-widest text-white leading-none">
+              VION
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/explore')} 
+              className="text-white hover:text-[#E5B8D9] transition-colors"
+            >
+              <Search size={18} />
+            </button>
+            <button 
+              onClick={() => isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true)} 
+              className="text-white hover:text-[#E5B8D9] transition-colors"
+            >
+              <Heart size={18} />
+            </button>
+            <button 
+              onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
+              className="text-white hover:text-[#E5B8D9] transition-colors relative"
+            >
+              <ShoppingBag size={18} />
+              <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-[#E5B8D9] text-black text-[8px] font-bold rounded-full flex items-center justify-center">0</span>
+            </button>
+          </div>
+        </nav>
+      )}
+
       {/* Main Content Area */}
       <div className={`flex-1 w-full ${isMainTab ? 'pb-24 md:pb-0' : 'pb-0'}`}>
         <Routes>
