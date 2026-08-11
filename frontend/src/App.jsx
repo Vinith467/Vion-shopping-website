@@ -2,6 +2,9 @@ import { Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-r
 import HomeScreen from './screens/HomeScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import CartScreen from './screens/CartScreen';
+import CheckoutScreen from './screens/CheckoutScreen';
+import OrderSuccessScreen from './screens/OrderSuccessScreen';
+import OrderDetailsScreen from './screens/OrderDetailsScreen';
 import LoginScreen from './screens/LoginScreen';
 import AccountScreen from './screens/AccountScreen';
 import ExploreScreen from './screens/ExploreScreen';
@@ -248,6 +251,9 @@ function App() {
 
           <Route path="/select-size" element={<ProtectedRoute><PlaceholderScreen title="Size Selection" /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartScreen /></ProtectedRoute>} />
+          <Route path="/checkout" element={<ProtectedRoute><CheckoutScreen /></ProtectedRoute>} />
+          <Route path="/order-success" element={<ProtectedRoute><OrderSuccessScreen /></ProtectedRoute>} />
+          <Route path="/order/:id" element={<ProtectedRoute><OrderDetailsScreen /></ProtectedRoute>} />
           <Route path="/explore" element={<ExploreScreen />} />
           <Route path="/wardrobe" element={<ProtectedRoute><PlaceholderScreen title="Wardrobe" /></ProtectedRoute>} />
           

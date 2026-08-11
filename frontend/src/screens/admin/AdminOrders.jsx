@@ -159,7 +159,7 @@ export default function AdminOrders() {
                   </tr>
                 ) : (
                   filteredOrders.map((order) => {
-                    const items = Array.isArray(order.items) ? order.items : [];
+                    const items = Array.isArray(order.items) ? order.items.filter(i => i._type !== 'metadata') : [];
                     const isExpanded = expandedOrderIds.includes(order.id);
                     return (
                       <React.Fragment key={order.id}>

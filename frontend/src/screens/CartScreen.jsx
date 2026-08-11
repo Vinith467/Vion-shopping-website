@@ -1,4 +1,4 @@
-import { ArrowLeft, MoreVertical, Sparkles, Trash2, Plus, Minus, Info, ChevronRight, ShieldCheck, RefreshCcw } from "lucide-react";
+import { ArrowLeft, MoreVertical, Sparkles, Trash2, Plus, Minus, Info, ChevronRight, ShieldCheck, RefreshCcw, CheckCircle, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { supabase } from "../services/supabaseClient";
@@ -20,38 +20,7 @@ export default function CartScreen() {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return toast.error("Your bag is empty");
-    
-    setIsProcessing(true);
-    
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Please login to checkout");
-        navigate('/');
-        return;
-      }
-      
-      const userId = session.user.id;
-      
-      const { error } = await supabase.from('orders').insert({
-        user_id: userId,
-        items: cart,
-        total_amount: toPay,
-        status: 'pending'
-      });
-      
-      if (error) throw error;
-      
-      clearCart();
-      toast.success("Order placed successfully!");
-      navigate('/account'); // Navigate to account so they can see "My Orders"
-      
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to place order. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
+    navigate('/checkout');
   };
 
   return (

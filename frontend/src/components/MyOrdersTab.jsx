@@ -6,21 +6,16 @@ import {
 } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 export default function MyOrdersTab() {
   const { session } = useAppContext();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('All Orders');
   const [searchQuery, setSearchQuery] = useState('');
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [expandedOrderIds, setExpandedOrderIds] = useState([]);
-
-  const toggleOrderExpand = (id) => {
-    setExpandedOrderIds(prev => 
-      prev.includes(id) ? prev.filter(e => e !== id) : [...prev, id]
-    );
-  };
 
   const tabs = ['All Orders', 'Processing', 'Shipped', 'Delivered', 'Returns'];
 
@@ -62,29 +57,36 @@ export default function MyOrdersTab() {
   };
 
   const formattedOrders = orders.map(order => {
-    const items = Array.isArray(order.items) ? order.items : [];
-    const images = items.map(item => {
-      const variation = item.variation;
-      return (variation?.image_urls && variation.image_urls.length > 0) ? variation.image_urls[0] : (variation?.image_url || (item.product.image_url ? item.product.image_url.split(',')[0] : '/images/default-product.png'));
-    }).filter(Boolean);
-    const statusProps = getStatusProps(order.status);
+    const items = Array.isArray(order.items) ? order.items.filter(i => i._type !== 'metadata') : [];
     
-    // Fallback images if no items array exists in the DB yet
-    const displayImages = images.length > 0 ? images : ['/images/placeholder.jpg'];
+    let totalQuantity = 0;
+    const images = [];
+    
+    items.forEach(item => {
+      totalQuantity += (item.quantity || 1);
+      const variation = item.variation;
+      const img = (variation?.image_urls && variation.image_urls.length > 0) ? variation.image_urls[0] : 
+                  (variation?.image_url || (item.product.images && item.product.images.length > 0 ? item.product.images[0] : null));
+      if (img && !images.includes(img)) {
+        images.push(img);
+      }
+    });
+
+    const statusProps = getStatusProps(order.status);
     
     return {
       id: order.id.split('-')[0].toUpperCase(), // Short ID
       fullId: order.id,
       items: items,
       date: new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      itemsCount: items.length || 1, // Fallback to 1 if empty
+      itemsCount: totalQuantity || 1,
       total: `₹${parseFloat(order.total_amount).toLocaleString()}`,
       status: order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending',
       subStatus: order.status === 'delivered' ? `Delivered on ${new Date(order.created_at).toLocaleDateString()}` : 'We are preparing your order',
       statusColor: statusProps.color,
       statusBg: statusProps.bg,
       statusIcon: statusProps.icon,
-      images: displayImages,
+      images: images.length > 0 ? images : ['/images/placeholder.jpg'],
       actions: order.status === 'delivered' ? ['View Details', 'Buy Again'] : ['Track Order', 'View Details']
     };
   });
@@ -95,7 +97,6 @@ export default function MyOrdersTab() {
     return matchesTab && matchesSearch;
   });
 
-  // Calculate summary stats dynamically
   const getCount = (status) => formattedOrders.filter(o => o.status.toLowerCase() === status.toLowerCase()).length;
   
   const summaryStats = [
@@ -109,17 +110,12 @@ export default function MyOrdersTab() {
 
   return (
     <div className="w-full flex flex-col gap-6 -mt-4">
-      
-      {/* 1. Header & Title */}
       <div>
         <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">My Orders</h2>
         <p className="text-sm text-gray-500 font-medium">Track, manage and view all your orders in one place.</p>
       </div>
 
-      {/* 2. Tabs, Search & Filters */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-gray-200 pb-4">
-        
-        {/* Tabs */}
         <div className="flex gap-6 overflow-x-auto hide-scrollbar w-full lg:w-auto">
           {tabs.map(tab => (
             <button 
@@ -137,7 +133,6 @@ export default function MyOrdersTab() {
           ))}
         </div>
 
-        {/* Search & Filter */}
         <div className="flex gap-3 w-full lg:w-auto shrink-0">
           <div className="relative flex-1 lg:w-64">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -153,13 +148,9 @@ export default function MyOrdersTab() {
             <Filter size={16} /> Filters
           </button>
         </div>
-
       </div>
 
-      {/* 3. Main Layout: Orders List & Sidebar */}
       <div className="flex flex-col xl:flex-row gap-8 items-start">
-        
-        {/* Left Column: Orders List */}
         <div className="w-full xl:w-[70%] flex flex-col gap-4">
           {isLoading ? (
             <div className="flex justify-center items-center h-48 bg-white rounded-2xl border border-gray-100">
@@ -174,10 +165,7 @@ export default function MyOrdersTab() {
             filteredOrders.map((order) => {
               const StatusIcon = order.statusIcon;
             return (
-              <div key={order.fullId} className="flex flex-col gap-2">
-                <div onClick={() => toggleOrderExpand(order.fullId)} className="bg-white rounded-2xl border border-gray-100 p-5 lg:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col lg:flex-row gap-6 cursor-pointer">
-                
-                {/* Images Cluster */}
+              <div key={order.fullId} onClick={() => navigate(`/order/${order.fullId}`)} className="bg-white rounded-2xl border border-gray-100 p-5 lg:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col lg:flex-row gap-6 cursor-pointer">
                 <div className="flex items-center shrink-0">
                   <div className="relative w-[100px] h-[120px] rounded-xl overflow-hidden bg-gray-100 border border-gray-100 shrink-0 z-20">
                     <img src={order.images[0]} alt="Item" className="w-full h-full object-cover mix-blend-multiply" />
@@ -195,10 +183,7 @@ export default function MyOrdersTab() {
                   )}
                 </div>
 
-                {/* Order Details */}
                 <div className="flex-1 flex flex-col lg:flex-row justify-between gap-4">
-                  
-                  {/* Info */}
                   <div className="flex flex-col justify-center">
                     <h3 className="text-base font-bold text-gray-900 mb-1">Order #{order.id}</h3>
                     <div className="flex items-center gap-2 text-xs font-medium text-gray-500 mb-4">
@@ -210,9 +195,7 @@ export default function MyOrdersTab() {
                     <p className="text-base font-bold text-gray-900">{order.total}</p>
                   </div>
 
-                  {/* Status & Actions */}
                   <div className="flex flex-col justify-between items-start lg:items-end">
-                    
                     <div className="flex w-full lg:w-auto justify-between items-start gap-4">
                       <div className="flex flex-col lg:items-end">
                         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold w-fit mb-1.5 border border-white/50 ${order.statusBg} ${order.statusColor}`}>
@@ -225,65 +208,9 @@ export default function MyOrdersTab() {
                         <MoreVertical size={20} />
                       </button>
                     </div>
-
-                    <div className="flex items-center gap-3 mt-6 lg:mt-0 w-full lg:w-auto">
-                      {order.actions.map((action, i) => (
-                        <button 
-                          key={action}
-                          className={`flex-1 lg:flex-none text-xs font-bold px-5 py-2.5 rounded-xl transition-all ${
-                            action === 'Buy Again' || action === 'Track Order'
-                              ? 'text-[#3A10E5] flex items-center justify-center gap-2 border border-gray-100 hover:bg-gray-50'
-                              : 'text-[#3A10E5] border border-[#3A10E5]/20 bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10'
-                          }`}
-                        >
-                          {action === 'Buy Again' && <RotateCcw size={14} />}
-                          {action}
-                        </button>
-                      ))}
-                    </div>
-
                   </div>
                 </div>
               </div>
-              
-              {/* Expanded Order Items */}
-              {expandedOrderIds.includes(order.fullId) && (
-                <div className="bg-[#F8F6FF] rounded-2xl p-6 border border-[#6344D4]/10 mb-4 animate-fade-in">
-                  <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2"><ShoppingBag size={16} className="text-[#6344D4]"/> Order Items</h4>
-                  <div className="space-y-4">
-                    {order.items.map((item, idx) => {
-                      const variation = item.variation;
-                      const img = (variation?.image_urls && variation.image_urls.length > 0) ? variation.image_urls[0] : (variation?.image_url || (item.product.image_url ? item.product.image_url.split(',')[0] : null));
-                      
-                      return (
-                        <div key={idx} className="flex gap-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-                          <div className="w-16 h-20 bg-gray-50 rounded-lg overflow-hidden shrink-0 border border-gray-100">
-                            {img ? (
-                              <img src={img} alt="Product" className="w-full h-full object-cover mix-blend-multiply" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                <ShoppingBag size={20} />
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h5 className="font-bold text-gray-900 leading-tight">{item.product.title}</h5>
-                            <p className="text-sm text-gray-500 mt-1">₹{item.product.price} × {item.quantity}</p>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 px-2 py-1 rounded">Size: {item.size}</span>
-                              {variation?.colorName && <span className="text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 px-2 py-1 rounded">Color: {variation.colorName}</span>}
-                              {variation?.bodyShape && variation.bodyShape !== 'all' && <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-2 py-1 rounded">Shape: {variation.bodyShape}</span>}
-                              {variation?.skinTone && variation.skinTone !== 'all' && <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-700 px-2 py-1 rounded">Tone: {variation.skinTone}</span>}
-                              {variation?.heightRange && variation.heightRange !== 'all' && <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 px-2 py-1 rounded">Height: {variation.heightRange}</span>}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
             );
           }))}
         </div>
