@@ -75,64 +75,67 @@ const BodyShapeTooltip = ({ id, img, children }) => {
               y: '-50%',
               zIndex: 999999
             }}
-            className="w-[850px] max-w-[95vw] max-h-[90vh] overflow-y-auto overflow-x-hidden bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl pointer-events-auto flex flex-col md:flex-row"
+            className="w-[850px] max-w-[95vw] max-h-[90vh] bg-white/95 backdrop-blur-2xl border border-white/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.4)] rounded-3xl overflow-hidden pointer-events-auto flex flex-col relative"
           >
             {/* Close button */}
             <button 
               onClick={handleClose}
-              className="absolute top-4 right-4 md:top-5 md:right-5 p-2 bg-white/50 backdrop-blur-md hover:bg-white/80 text-gray-600 hover:text-gray-900 rounded-full transition-colors z-10 cursor-pointer shadow-sm"
+              className="absolute top-4 right-4 md:top-5 md:right-5 p-2 bg-white/50 backdrop-blur-md hover:bg-white/80 text-gray-600 hover:text-gray-900 rounded-full transition-colors z-[60] cursor-pointer shadow-sm"
             >
               <X size={20} />
             </button>
 
-            {/* Left: Image area */}
-            <div className="w-full md:w-[45%] shrink-0 bg-gradient-to-br from-purple-50/80 to-purple-100/30 p-6 md:p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
-              <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center mb-4 md:mb-6">
-                <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-xl mix-blend-multiply" />
-              </div>
-              <div className="text-center">
-                <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
-                <p className="text-xs md:text-sm font-bold text-[#3A10E5] uppercase tracking-wider mt-1 md:mt-2">Shape Guide</p>
-              </div>
-            </div>
-
-            {/* Right: Content area */}
-            <div className="w-full md:w-[55%] shrink-0 p-6 md:p-8 flex flex-col justify-between">
-              
-              <div className="space-y-6">
-                {/* How to identify */}
-                <div>
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                    <CheckCircle2 size={16} className="text-[#3A10E5]" /> How to identify
-                  </h4>
-                  <ul className="space-y-3">
-                    {data.how.map((point, i) => (
-                      <li key={i} className="text-[15px] text-gray-700 flex items-start gap-3 leading-tight">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-2 shrink-0" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+            {/* Scrollable container */}
+            <div className="flex flex-col md:flex-row w-full h-full overflow-y-auto overflow-x-hidden">
+              {/* Left: Image area */}
+              <div className="w-full md:w-[45%] shrink-0 bg-gradient-to-br from-purple-50/80 to-purple-100/30 p-6 md:p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
+                <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center mb-4 md:mb-6">
+                  <img src={img} alt={id} className="w-full h-full object-contain drop-shadow-xl mix-blend-multiply" />
                 </div>
-
-                {/* Quick check */}
-                <div className="bg-purple-50/80 rounded-2xl p-4 border border-purple-100">
-                  <h4 className="text-[11px] font-bold text-[#3A10E5] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <AlertCircle size={14} /> Quick check
-                  </h4>
-                  <p className="text-sm font-medium text-purple-900 leading-snug">
-                    {data.quick}
-                  </p>
+                <div className="text-center">
+                  <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight">{id}</h3>
+                  <p className="text-xs md:text-sm font-bold text-[#3A10E5] uppercase tracking-wider mt-1 md:mt-2">Shape Guide</p>
                 </div>
+              </div>
 
-                {/* Best way to choose */}
-                <div>
-                  <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Info size={14} className="text-gray-400" /> Best way to choose
-                  </h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {data.best}
-                  </p>
+              {/* Right: Content area */}
+              <div className="w-full md:w-[55%] shrink-0 p-6 md:p-8 flex flex-col justify-between">
+                
+                <div className="space-y-6">
+                  {/* How to identify */}
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                      <CheckCircle2 size={16} className="text-[#3A10E5]" /> How to identify
+                    </h4>
+                    <ul className="space-y-3">
+                      {data.how.map((point, i) => (
+                        <li key={i} className="text-[15px] text-gray-700 flex items-start gap-3 leading-tight">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#3A10E5]/60 mt-2 shrink-0" />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Quick check */}
+                  <div className="bg-purple-50/80 rounded-2xl p-4 border border-purple-100">
+                    <h4 className="text-[11px] font-bold text-[#3A10E5] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <AlertCircle size={14} /> Quick check
+                    </h4>
+                    <p className="text-sm font-medium text-purple-900 leading-snug">
+                      {data.quick}
+                    </p>
+                  </div>
+
+                  {/* Best way to choose */}
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Info size={14} className="text-gray-400" /> Best way to choose
+                    </h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {data.best}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
