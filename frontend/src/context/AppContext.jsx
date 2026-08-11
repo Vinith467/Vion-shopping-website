@@ -40,33 +40,44 @@ export function AppProvider({ children }) {
   // Cart State
   const [cart, setCart] = useState([]);
   
-  // Global Wishlist State
-  const [wishlist, setWishlist] = useState(() => {
+  // Per-Profile Wishlist State
+  const [wishlists, setWishlists] = useState(() => {
     try {
-      const saved = localStorage.getItem('vion_wishlist');
-      return saved ? JSON.parse(saved) : [];
+      const saved = localStorage.getItem('vion_wishlists');
+      return saved ? JSON.parse(saved) : {};
     } catch (e) {
-      return [];
+      return {};
     }
   });
 
   useEffect(() => {
-    localStorage.setItem('vion_wishlist', JSON.stringify(wishlist));
-  }, [wishlist]);
+    localStorage.setItem('vion_wishlists', JSON.stringify(wishlists));
+  }, [wishlists]);
+
+  // Expose the current primary member's wishlist for backwards compatibility
+  const wishlist = selectedConsumerId ? (wishlists[selectedConsumerId] || []) : [];
 
   const toggleWishlist = (productId) => {
-    setWishlist(prev => {
-      if (prev.includes(productId)) {
+    if (!selectedConsumerId) {
+      toast.error("Please select a profile first.");
+      return;
+    }
+    setWishlists(prev => {
+      const currentList = prev[selectedConsumerId] || [];
+      if (currentList.includes(productId)) {
         toast.success("Outfit removed!");
-        return prev.filter(id => id !== productId);
+        return { ...prev, [selectedConsumerId]: currentList.filter(id => id !== productId) };
       } else {
         toast.success("Outfit saved!");
-        return [...prev, productId];
+        return { ...prev, [selectedConsumerId]: [...currentList, productId] };
       }
     });
   };
 
-  const isInWishlist = (productId) => wishlist.includes(productId);
+  const isInWishlist = (productId) => {
+    if (!selectedConsumerId) return false;
+    return (wishlists[selectedConsumerId] || []).includes(productId);
+  };
 
   const addToCart = (product, size, variation = null, customMeasurements = null) => {
     setCart(prev => {
@@ -164,6 +175,25 @@ export function AppProvider({ children }) {
             heightUnit: 'cm',
             bodyShape: primary.body_shape ? primary.body_shape.charAt(0).toUpperCase() + primary.body_shape.slice(1) : 'Hourglass',
           });
+
+          // Wishlist Migration
+          const oldWishlistRaw = localStorage.getItem('vion_wishlist');
+          if (oldWishlistRaw) {
+            try {
+              const oldArr = JSON.parse(oldWishlistRaw);
+              if (Array.isArray(oldArr) && oldArr.length > 0) {
+                setWishlists(prev => {
+                  if (!prev[primary.id]) {
+                    return { ...prev, [primary.id]: oldArr };
+                  }
+                  return prev;
+                });
+              }
+              localStorage.removeItem('vion_wishlist');
+            } catch (e) {
+              localStorage.removeItem('vion_wishlist');
+            }
+          }
         }
         
         const formattedMembers = consumersData.map(c => ({
@@ -383,6 +413,23 @@ export function AppProvider({ children }) {
       console.error('Error deleting member:', err);
       toast.error('Failed to remove member');
       throw err;
+    }
+  };
+
+  const setPrimaryMember = async (memberId) => {
+    if (!session?.user?.id) return;
+    try {
+      const userId = session.user.id;
+      // Set all consumers to non-primary
+      await supabase.from('consumers').update({ is_primary: false }).eq('user_id', userId);
+      // Set the selected one to primary
+      await supabase.from('consumers').update({ is_primary: true }).eq('id', memberId);
+      
+      // Refresh user data to sync state
+      await fetchUserData(session);
+      toast.success("Primary profile updated!");
+    } catch (err) {
+      toast.error("Failed to switch profile");
     }
   };
 

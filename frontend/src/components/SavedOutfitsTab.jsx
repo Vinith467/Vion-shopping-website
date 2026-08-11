@@ -10,7 +10,7 @@ import { supabase } from '../services/supabaseClient';
 import { Link } from 'react-router-dom';
 
 export default function SavedOutfitsTab() {
-  const { members, wishlist, toggleWishlist } = useAppContext();
+  const { members, wishlist, wishlists, toggleWishlist, setPrimaryMember } = useAppContext();
   const [savedProducts, setSavedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('My Members');
   const tabs = ['My Members', 'Outfit Collections'];
@@ -21,17 +21,18 @@ export default function SavedOutfitsTab() {
 
   useEffect(() => {
     async function loadSavedOutfits() {
-      if (!wishlist || wishlist.length === 0) {
+      const targetWishlist = selectedMember ? (wishlists?.[selectedMember.id] || []) : wishlist;
+      if (!targetWishlist || targetWishlist.length === 0) {
         setSavedProducts([]);
         return;
       }
-      const { data } = await supabase.from('products').select('*, category:categories(name)').in('id', wishlist);
+      const { data } = await supabase.from('products').select('*, category:categories(name)').in('id', targetWishlist);
       if (data) {
         setSavedProducts(data);
       }
     }
     loadSavedOutfits();
-  }, [wishlist]);
+  }, [wishlists, selectedMember, wishlist]);
 
   const collectionTabs = [
     'All Outfits', 'Traditional', 'Western', 
@@ -69,10 +70,17 @@ export default function SavedOutfitsTab() {
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-2">
                 <h2 className="text-2xl font-bold text-gray-900">{selectedMember.name}</h2>
-                {selectedMember.isPrimary && (
+                {selectedMember.isPrimary ? (
                   <span className="bg-[#3A10E5] text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
                     You
                   </span>
+                ) : (
+                  <button 
+                    onClick={() => setPrimaryMember(selectedMember.id)}
+                    className="bg-[#3A10E5]/10 text-[#3A10E5] hover:bg-[#3A10E5]/20 text-[11px] font-bold px-3 py-1 rounded-full transition-colors"
+                  >
+                    Set as Primary Profile
+                  </button>
                 )}
               </div>
               <div className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-1">
@@ -268,10 +276,17 @@ export default function SavedOutfitsTab() {
                   <div className="w-full h-full rounded-full overflow-hidden bg-gray-100 border border-gray-100">
                     <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                   </div>
-                  {member.isPrimary && (
-                    <div className="absolute top-0 right-0 bg-[#3A10E5] text-white text-[11px] font-bold px-2 py-0.5 rounded-full border border-white">
+                  {member.isPrimary ? (
+                    <div className="absolute top-0 right-0 bg-[#3A10E5] text-white text-[11px] font-bold px-2 py-0.5 rounded-full border border-white shadow-sm">
                       You
                     </div>
+                  ) : (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setPrimaryMember(member.id); }}
+                      className="absolute top-0 right-0 bg-white text-[#3A10E5] border border-gray-200 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm hover:bg-gray-50 transition-colors"
+                    >
+                      Set Primary
+                    </button>
                   )}
                 </div>
 
@@ -299,7 +314,7 @@ export default function SavedOutfitsTab() {
               }`}>
                 <div>
                   <h5 className={`text-3xl font-black mb-1 ${member.isPrimary ? 'text-[#3A10E5]' : 'text-[#3A10E5]'}`}>
-                    {savedProducts.length}
+                    {wishlists?.[member.id]?.length || 0}
                   </h5>
                   <p className="text-xs font-medium text-gray-500">Saved Outfits</p>
                 </div>
