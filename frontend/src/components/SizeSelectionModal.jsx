@@ -5,7 +5,7 @@ import { useAppContext } from "../context/AppContext";
 
 export default function SizeSelectionModal({ isOpen, onClose, product, activeVariation }) {
   const navigate = useNavigate();
-  const { addToCart, measurements } = useAppContext();
+  const { addToCart, measurements, updateMember, selectedConsumerId } = useAppContext();
   const [selectedSize, setSelectedSize] = useState("Custom");
   const [isRendered, setIsRendered] = useState(false);
   const [isManualMode, setIsManualMode] = useState(false);
@@ -42,10 +42,19 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
     setCustomMeasurements(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (product) {
       if (selectedSize === "Custom") {
         addToCart(product, "Custom", activeVariation, customMeasurements);
+        
+        // Save to profile
+        if (selectedConsumerId) {
+          try {
+            await updateMember(selectedConsumerId, { measurements: customMeasurements });
+          } catch (e) {
+            console.error("Failed to save measurements to profile", e);
+          }
+        }
       } else {
         addToCart(product, selectedSize, activeVariation);
       }
