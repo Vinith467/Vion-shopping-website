@@ -393,6 +393,7 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{
       isLoggedIn,
+      session,
       selectedConsumerId,
       setSelectedConsumerId,
       login,
