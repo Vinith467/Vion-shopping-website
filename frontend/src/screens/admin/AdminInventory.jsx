@@ -95,7 +95,7 @@ export default function AdminInventory() {
     }
 
     // Fetch Categories for dropdown
-    const { data: catData } = await supabase.from('categories').select('id, name');
+    const { data: catData } = await supabase.from('categories').select('id, name, slug');
     setCategories(catData || []);
 
     setIsLoading(false);
