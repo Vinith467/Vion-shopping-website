@@ -83,7 +83,7 @@ export default function AccountScreen() {
       {/* Mobile Drawer Backdrop */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-50 md:hidden transition-opacity" 
+          className="fixed inset-0 bg-black/50 z-[60] md:hidden transition-opacity" 
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -93,7 +93,7 @@ export default function AccountScreen() {
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
           
           {/* Left Sidebar / Mobile Drawer */}
-          <div className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 w-72 md:w-64 bg-[#F9FAFB] md:bg-transparent shrink-0 flex flex-col gap-1 md:sticky md:top-28 md:self-start z-40 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none overflow-y-auto md:overflow-visible h-full md:h-max`}>
+          <div className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 w-72 md:w-64 bg-[#F9FAFB] md:bg-transparent shrink-0 flex flex-col gap-1 md:sticky md:top-28 md:self-start z-[70] transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none overflow-y-auto md:overflow-visible h-full md:h-max`}>
             
             <div className="md:hidden flex items-center justify-between p-6 border-b border-gray-200 bg-white">
                <div>
