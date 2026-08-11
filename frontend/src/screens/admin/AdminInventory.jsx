@@ -583,13 +583,52 @@ export default function AdminInventory() {
                         required
                       >
                         <option value="">Select Collection</option>
-                        {categories.filter(c => {
-                          const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
-                          const catShape = shapeMatch ? shapeMatch[1] : 'all';
-                          return formData.body_shape === 'all' || catShape === 'all' || catShape === formData.body_shape;
-                        }).map(c => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
+                        {(() => {
+                          const validCats = categories.filter(c => {
+                            const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                            const catShape = shapeMatch ? shapeMatch[1] : 'all';
+                            return formData.body_shape === 'all' || catShape === 'all' || catShape === formData.body_shape;
+                          });
+                          
+                          const grouped = validCats.reduce((acc, cat) => {
+                            const shapeMatch = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
+                            const shape = shapeMatch ? shapeMatch[1] : 'all';
+                            if (!acc[shape]) acc[shape] = [];
+                            acc[shape].push(cat);
+                            return acc;
+                          }, {});
+
+                          const shapeOrder = ['all', 'hourglass', 'pear', 'apple', 'rectangle', 'inverted-triangle'];
+                          const shapeNames = {
+                            all: 'General / All Shapes',
+                            hourglass: 'Hourglass Shape ⏳',
+                            pear: 'Pear Shape 🍐',
+                            apple: 'Apple Shape 🍎',
+                            rectangle: 'Rectangle Shape 🟦',
+                            'inverted-triangle': 'Inverted Triangle 🔻'
+                          };
+                          const shapeColors = {
+                            all: '#4B5563',
+                            hourglass: '#DB2777',
+                            pear: '#16A34A',
+                            apple: '#DC2626',
+                            rectangle: '#2563EB',
+                            'inverted-triangle': '#9333EA'
+                          };
+
+                          return shapeOrder.map(shape => {
+                            if (!grouped[shape]) return null;
+                            return (
+                              <optgroup key={shape} label={shapeNames[shape]} style={{ color: shapeColors[shape], fontWeight: 'bold' }}>
+                                {grouped[shape].map(c => (
+                                  <option key={c.id} value={c.id} style={{ color: '#111827', fontWeight: 'normal' }}>
+                                    {c.name}
+                                  </option>
+                                ))}
+                              </optgroup>
+                            );
+                          });
+                        })()}
                       </select>
                     </div>
 
