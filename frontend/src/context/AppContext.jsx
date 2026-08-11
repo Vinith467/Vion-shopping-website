@@ -57,10 +57,10 @@ export function AppProvider({ children }) {
   const toggleWishlist = (productId) => {
     setWishlist(prev => {
       if (prev.includes(productId)) {
-        toast.success("Removed from wishlist");
+        toast.success("Outfit removed!");
         return prev.filter(id => id !== productId);
       } else {
-        toast.success("Saved to wishlist");
+        toast.success("Outfit saved!");
         return [...prev, productId];
       }
     });

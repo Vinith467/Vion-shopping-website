@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Heart, Search, ChevronRight, ArrowLeft, 
   Pencil, Filter, ChevronDown, MoreHorizontal, 
@@ -6,31 +6,32 @@ import {
 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import AddMemberModal from './AddMemberModal';
-
-const mockWomenOutfits = [
-  { id: 1, name: 'Lavender Co-ord Set', date: 'May 20, 2024', image: '/images/lavender-dress.jpg', topIcon: 'dots', category: 'Casual' },
-  { id: 2, name: 'Blush Pink Blazer Set', date: 'May 18, 2024', image: '/images/silk-wrap-dress.jpg', topIcon: 'heart', category: 'Workwear' },
-  { id: 3, name: 'Maroon Anarkali Set', date: 'May 15, 2024', image: '/images/dress-red.jpg', topIcon: 'heart', category: 'Traditional' },
-  { id: 4, name: 'White Wool Coat', date: 'May 12, 2024', image: '/images/tailored-wool-coat.jpg', topIcon: 'dots', category: 'Western' },
-  { id: 5, name: 'Casual Denim Jacket', date: 'May 10, 2024', image: '/images/cat-jackets.jpg', topIcon: 'heart', category: 'Workwear' },
-  { id: 6, name: 'Green Trench Coat', date: 'May 08, 2024', image: '/images/coat-green.jpg', topIcon: 'dots', category: 'Western' },
-];
-
-const mockMenOutfits = [
-  { id: 7, name: 'Orange Linen Overshirt', date: 'May 05, 2024', image: '/images/shirt-orange.jpg', topIcon: 'heart', category: 'Casual' },
-  { id: 8, name: 'Brown Linen Overshirt', date: 'May 03, 2024', image: '/images/linen-overshirt.jpg', topIcon: 'dots', category: 'Casual' },
-  { id: 9, name: 'Classic Business Suit', date: 'Apr 30, 2024', image: '/images/business_suits.jpg', topIcon: 'dots', category: 'Workwear' },
-  { id: 10, name: 'Smart Casual Look', date: 'Apr 28, 2024', image: '/images/smart_casual.png', topIcon: 'heart', category: 'Western' },
-];
+import { supabase } from '../services/supabaseClient';
+import { Link } from 'react-router-dom';
 
 export default function SavedOutfitsTab() {
-  const { members } = useAppContext();
+  const { members, wishlist, toggleWishlist } = useAppContext();
+  const [savedProducts, setSavedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('My Members');
   const tabs = ['My Members', 'Outfit Collections'];
   const [selectedMember, setSelectedMember] = useState(null);
   const [collectionTab, setCollectionTab] = useState('All Outfits');
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [searchMemberQuery, setSearchMemberQuery] = useState('');
+
+  useEffect(() => {
+    async function loadSavedOutfits() {
+      if (!wishlist || wishlist.length === 0) {
+        setSavedProducts([]);
+        return;
+      }
+      const { data } = await supabase.from('products').select('*, category:categories(name)').in('id', wishlist);
+      if (data) {
+        setSavedProducts(data);
+      }
+    }
+    loadSavedOutfits();
+  }, [wishlist]);
 
   const collectionTabs = [
     'All Outfits', 'Traditional', 'Western', 
@@ -106,7 +107,7 @@ export default function SavedOutfitsTab() {
               <Heart size={20} className="fill-current" />
             </div>
             <div>
-              <h3 className="text-3xl font-black text-gray-900 mb-1">{selectedMember.gender === 'Male' ? mockMenOutfits.length : mockWomenOutfits.length}</h3>
+              <h3 className="text-3xl font-black text-gray-900 mb-1">{savedProducts.length}</h3>
               <p className="text-xs font-semibold text-gray-500">Saved Outfits</p>
             </div>
           </div>
@@ -141,36 +142,28 @@ export default function SavedOutfitsTab() {
           </div>
         </div>
 
-        {/* Outfit Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6 mt-2">
-          {(selectedMember.gender === 'Male' ? mockMenOutfits : mockWomenOutfits)
-            .filter(outfit => collectionTab === 'All Outfits' || outfit.category === collectionTab)
-            .map(outfit => (
-            <div key={outfit.id} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group relative">
-              <div className="relative aspect-[3/4] bg-gray-100">
-                <img src={outfit.image} alt={outfit.name} className="w-full h-full object-cover" />
-                
-                {/* Top Right Icon */}
-                <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-[#3A10E5] hover:bg-gray-50 transition-colors">
-                  {outfit.topIcon === 'heart' ? (
-                    <Heart size={14} />
-                  ) : (
-                    <MoreHorizontal size={14} />
-                  )}
-                </button>
-              </div>
+          {savedProducts
+            .filter(product => collectionTab === 'All Outfits' || product.category?.name === collectionTab)
+            .map(product => (
+            <div key={product.id} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group relative">
+              <Link to={`/product/${product.id}`} className="relative aspect-[3/4] bg-gray-100 block">
+                <img src={product.images?.[0] || '/images/placeholder.jpg'} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
+              </Link>
               
               <div className="p-4 flex flex-col gap-1 border-b border-gray-50">
-                <h4 className="text-sm font-bold text-gray-900 truncate">{outfit.name}</h4>
-                <p className="text-[10px] font-medium text-gray-500">Saved on {outfit.date}</p>
+                <Link to={`/product/${product.id}`}>
+                  <h4 className="text-sm font-bold text-gray-900 line-clamp-1 hover:text-[#3A10E5]">{product.title}</h4>
+                </Link>
+                <p className="text-[12px] font-bold text-gray-500">₹{parseFloat(product.price).toLocaleString()}</p>
               </div>
 
               <div className="p-3 flex justify-between items-center bg-white">
-                <button className="w-8 h-8 rounded-full flex items-center justify-center text-[#3A10E5] bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10 transition-colors">
+                <Link to={`/product/${product.id}`} className="w-8 h-8 rounded-full flex items-center justify-center text-[#3A10E5] bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10 transition-colors">
                   <ShoppingBag size={14} />
-                </button>
-                <button className="w-8 h-8 rounded-full flex items-center justify-center text-[#3A10E5] bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10 transition-colors">
-                  <Trash2 size={14} />
+                </Link>
+                <button onClick={() => toggleWishlist(product.id)} className="w-8 h-8 rounded-full flex items-center justify-center text-[#3A10E5] bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10 transition-colors">
+                  <Heart size={14} className="fill-current" />
                 </button>
               </div>
             </div>
