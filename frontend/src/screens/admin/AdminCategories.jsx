@@ -43,15 +43,15 @@ export default function AdminCategories() {
     fetchCategories();
   }, []);
 
-  const fetchCategories = async () => {
-    setIsLoading(true);
+  const fetchCategories = async (showLoader = true) => {
+    if (showLoader) setIsLoading(true);
     const { data, error } = await supabase.from('categories').select('*').order('name');
     if (error) {
       toast.error('Failed to load collections');
     } else {
       setCategories(data || []);
     }
-    setIsLoading(false);
+    if (showLoader) setIsLoading(false);
   };
 
   const handleOpenModal = (cat = null) => {
@@ -113,7 +113,7 @@ export default function AdminCategories() {
       else {
         toast.success('Collection updated!');
         setShowModal(false);
-        fetchCategories();
+        fetchCategories(false);
       }
     } else {
       const { error } = await supabase.from('categories').insert([payload]);
@@ -121,7 +121,7 @@ export default function AdminCategories() {
       else {
         toast.success('Collection created!');
         setShowModal(false);
-        fetchCategories();
+        fetchCategories(false);
       }
     }
     setIsSubmitting(false);
@@ -133,7 +133,7 @@ export default function AdminCategories() {
     if (error) toast.error(error.message);
     else {
       toast.success('Collection deleted!');
-      fetchCategories();
+      fetchCategories(false);
     }
   };
 
