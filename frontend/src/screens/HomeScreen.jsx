@@ -180,7 +180,7 @@ export default function HomeScreen() {
                         <h3 className="text-xl md:text-2xl font-serif font-bold text-gray-800 mb-6 tracking-wide">{shape.label} Body Type Collection</h3>
                         <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap justify-center gap-3 md:gap-4 xl:gap-6 items-start py-2 px-2 md:px-4 max-w-7xl mx-auto">
                           {shapeCats.map((cat, i) => (
-                            <Link to={`/explore?category=${cat.id}&body_shape=${shape.id}`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-48">
+                            <Link to={`/explore?category=${cat.id}&body_shape=${shape.id}`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-40 lg:w-[170px] xl:w-[190px]">
                               <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-md border border-gray-100 relative w-full bg-gray-50">
                                 <img src={cat.image_url || '/images/silk-wrap-dress.jpg'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                               </div>
@@ -206,7 +206,7 @@ export default function HomeScreen() {
                           const match = cat.slug ? cat.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
                           return (match ? match[1] : 'all') === 'all';
                         }).map((cat, i) => (
-                          <Link to={`/explore?category=${cat.id}&body_shape=all`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-48">
+                          <Link to={`/explore?category=${cat.id}&body_shape=all`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-40 lg:w-[170px] xl:w-[190px]">
                             <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-md border border-gray-100 relative w-full bg-gray-50">
                               <img src={cat.image_url || '/images/silk-wrap-dress.jpg'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                             </div>
@@ -222,7 +222,7 @@ export default function HomeScreen() {
               ) : (
                 <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap justify-center gap-3 md:gap-4 xl:gap-6 items-start py-2 px-2 md:px-4 max-w-7xl mx-auto">
                   {desktopCategories.map((cat, i) => (
-                    <Link to={`/explore?category=${cat.id}&body_shape=${selectedBodyShape}`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-[clamp(140px,12vw,200px)]">
+                    <Link to={`/explore?category=${cat.id}&body_shape=${selectedBodyShape}`} key={i} className="flex flex-col gap-2 md:gap-3 shrink-0 group cursor-pointer snap-start w-full md:w-40 lg:w-[170px] xl:w-[190px]">
                       <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-md border border-gray-100 relative w-full bg-gray-50">
                         <img src={cat.image_url || '/images/silk-wrap-dress.jpg'} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       </div>
