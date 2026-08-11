@@ -69,7 +69,7 @@ export default function HomeScreen() {
     if (selectedBodyShape !== 'all' && catBodyShape !== 'all' && catBodyShape !== selectedBodyShape) return false;
 
     return true;
-  }).sort((a, b) => a.name.localeCompare(b.name));
+  }).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   const BODY_SHAPES = [
     { id: 'all', label: 'All Shapes' },

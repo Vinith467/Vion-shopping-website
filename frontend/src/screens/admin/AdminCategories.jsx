@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../services/supabaseClient';
 import { uploadImage } from '../../services/storageService';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, Edit2, X, Check, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, Image as ImageIcon, ArrowUp, ArrowDown } from 'lucide-react';
 
 const PREDEFINED_COLLECTIONS = [
   "Business Suits",
@@ -45,7 +45,7 @@ export default function AdminCategories() {
 
   const fetchCategories = async (showLoader = true) => {
     if (showLoader) setIsLoading(true);
-    const { data, error } = await supabase.from('categories').select('*').order('name');
+    const { data, error } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
     if (error) {
       toast.error('Failed to load collections');
     } else {
@@ -137,6 +137,35 @@ export default function AdminCategories() {
     }
   };
 
+  const moveCategory = async (groupArray, index, direction) => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === groupArray.length - 1) return;
+
+    const newArray = [...groupArray];
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    // Swap elements
+    [newArray[index], newArray[swapIndex]] = [newArray[swapIndex], newArray[index]];
+    
+    setIsLoading(true);
+    
+    // Rewrite created_at timestamps to lock in the new order
+    const baseTime = Date.now();
+    
+    try {
+      for (let i = 0; i < newArray.length; i++) {
+        const item = newArray[i];
+        const newDate = new Date(baseTime + i * 1000).toISOString();
+        await supabase.from('categories').update({ created_at: newDate }).eq('id', item.id);
+      }
+      toast.success('Order saved!');
+    } catch (e) {
+      toast.error('Failed to save order');
+    }
+    
+    fetchCategories(false);
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto animate-fade-in">
       <div className="flex justify-between items-center mb-8">
@@ -166,6 +195,7 @@ export default function AdminCategories() {
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Slug</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Target Audience</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Parent Category</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider text-center">Order</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
@@ -200,7 +230,7 @@ export default function AdminCategories() {
                     return sortedShapes.map(shape => (
                       <React.Fragment key={shape}>
                         <tr className="bg-[#f0eaff]">
-                          <td colSpan="5" className="px-6 py-3 font-black text-[#3A10E5] uppercase tracking-wider text-xs border-y border-[#3A10E5]/10">
+                          <td colSpan="6" className="px-6 py-3 font-black text-[#3A10E5] uppercase tracking-wider text-xs border-y border-[#3A10E5]/10">
                             {shape === 'all' ? 'All Shapes / General' : `${shape} Body Shape`}
                           </td>
                         </tr>
@@ -233,6 +263,24 @@ export default function AdminCategories() {
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-600 font-medium">
                               {cat.parent_id ? categories.find(c => c.id === cat.parent_id)?.name || cat.parent_id : '-'}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex items-center justify-center gap-1">
+                                <button 
+                                  onClick={() => moveCategory(groupedCategories[shape], groupedCategories[shape].indexOf(cat), 'up')}
+                                  disabled={groupedCategories[shape].indexOf(cat) === 0}
+                                  className="p-1.5 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-md transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400"
+                                >
+                                  <ArrowUp size={16} />
+                                </button>
+                                <button 
+                                  onClick={() => moveCategory(groupedCategories[shape], groupedCategories[shape].indexOf(cat), 'down')}
+                                  disabled={groupedCategories[shape].indexOf(cat) === groupedCategories[shape].length - 1}
+                                  className="p-1.5 text-gray-400 hover:text-[#3A10E5] hover:bg-purple-50 rounded-md transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400"
+                                >
+                                  <ArrowDown size={16} />
+                                </button>
+                              </div>
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex items-center justify-end gap-2">
