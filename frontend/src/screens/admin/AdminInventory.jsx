@@ -583,17 +583,13 @@ export default function AdminInventory() {
                         required
                       >
                         <option value="">Select Collection</option>
-                        {categories.map(c => {
+                        {categories.filter(c => {
                           const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
                           const catShape = shapeMatch ? shapeMatch[1] : 'all';
-                          let displayName = c.name;
-                          if (catShape !== 'all') {
-                            displayName = `${c.name} (${catShape.charAt(0).toUpperCase() + catShape.slice(1)})`;
-                          }
-                          return (
-                            <option key={c.id} value={c.id}>{displayName}</option>
-                          );
-                        })}
+                          return formData.body_shape === 'all' || catShape === 'all' || catShape === formData.body_shape;
+                        }).map(c => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
                       </select>
                     </div>
 
