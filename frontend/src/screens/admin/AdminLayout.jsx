@@ -17,7 +17,7 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-mesh-animated flex flex-col md:flex-row w-full font-sans">
+    <div className="h-screen overflow-hidden bg-mesh-animated flex flex-col md:flex-row w-full font-sans">
       
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-md border-b border-white/50 sticky top-0 z-40">
@@ -104,7 +104,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-x-hidden min-h-screen">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto h-full">
         <Outlet />
       </main>
     </div>
