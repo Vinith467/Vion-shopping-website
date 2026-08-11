@@ -240,7 +240,8 @@ export default function AdminDashboard() {
               </div>
             ) : (
               recentOrders.map(order => {
-                const itemsCount = Array.isArray(order.items) ? order.items.length : 0;
+                const items = Array.isArray(order.items) ? order.items.filter(i => i._type !== 'metadata') : [];
+                const itemsCount = items.length;
                 return (
                   <div key={order.id} className="flex items-center justify-between p-4 rounded-2xl border border-white/40 bg-white/40 hover:bg-white/60 hover:border-white transition-all group shadow-sm">
                     <div className="flex items-center gap-3">
