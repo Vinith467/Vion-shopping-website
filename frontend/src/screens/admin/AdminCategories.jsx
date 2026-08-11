@@ -163,7 +163,7 @@ export default function AdminCategories() {
       toast.error('Failed to save order');
     }
     
-    fetchCategories(false);
+    fetchCategories(true);
   };
 
   return (
