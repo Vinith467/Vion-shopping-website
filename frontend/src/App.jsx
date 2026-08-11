@@ -120,9 +120,22 @@ function App() {
           {/* Right Actions */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
-              <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors"><Search size={20} /></button>
-              <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors"><Heart size={20} /></button>
-              <button onClick={() => !isLoggedIn && setShowSignupModal(true)} className="hover:text-[#E5B8D9] transition-colors relative">
+              <button 
+                onClick={() => navigate('/explore')} 
+                className="hover:text-[#E5B8D9] transition-colors"
+              >
+                <Search size={20} />
+              </button>
+              <button 
+                onClick={() => isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true)} 
+                className="hover:text-[#E5B8D9] transition-colors"
+              >
+                <Heart size={20} />
+              </button>
+              <button 
+                onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
+                className="hover:text-[#E5B8D9] transition-colors relative"
+              >
                 <ShoppingBag size={20} />
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E5B8D9] text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
               </button>
