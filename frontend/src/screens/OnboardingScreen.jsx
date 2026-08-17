@@ -1094,7 +1094,7 @@ export default function OnboardingScreen() {
             {/* Top Product Section */}
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 items-start">
               {/* LEFT COLUMN: Gallery */}
-              <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%]">
+              <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-28 lg:h-max">
                 <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
                   {/* Thumbnails */}
                   {(selectedProduct.images?.length > 0 ? selectedProduct.images : [selectedProduct.image]).map((img, idx) => (
@@ -1263,86 +1263,61 @@ export default function OnboardingScreen() {
                     </button>
                   </div>
 
+                  <div className="pt-8 space-y-6 lg:pb-8">
+                    {/* Why it suits you */}
+                    <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100 shadow-sm">
+                      <h4 className="font-bold text-[13px] text-[#1A0A08] mb-4 uppercase tracking-wide">Why it suits you</h4>
+                      <ul className="space-y-3 text-xs text-gray-700 font-medium">
+                        <li className="flex items-start gap-2.5">
+                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
+                          <span>Flattering for your <strong className="text-[#1A0A08]">{profile.bodyShape || 'Hourglass'}</strong> body shape</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
+                          <span>Perfect for your <strong className="text-[#1A0A08]">{profile.height}</strong> height</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
+                          <span>Colors that complement your <strong className="text-[#1A0A08]">{profile.skinTone || 'complexion'}</strong></span>
+                        </li>
+                      </ul>
+                      <button className="text-[10px] font-bold text-gray-500 underline mt-4 hover:text-[#1A0A08] transition-colors">View Details</button>
+                    </div>
+
+                    {/* Our Services */}
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <h3 className="font-bold text-[13px] text-[#1A0A08] uppercase tracking-wide">Our Services</h3>
+                        <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center hover:text-[#1A0A08] transition-colors">Explore all services <ArrowRight size={10} className="ml-0.5"/></span>
+                      </div>
+                      <div className="bg-[#F9F7F5] rounded-2xl border border-gray-100 divide-y divide-gray-200/60 shadow-sm">
+                        <div className="p-3.5 flex gap-3.5 items-start group">
+                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/></div>
+                          <div>
+                            <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Casual</h4>
+                            <p className="text-[11px] text-gray-500 leading-relaxed">Affordable styles for everyday you.<br/>Give size or measurements.</p>
+                          </div>
+                        </div>
+                        <div className="p-3.5 flex gap-3.5 items-start group">
+                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1.5"/></div>
+                          <div>
+                            <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive</h4>
+                            <p className="text-[11px] text-gray-500 leading-relaxed">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
+                          </div>
+                        </div>
+                        <div className="p-3.5 flex gap-3.5 items-start group">
+                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
+                          <div>
+                            <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive Plus</h4>
+                            <p className="text-[11px] text-gray-500 leading-relaxed">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
-            </div>
-
-            {/* Bottom Section: Recommendations & Services */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                
-                {/* Complete the Look */}
-                <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100 flex flex-col">
-                   <div className="flex justify-between items-center mb-3">
-                     <h3 className="font-bold text-sm text-[#1A0A08]">Complete the Look</h3>
-                     <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center">View All <ArrowRight size={10} className="ml-0.5"/></span>
-                   </div>
-                   <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
-                     {/* Using fetchedProducts as accessories */}
-                     {fetchedProducts.filter(p => p.id !== selectedProduct.id).slice(0, 3).map((item, i) => (
-                       <div key={i} className="w-[100px] shrink-0 bg-[#F9F7F5] rounded-xl p-2 pb-3 border border-gray-100 flex flex-col group relative">
-                         <div className="w-full aspect-[4/5] rounded-lg overflow-hidden mb-2 bg-white flex items-center justify-center">
-                           <img src={(item.images && item.images[0]) || "/images/herobannerimage/casual.png"} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                         </div>
-                         <h4 className="text-[9px] font-bold text-[#1A0A08] leading-tight mb-1 truncate">{item.title}</h4>
-                         <span className="text-[10px] font-bold text-gray-600">₹ {(item.price || 0).toLocaleString()}</span>
-                         <button className="absolute bottom-2 right-2 w-5 h-5 bg-white shadow-sm rounded-full flex items-center justify-center text-gray-400 hover:text-[#986427] hover:border-[#986427] border transition-colors">
-                           <Plus size={10}/>
-                         </button>
-                       </div>
-                     ))}
-                   </div>
-                </div>
-
-                {/* Why it suits you */}
-                <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100">
-                  <h4 className="font-bold text-sm text-[#1A0A08] mb-4">Why it suits you</h4>
-                  <ul className="space-y-3 text-xs text-gray-700 font-medium">
-                    <li className="flex items-start gap-2">
-                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
-                      <span>Flattering for your <strong className="text-[#1A0A08]">Hourglass</strong> body shape</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
-                      <span>Perfect for your <strong className="text-[#1A0A08]">{profile.height}</strong> height</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
-                      <span>Colors that complement your <strong className="text-[#1A0A08]">{profile.skinTone}</strong> skin tone</span>
-                    </li>
-                  </ul>
-                  <button className="text-[10px] font-bold text-gray-500 underline mt-4 hover:text-[#1A0A08]">View Details</button>
-                </div>
-
-                {/* Our Services */}
-                <div>
-                   <div className="flex justify-between items-center mb-3">
-                     <h3 className="font-bold text-sm text-[#1A0A08]">Our Services</h3>
-                     <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center">Explore all services <ArrowRight size={10} className="ml-0.5"/></span>
-                   </div>
-                   <div className="bg-[#F9F7F5] rounded-2xl border border-gray-100 divide-y divide-gray-200/60">
-                     <div className="p-3 flex gap-3 items-start group">
-                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><User size={14}/></div>
-                       <div>
-                         <h4 className="text-xs font-bold text-[#986427] mb-0.5">Casual</h4>
-                         <p className="text-[10px] text-gray-500 leading-tight">Affordable styles for everyday you.<br/>Give size or measurements.</p>
-                       </div>
-                     </div>
-                     <div className="p-3 flex gap-3 items-start group">
-                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1"/></div>
-                       <div>
-                         <h4 className="text-xs font-bold text-[#1A0A08] mb-0.5">Exclusive</h4>
-                         <p className="text-[10px] text-gray-500 leading-tight">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
-                       </div>
-                     </div>
-                     <div className="p-3 flex gap-3 items-start group">
-                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
-                       <div>
-                         <h4 className="text-xs font-bold text-[#1A0A08] mb-0.5">Exclusive Plus</h4>
-                         <p className="text-[10px] text-gray-500 leading-tight">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
-                       </div>
-                     </div>
-                   </div>
-                </div>
             </div>
           </div>
         )}
