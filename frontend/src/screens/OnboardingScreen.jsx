@@ -176,12 +176,13 @@ export default function OnboardingScreen() {
 
   return (
     <div className="min-h-[100dvh] font-sans relative overflow-clip bg-[#e8d5c4]">
-      {/* Dynamic Background Image - Hide on Step 4 for clean layout */}
+      {/* Background Image & Gradient - Hide on Step 4 for clean layout */}
       <div className={`absolute inset-0 z-0 transition-opacity duration-500 ${step === 4 ? 'opacity-0' : 'opacity-100'}`}>
-        <img src={getBackgroundImage()} alt="Background" className="w-full h-full object-cover opacity-[0.85]" />
-        {/* Subtle gradient overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FDFBF7]/95 via-[#FDFBF7]/80 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7] via-transparent to-transparent"></div>
+        <div className="absolute top-0 right-0 w-full lg:w-2/3 h-full">
+          <img src="/images/onboarding_bg.jpg" alt="Background" className="w-full h-full object-cover object-center opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#e8d5c4]/50 to-[#e8d5c4] lg:via-[#e8d5c4]/80 lg:to-[#e8d5c4]"></div>
+        </div>
+        <div className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-[#e8d5c4]"></div>
       </div>
 
       <div className="relative z-10 flex flex-col min-h-[100dvh]">
