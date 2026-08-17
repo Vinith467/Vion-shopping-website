@@ -1395,6 +1395,8 @@ export default function OnboardingScreen() {
             </div>
           </div>
         </div>
+      )}
+
       {/* Standard Size Modal */}
       {showStandardSizeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
