@@ -330,7 +330,18 @@ export default function AdminInventory() {
       }
     }
 
-    const derivedSizes = Array.from(new Set(updatedVariations.map(v => v.size).filter(s => s && s !== 'all')));
+    // Combine size_top and size_bottom into size for backward compatibility
+    const allSizes = new Set();
+    updatedVariations.forEach(v => {
+      if (v.size_top) v.size_top.forEach(s => s !== 'all' && allSizes.add(s));
+      if (v.size_bottom) v.size_bottom.forEach(s => s !== 'all' && allSizes.add(s));
+      // fallback for old variations
+      if (v.size) {
+         if (Array.isArray(v.size)) v.size.forEach(s => s !== 'all' && allSizes.add(s));
+         else if (v.size !== 'all') allSizes.add(v.size);
+      }
+    });
+    const derivedSizes = Array.from(allSizes);
     const derivedSkinTones = Array.from(new Set(updatedVariations.map(v => v.skinTone).filter(s => s && s !== 'all')));
     const derivedHeights = Array.from(new Set(updatedVariations.map(v => v.heightRange).filter(h => h && h !== 'all')));
 
@@ -801,7 +812,7 @@ export default function AdminInventory() {
                     onClick={() => {
                       setFormData(prev => ({
                         ...prev,
-                        variations: [...prev.variations, { id: Date.now(), size: ['S'], skinTone: 'all', heightRange: ['all'], colorName: '', image_urls: [] }]
+                        variations: [...prev.variations, { id: Date.now(), size_top: ['S'], size_bottom: ['S'], skinTone: 'all', heightRange: ['all'], colorName: '', image_urls: [] }]
                       }));
                     }}
                     className="text-xs font-bold bg-[#986427]/10 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#986427]/20 text-[#986427] transition-colors"
@@ -819,10 +830,10 @@ export default function AdminInventory() {
                         <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-3">
                           <div className="col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-100 pb-4">
                             <div>
-                              <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Size</label>
+                              <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Size (Top)</label>
                               <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
                                 {sizesMap.map((type) => {
-                                  const currentSizes = Array.isArray(v.size) ? v.size : (v.size ? [v.size] : ['S']);
+                                  const currentSizes = Array.isArray(v.size_top) ? v.size_top : (v.size_top ? [v.size_top] : ['S']);
                                   const isSelected = currentSizes.includes(type.id);
                                   return (
                                     <button
@@ -831,7 +842,7 @@ export default function AdminInventory() {
                                       onClick={() => {
                                         const newVars = [...formData.variations];
                                         if (type.id === 'all') {
-                                          newVars[index].size = ['all'];
+                                          newVars[index].size_top = ['all'];
                                         } else {
                                           let updated = currentSizes.filter(s => s !== 'all');
                                           if (isSelected) {
@@ -840,14 +851,48 @@ export default function AdminInventory() {
                                           } else {
                                             updated = [...updated, type.id];
                                           }
-                                          newVars[index].size = updated;
+                                          newVars[index].size_top = updated;
                                         }
                                         setFormData({ ...formData, variations: newVars });
                                       }}
-                                      className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl border transition-all min-w-[70px] h-12 shrink-0 ${isSelected ? 'border-[#986427] ring-1 ring-[#986427] bg-[#986427]/10' : 'border-gray-200 bg-white hover:border-[#986427]/50'
-                                        }`}
+                                      className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl border transition-all min-w-[50px] h-10 shrink-0 ${isSelected ? 'border-[#986427] ring-1 ring-[#986427] bg-[#986427]/10' : 'border-gray-200 bg-white hover:border-[#986427]/50'}`}
                                     >
-                                      <span className={`text-xs font-bold tracking-wide uppercase ${isSelected ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>{type.name}</span>
+                                      <span className={`text-[10px] font-bold tracking-wide uppercase ${isSelected ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>{type.name}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Size (Bottom)</label>
+                              <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                {sizesMap.map((type) => {
+                                  const currentSizes = Array.isArray(v.size_bottom) ? v.size_bottom : (v.size_bottom ? [v.size_bottom] : ['S']);
+                                  const isSelected = currentSizes.includes(type.id);
+                                  return (
+                                    <button
+                                      key={type.id}
+                                      type="button"
+                                      onClick={() => {
+                                        const newVars = [...formData.variations];
+                                        if (type.id === 'all') {
+                                          newVars[index].size_bottom = ['all'];
+                                        } else {
+                                          let updated = currentSizes.filter(s => s !== 'all');
+                                          if (isSelected) {
+                                            updated = updated.filter(s => s !== type.id);
+                                            if (updated.length === 0) updated = ['all'];
+                                          } else {
+                                            updated = [...updated, type.id];
+                                          }
+                                          newVars[index].size_bottom = updated;
+                                        }
+                                        setFormData({ ...formData, variations: newVars });
+                                      }}
+                                      className={`relative flex flex-col items-center justify-center overflow-hidden rounded-xl border transition-all min-w-[50px] h-10 shrink-0 ${isSelected ? 'border-[#986427] ring-1 ring-[#986427] bg-[#986427]/10' : 'border-gray-200 bg-white hover:border-[#986427]/50'}`}
+                                    >
+                                      <span className={`text-[10px] font-bold tracking-wide uppercase ${isSelected ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>{type.name}</span>
                                     </button>
                                   );
                                 })}

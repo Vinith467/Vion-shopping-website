@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2 } from 'lucide-react';
+import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
 
@@ -91,6 +91,12 @@ export default function OnboardingScreen() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [skinToneColors, setSkinToneColors] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Product Details UI States
+  const [selectedFitMode, setSelectedFitMode] = useState('size');
+  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
   
   // Profile Data
   const [profile, setProfile] = useState(() => savedProfiles.length > 0 ? savedProfiles[0] : defaultProfile);
@@ -1085,77 +1091,265 @@ export default function OnboardingScreen() {
               <h1 className="text-4xl font-serif text-gray-900">Shop with Confidence</h1>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-10">
-              {/* Product Image */}
-              <div className="flex-1">
-                <div className="bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_0_10px_30px_rgba(0,0,0,0.08)] rounded-3xl p-4 overflow-hidden relative aspect-[3/4]">
-                  <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover rounded-2xl" />
-                  <button className="absolute top-6 right-6 p-3 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
-                    <Heart size={20} />
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+              {/* LEFT COLUMN: Gallery */}
+              <div className="flex gap-4 w-full lg:w-[45%]">
+                <div className="flex flex-col gap-3 w-20 shrink-0 hidden sm:flex">
+                  {/* Thumbnails (Mocking a few for now using the main image or fallback) */}
+                  {[selectedProduct.image, "/images/herobannerimage/casual.png", "/images/herobannerimage/ethnic.png"].map((img, idx) => (
+                    <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex-1 bg-[#F9F7F5] rounded-3xl overflow-hidden relative aspect-[3/4] flex items-center justify-center group">
+                  <img src={activeImageIndex === 0 ? selectedProduct.image : (activeImageIndex === 1 ? "/images/herobannerimage/casual.png" : "/images/herobannerimage/ethnic.png")} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                  <button className="absolute top-4 right-4 p-2.5 bg-white/60 hover:bg-white rounded-full text-[#1A0A08] hover:text-red-500 transition-colors shadow-sm backdrop-blur-md">
+                    <Heart size={18} />
+                  </button>
+                  <button className="absolute bottom-4 right-4 bg-white/80 hover:bg-white px-3 py-1.5 rounded-lg text-xs font-bold text-[#1A0A08] flex items-center gap-1 shadow-sm transition-colors backdrop-blur-sm">
+                    <Box size={14} /> View in 3D
                   </button>
                 </div>
               </div>
 
-              {/* Product Info */}
-              <div className="w-full lg:w-[400px] xl:w-[500px] shrink-0 space-y-6">
+              {/* MIDDLE COLUMN: Details & Actions */}
+              <div className="flex-1 flex flex-col space-y-6">
                 <div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-[#1A0A08] mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
-                  <p className="text-2xl text-[#8B6544] font-bold">{selectedProduct.price}</p>
-                </div>
-
-                {/* Personalized Recommendation Box */}
-                <div className="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.05)] rounded-2xl p-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Sparkles className="text-[#8B6544]" size={18} />
-                    <h4 className="font-bold text-sm text-[#1A0A08]">Why it's perfect for {profile.name}</h4>
+                  <div className="flex items-center gap-3 mb-1">
+                    <h2 className="text-2xl lg:text-3xl font-bold text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
+                    <span className="bg-[#f0e6dd] text-[#986427] text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Bestseller</span>
                   </div>
-                  <ul className="space-y-3 text-sm text-[#1A0A08]/80 font-medium">
-                    <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center shrink-0 mt-0.5 border border-white/40 shadow-inner"><User size={12} className="text-[#1A0A08]"/></div>
-                      <span>The structured fit complements a <strong className="text-[#1A0A08]">Size {profile.size}</strong> figure effortlessly.</span>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex text-[#986427]">
+                      {'★★★★☆'.split('').map((star, i) => <span key={i} className="text-sm">{star}</span>)}
+                    </div>
+                    <span className="text-xs text-gray-500 font-medium">4.6 (128 reviews)</span>
+                  </div>
+                  <p className="text-xl text-[#1A0A08] font-bold mb-3">{selectedProduct.price} <span className="text-[10px] font-normal text-gray-500 ml-2">Inclusive of all taxes</span></p>
+                  <p className="text-sm text-gray-600 leading-relaxed font-medium mb-4">{selectedProduct.description}</p>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Colors */}
+                  <div>
+                    <span className="text-xs font-bold text-[#1A0A08] block mb-2">Color: Sand Beige</span>
+                    <div className="flex gap-2">
+                      {['#EAE0D5', '#1A0A08', '#F5E6D3'].map((color, idx) => (
+                        <button key={idx} className={`w-8 h-8 rounded-full border-2 ${idx === 0 ? 'border-[#986427] scale-110 shadow-sm' : 'border-transparent hover:scale-105'} transition-all`} style={{ backgroundColor: color }}></button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size Top & Bottom */}
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-[#1A0A08]">Size (Top)</span>
+                        <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Size Guide</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="flex-1 max-w-[60px] py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-[#1A0A08] block mb-2">Size (Bottom)</span>
+                      <div className="flex gap-2">
+                        <button className="flex-1 max-w-[60px] py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fit Options */}
+                  <div className="space-y-2 pt-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold text-[#1A0A08]">How would you like to get the perfect fit?</span>
+                      <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Help me choose</span>
+                    </div>
+                    
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
+                      <input type="radio" name="fit" checked={selectedFitMode === 'size'} onChange={() => setSelectedFitMode('size')} className="w-4 h-4 text-[#986427] focus:ring-[#986427]" />
+                      <div className="bg-white p-1.5 rounded-lg border border-gray-100 shadow-sm text-[#986427]"><Ruler size={16} /></div>
+                      <div>
+                        <p className="text-xs font-bold text-[#1A0A08]">Give Size</p>
+                        <p className="text-[10px] text-gray-500 font-medium">Select from standard sizes (S, M, L, XL, XXL)</p>
+                      </div>
+                    </label>
+                    
+                    <label className={`flex flex-col gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
+                      <div className="flex items-center gap-3" onClick={() => setSelectedFitMode('expert')}>
+                        <input type="radio" name="fit" checked={selectedFitMode === 'expert'} onChange={() => setSelectedFitMode('expert')} className="w-4 h-4 text-[#986427] focus:ring-[#986427]" />
+                        <div className="bg-white p-1.5 rounded-lg border border-gray-100 shadow-sm text-[#986427]"><User size={16} /></div>
+                        <div>
+                          <p className="text-xs font-bold text-[#1A0A08]">Book Our Expert</p>
+                          <p className="text-[10px] text-gray-500 font-medium">Our expert will take measurements for perfect fit</p>
+                        </div>
+                      </div>
+                      
+                      {selectedFitMode === 'expert' && (
+                        <div className="pl-9 pr-2 pt-2 animate-in slide-in-from-top-2 duration-300">
+                          <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-3">
+                            <p className="text-[10px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
+                                <Calendar size={12} className="text-gray-400" />
+                                <input type="date" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                              </div>
+                              <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
+                                <Clock size={12} className="text-gray-400" />
+                                <input type="time" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
+                              <MapPin size={12} className="text-gray-400 shrink-0" />
+                              <input type="text" placeholder="Enter your address for the visit" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-2 flex gap-3">
+                    <button 
+                      onClick={() => {
+                        const numericPrice = selectedProduct.price.replace(/[^0-9.]/g, '');
+                        addToCart({
+                          id: 'rec-' + Date.now().toString(),
+                          title: selectedProduct.name,
+                          price: numericPrice,
+                          images: [selectedProduct.image],
+                          fitMode: selectedFitMode,
+                          size_top: profile.size,
+                          size_bottom: profile.size
+                        }, profile.size);
+                        navigate('/cart');
+                      }}
+                      className="flex-1 bg-[#7C4022] hover:bg-[#5E3019] text-white py-3.5 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-sm"
+                    >
+                      <ShoppingBag size={18} /> Add to Bag
+                    </button>
+                    <button className="flex-1 bg-white hover:bg-gray-50 border border-[#1A0A08]/20 text-[#1A0A08] py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm">
+                      <Heart size={18} /> Wishlist
+                    </button>
+                  </div>
+
+                  {/* Badges */}
+                  <div className="flex justify-between items-center pt-2 px-1 gap-2">
+                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><Truck size={14} className="text-gray-400"/> <span>Get it by 26 May<br/><span className="text-gray-400">Free Delivery</span></span></div>
+                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><RefreshCw size={14} className="text-gray-400"/> <span>Easy Returns<br/><span className="text-gray-400">15 days return</span></span></div>
+                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><ShieldCheck size={14} className="text-gray-400"/> <span>Secure Payment<br/><span className="text-gray-400">100% protected</span></span></div>
+                  </div>
+
+                  {/* Tabs */}
+                  <div className="pt-6">
+                    <div className="flex border-b border-gray-200 gap-6">
+                       {['Product Details', 'Fabric & Care', 'Shipping & Returns', 'Reviews (128)'].map(tab => (
+                          <button key={tab} onClick={() => setActiveDetailTab(tab)} className={`pb-3 text-xs font-bold transition-colors border-b-2 ${activeDetailTab === tab ? 'border-[#986427] text-[#986427]' : 'border-transparent text-gray-500 hover:text-[#1A0A08]'}`}>
+                            {tab}
+                          </button>
+                       ))}
+                    </div>
+                    <div className="py-4 text-xs text-gray-600 leading-relaxed font-medium">
+                       {activeDetailTab === 'Product Details' && (
+                         <div className="flex flex-col sm:flex-row gap-4">
+                           <p className="flex-1">Step into effortless elegance with this beautiful piece. It is tailored in premium fabric for all-day comfort, combining functionality with sophisticated styling.</p>
+                           <ul className="flex-1 list-disc pl-4 space-y-1">
+                             {selectedProduct.highlights.map((h, i) => <li key={i}>{h}</li>)}
+                           </ul>
+                         </div>
+                       )}
+                       {activeDetailTab === 'Fabric & Care' && (
+                         <p>Premium blends designed for longevity. Dry clean only. Do not bleach or tumble dry.</p>
+                       )}
+                       {activeDetailTab === 'Shipping & Returns' && (
+                         <p>Free standard shipping on all orders. Returns and exchanges are accepted within 15 days of delivery.</p>
+                       )}
+                       {activeDetailTab === 'Reviews (128)' && (
+                         <p>Overall rating 4.6 based on 128 verified purchases.</p>
+                       )}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: Recommendations & Services */}
+              <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 space-y-6">
+                
+                {/* Complete the Look */}
+                <div>
+                   <div className="flex justify-between items-center mb-3">
+                     <h3 className="font-bold text-sm text-[#1A0A08]">Complete the Look</h3>
+                     <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center">View All <ArrowRight size={10} className="ml-0.5"/></span>
+                   </div>
+                   <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                     {/* Using fetchedProducts as accessories */}
+                     {fetchedProducts.filter(p => p.id !== selectedProduct.id).slice(0, 3).map((item, i) => (
+                       <div key={i} className="w-[100px] shrink-0 bg-[#F9F7F5] rounded-xl p-2 pb-3 border border-gray-100 flex flex-col group relative">
+                         <div className="w-full aspect-[4/5] rounded-lg overflow-hidden mb-2 bg-white flex items-center justify-center">
+                           <img src={(item.images && item.images[0]) || "/images/herobannerimage/casual.png"} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                         </div>
+                         <h4 className="text-[9px] font-bold text-[#1A0A08] leading-tight mb-1 truncate">{item.title}</h4>
+                         <span className="text-[10px] font-bold text-gray-600">₹ {(item.price || 0).toLocaleString()}</span>
+                         <button className="absolute bottom-2 right-2 w-5 h-5 bg-white shadow-sm rounded-full flex items-center justify-center text-gray-400 hover:text-[#986427] hover:border-[#986427] border transition-colors">
+                           <Plus size={10}/>
+                         </button>
+                       </div>
+                     ))}
+                   </div>
+                </div>
+
+                {/* Why it suits you */}
+                <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100">
+                  <h4 className="font-bold text-sm text-[#1A0A08] mb-4">Why it suits you</h4>
+                  <ul className="space-y-3 text-xs text-gray-700 font-medium">
+                    <li className="flex items-start gap-2">
+                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
+                      <span>Flattering for your <strong className="text-[#1A0A08]">Hourglass</strong> body shape</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center shrink-0 mt-0.5 border border-white/40 shadow-inner"><div className="w-2 flex justify-center text-[10px] font-bold text-[#1A0A08]">I</div></div>
-                      <span>Ideal length for <strong className="text-[#1A0A08]">{profile.height}</strong> height, offering a balanced silhouette.</span>
+                    <li className="flex items-start gap-2">
+                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
+                      <span>Perfect for your <strong className="text-[#1A0A08]">{profile.height}</strong> height</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center shrink-0 mt-0.5 border border-white/40 shadow-inner"><div className="w-2.5 h-2.5 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div></div>
-                      <span>This color palette makes <strong className="text-[#1A0A08]">{profile.skinTone}</strong> skin tone glow naturally.</span>
+                    <li className="flex items-start gap-2">
+                      <Check size={14} className="text-gray-700 shrink-0 mt-0.5" />
+                      <span>Colors that complement your <strong className="text-[#1A0A08]">{profile.skinTone}</strong> skin tone</span>
                     </li>
                   </ul>
+                  <button className="text-[10px] font-bold text-gray-500 underline mt-4 hover:text-[#1A0A08]">View Details</button>
                 </div>
 
-                <div className="space-y-3">
-                  <h4 className="font-bold text-[#1A0A08] text-xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Description</h4>
-                  <p className="text-sm text-[#1A0A08]/80 leading-relaxed font-medium">{selectedProduct.description}</p>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="font-bold text-[#1A0A08] text-xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Highlights</h4>
-                  <ul className="list-disc pl-5 space-y-1.5 text-sm text-[#1A0A08]/80 font-medium">
-                    {selectedProduct.highlights.map((h, i) => <li key={i}>{h}</li>)}
-                  </ul>
-                </div>
-
-                <div className="pt-6">
-                  <button 
-                    onClick={() => {
-                      // Formatting price string '₹ 2,899' to numeric-like string '2899' expected by cart
-                      const numericPrice = selectedProduct.price.replace(/[^0-9.]/g, '');
-                      
-                      addToCart({
-                        id: 'rec-' + Date.now().toString(),
-                        title: selectedProduct.name,
-                        price: numericPrice,
-                        images: [selectedProduct.image]
-                      }, profile.size);
-                      
-                      navigate('/cart');
-                    }}
-                    className="w-full bg-gradient-to-b from-[#3A2419] to-[#1A0A08] text-white py-4 rounded-xl font-bold transition-all shadow-[0_4px_12px_rgba(26,10,8,0.3)] hover:from-[#4A3022] hover:to-[#240E0C] flex items-center justify-center gap-2 uppercase tracking-wide text-sm"
-                  >
-                    <ShoppingBag size={18} /> Add to Cart
-                  </button>
+                {/* Our Services */}
+                <div>
+                   <div className="flex justify-between items-center mb-3">
+                     <h3 className="font-bold text-sm text-[#1A0A08]">Our Services</h3>
+                     <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center">Explore all services <ArrowRight size={10} className="ml-0.5"/></span>
+                   </div>
+                   <div className="bg-[#F9F7F5] rounded-2xl border border-gray-100 divide-y divide-gray-200/60">
+                     <div className="p-3 flex gap-3 items-start group">
+                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><User size={14}/></div>
+                       <div>
+                         <h4 className="text-xs font-bold text-[#986427] mb-0.5">Casual</h4>
+                         <p className="text-[10px] text-gray-500 leading-tight">Affordable styles for everyday you.<br/>Give size or measurements.</p>
+                       </div>
+                     </div>
+                     <div className="p-3 flex gap-3 items-start group">
+                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1"/></div>
+                       <div>
+                         <h4 className="text-xs font-bold text-[#1A0A08] mb-0.5">Exclusive</h4>
+                         <p className="text-[10px] text-gray-500 leading-tight">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
+                       </div>
+                     </div>
+                     <div className="p-3 flex gap-3 items-start group">
+                       <div className="w-8 h-8 rounded-full bg-[#f0e6dd] text-[#986427] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
+                       <div>
+                         <h4 className="text-xs font-bold text-[#1A0A08] mb-0.5">Exclusive Plus</h4>
+                         <p className="text-[10px] text-gray-500 leading-tight">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
+                       </div>
+                     </div>
+                   </div>
                 </div>
 
               </div>
