@@ -1092,7 +1092,7 @@ export default function OnboardingScreen() {
             </div>
 
             {/* Top Product Section */}
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 items-start">
               {/* LEFT COLUMN: Gallery */}
               <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%]">
                 <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
@@ -1155,72 +1155,73 @@ export default function OnboardingScreen() {
                   })()}
 
                   {/* Size Top & Bottom */}
-                  <div className="space-y-3">
-                    <div>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs font-bold text-[#1A0A08]">Size (Top)</span>
                         <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Size Guide</span>
                       </div>
                       <div className="flex gap-2">
-                        <button className="flex-1 max-w-[60px] py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                        <button className="w-full py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
                       </div>
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <span className="text-xs font-bold text-[#1A0A08] block mb-2">Size (Bottom)</span>
                       <div className="flex gap-2">
-                        <button className="flex-1 max-w-[60px] py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                        <button className="w-full py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
                       </div>
                     </div>
                   </div>
 
                   {/* Fit Options */}
-                  <div className="space-y-2 pt-2">
-                    <div className="flex justify-between items-center mb-1">
+                  <div className="pt-2">
+                    <div className="flex justify-between items-center mb-2">
                       <span className="text-xs font-bold text-[#1A0A08]">How would you like to get the perfect fit?</span>
                       <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Help me choose</span>
                     </div>
                     
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
-                      <input type="radio" name="fit" checked={selectedFitMode === 'size'} onChange={() => setSelectedFitMode('size')} className="w-4 h-4 text-[#986427] focus:ring-[#986427]" />
-                      <div className="bg-white p-1.5 rounded-lg border border-gray-100 shadow-sm text-[#986427]"><Ruler size={16} /></div>
-                      <div>
-                        <p className="text-xs font-bold text-[#1A0A08]">Give Size</p>
-                        <p className="text-[10px] text-gray-500 font-medium">Select from standard sizes (S, M, L, XL, XXL)</p>
-                      </div>
-                    </label>
-                    
-                    <label className={`flex flex-col gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
-                      <div className="flex items-center gap-3" onClick={() => setSelectedFitMode('expert')}>
-                        <input type="radio" name="fit" checked={selectedFitMode === 'expert'} onChange={() => setSelectedFitMode('expert')} className="w-4 h-4 text-[#986427] focus:ring-[#986427]" />
-                        <div className="bg-white p-1.5 rounded-lg border border-gray-100 shadow-sm text-[#986427]"><User size={16} /></div>
-                        <div>
-                          <p className="text-xs font-bold text-[#1A0A08]">Book Our Expert</p>
-                          <p className="text-[10px] text-gray-500 font-medium">Our expert will take measurements for perfect fit</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
+                        <div className="flex items-center gap-2">
+                          <input type="radio" name="fit" checked={selectedFitMode === 'size'} onChange={() => setSelectedFitMode('size')} className="w-3.5 h-3.5 text-[#986427] focus:ring-[#986427]" />
+                          <div className="bg-white p-1 rounded border border-gray-100 shadow-sm text-[#986427]"><Ruler size={14} /></div>
+                          <p className="text-xs font-bold text-[#1A0A08]">Give Size</p>
                         </div>
-                      </div>
+                        <p className="text-[9px] text-gray-500 font-medium pl-6 leading-tight">Select from standard sizes</p>
+                      </label>
                       
-                      {selectedFitMode === 'expert' && (
-                        <div className="pl-9 pr-2 pt-2 animate-in slide-in-from-top-2 duration-300">
-                          <div className="bg-white p-3 rounded-lg border border-gray-200 space-y-3">
-                            <p className="text-[10px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
-                                <Calendar size={12} className="text-gray-400" />
-                                <input type="date" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
-                              </div>
-                              <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
-                                <Clock size={12} className="text-gray-400" />
-                                <input type="time" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
-                              </div>
+                      <label className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
+                        <div className="flex items-center gap-2">
+                          <input type="radio" name="fit" checked={selectedFitMode === 'expert'} onChange={() => setSelectedFitMode('expert')} className="w-3.5 h-3.5 text-[#986427] focus:ring-[#986427]" />
+                          <div className="bg-white p-1 rounded border border-gray-100 shadow-sm text-[#986427]"><User size={14} /></div>
+                          <p className="text-xs font-bold text-[#1A0A08]">Book Expert</p>
+                        </div>
+                        <p className="text-[9px] text-gray-500 font-medium pl-6 leading-tight">Expert takes measurements</p>
+                      </label>
+                    </div>
+
+                    {/* Expandable expert form */}
+                    {selectedFitMode === 'expert' && (
+                      <div className="mt-3 animate-in slide-in-from-top-2 duration-300">
+                        <div className="bg-[#F9F7F5] p-4 rounded-xl border border-gray-200 space-y-3">
+                          <p className="text-[11px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
+                              <Calendar size={12} className="text-[#986427]" />
+                              <input type="date" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
                             </div>
-                            <div className="flex items-center gap-2 border border-gray-200 rounded p-2">
-                              <MapPin size={12} className="text-gray-400 shrink-0" />
-                              <input type="text" placeholder="Enter your address for the visit" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
+                              <Clock size={12} className="text-[#986427]" />
+                              <input type="time" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
                             </div>
                           </div>
+                          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
+                            <MapPin size={12} className="text-[#986427] shrink-0" />
+                            <input type="text" placeholder="Enter full address for the visit" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                          </div>
                         </div>
-                      )}
-                    </label>
+                      </div>
+                    )}
                   </div>
 
                   {/* Actions */}
