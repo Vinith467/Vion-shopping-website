@@ -1094,7 +1094,7 @@ export default function OnboardingScreen() {
             {/* Top Product Section */}
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16">
               {/* LEFT COLUMN: Gallery */}
-              <div className="flex gap-4 w-full lg:w-[48%] xl:w-[55%]">
+              <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%]">
                 <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
                   {/* Thumbnails */}
                   {(selectedProduct.images?.length > 0 ? selectedProduct.images : [selectedProduct.image]).map((img, idx) => (
@@ -1103,8 +1103,8 @@ export default function OnboardingScreen() {
                     </div>
                   ))}
                 </div>
-                <div className="flex-1 bg-white rounded-2xl overflow-hidden relative h-[450px] sm:h-[550px] lg:h-[600px] xl:h-[700px] flex items-center justify-center group shadow-sm border border-gray-100">
-                  <img src={selectedProduct.images?.[activeImageIndex] || selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover object-top" />
+                <div className="flex-1 bg-white/50 rounded-2xl overflow-hidden relative h-[450px] sm:h-[550px] lg:h-[600px] flex items-center justify-center group shadow-sm border border-gray-100">
+                  <img src={selectedProduct.images?.[activeImageIndex] || selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-contain object-center mix-blend-multiply" />
                   <button className="absolute top-4 right-4 p-2.5 bg-white/60 hover:bg-white rounded-full text-[#1A0A08] hover:text-red-500 transition-colors shadow-sm backdrop-blur-md">
                     <Heart size={18} />
                   </button>
