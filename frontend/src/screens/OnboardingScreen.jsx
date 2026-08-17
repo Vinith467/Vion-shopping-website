@@ -46,8 +46,11 @@ const occasionsList = [
 export default function OnboardingScreen() {
   const navigate = useNavigate();
   const { addToCart, addMember, updateMember, deleteMember, setSelectedConsumerId, setPrimaryMember, members } = useAppContext();
-  const [step, setStep] = useState(1);
-  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const [step, setStep] = useState(() => parseInt(sessionStorage.getItem('onboardingStep')) || 1);
+  const [fetchedProducts, setFetchedProducts] = useState(() => {
+    const saved = sessionStorage.getItem('onboardingProducts');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [shoppingFor, setShoppingFor] = useState('Myself');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -88,7 +91,10 @@ export default function OnboardingScreen() {
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [showNameModal, setShowNameModal] = useState(false);
   const [activeCollectionTab, setActiveCollectionTab] = useState('All Recommendations');
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(() => {
+    const saved = sessionStorage.getItem('onboardingSelectedProduct');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [skinToneColors, setSkinToneColors] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   
@@ -102,6 +108,24 @@ export default function OnboardingScreen() {
   
   // Profile Data
   const [profile, setProfile] = useState(() => savedProfiles.length > 0 ? savedProfiles[0] : defaultProfile);
+
+  React.useEffect(() => {
+    sessionStorage.setItem('onboardingStep', step);
+  }, [step]);
+
+  React.useEffect(() => {
+    if (fetchedProducts.length > 0) {
+      sessionStorage.setItem('onboardingProducts', JSON.stringify(fetchedProducts));
+    }
+  }, [fetchedProducts]);
+
+  React.useEffect(() => {
+    if (selectedProduct) {
+      sessionStorage.setItem('onboardingSelectedProduct', JSON.stringify(selectedProduct));
+    } else {
+      sessionStorage.removeItem('onboardingSelectedProduct');
+    }
+  }, [selectedProduct]);
 
   // Sync when members are loaded after component mounts
   React.useEffect(() => {
