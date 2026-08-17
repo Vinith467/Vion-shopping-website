@@ -1093,8 +1093,8 @@ export default function OnboardingScreen() {
 
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
               {/* LEFT COLUMN: Gallery */}
-              <div className="flex gap-4 w-full lg:w-[45%]">
-                <div className="flex flex-col gap-3 w-20 shrink-0 hidden sm:flex">
+              <div className="flex gap-4 w-full lg:w-[38%] xl:w-[35%]">
+                <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
                   {/* Thumbnails (Mocking a few for now using the main image or fallback) */}
                   {[selectedProduct.image, "/images/herobannerimage/casual.png", "/images/herobannerimage/ethnic.png"].map((img, idx) => (
                     <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
@@ -1102,19 +1102,16 @@ export default function OnboardingScreen() {
                     </div>
                   ))}
                 </div>
-                <div className="flex-1 bg-[#F9F7F5] rounded-3xl overflow-hidden relative aspect-[3/4] flex items-center justify-center group">
+                <div className="flex-1 bg-[#F9F7F5] rounded-2xl overflow-hidden relative aspect-[3/4] max-h-[700px] flex items-center justify-center group">
                   <img src={activeImageIndex === 0 ? selectedProduct.image : (activeImageIndex === 1 ? "/images/herobannerimage/casual.png" : "/images/herobannerimage/ethnic.png")} alt={selectedProduct.name} className="w-full h-full object-cover" />
                   <button className="absolute top-4 right-4 p-2.5 bg-white/60 hover:bg-white rounded-full text-[#1A0A08] hover:text-red-500 transition-colors shadow-sm backdrop-blur-md">
                     <Heart size={18} />
-                  </button>
-                  <button className="absolute bottom-4 right-4 bg-white/80 hover:bg-white px-3 py-1.5 rounded-lg text-xs font-bold text-[#1A0A08] flex items-center gap-1 shadow-sm transition-colors backdrop-blur-sm">
-                    <Box size={14} /> View in 3D
                   </button>
                 </div>
               </div>
 
               {/* MIDDLE COLUMN: Details & Actions */}
-              <div className="flex-1 flex flex-col space-y-6">
+              <div className="flex-1 flex flex-col space-y-5">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h2 className="text-2xl lg:text-3xl font-bold text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
@@ -1276,7 +1273,7 @@ export default function OnboardingScreen() {
               </div>
 
               {/* RIGHT COLUMN: Recommendations & Services */}
-              <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 space-y-6">
+              <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 space-y-6">
                 
                 {/* Complete the Look */}
                 <div>
