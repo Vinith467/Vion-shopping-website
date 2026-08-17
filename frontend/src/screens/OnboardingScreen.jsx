@@ -1304,9 +1304,13 @@ export default function OnboardingScreen() {
                         </div>
                       </div>
                     </div>
+                    
+                    {/* Product Description */}
+                    <div className="pt-4 mt-6">
+                      <h3 className="font-bold text-[13px] text-[#1A0A08] uppercase tracking-wide mb-3">Product Details</h3>
+                      <p className="text-[13px] text-gray-600 leading-relaxed font-medium">{selectedProduct.description}</p>
+                    </div>
                   </div>
-
-                </div>
               </div>
             </div>
           </div>
