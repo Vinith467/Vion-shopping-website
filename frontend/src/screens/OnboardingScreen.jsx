@@ -169,7 +169,7 @@ export default function OnboardingScreen() {
   const prevStep = () => setStep(prev => Math.max(1, prev - 1));
 
   return (
-    <div className="min-h-screen font-sans relative overflow-clip bg-[#e8d5c4]">
+    <div className="min-h-[100dvh] font-sans relative overflow-clip bg-[#e8d5c4]">
       {/* Background Image & Gradient */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 right-0 w-full lg:w-2/3 h-full">
@@ -179,7 +179,7 @@ export default function OnboardingScreen() {
         <div className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-[#e8d5c4]"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-[100dvh]">
 
 
         {/* Progress Bar Header */}

@@ -348,6 +348,7 @@ export default function AdminInventory() {
       size: derivedSizes.length > 0 ? derivedSizes.join(',') : 'all',
       body_shape: derivedHeights.length > 0 ? derivedHeights.join(',') : 'all', // backward compatibility
       target_genders: formData.target_genders,
+      target_body_shapes: formData.target_body_shapes,
       occasion_tags: formData.occasion_tags,
       target_skin_tones: derivedSkinTones,
       style_tags: formData.style_tags,

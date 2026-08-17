@@ -88,7 +88,7 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-white min-h-screen w-full flex flex-col">
+    <div className="bg-white min-h-[100dvh] w-full flex flex-col">
       <ScrollToTop />
       <Toaster position="top-center" />
       {/* Desktop Top Navigation */}

@@ -173,11 +173,11 @@ export default function AccountScreen() {
   ];
 
   if (isLoading) {
-    return <div className="min-h-screen bg-[#e8d5c4] flex items-center justify-center font-serif italic text-gray-500">Loading your account...</div>;
+    return <div className="min-h-[100dvh] bg-[#e8d5c4] flex items-center justify-center font-serif italic text-gray-500">Loading your account...</div>;
   }
 
   return (
-    <div className="min-h-screen relative overflow-clip bg-[#e8d5c4] pt-12 pb-24">
+    <div className="min-h-[100dvh] relative overflow-clip bg-[#e8d5c4] pt-12 pb-24">
       {/* Background Glossy Elements (similar to Onboarding) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-white/20 rounded-full blur-[100px]" />

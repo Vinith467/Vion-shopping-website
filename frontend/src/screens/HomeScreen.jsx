@@ -33,10 +33,10 @@ export default function HomeScreen() {
   const glassCardHover = "hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] transition-all duration-300";
 
   return (
-    <div onClickCapture={handlePageClick} className="flex w-full flex-col min-h-screen font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
+    <div onClickCapture={handlePageClick} className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
       
       {/* 1. Hero Section */}
-      <section className="relative w-full max-w-[1983px] mx-auto min-h-[85vh] lg:min-h-0 lg:aspect-[1983/793] flex flex-col justify-end md:justify-center overflow-hidden">
+      <section className="relative w-full max-w-[1983px] mx-auto min-h-[85svh] lg:min-h-0 lg:aspect-[1983/793] flex flex-col justify-end md:justify-center overflow-hidden">
         
         {/* Full Background Image */}
         <div className="absolute inset-0 z-0">
