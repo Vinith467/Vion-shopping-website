@@ -1153,7 +1153,7 @@ export default function OnboardingScreen() {
                           <span className="text-[11px] font-bold text-[#1A0A08] block mb-3 uppercase tracking-wide">Color</span>
                           <div className="flex gap-2">
                             {uniqueColors.map((color, idx) => (
-                              <button key={idx} title={color} className={`px-5 py-2 rounded-md border-2 text-[11px] font-bold transition-all shadow-sm ${idx === 0 ? 'border-[#986427] text-[#986427] bg-[#F9F7F5]' : 'border-gray-200 text-gray-600 bg-white hover:border-[#986427]/50'}`}>
+                              <button key={idx} title={color} className={`px-5 py-2 rounded-md border-2 text-[11px] font-bold transition-all shadow-sm ${idx === 0 ? 'border-[#986427] text-[#986427] bg-[#986427]/10' : 'border-white/60 text-gray-600 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30'}`}>
                                 {color}
                               </button>
                             ))}
@@ -1193,24 +1193,24 @@ export default function OnboardingScreen() {
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/5 shadow-[0_2px_8px_rgba(152,100,39,0.08)]' : 'border-gray-100 bg-white hover:border-[#986427]/30 hover:shadow-sm'}`}>
+                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/10 shadow-md' : 'border-white/60 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30 hover:shadow-sm'}`}>
                         <div className="flex items-center gap-2 mb-1.5">
-                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'size' ? 'border-[#986427]' : 'border-gray-300'}`}>
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'size' ? 'border-[#986427]' : 'border-gray-400'}`}>
                             {selectedFitMode === 'size' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
                           </div>
                           <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'size' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Standard Size</p>
                         </div>
-                        <p className="text-[10px] text-gray-500 font-medium pl-6 leading-tight">We'll use your saved profile sizes.</p>
+                        <p className="text-[10px] text-gray-600 font-medium pl-6 leading-tight">We'll use your saved profile sizes.</p>
                       </label>
                       
-                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/5 shadow-[0_2px_8px_rgba(152,100,39,0.08)]' : 'border-gray-100 bg-white hover:border-[#986427]/30 hover:shadow-sm'}`}>
+                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/10 shadow-md' : 'border-white/60 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30 hover:shadow-sm'}`}>
                         <div className="flex items-center gap-2 mb-1.5">
-                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427]' : 'border-gray-300'}`}>
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427]' : 'border-gray-400'}`}>
                             {selectedFitMode === 'expert' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
                           </div>
                           <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'expert' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Bespoke Fit</p>
                         </div>
-                        <p className="text-[10px] text-gray-500 font-medium pl-6 leading-tight">Expert takes your exact measurements.</p>
+                        <p className="text-[10px] text-gray-600 font-medium pl-6 leading-tight">Expert takes your exact measurements.</p>
                       </label>
                     </div>
 
