@@ -1174,9 +1174,6 @@ export default function OnboardingScreen() {
                   </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-[#1A0A08]/10 my-5"></div>
-
-                <p className="text-[13px] text-gray-600 leading-relaxed font-medium mb-6 max-w-[95%]">{selectedProduct.description}</p>
 
                 <div className="space-y-6">
                   {/* Colors - Dynamic from Variations */}
