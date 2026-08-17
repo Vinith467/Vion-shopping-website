@@ -1170,55 +1170,27 @@ export default function OnboardingScreen() {
 
                   {/* Fit Options */}
                   <div className="pt-6 border-t border-gray-100">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-[12px] font-bold text-[#1A0A08] uppercase tracking-wide">Select Fit</span>
-                      <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1 cursor-pointer hover:text-[#986427] transition-colors"><Info size={12}/> Help me choose</span>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Select Fit & Size</span>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/10 shadow-md' : 'border-white/60 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30 hover:shadow-sm'}`}>
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'size' ? 'border-[#986427]' : 'border-gray-400'}`}>
-                            {selectedFitMode === 'size' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
-                          </div>
-                          <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'size' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Standard Size</p>
-                        </div>
-                        <p className="text-[10px] text-gray-600 font-medium pl-6 leading-tight">We'll use your saved profile sizes.</p>
-                      </label>
+                      <button 
+                        onClick={() => setShowStandardSizeModal(true)}
+                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 backdrop-blur-sm text-[#1A0A08] hover:bg-white/60 hover:border-[#986427]/30'}`}
+                      >
+                        <span className="text-[12px] font-bold">Standard Size</span>
+                        <span className="text-[9px] opacity-70 font-medium mt-0.5">Pick from S, M, L, XL</span>
+                      </button>
                       
-                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/10 shadow-md' : 'border-white/60 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30 hover:shadow-sm'}`}>
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427]' : 'border-gray-400'}`}>
-                            {selectedFitMode === 'expert' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
-                          </div>
-                          <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'expert' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Bespoke Fit</p>
-                        </div>
-                        <p className="text-[10px] text-gray-600 font-medium pl-6 leading-tight">Expert takes your exact measurements.</p>
-                      </label>
+                      <button 
+                        onClick={() => setShowBespokeFitModal(true)}
+                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 backdrop-blur-sm text-[#1A0A08] hover:bg-white/60 hover:border-[#986427]/30'}`}
+                      >
+                        <span className="text-[12px] font-bold">Book Our Expert</span>
+                        <span className="text-[9px] opacity-70 font-medium mt-0.5">We measure you</span>
+                      </button>
                     </div>
-
-                    {/* Expandable expert form */}
-                    {selectedFitMode === 'expert' && (
-                      <div className="animate-in slide-in-from-top-2 duration-300 mb-6">
-                        <div className="bg-[#F9F7F5] p-5 rounded-xl border border-[#E5D5C5] space-y-4 shadow-inner">
-                          <p className="text-[12px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
-                          <div className="grid grid-cols-2 gap-3">
-                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
-                              <Calendar size={14} className="text-[#986427]" />
-                              <input type="date" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                            </div>
-                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
-                              <Clock size={14} className="text-[#986427]" />
-                              <input type="time" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
-                            <MapPin size={14} className="text-[#986427] shrink-0" />
-                            <input type="text" placeholder="Enter full address for the visit" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {/* Actions */}
