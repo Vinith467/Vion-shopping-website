@@ -1102,8 +1102,8 @@ export default function OnboardingScreen() {
                     </div>
                   ))}
                 </div>
-                <div className="flex-1 bg-white rounded-2xl overflow-hidden relative aspect-[3/4] max-h-[700px] flex items-center justify-center group shadow-sm border border-gray-100">
-                  <img src={selectedProduct.images?.[activeImageIndex] || selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                <div className="flex-1 bg-white rounded-2xl overflow-hidden relative h-[450px] sm:h-[550px] lg:h-[600px] xl:h-[700px] flex items-center justify-center group shadow-sm border border-gray-100">
+                  <img src={selectedProduct.images?.[activeImageIndex] || selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover object-top" />
                   <button className="absolute top-4 right-4 p-2.5 bg-white/60 hover:bg-white rounded-full text-[#1A0A08] hover:text-red-500 transition-colors shadow-sm backdrop-blur-md">
                     <Heart size={18} />
                   </button>
@@ -1223,7 +1223,7 @@ export default function OnboardingScreen() {
                   </div>
 
                   {/* Actions */}
-                  <div className="pt-2 flex gap-3">
+                  <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 p-4 flex gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
                     <button 
                       onClick={() => {
                         const numericPrice = selectedProduct.price.replace(/[^0-9.]/g, '');
@@ -1245,43 +1245,6 @@ export default function OnboardingScreen() {
                     <button className="flex-1 bg-white hover:bg-gray-50 border border-[#1A0A08]/20 text-[#1A0A08] py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm">
                       <Heart size={18} /> Wishlist
                     </button>
-                  </div>
-
-                  {/* Badges */}
-                  <div className="flex justify-between items-center pt-2 px-1 gap-2">
-                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><Truck size={14} className="text-gray-400"/> <span>Get it by 26 May<br/><span className="text-gray-400">Free Delivery</span></span></div>
-                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><RefreshCw size={14} className="text-gray-400"/> <span>Easy Returns<br/><span className="text-gray-400">15 days return</span></span></div>
-                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600"><ShieldCheck size={14} className="text-gray-400"/> <span>Secure Payment<br/><span className="text-gray-400">100% protected</span></span></div>
-                  </div>
-
-                  {/* Tabs */}
-                  <div className="pt-6">
-                    <div className="flex border-b border-gray-200 gap-6">
-                       {['Product Details', 'Fabric & Care', 'Shipping & Returns', 'Reviews (128)'].map(tab => (
-                          <button key={tab} onClick={() => setActiveDetailTab(tab)} className={`pb-3 text-xs font-bold transition-colors border-b-2 ${activeDetailTab === tab ? 'border-[#986427] text-[#986427]' : 'border-transparent text-gray-500 hover:text-[#1A0A08]'}`}>
-                            {tab}
-                          </button>
-                       ))}
-                    </div>
-                    <div className="py-4 text-xs text-gray-600 leading-relaxed font-medium">
-                       {activeDetailTab === 'Product Details' && (
-                         <div className="flex flex-col sm:flex-row gap-4">
-                           <p className="flex-1">Step into effortless elegance with this beautiful piece. It is tailored in premium fabric for all-day comfort, combining functionality with sophisticated styling.</p>
-                           <ul className="flex-1 list-disc pl-4 space-y-1">
-                             {selectedProduct.highlights.map((h, i) => <li key={i}>{h}</li>)}
-                           </ul>
-                         </div>
-                       )}
-                       {activeDetailTab === 'Fabric & Care' && (
-                         <p>Premium blends designed for longevity. Dry clean only. Do not bleach or tumble dry.</p>
-                       )}
-                       {activeDetailTab === 'Shipping & Returns' && (
-                         <p>Free standard shipping on all orders. Returns and exchanges are accepted within 15 days of delivery.</p>
-                       )}
-                       {activeDetailTab === 'Reviews (128)' && (
-                         <p>Overall rating 4.6 based on 128 verified purchases.</p>
-                       )}
-                    </div>
                   </div>
 
                 </div>
