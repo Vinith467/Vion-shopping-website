@@ -190,25 +190,25 @@ export default function OnboardingScreen() {
 
         {/* Progress Bar Header */}
         <div className="px-0 md:px-6 lg:px-12 pt-5 pb-3 w-full max-w-7xl mx-auto relative overflow-hidden">
-          <div className="flex items-center justify-between relative overflow-x-auto hide-scrollbar px-6 md:px-0 snap-x">
+          <div className="flex items-center justify-start md:justify-between gap-8 md:gap-0 relative overflow-x-auto hide-scrollbar px-6 md:px-0 snap-x">
             <div className="absolute top-1/2 left-[5%] w-[90%] h-[1px] bg-black/10 -z-10 -translate-y-1/2 hidden md:block"></div>
             
-            <div className="flex items-center gap-2.5 pr-6 md:pr-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setStep(1)}>
+            <div className={`items-center gap-2.5 pr-6 md:pr-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 1 || (step === 2 && false) || (step === 4 && false) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(1)}>
               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 1 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>1</div>
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 1 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Who are you<br/>shopping for?</span>
             </div>
 
-            <div className="flex items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setStep(2)}>
+            <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 2 || step === 1 ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(2)}>
               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 2 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>2</div>
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 2 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Tell us about them<br/><span className={`text-[12px] md:text-[13px] ${step >= 2 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Profile Details)</span></span>
             </div>
 
-            <div className="flex items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setStep(3)}>
+            <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 3 || step === 2 || (step === 4) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(3)}>
               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 3 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>3</div>
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 3 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your VION Collection<br/><span className={`text-[12px] md:text-[13px] ${step >= 3 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Recommended for them)</span></span>
             </div>
 
-            <div className="flex items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start cursor-default">
+            <div className={`items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start cursor-default ${step === 4 || step === 3 ? 'flex' : 'hidden md:flex'}`}>
               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 4 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>4</div>
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 4 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Shop with<br/>Confidence</span>
             </div>
