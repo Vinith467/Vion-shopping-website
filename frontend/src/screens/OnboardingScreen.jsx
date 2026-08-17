@@ -763,10 +763,7 @@ export default function OnboardingScreen() {
                         if (profile.height) {
                           query = query.or(`body_shape.eq.all,body_shape.ilike.%${profile.height}%`);
                         }
-                        if (profile.occasions && profile.occasions.length > 0) {
-                          const occFilters = profile.occasions.map(occ => `occasion_tags.cs.{"${occ}"}`).join(',');
-                          query = query.or(`${occFilters}`);
-                        }
+                        // Occasions are handled by frontend tabs, so we don't strictly filter them in the DB query here.
                         
                         const { data } = await query.order('created_at', { ascending: false }).limit(20);
                         if (data) setFetchedProducts(data);
@@ -945,7 +942,10 @@ export default function OnboardingScreen() {
                       No exact matches found for your profile. Try adjusting your preferences.
                     </div>
                   ) : (
-                    fetchedProducts.map((item) => {
+                    fetchedProducts.filter(item => {
+                      if (activeCollectionTab === 'All Recommendations') return true;
+                      return item.occasion_tags?.includes(activeCollectionTab);
+                    }).map((item) => {
                       const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
                       const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
                       const displayColor = matchingVar?.color_name || "";
