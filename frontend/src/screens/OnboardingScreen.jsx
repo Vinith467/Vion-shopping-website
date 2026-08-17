@@ -1311,6 +1311,7 @@ export default function OnboardingScreen() {
                       <p className="text-[13px] text-gray-600 leading-relaxed font-medium">{selectedProduct.description}</p>
                     </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
