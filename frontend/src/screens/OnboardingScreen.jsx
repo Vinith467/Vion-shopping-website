@@ -94,6 +94,8 @@ export default function OnboardingScreen() {
   
   // Product Details UI States
   const [selectedFitMode, setSelectedFitMode] = useState('size');
+  const [showStandardSizeModal, setShowStandardSizeModal] = useState(false);
+  const [showBespokeFitModal, setShowBespokeFitModal] = useState(false);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
@@ -1164,26 +1166,7 @@ export default function OnboardingScreen() {
                     return null;
                   })()}
 
-                  {/* Size Top & Bottom */}
-                  <div className="flex gap-8">
-                    <div className="flex-1 max-w-[120px]">
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
-                        <span className="text-[9px] font-bold text-gray-400 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button className="min-w-[56px] h-[40px] flex items-center justify-center border-2 border-[#986427] bg-[#F9F7F5] text-[#986427] font-bold text-[13px] rounded-md shadow-sm transition-all hover:bg-[#986427]/10">{profile.size || 'S'}</button>
-                      </div>
-                    </div>
-                    <div className="flex-1 max-w-[120px]">
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button className="min-w-[56px] h-[40px] flex items-center justify-center border-2 border-[#986427] bg-[#F9F7F5] text-[#986427] font-bold text-[13px] rounded-md shadow-sm transition-all hover:bg-[#986427]/10">{profile.size || 'S'}</button>
-                      </div>
-                    </div>
-                  </div>
+
 
                   {/* Fit Options */}
                   <div className="pt-6 border-t border-gray-100">
@@ -1409,6 +1392,133 @@ export default function OnboardingScreen() {
               >
                 Yes, Delete
               </button>
+            </div>
+          </div>
+        </div>
+      {/* Standard Size Modal */}
+      {showStandardSizeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowStandardSizeModal(false)}></div>
+          <div className="relative w-full max-w-sm bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl p-8 animate-in zoom-in-95 duration-300">
+            <button onClick={() => setShowStandardSizeModal(false)} className="absolute top-4 right-4 text-[#1A0A08] hover:opacity-70"><X size={20} /></button>
+            <h3 className="text-2xl font-bold text-[#1A0A08] mb-6 text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Select Standard Size
+            </h3>
+            
+            <div className="space-y-6">
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
+                  <span className="text-[9px] font-bold text-gray-500 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
+                </div>
+                <div className="flex gap-2">
+                  {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                    <button 
+                      key={s} 
+                      onClick={() => setProfile({...profile, size: s})}
+                      className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
+                </div>
+                <div className="flex gap-2">
+                  {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                    <button 
+                      key={s}
+                      onClick={() => setProfile({...profile, size: s})} 
+                      className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button 
+                onClick={() => {
+                  setSelectedFitMode('size');
+                  setShowStandardSizeModal(false);
+                }}
+                className="w-full mt-2 bg-gradient-to-b from-[#3A2419] to-[#1A0A08] text-white py-3.5 rounded-xl font-bold transition-all shadow-[0_4px_12px_rgba(26,10,8,0.3)] hover:from-[#4A3022] hover:to-[#240E0C]"
+              >
+                Confirm Sizes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Book Our Expert Modal */}
+      {showBespokeFitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-md" onClick={() => setShowBespokeFitModal(false)}></div>
+          <div className="relative w-full max-w-4xl bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-300">
+            <button onClick={() => setShowBespokeFitModal(false)} className="absolute top-4 right-4 z-10 p-2 bg-white/50 rounded-full text-[#1A0A08] hover:bg-white transition-colors"><X size={20} /></button>
+            
+            {/* Left Column: Image */}
+            <div className="w-full md:w-1/2 bg-[#F9F7F5] flex items-center justify-center p-8 border-b md:border-b-0 md:border-r border-gray-200">
+              <img 
+                src={profile.gender === 'Male' ? '/images/mens_measurement_guide.png' : '/images/womens_measurement_guide.png'} 
+                alt="Measurement Guide" 
+                className="w-full h-auto max-h-[500px] object-contain mix-blend-multiply"
+              />
+            </div>
+            
+            {/* Right Column: Form */}
+            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+              <div className="mb-2">
+                <span className="bg-[#f0e6dd] text-[#986427] text-[10px] font-extrabold px-2.5 py-1 rounded-sm tracking-widest uppercase shadow-sm">Premium Service</span>
+              </div>
+              <h3 className="text-3xl font-bold text-[#1A0A08] mb-3 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Book Our Expert
+              </h3>
+              <p className="text-sm text-gray-600 mb-8 leading-relaxed">
+                Our tailoring expert will visit you to take exact measurements for a flawless bespoke fit. Please select a convenient time and location.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Date</label>
+                    <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
+                      <Calendar size={16} className="text-[#986427]" />
+                      <input type="date" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Time</label>
+                    <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
+                      <Clock size={16} className="text-[#986427]" />
+                      <input type="time" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Address</label>
+                  <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
+                    <MapPin size={16} className="text-[#986427] shrink-0" />
+                    <input type="text" placeholder="Enter full address for the visit" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
+                  </div>
+                </div>
+                
+                <button 
+                  onClick={() => {
+                    setSelectedFitMode('expert');
+                    setShowBespokeFitModal(false);
+                  }}
+                  className="w-full mt-4 bg-[#986427] text-white py-4 rounded-xl font-bold transition-all shadow-lg hover:bg-[#7D5220] flex items-center justify-center gap-2 text-[14px]"
+                >
+                   Confirm Appointment <ArrowRight size={16}/>
+                </button>
+              </div>
             </div>
           </div>
         </div>
