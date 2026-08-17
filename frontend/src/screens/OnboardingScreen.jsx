@@ -176,13 +176,12 @@ export default function OnboardingScreen() {
 
   return (
     <div className="min-h-[100dvh] font-sans relative overflow-clip bg-[#e8d5c4]">
-      {/* Background Image & Gradient */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 right-0 w-full lg:w-2/3 h-full">
-          <img src="/images/onboarding_bg.jpg" alt="Background" className="w-full h-full object-cover object-center opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#e8d5c4]/50 to-[#e8d5c4] lg:via-[#e8d5c4]/80 lg:to-[#e8d5c4]"></div>
-        </div>
-        <div className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-[#e8d5c4]"></div>
+      {/* Dynamic Background Image - Hide on Step 4 for clean layout */}
+      <div className={`absolute inset-0 z-0 transition-opacity duration-500 ${step === 4 ? 'opacity-0' : 'opacity-100'}`}>
+        <img src={getBackgroundImage()} alt="Background" className="w-full h-full object-cover opacity-[0.85]" />
+        {/* Subtle gradient overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FDFBF7]/95 via-[#FDFBF7]/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7] via-transparent to-transparent"></div>
       </div>
 
       <div className="relative z-10 flex flex-col min-h-[100dvh]">
@@ -1085,7 +1084,7 @@ export default function OnboardingScreen() {
         {step === 4 && selectedProduct && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-500">
             <div className="flex items-center gap-4 mb-6">
-              <button onClick={() => setStep(3)} className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/50 text-[#1A0A08] p-2 rounded-full transition-colors shadow-sm">
+              <button onClick={() => setStep(3)} className={`p-2 rounded-full transition-colors shadow-sm ${step === 4 ? 'bg-white border border-gray-200 hover:bg-gray-50' : 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/50 text-[#1A0A08]'}`}>
                 <ArrowLeft size={20} />
               </button>
               <h1 className="text-4xl font-serif text-gray-900">Shop with Confidence</h1>
@@ -1095,15 +1094,15 @@ export default function OnboardingScreen() {
               {/* LEFT COLUMN: Gallery */}
               <div className="flex gap-4 w-full lg:w-[38%] xl:w-[35%]">
                 <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
-                  {/* Thumbnails (Mocking a few for now using the main image or fallback) */}
-                  {[selectedProduct.image, "/images/herobannerimage/casual.png", "/images/herobannerimage/ethnic.png"].map((img, idx) => (
-                    <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
+                  {/* Thumbnails */}
+                  {(selectedProduct.images?.length > 0 ? selectedProduct.images : [selectedProduct.image]).map((img, idx) => (
+                    <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
                       <img src={img} alt="" className="w-full h-full object-cover" />
                     </div>
                   ))}
                 </div>
-                <div className="flex-1 bg-[#F9F7F5] rounded-2xl overflow-hidden relative aspect-[3/4] max-h-[700px] flex items-center justify-center group">
-                  <img src={activeImageIndex === 0 ? selectedProduct.image : (activeImageIndex === 1 ? "/images/herobannerimage/casual.png" : "/images/herobannerimage/ethnic.png")} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                <div className="flex-1 bg-white rounded-2xl overflow-hidden relative aspect-[3/4] max-h-[700px] flex items-center justify-center group shadow-sm border border-gray-100">
+                  <img src={selectedProduct.images?.[activeImageIndex] || selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
                   <button className="absolute top-4 right-4 p-2.5 bg-white/60 hover:bg-white rounded-full text-[#1A0A08] hover:text-red-500 transition-colors shadow-sm backdrop-blur-md">
                     <Heart size={18} />
                   </button>
@@ -1128,15 +1127,30 @@ export default function OnboardingScreen() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Colors */}
-                  <div>
-                    <span className="text-xs font-bold text-[#1A0A08] block mb-2">Color: Sand Beige</span>
-                    <div className="flex gap-2">
-                      {['#EAE0D5', '#1A0A08', '#F5E6D3'].map((color, idx) => (
-                        <button key={idx} className={`w-8 h-8 rounded-full border-2 ${idx === 0 ? 'border-[#986427] scale-110 shadow-sm' : 'border-transparent hover:scale-105'} transition-all`} style={{ backgroundColor: color }}></button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Colors - Dynamic from Variations */}
+                  {(() => {
+                    const uniqueColors = Array.from(new Set(
+                      (selectedProduct?.originalItem?.variations || [])
+                        .map(v => v.color)
+                        .filter(c => c && c.trim() !== '')
+                    ));
+                    
+                    if (uniqueColors.length > 0) {
+                      return (
+                        <div>
+                          <span className="text-xs font-bold text-[#1A0A08] block mb-2">Color</span>
+                          <div className="flex gap-2">
+                            {uniqueColors.map((color, idx) => (
+                              <button key={idx} title={color} className={`px-4 py-1.5 rounded-full border-2 text-xs font-bold transition-all ${idx === 0 ? 'border-[#986427] text-[#986427] bg-[#986427]/5' : 'border-gray-200 text-gray-600 hover:border-[#986427]/50'}`}>
+                                {color}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   {/* Size Top & Bottom */}
                   <div className="space-y-3">
