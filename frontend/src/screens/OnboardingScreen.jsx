@@ -1112,23 +1112,33 @@ export default function OnboardingScreen() {
               </div>
 
               {/* RIGHT COLUMN: Details & Actions */}
-              <div className="flex-1 flex flex-col space-y-5 lg:pr-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <h2 className="text-2xl lg:text-3xl font-bold text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
-                    <span className="bg-[#f0e6dd] text-[#986427] text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Bestseller</span>
+              <div className="flex-1 flex flex-col pt-2 lg:pr-4">
+                
+                {/* Header & Title */}
+                <div className="mb-6">
+                  <div className="mb-3">
+                    <span className="bg-[#f0e6dd] text-[#986427] text-[9px] font-extrabold px-2.5 py-1 rounded-sm tracking-widest uppercase shadow-sm">Bestseller</span>
                   </div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex text-[#986427]">
-                      {'★★★★☆'.split('').map((star, i) => <span key={i} className="text-sm">{star}</span>)}
+                  <h2 className="text-3xl lg:text-4xl font-bold text-[#1A0A08] leading-tight mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
+                  
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="flex text-[#986427] gap-0.5">
+                      {'★★★★☆'.split('').map((star, i) => <span key={i} className="text-[14px]">{star}</span>)}
                     </div>
-                    <span className="text-xs text-gray-500 font-medium">4.6 (128 reviews)</span>
+                    <span className="text-[11px] text-gray-500 font-bold underline cursor-pointer hover:text-[#1A0A08] transition-colors">128 Reviews</span>
                   </div>
-                  <p className="text-xl text-[#1A0A08] font-bold mb-3">{selectedProduct.price} <span className="text-[10px] font-normal text-gray-500 ml-2">Inclusive of all taxes</span></p>
-                  <p className="text-sm text-gray-600 leading-relaxed font-medium mb-4">{selectedProduct.description}</p>
+                  
+                  <p className="text-2xl text-[#1A0A08] font-bold font-serif flex items-baseline gap-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    {selectedProduct.price} 
+                    <span className="text-[9px] font-sans font-bold text-gray-400 tracking-wider uppercase">Inclusive of all taxes</span>
+                  </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="w-full h-[1px] bg-gray-100 mb-6"></div>
+
+                <p className="text-[13px] text-gray-600 leading-relaxed font-medium mb-8 max-w-[95%]">{selectedProduct.description}</p>
+
+                <div className="space-y-6">
                   {/* Colors - Dynamic from Variations */}
                   {(() => {
                     const uniqueColors = Array.from(new Set(
@@ -1139,11 +1149,11 @@ export default function OnboardingScreen() {
                     
                     if (uniqueColors.length > 0) {
                       return (
-                        <div>
-                          <span className="text-xs font-bold text-[#1A0A08] block mb-2">Color</span>
+                        <div className="mb-2">
+                          <span className="text-[11px] font-bold text-[#1A0A08] block mb-3 uppercase tracking-wide">Color</span>
                           <div className="flex gap-2">
                             {uniqueColors.map((color, idx) => (
-                              <button key={idx} title={color} className={`px-4 py-1.5 rounded-full border-2 text-xs font-bold transition-all ${idx === 0 ? 'border-[#986427] text-[#986427] bg-[#986427]/5' : 'border-gray-200 text-gray-600 hover:border-[#986427]/50'}`}>
+                              <button key={idx} title={color} className={`px-5 py-2 rounded-md border-2 text-[11px] font-bold transition-all shadow-sm ${idx === 0 ? 'border-[#986427] text-[#986427] bg-[#F9F7F5]' : 'border-gray-200 text-gray-600 bg-white hover:border-[#986427]/50'}`}>
                                 {color}
                               </button>
                             ))}
@@ -1155,69 +1165,73 @@ export default function OnboardingScreen() {
                   })()}
 
                   {/* Size Top & Bottom */}
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold text-[#1A0A08]">Size (Top)</span>
-                        <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Size Guide</span>
+                  <div className="flex gap-8">
+                    <div className="flex-1 max-w-[120px]">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
+                        <span className="text-[9px] font-bold text-gray-400 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
                       </div>
                       <div className="flex gap-2">
-                        <button className="w-full py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                        <button className="min-w-[56px] h-[40px] flex items-center justify-center border-2 border-[#986427] bg-[#F9F7F5] text-[#986427] font-bold text-[13px] rounded-md shadow-sm transition-all hover:bg-[#986427]/10">{profile.size || 'S'}</button>
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <span className="text-xs font-bold text-[#1A0A08] block mb-2">Size (Bottom)</span>
+                    <div className="flex-1 max-w-[120px]">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
+                      </div>
                       <div className="flex gap-2">
-                        <button className="w-full py-1.5 border border-[#986427] bg-[#986427]/5 text-[#986427] font-bold text-xs rounded-lg">{profile.size}</button>
+                        <button className="min-w-[56px] h-[40px] flex items-center justify-center border-2 border-[#986427] bg-[#F9F7F5] text-[#986427] font-bold text-[13px] rounded-md shadow-sm transition-all hover:bg-[#986427]/10">{profile.size || 'S'}</button>
                       </div>
                     </div>
                   </div>
 
                   {/* Fit Options */}
-                  <div className="pt-2">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs font-bold text-[#1A0A08]">How would you like to get the perfect fit?</span>
-                      <span className="text-[10px] font-bold text-gray-500 flex items-center gap-1 cursor-pointer hover:text-[#1A0A08] transition-colors"><Info size={10}/> Help me choose</span>
+                  <div className="pt-6 border-t border-gray-100">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-[12px] font-bold text-[#1A0A08] uppercase tracking-wide">Select Fit</span>
+                      <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1 cursor-pointer hover:text-[#986427] transition-colors"><Info size={12}/> Help me choose</span>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
-                        <div className="flex items-center gap-2">
-                          <input type="radio" name="fit" checked={selectedFitMode === 'size'} onChange={() => setSelectedFitMode('size')} className="w-3.5 h-3.5 text-[#986427] focus:ring-[#986427]" />
-                          <div className="bg-white p-1 rounded border border-gray-100 shadow-sm text-[#986427]"><Ruler size={14} /></div>
-                          <p className="text-xs font-bold text-[#1A0A08]">Give Size</p>
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/5 shadow-[0_2px_8px_rgba(152,100,39,0.08)]' : 'border-gray-100 bg-white hover:border-[#986427]/30 hover:shadow-sm'}`}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'size' ? 'border-[#986427]' : 'border-gray-300'}`}>
+                            {selectedFitMode === 'size' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
+                          </div>
+                          <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'size' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Standard Size</p>
                         </div>
-                        <p className="text-[9px] text-gray-500 font-medium pl-6 leading-tight">Select from standard sizes</p>
+                        <p className="text-[10px] text-gray-500 font-medium pl-6 leading-tight">We'll use your saved profile sizes.</p>
                       </label>
                       
-                      <label className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border cursor-pointer transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#F9F7F5]' : 'border-gray-200 hover:border-[#986427]/50'}`}>
-                        <div className="flex items-center gap-2">
-                          <input type="radio" name="fit" checked={selectedFitMode === 'expert'} onChange={() => setSelectedFitMode('expert')} className="w-3.5 h-3.5 text-[#986427] focus:ring-[#986427]" />
-                          <div className="bg-white p-1 rounded border border-gray-100 shadow-sm text-[#986427]"><User size={14} /></div>
-                          <p className="text-xs font-bold text-[#1A0A08]">Book Expert</p>
+                      <label className={`flex flex-col items-start p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/5 shadow-[0_2px_8px_rgba(152,100,39,0.08)]' : 'border-gray-100 bg-white hover:border-[#986427]/30 hover:shadow-sm'}`}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedFitMode === 'expert' ? 'border-[#986427]' : 'border-gray-300'}`}>
+                            {selectedFitMode === 'expert' && <div className="w-2 h-2 rounded-full bg-[#986427]" />}
+                          </div>
+                          <p className={`text-[13px] font-bold transition-colors ${selectedFitMode === 'expert' ? 'text-[#986427]' : 'text-[#1A0A08]'}`}>Bespoke Fit</p>
                         </div>
-                        <p className="text-[9px] text-gray-500 font-medium pl-6 leading-tight">Expert takes measurements</p>
+                        <p className="text-[10px] text-gray-500 font-medium pl-6 leading-tight">Expert takes your exact measurements.</p>
                       </label>
                     </div>
 
                     {/* Expandable expert form */}
                     {selectedFitMode === 'expert' && (
-                      <div className="mt-3 animate-in slide-in-from-top-2 duration-300">
-                        <div className="bg-[#F9F7F5] p-4 rounded-xl border border-gray-200 space-y-3">
-                          <p className="text-[11px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
+                      <div className="animate-in slide-in-from-top-2 duration-300 mb-6">
+                        <div className="bg-[#F9F7F5] p-5 rounded-xl border border-[#E5D5C5] space-y-4 shadow-inner">
+                          <p className="text-[12px] font-bold text-[#1A0A08] mb-1">Schedule an Appointment</p>
                           <div className="grid grid-cols-2 gap-3">
-                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
-                              <Calendar size={12} className="text-[#986427]" />
-                              <input type="date" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
+                              <Calendar size={14} className="text-[#986427]" />
+                              <input type="date" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
                             </div>
-                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
-                              <Clock size={12} className="text-[#986427]" />
-                              <input type="time" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
+                              <Clock size={14} className="text-[#986427]" />
+                              <input type="time" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
-                            <MapPin size={12} className="text-[#986427] shrink-0" />
-                            <input type="text" placeholder="Enter full address for the visit" className="text-[10px] w-full focus:outline-none text-gray-700 font-medium bg-transparent" />
+                          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 hover:border-gray-300 transition-colors shadow-sm">
+                            <MapPin size={14} className="text-[#986427] shrink-0" />
+                            <input type="text" placeholder="Enter full address for the visit" className="text-[11px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
                           </div>
                         </div>
                       </div>
@@ -1225,7 +1239,7 @@ export default function OnboardingScreen() {
                   </div>
 
                   {/* Actions */}
-                  <div className="fixed bottom-[72px] left-0 right-0 z-50 bg-white border-t border-gray-100 p-4 flex gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
+                  <div className="fixed bottom-[72px] left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-100 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
                     <button 
                       onClick={() => {
                         const numericPrice = selectedProduct.price.replace(/[^0-9.]/g, '');
@@ -1240,12 +1254,12 @@ export default function OnboardingScreen() {
                         }, profile.size);
                         navigate('/cart');
                       }}
-                      className="flex-1 bg-[#7C4022] hover:bg-[#5E3019] text-white py-3.5 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-sm"
+                      className="flex-1 bg-[#1A0A08] hover:bg-black text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-black/20 flex items-center justify-center gap-2.5 text-[13px] tracking-wide"
                     >
-                      <ShoppingBag size={18} /> Add to Bag
+                      <ShoppingBag size={16} /> Add to Bag
                     </button>
-                    <button className="flex-1 bg-white hover:bg-gray-50 border border-[#1A0A08]/20 text-[#1A0A08] py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm">
-                      <Heart size={18} /> Wishlist
+                    <button className="flex-1 bg-white hover:bg-[#F9F7F5] border-2 border-[#1A0A08] text-[#1A0A08] py-4 rounded-xl font-bold transition-all shadow-sm hover:shadow flex items-center justify-center gap-2.5 text-[13px] tracking-wide">
+                      <Heart size={16} /> Wishlist
                     </button>
                   </div>
 
