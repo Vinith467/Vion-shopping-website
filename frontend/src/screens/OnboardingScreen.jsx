@@ -1091,9 +1091,10 @@ export default function OnboardingScreen() {
               <h1 className="text-4xl font-serif text-gray-900">Shop with Confidence</h1>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+            {/* Top Product Section */}
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16">
               {/* LEFT COLUMN: Gallery */}
-              <div className="flex gap-4 w-full lg:w-[38%] xl:w-[35%]">
+              <div className="flex gap-4 w-full lg:w-[48%] xl:w-[55%]">
                 <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
                   {/* Thumbnails */}
                   {(selectedProduct.images?.length > 0 ? selectedProduct.images : [selectedProduct.image]).map((img, idx) => (
@@ -1110,8 +1111,8 @@ export default function OnboardingScreen() {
                 </div>
               </div>
 
-              {/* MIDDLE COLUMN: Details & Actions */}
-              <div className="flex-1 flex flex-col space-y-5">
+              {/* RIGHT COLUMN: Details & Actions */}
+              <div className="flex-1 flex flex-col space-y-5 lg:pr-4">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h2 className="text-2xl lg:text-3xl font-bold text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{selectedProduct.name}</h2>
@@ -1249,12 +1250,13 @@ export default function OnboardingScreen() {
 
                 </div>
               </div>
+            </div>
 
-              {/* RIGHT COLUMN: Recommendations & Services */}
-              <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 space-y-6">
+            {/* Bottom Section: Recommendations & Services */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 
                 {/* Complete the Look */}
-                <div>
+                <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100 flex flex-col">
                    <div className="flex justify-between items-center mb-3">
                      <h3 className="font-bold text-sm text-[#1A0A08]">Complete the Look</h3>
                      <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center">View All <ArrowRight size={10} className="ml-0.5"/></span>
@@ -1326,8 +1328,6 @@ export default function OnboardingScreen() {
                      </div>
                    </div>
                 </div>
-
-              </div>
             </div>
           </div>
         )}
