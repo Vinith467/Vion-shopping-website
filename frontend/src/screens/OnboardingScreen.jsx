@@ -1220,7 +1220,7 @@ export default function OnboardingScreen() {
 
                   <div className="pt-8 space-y-6 lg:pb-8">
                     {/* Why it suits you */}
-                    <div className="bg-[#F9F7F5] rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div className="bg-white/40 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)]">
                       <h4 className="font-bold text-[13px] text-[#1A0A08] mb-4 uppercase tracking-wide">Why it suits you</h4>
                       <ul className="space-y-3 text-xs text-gray-700 font-medium">
                         <li className="flex items-start gap-2.5">
@@ -1245,23 +1245,23 @@ export default function OnboardingScreen() {
                         <h3 className="font-bold text-[13px] text-[#1A0A08] uppercase tracking-wide">Our Services</h3>
                         <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center hover:text-[#1A0A08] transition-colors">Explore all services <ArrowRight size={10} className="ml-0.5"/></span>
                       </div>
-                      <div className="bg-[#F9F7F5] rounded-2xl border border-gray-100 divide-y divide-gray-200/60 shadow-sm">
+                      <div className="bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 divide-y divide-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)]">
                         <div className="p-3.5 flex gap-3.5 items-start group">
-                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/></div>
+                          <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/></div>
                           <div>
                             <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Casual</h4>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Affordable styles for everyday you.<br/>Give size or measurements.</p>
                           </div>
                         </div>
                         <div className="p-3.5 flex gap-3.5 items-start group">
-                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1.5"/></div>
+                          <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1.5"/></div>
                           <div>
                             <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive</h4>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
                           </div>
                         </div>
                         <div className="p-3.5 flex gap-3.5 items-start group">
-                          <div className="w-8 h-8 rounded-full bg-white text-[#986427] flex items-center justify-center shrink-0 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
+                          <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
                           <div>
                             <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive Plus</h4>
                             <p className="text-[11px] text-gray-500 leading-relaxed">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
