@@ -1213,7 +1213,7 @@ export default function OnboardingScreen() {
                     >
                       <ShoppingBag size={16} /> Add to Bag
                     </button>
-                    <button className="flex-1 bg-white hover:bg-[#F9F7F5] border-2 border-[#1A0A08] text-[#1A0A08] py-4 rounded-xl font-bold transition-all shadow-sm hover:shadow flex items-center justify-center gap-2.5 text-[13px] tracking-wide">
+                    <button className="flex-1 bg-white/40 backdrop-blur-md hover:bg-white/60 border border-white/60 text-[#1A0A08] py-4 rounded-xl font-bold transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.08)] flex items-center justify-center gap-2.5 text-[13px] tracking-wide">
                       <Heart size={16} /> Wishlist
                     </button>
                   </div>
