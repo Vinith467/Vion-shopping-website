@@ -1154,15 +1154,29 @@ export default function OnboardingScreen() {
                     <span className="text-[11px] text-gray-500 font-bold underline cursor-pointer hover:text-[#1A0A08] transition-colors">128 Reviews</span>
                   </div>
                   
-                  <p className="text-2xl text-[#1A0A08] font-bold font-serif flex items-baseline gap-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                    {selectedProduct.price} 
-                    <span className="text-[9px] font-sans font-bold text-gray-400 tracking-wider uppercase">Inclusive of all taxes</span>
-                  </p>
+                  <div className="flex items-baseline gap-2.5 mb-1.5">
+                    <span className="text-2xl text-[#1A0A08] font-bold font-sans tracking-tight">
+                      {selectedProduct.price}
+                    </span>
+                    {selectedProduct.originalItem?.compare_at_price > (selectedProduct.originalItem?.price || 0) && (
+                      <>
+                        <span className="text-sm text-gray-400 font-medium line-through font-sans">
+                          ₹ {selectedProduct.originalItem.compare_at_price.toLocaleString()}
+                        </span>
+                        <span className="text-[11px] font-bold text-[#986427] bg-[#f0e6dd] px-2 py-0.5 rounded-sm tracking-wide ml-1 font-sans">
+                          {Math.round(((selectedProduct.originalItem.compare_at_price - (selectedProduct.originalItem.price || 0)) / selectedProduct.originalItem.compare_at_price) * 100)}% OFF
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">
+                    Inclusive of all taxes
+                  </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-gray-100 mb-6"></div>
+                <div className="w-full h-[1px] bg-[#1A0A08]/10 my-5"></div>
 
-                <p className="text-[13px] text-gray-600 leading-relaxed font-medium mb-8 max-w-[95%]">{selectedProduct.description}</p>
+                <p className="text-[13px] text-gray-600 leading-relaxed font-medium mb-6 max-w-[95%]">{selectedProduct.description}</p>
 
                 <div className="space-y-6">
                   {/* Colors - Dynamic from Variations */}
@@ -1404,40 +1418,77 @@ export default function OnboardingScreen() {
             </h3>
             
             <div className="space-y-6">
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
-                  <span className="text-[9px] font-bold text-gray-500 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
-                </div>
-                <div className="flex gap-2">
-                  {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
-                    <button 
-                      key={s} 
-                      onClick={() => setProfile({...profile, size: s})}
-                      className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {(() => {
+                const SIZES_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+                const sortSizes = (sizes) => sizes.sort((a, b) => SIZES_ORDER.indexOf(a) - SIZES_ORDER.indexOf(b));
+                
+                const uniqueTopSizes = Array.from(new Set(
+                  (selectedProduct?.originalItem?.variations || [])
+                    .flatMap(v => {
+                       let sizes = [];
+                       if (Array.isArray(v.size_top)) sizes.push(...v.size_top);
+                       else if (v.size_top) sizes.push(v.size_top);
+                       if (Array.isArray(v.size)) sizes.push(...v.size);
+                       else if (v.size) sizes.push(v.size);
+                       return sizes;
+                    })
+                    .filter(s => s && s !== 'all')
+                ));
+                const displayTopSizes = uniqueTopSizes.length > 0 ? sortSizes(uniqueTopSizes) : ['S', 'M', 'L', 'XL', 'XXL'];
 
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
-                </div>
-                <div className="flex gap-2">
-                  {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
-                    <button 
-                      key={s}
-                      onClick={() => setProfile({...profile, size: s})} 
-                      className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                const uniqueBottomSizes = Array.from(new Set(
+                  (selectedProduct?.originalItem?.variations || [])
+                    .flatMap(v => {
+                       let sizes = [];
+                       if (Array.isArray(v.size_bottom)) sizes.push(...v.size_bottom);
+                       else if (v.size_bottom) sizes.push(v.size_bottom);
+                       if (Array.isArray(v.size)) sizes.push(...v.size);
+                       else if (v.size) sizes.push(v.size);
+                       return sizes;
+                    })
+                    .filter(s => s && s !== 'all')
+                ));
+                const displayBottomSizes = uniqueBottomSizes.length > 0 ? sortSizes(uniqueBottomSizes) : displayTopSizes;
+
+                return (
+                  <>
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
+                        <span className="text-[9px] font-bold text-gray-500 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {displayTopSizes.map(s => (
+                          <button 
+                            key={s} 
+                            onClick={() => setProfile({...profile, size: s})}
+                            className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {displayBottomSizes.map(s => (
+                          <button 
+                            key={s}
+                            onClick={() => setProfile({...profile, size: s})} 
+                            className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
 
               <button 
                 onClick={() => {
