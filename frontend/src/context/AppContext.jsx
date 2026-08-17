@@ -136,11 +136,11 @@ export function AppProvider({ children }) {
         .order('is_primary', { ascending: false });
 
       if (consumersData && consumersData.length > 0) {
-        // QUICK CLEANUP: If there are multiple consumers (due to race condition bugs), let's keep only the newest primary one
+        // QUICK CLEANUP: If there are multiple consumers (due to race condition bugs), let's keep only the oldest primary one (the real one)
         if (consumersData.length > 1) {
-          const primaryConsumers = consumersData.filter(c => c.is_primary).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          const primaryConsumers = consumersData.filter(c => c.is_primary).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
           if (primaryConsumers.length > 1) {
-            // Keep the first one (newest), delete the others
+            // Keep the first one (oldest), delete the others (newer duplicates)
             const toDelete = primaryConsumers.slice(1);
             for (const c of toDelete) {
               await supabase.from('consumers').delete().eq('id', c.id);
