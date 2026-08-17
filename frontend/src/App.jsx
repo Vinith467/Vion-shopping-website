@@ -33,13 +33,17 @@ const PlaceholderScreen = ({ title }) => (
 );
 
 const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, isInitialized } = useAppContext();
   
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isInitialized && !isLoggedIn) {
       window.dispatchEvent(new Event('openLoginModal'));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isInitialized]);
+
+  if (!isInitialized) {
+    return <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
+  }
 
   if (!isLoggedIn) {
     return <Navigate to="/home" replace />;
@@ -49,13 +53,17 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const AdminRoute = ({ children }) => {
-  const { isLoggedIn, profile } = useAppContext();
+  const { isLoggedIn, profile, isInitialized } = useAppContext();
   
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isInitialized && !isLoggedIn) {
       window.dispatchEvent(new Event('openLoginModal'));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isInitialized]);
+
+  if (!isInitialized) {
+    return <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
+  }
 
   if (!isLoggedIn) {
     return <Navigate to="/home" replace />;

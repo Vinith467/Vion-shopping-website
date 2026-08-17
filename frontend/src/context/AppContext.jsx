@@ -20,6 +20,7 @@ const AppContext = createContext();
 
 export function AppProvider({ children }) {
   // Global Auth State
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [session, setSession] = useState(null);
   const [selectedConsumerId, setSelectedConsumerId] = useState(null);
@@ -258,22 +259,28 @@ export function AppProvider({ children }) {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setIsLoggedIn(!!session);
-      if (session) fetchUserData(session);
+      if (session) {
+        await fetchUserData(session);
+      }
+      setIsInitialized(true);
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setIsLoggedIn(!!session);
-      if (session) fetchUserData(session);
-      else {
+      if (session) {
+        await fetchUserData(session);
+        setIsInitialized(true);
+      } else {
         setProfile(null);
         setMembers([]);
         setSelectedConsumerId(null);
+        setIsInitialized(true);
       }
     });
 
@@ -483,6 +490,7 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
+      isInitialized,
       isLoggedIn,
       session,
       selectedConsumerId,
