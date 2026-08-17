@@ -55,12 +55,12 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
       ></div>
 
       {/* Modal Content */}
-      <div className="relative z-10 w-full max-w-5xl h-[90vh] bg-white rounded-3xl shadow-2xl flex overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative z-10 w-full max-w-5xl h-[90vh] bg-white/70 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_2px_rgba(255,255,255,0.8)] border border-white/60 flex overflow-hidden animate-in fade-in zoom-in duration-300">
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 p-2 bg-white rounded-full text-gray-500 hover:text-black shadow-md transition-colors"
+          className="absolute top-4 right-4 z-50 p-2 bg-white/50 backdrop-blur-md rounded-full text-gray-600 hover:bg-white hover:text-black shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/60 transition-all"
         >
           <X size={20} />
         </button>
@@ -78,45 +78,54 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
           </div>
 
           {/* Right Column (Login Form) */}
-          <div className="w-full md:w-[50%] h-auto md:h-full bg-gradient-to-br from-[#F5EFFF] to-white relative flex flex-col px-8 py-10 md:px-12 justify-center shrink-0">
+          <div className="w-full md:w-[50%] h-auto md:h-full bg-gradient-to-br from-white/60 to-white/20 relative flex flex-col px-8 py-10 md:px-12 justify-center shrink-0">
             
             <div className="mb-8 shrink-0">
-              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2 relative inline-block">
+              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2 relative inline-block drop-shadow-sm">
                 Login
-                <Sparkles className="absolute -top-3 -right-6 text-purple-400 w-5 h-5" />
+                <Sparkles className="absolute -top-3 -right-6 text-[#C49A5C] w-5 h-5 drop-shadow-md" />
               </h2>
-              <p className="text-gray-500 text-sm">Enter your details to access your account.</p>
+              <p className="text-gray-600 text-sm font-medium">Enter your details to access your account.</p>
             </div>
             
             <form className="space-y-6 flex-1 flex flex-col justify-center" onSubmit={handleLogin}>
               
               <div className="space-y-4">
-                <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                    <Mail size={16} />
+                <div className="relative bg-white/40 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 focus-within:bg-white/60 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                    <Mail size={18} />
                   </div>
-                  <input type="text" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email Address or Phone Number" className="w-full border-none bg-transparent text-sm py-3.5 pl-10 pr-4 focus:outline-none focus:ring-1 focus:ring-purple-500" />
+                  <input type="text" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email Address or Phone Number" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-4 focus:outline-none placeholder-gray-500 font-medium text-gray-800" />
                 </div>
                 
-                <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                    <Lock size={16} />
+                <div className="relative bg-white/40 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 focus-within:bg-white/60 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                    <Lock size={18} />
                   </div>
-                  <input type={showPassword ? "text" : "password"} value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" className="w-full border-none bg-transparent text-sm py-3.5 pl-10 pr-10 focus:outline-none focus:ring-1 focus:ring-purple-500" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                    {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-12 focus:outline-none placeholder-gray-500 font-medium text-gray-800" />
+                  <button type="button" onClick={()=>setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 transition-colors">
+                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                   </button>
                 </div>
-
-                <div className="flex justify-end pt-1">
-                  <a href="#" className="text-xs font-bold text-purple-600 hover:text-purple-800 transition-colors">Forgot Password?</a>
-                </div>
               </div>
-
-              {/* Submit Button */}
-              <div className="pt-4 space-y-6">
-                <button disabled={isLoading} type="submit" className="w-full bg-[#111] hover:bg-black text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-black/20">
-                  {isLoading ? 'Logging in...' : 'Login'}
+              
+              <div className="flex items-center justify-end pt-1">
+                <a href="#" className="text-xs font-bold text-[#906227] drop-shadow-sm hover:text-[#704918] transition-colors">Forgot Password?</a>
+              </div>
+              
+              <div className="pt-2">
+                <button 
+                  type="submit" 
+                  disabled={isLoading}
+                  style={{
+                    background: isLoading ? 'rgba(255,255,255,0.5)' : 'linear-gradient(135deg, #4A1A18 0%, #2A0C0A 100%)',
+                    boxShadow: isLoading ? 'none' : 'inset 0 1px 1px rgba(255,255,255,0.2), 0 8px 20px rgba(74,26,24,0.3)'
+                  }}
+                  className={`w-full font-bold py-4 rounded-xl border border-white/20 transition-all duration-300 relative overflow-hidden group ${!isLoading ? 'text-[#E5CDA7] hover:scale-[1.02] active:scale-[0.98]' : 'text-gray-400 cursor-not-allowed'}`}
+                >
+                  {/* Glossy sheen overlay on button */}
+                  {!isLoading && <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>}
+                  <span className="relative z-10">{isLoading ? 'Logging in...' : 'Login'}</span>
                 </button>
 
                 <div className="relative my-8">
@@ -140,10 +149,10 @@ const LoginModal = ({ isOpen, onClose, onSwitchToSignup }) => {
                   </button>
                 </div>
 
-                <div className="text-center text-sm text-gray-500 pt-2">
+                <div className="text-center text-sm text-gray-600 pt-2 font-medium">
                   Don't have an account?{' '}
-                  <button type="button" onClick={onSwitchToSignup} className="text-purple-600 font-bold hover:text-purple-800 transition-colors">
-                    Sign Up
+                <button type="button" onClick={onSwitchToSignup} className="text-[#906227] font-bold hover:text-[#704918] drop-shadow-sm transition-colors">
+                  Sign Up
                   </button>
                 </div>
               </div>

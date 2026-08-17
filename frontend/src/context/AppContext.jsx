@@ -202,10 +202,10 @@ export function AppProvider({ children }) {
           isPrimary: c.is_primary,
           age: c.age,
           gender: c.gender,
-          height: `${c.height_cm} cm`,
+          height: c.measurements?.height_string || (c.height_cm ? `${c.height_cm} cm` : 'Not set'),
           bodyShape: c.body_shape ? c.body_shape.charAt(0).toUpperCase() + c.body_shape.slice(1) : 'Hourglass',
           skinTone: c.skin_tone,
-          image: c.avatar_url || getBodyImage(c.body_shape),
+          image: c.avatar_url || '',
           measurements: c.measurements || {},
         }));
         setMembers(formattedMembers);
@@ -236,10 +236,10 @@ export function AppProvider({ children }) {
             isPrimary: true,
             age: newConsumer.age,
             gender: newConsumer.gender,
-            height: `${newConsumer.height_cm} cm`,
+            height: newConsumer.measurements?.height_string || (newConsumer.height_cm ? `${newConsumer.height_cm} cm` : 'Not set'),
             bodyShape: newConsumer.body_shape ? newConsumer.body_shape.charAt(0).toUpperCase() + newConsumer.body_shape.slice(1) : 'Hourglass',
             skinTone: newConsumer.skin_tone,
-            image: newConsumer.avatar_url || getBodyImage(newConsumer.body_shape),
+            image: newConsumer.avatar_url || '',
             measurements: newConsumer.measurements || {},
           }]);
           setSelectedConsumerId(newConsumer.id);
@@ -305,6 +305,9 @@ export function AppProvider({ children }) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Not logged in');
 
+      const heightVal = newMember.height;
+      const isNumericHeight = heightVal && /^\d+$/.test(String(heightVal).trim());
+      
       const { data: newConsumer, error } = await supabase
         .from('consumers')
         .insert({
@@ -313,9 +316,11 @@ export function AppProvider({ children }) {
           is_primary: false,
           age: parseInt(newMember.age) || null,
           gender: newMember.gender,
-          height_cm: parseInt(newMember.height) || null,
-          body_shape: newMember.bodyShape,
+          height_cm: isNumericHeight ? parseInt(heightVal) : null,
+          body_shape: newMember.bodyShape || null,
           avatar_url: newMember.avatarUrl || null,
+          skin_tone: newMember.skinTone || null,
+          measurements: { ...(newMember.measurements || {}), size: newMember.size, category: newMember.category, occasions: newMember.occasions, height_string: newMember.height },
         })
         .select()
         .single();
@@ -329,38 +334,50 @@ export function AppProvider({ children }) {
           isPrimary: false,
           age: newConsumer.age,
           gender: newConsumer.gender,
-          height: `${newConsumer.height_cm} cm`,
+          height: newConsumer.measurements?.height_string || (newConsumer.height_cm ? `${newConsumer.height_cm} cm` : 'Not set'),
           bodyShape: newConsumer.body_shape ? newConsumer.body_shape.charAt(0).toUpperCase() + newConsumer.body_shape.slice(1) : 'Hourglass',
           skinTone: newConsumer.skin_tone,
-          image: newConsumer.avatar_url || getBodyImage(newConsumer.body_shape),
+          image: newConsumer.avatar_url || '',
           measurements: newConsumer.measurements || {},
         };
         setMembers((prev) => [...prev, memberToAdd]);
         toast.success(`${newConsumer.name} added successfully!`);
+        return newConsumer.id;
       }
     } catch (err) {
       console.error('Error adding member:', err);
       toast.error('Failed to add member');
+      return null;
     }
   };
 
   const updateMember = async (memberId, updatedMember) => {
     try {
+      // Parse height_cm only if the height looks numeric (e.g. "165"), not a range string (e.g. "5'4\" - 5'7\"")
+      const heightVal = updatedMember.height;
+      const isNumericHeight = heightVal && /^\d+$/.test(String(heightVal).trim());
+      
       const updates = {
         name: updatedMember.name,
         age: parseInt(updatedMember.age) || null,
         gender: updatedMember.gender,
-        height_cm: parseInt(updatedMember.height) || null,
-        body_shape: updatedMember.bodyShape,
-        skin_tone: updatedMember.skinTone,
+        height_cm: isNumericHeight ? parseInt(heightVal) : null,
+        body_shape: updatedMember.bodyShape || null,
+        skin_tone: updatedMember.skinTone || null,
       };
       
-      if (updatedMember.avatarUrl) {
-        updates.avatar_url = updatedMember.avatarUrl;
+      if (updatedMember.avatarUrl !== undefined) {
+        updates.avatar_url = updatedMember.avatarUrl || null;
       }
-      if (updatedMember.measurements !== undefined) {
-        updates.measurements = updatedMember.measurements;
-      }
+      
+      const currentMeasurements = updatedMember.measurements || {};
+      updates.measurements = { 
+        ...currentMeasurements, 
+        size: updatedMember.size !== undefined ? updatedMember.size : currentMeasurements.size,
+        category: updatedMember.category !== undefined ? updatedMember.category : currentMeasurements.category,
+        occasions: updatedMember.occasions !== undefined ? updatedMember.occasions : currentMeasurements.occasions,
+        height_string: updatedMember.height !== undefined ? updatedMember.height : currentMeasurements.height_string
+      };
 
       const { error } = await supabase
         .from('consumers')
@@ -374,11 +391,11 @@ export function AppProvider({ children }) {
         name: updatedMember.name,
         age: parseInt(updatedMember.age) || null,
         gender: updatedMember.gender,
-        height: `${updatedMember.height} cm`,
-        bodyShape: updatedMember.bodyShape ? updatedMember.bodyShape.charAt(0).toUpperCase() + updatedMember.bodyShape.slice(1) : 'Hourglass',
+        height: updatedMember.height !== undefined ? updatedMember.height : m.height,
+        bodyShape: updatedMember.bodyShape || m.bodyShape,
         skinTone: updatedMember.skinTone !== undefined ? updatedMember.skinTone : m.skinTone,
-        image: updatedMember.avatarUrl || m.image,
-        measurements: updatedMember.measurements !== undefined ? updatedMember.measurements : m.measurements,
+        image: updatedMember.avatarUrl !== undefined ? (updatedMember.avatarUrl || '') : m.image,
+        measurements: updates.measurements,
       } : m));
       toast.success('Member updated successfully!');
     } catch (err) {
@@ -397,8 +414,7 @@ export function AppProvider({ children }) {
         .from('consumers')
         .delete()
         .eq('id', memberId)
-        .eq('user_id', session.user.id)
-        .eq('is_primary', false);
+        .eq('user_id', session.user.id);
 
       if (error) throw error;
 
@@ -481,6 +497,7 @@ export function AppProvider({ children }) {
       addMember,
       updateMember,
       deleteMember,
+      setPrimaryMember,
       updateMemberImage,
       updateMemberVtonImage,
       cart,

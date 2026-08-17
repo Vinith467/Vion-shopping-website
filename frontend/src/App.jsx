@@ -8,6 +8,7 @@ import OrderDetailsScreen from './screens/OrderDetailsScreen';
 import LoginScreen from './screens/LoginScreen';
 import AccountScreen from './screens/AccountScreen';
 import ExploreScreen from './screens/ExploreScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
 import AdminLayout from './screens/admin/AdminLayout';
 import AdminDashboard from './screens/admin/AdminDashboard';
 import AdminUsers from './screens/admin/AdminUsers';
@@ -19,7 +20,7 @@ import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import ScrollToTop from './components/ScrollToTop';
-import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff } from "lucide-react";
+import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Toaster } from 'react-hot-toast';
 import { useAppContext } from './context/AppContext';
@@ -71,8 +72,11 @@ const AdminRoute = ({ children }) => {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, logout, profile } = useAppContext();
-  const isMainTab = ['/home', '/explore', '/wardrobe', '/account'].includes(location.pathname);
+  const { isLoggedIn, logout, profile, members, selectedConsumerId } = useAppContext();
+  const activeMember = members?.find(m => m.id === selectedConsumerId) || members?.find(m => m.isPrimary) || members?.[0];
+  const isMainTab = ['/home', '/explore', '/wardrobe', '/account', '/onboarding'].includes(location.pathname);
+  const isHome = location.pathname === '/home';
+  const isOnboarding = location.pathname === '/onboarding';
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -87,66 +91,107 @@ function App() {
     <div className="bg-white min-h-screen w-full flex flex-col">
       <ScrollToTop />
       <Toaster position="top-center" />
-      {/* Desktop Top Navigation (Hidden on Mobile or when not on a main tab) */}
+      {/* Desktop Top Navigation */}
       {isMainTab && (
-        <nav className="hidden md:flex items-center justify-between px-10 lg:px-16 py-2 sticky top-0 bg-[#0A0A0A] text-white z-50 border-b border-gray-800">
+        <nav className="hidden md:flex items-center justify-between px-8 lg:px-14 py-2 sticky top-0 bg-[#F5F0E8]/80 backdrop-blur-md text-[#111111] z-50 border-b border-[#111111]/5 shadow-sm">
           
-          {/* Brand */}
-          <Link to="/home" className="flex flex-col cursor-pointer">
-            <span className="text-xl lg:text-2xl font-serif font-bold tracking-widest text-white leading-none mb-1">
-              VION<span className="text-gray-400 font-light">FASHION</span>
+          {/* Brand & Tagline */}
+          <Link to="/home" className="flex flex-col cursor-pointer group whitespace-nowrap">
+            <span className="text-3xl lg:text-4xl font-serif font-bold tracking-widest text-[#1A0A08] leading-none">
+              VION
+            </span>
+            <span className="text-[10px] lg:text-[11px] font-serif font-semibold text-[#5A4232] tracking-wide mt-1" style={{ letterSpacing: '0.04em' }}>
+              Made For You. Made To Suit You.
             </span>
           </Link>
 
-          {/* Centered Navigation */}
-          <div className="flex items-center gap-6 lg:gap-8 text-sm font-semibold">
-            <button 
-              onClick={() => navigate('/explore')}
-              className="flex items-center gap-1 hover:text-[#E5B8D9] transition-colors"
-            >
-              Women <ChevronDown size={14} className="text-gray-500" />
-            </button>
-            <button 
-              onClick={() => navigate('/explore')} 
-              className="hover:text-[#E5B8D9] transition-colors"
-            >
-              New Arrivals
-            </button>
-            <button 
-              onClick={() => navigate('/home#collections')} 
-              className="hover:text-[#E5B8D9] transition-colors"
-            >
-              Collections
-            </button>
-          </div>
+          {/* Center Section - Nav Links or Trust Badges */}
+          {isOnboarding ? (
+            <div className="flex items-center gap-3 xl:gap-5">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full border border-[#8B6544]/60 flex items-center justify-center">
+                  <Diamond className="text-[#8B6544] w-[14px] h-[14px]" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-[900] text-[#000000] tracking-wide leading-none" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>BESPOKE EXPERIENCE</p>
+                  <p className="text-[9px] font-[700] text-[#3E2312] leading-none mt-0.5" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Tailored just for you.</p>
+                </div>
+              </div>
+              <div className="w-px h-5 bg-[#111111]/20"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full border border-[#8B6544]/60 flex items-center justify-center">
+                  <Award className="text-[#8B6544] w-[14px] h-[14px]" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-[900] text-[#000000] tracking-wide leading-none" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>PREMIUM QUALITY</p>
+                  <p className="text-[9px] font-[700] text-[#3E2312] leading-none mt-0.5" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Finest fabrics</p>
+                </div>
+              </div>
+              <div className="w-px h-5 bg-[#111111]/20"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full border border-[#8B6544]/60 flex items-center justify-center">
+                  <Truck className="text-[#8B6544] w-[14px] h-[14px]" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-[900] text-[#000000] tracking-wide leading-none" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>WORLDWIDE DELIVERY</p>
+                  <p className="text-[9px] font-[700] text-[#3E2312] leading-none mt-0.5" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Complimentary shipping</p>
+                </div>
+              </div>
+              <div className="w-px h-5 bg-[#111111]/20"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full border border-[#8B6544]/60 flex items-center justify-center">
+                  <Headphones className="text-[#8B6544] w-[14px] h-[14px]" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-[900] text-[#000000] tracking-wide leading-none" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>EXPERT SUPPORT</p>
+                  <p className="text-[9px] font-[700] text-[#3E2312] leading-none mt-0.5" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Here for you.</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4 lg:gap-6 text-[16px] lg:text-[18px] font-bold text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Women</button>
+              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Men</button>
+              <button onClick={() => navigate('/home#occasions')} className="hover:text-[#A87B45] transition-colors">Occasion</button>
+              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">New In</button>
+              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Lookbook</button>
+              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors flex items-center gap-1.5">
+                <span>VION For You</span>
+                <span className="bg-gradient-to-r from-[#B88746] to-[#906227] text-white text-[9px] font-sans font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">NEW</span>
+              </button>
+            </div>
+          )}
 
           {/* Right Actions */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6 text-[#111111]">
+            <div className="flex items-center gap-5">
               <button 
                 onClick={() => navigate('/explore')} 
-                className="hover:text-[#E5B8D9] transition-colors"
+                className="hover:text-[#A87B45] transition-colors"
+                title="Search"
               >
-                <Search size={20} />
+                <Search size={21} strokeWidth={1.8} />
               </button>
               <button 
                 onClick={() => isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true)} 
-                className="hover:text-[#E5B8D9] transition-colors"
+                className="hover:text-[#A87B45] transition-colors"
+                title="Wishlist"
               >
-                <Heart size={20} />
+                <Heart size={21} strokeWidth={1.8} />
               </button>
               <button 
                 onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
-                className="hover:text-[#E5B8D9] transition-colors relative"
+                className="hover:text-[#A87B45] transition-colors relative"
+                title="Cart"
               >
-                <ShoppingBag size={20} />
-                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E5B8D9] text-black text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+                <ShoppingBag size={21} strokeWidth={1.8} />
+                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">2</span>
               </button>
             </div>
             
             {/* Login Container with Hover Popover */}
             <div 
-              className="relative"
+              className="relative flex items-center pl-2"
               onMouseEnter={() => setIsLoginHovered(true)}
               onMouseLeave={() => setIsLoginHovered(false)}
             >
@@ -159,13 +204,35 @@ function App() {
                     setShowSignupModal(true);
                   }
                 }}
-                className="bg-[#E5B8D9] text-black px-6 py-2 rounded-md font-bold text-sm hover:bg-[#d49bc4] transition-colors shadow-[0_0_15px_rgba(229,184,217,0.3)]"
+                className="hover:text-[#A87B45] transition-colors flex items-center gap-1.5"
               >
-                {isLoggedIn ? (profile?.email === 'admin@gmail.com' ? 'Admin Panel' : 'My Account') : 'Login / Sign Up'}
+                {isLoggedIn ? (
+                  profile?.email === 'admin@gmail.com' ? (
+                    <span className="text-[12px] font-bold uppercase tracking-wider bg-[#3E1210] text-[#E5CDA7] px-3 py-1 rounded-full">Admin</span>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      {activeMember?.image ? (
+                        <img src={activeMember.image} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-[#BFA679]" />
+                      ) : (
+                        <div className="w-7 h-7 rounded-full border border-[#BFA679] flex items-center justify-center bg-[#f5ece3] text-[#986427]">
+                          <User size={16} />
+                        </div>
+                      )}
+                      <span className="text-[14px] lg:text-[15px] font-bold tracking-wide hidden xl:block text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Hi, {activeMember?.name || profile?.firstName || 'User'}</span>
+                      <ChevronDown size={14} className="text-[#111111]" />
+                    </div>
+                  )
+                ) : (
+                  <div className="flex items-center gap-1.5 cursor-pointer">
+                    <User size={21} strokeWidth={1.8} />
+                    <span className="text-[14px] lg:text-[15px] font-bold text-[#111111] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Login / Sign Up</span>
+                    <ChevronDown size={14} className="text-[#111111]" />
+                  </div>
+                )}
               </button>
 
               {/* Hover Dropdown */}
-              <div className={`absolute top-full right-0 mt-3 w-40 bg-[#0A0A0A] border border-gray-800 rounded-xl shadow-2xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+              <div className={`absolute top-full right-0 mt-4 w-40 bg-white border border-gray-100 rounded-xl shadow-xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 
                 {/* Invisible hover bridge to prevent mouseleave when moving from button to popover */}
                 <div className="absolute -top-4 left-0 right-0 h-4 bg-transparent"></div>
@@ -184,13 +251,13 @@ function App() {
                     <>
                       <button 
                         onClick={() => { setIsLoginHovered(false); setShowLoginModal(true); }}
-                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-200 hover:bg-[#E5B8D9] hover:text-black rounded-lg transition-all"
+                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
                       >
                         Login
                       </button>
                       <button 
                         onClick={() => { setIsLoginHovered(false); setShowSignupModal(true); }}
-                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-200 hover:bg-[#E5B8D9] hover:text-black rounded-lg transition-all"
+                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
                       >
                         Sign Up
                       </button>
@@ -247,6 +314,7 @@ function App() {
           
           {/* Protected Routes */}
           <Route path="/account" element={<ProtectedRoute><AccountScreen /></ProtectedRoute>} />
+          <Route path="/onboarding" element={<ProtectedRoute><OnboardingScreen /></ProtectedRoute>} />
           <Route path="/add-consumer" element={<ProtectedRoute><PlaceholderScreen title="Add Consumer" /></ProtectedRoute>} />
 
           <Route path="/select-size" element={<ProtectedRoute><PlaceholderScreen title="Size Selection" /></ProtectedRoute>} />
@@ -268,7 +336,7 @@ function App() {
           </Route>
           
           {/* Fallback & Redirects */}
-          <Route path="/select-consumer" element={<Navigate to="/account" state={{ activeTab: 'members' }} replace />} />
+          <Route path="/select-consumer" element={<Navigate to="/account" replace />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>

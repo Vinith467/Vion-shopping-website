@@ -1,8 +1,13 @@
 @import "tailwindcss";
-
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
+}
+
+/* ─── Smooth Scrolling ─── */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -21,6 +26,34 @@ body {
   display: block;
 }
 
+/* ─── GPU Performance: Promote sticky/fixed elements with backdrop-blur ─── */
+/* The #1 cause of scroll jank: backdrop-blur on sticky elements forces the
+   browser to re-rasterize the blurred area behind them on every scroll frame.
+   By promoting them to GPU layers, the browser can cache the composited result. */
+
+/* Sticky nav, fixed bottom bars, and any sticky element with blur */
+nav[class*="sticky"],
+nav[class*="fixed"],
+div[class*="sticky"][class*="backdrop-blur"],
+div[class*="fixed"][class*="backdrop-blur"],
+div[class*="sticky"][class*="bg-white/"] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ─── Glass element GPU promotion ─── */
+/* Promote glass panels to their own compositing layer so blur calculations
+   are cached and don't trigger full-page repaints during scroll */
+.glass-panel,
+.glass-panel-darker,
+.glass-input,
+.glass-button {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 @layer utilities {
   .hide-scrollbar {
     -ms-overflow-style: none;
@@ -30,7 +63,7 @@ body {
     display: none;
   }
   
-  /* Glassmorphism Utilities */
+  /* Glassmorphism Utilities — with GPU-optimized blur */
   .glass-panel {
     @apply bg-white/40 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
   }
@@ -48,21 +81,43 @@ body {
   }
 }
 
-/* Animated Mesh Gradient Background */
+/* ─── Optimized Animated Gradient ─── */
+/* Uses transform instead of background-position for GPU-accelerated animation */
 .bg-mesh-animated {
+  position: relative;
+  overflow: hidden;
+}
+.bg-mesh-animated::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
   background: linear-gradient(-45deg, #f3e8ff, #fbcfe8, #e0e7ff, #fae8ff);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  animation: gradient-transform 15s ease infinite;
+  z-index: -1;
 }
 
-@keyframes gradient {
+@keyframes gradient-transform {
   0% {
-    background-position: 0% 50%;
+    transform: translate(0, 0);
   }
   50% {
-    background-position: 100% 50%;
+    transform: translate(-25%, -25%);
   }
   100% {
-    background-position: 0% 50%;
+    transform: translate(0, 0);
   }
+}
+
+/* ─── Image rendering optimization ─── */
+/* Prevents images from triggering layout recalculations during scroll */
+img {
+  content-visibility: auto;
+}
+
+/* ─── Reduce paint complexity for hover transitions ─── */
+/* Ensure transition properties only animate transform and opacity (GPU-friendly) */
+.group:hover img {
+  will-change: transform;
 }

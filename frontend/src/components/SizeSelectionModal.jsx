@@ -10,7 +10,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
   const [isRendered, setIsRendered] = useState(false);
   const [isManualMode, setIsManualMode] = useState(false);
 
-  const hasMeasurements = measurements && Object.keys(measurements).some(key => !['heightUnit', 'bodyShape'].includes(key) && measurements[key]);
+  const hasMeasurements = measurements && Object.keys(measurements).some(key => !['heightUnit', 'size'].includes(key) && measurements[key]);
 
   // Form state for 11 measurements
   const [customMeasurements, setCustomMeasurements] = useState({

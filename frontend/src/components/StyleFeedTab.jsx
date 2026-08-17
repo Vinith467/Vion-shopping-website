@@ -4,35 +4,53 @@ import toast from 'react-hot-toast';
 
 import { useAppContext } from '../context/AppContext';
 
-const womensFeed = [
-  { id: 1, image: '/images/lavender-dress.jpg', title: 'Summer Lavender', likes: 124, categories: ['Trending', 'Party'] },
-  { id: 2, image: '/images/dress-red.jpg', title: 'Crimson Elegance', likes: 256, categories: ['Party', 'Trending'] },
-  { id: 3, image: '/images/coat-green.jpg', title: 'Olive Trench', likes: 198, categories: ['Workwear', 'Street Style'] },
-  { id: 4, image: '/images/cat-accessories.jpg', title: 'Floral Accessories', likes: 89, categories: ['Street Style', 'Trending'] },
-  { id: 5, image: '/images/formal_dresses.jpg', title: 'Evening Wear', likes: 312, categories: ['Workwear', 'Party'] },
-  { id: 6, image: '/images/fash_fit_hero.jpg', title: 'Casual Chic', likes: 142, categories: ['Trending', 'Street Style'] },
-];
-
-const mensFeed = [
-  { id: 7, image: '/images/shirt-orange.jpg', title: 'Vibrant Casual', likes: 142, categories: ['Trending', 'Street Style'] },
-  { id: 8, image: '/images/cat-jackets.jpg', title: 'Leather Jacket', likes: 67, categories: ['Street Style', 'Party'] },
-  { id: 9, image: '/images/business_suits.jpg', title: 'Classic Suit', likes: 256, categories: ['Workwear', 'Trending'] },
-  { id: 10, image: '/images/smart_casual.png', title: 'Smart Casual', likes: 198, categories: ['Workwear', 'Party'] },
-  { id: 11, image: '/images/cat-jeans.jpg', title: 'Denim Style', likes: 89, categories: ['Street Style', 'Trending'] },
-];
+import { supabase } from '../services/supabaseClient';
 
 export default function StyleFeedTab() {
   const { members, selectedConsumerId, setSelectedConsumerId } = useAppContext();
   const currentMember = members.find(m => m.id === selectedConsumerId) || members[0] || {};
   
-  const feedItems = currentMember.gender === 'Male' ? mensFeed : womensFeed;
-
-  const [savedItems, setSavedItems] = useState([2, 5]);
+  const [feedItems, setFeedItems] = useState([]);
+  const [categories, setCategories] = useState(['For You']);
+  const [savedItems, setSavedItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState('For You');
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    async function fetchStyleFeed() {
+      setIsLoading(true);
+      const gender = currentMember.gender || 'Female';
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .contains('target_genders', [gender])
+        .eq('status', 'active');
+      
+      if (!error && data) {
+        setFeedItems(data);
+        
+        // Extract unique style/occasion tags for categories
+        const uniqueTags = new Set();
+        data.forEach(product => {
+          if (Array.isArray(product.style_tags)) product.style_tags.forEach(t => uniqueTags.add(t));
+          if (Array.isArray(product.occasion_tags)) product.occasion_tags.forEach(t => uniqueTags.add(t));
+        });
+        setCategories(['For You', ...Array.from(uniqueTags)]);
+      }
+      setIsLoading(false);
+    }
+    
+    if (currentMember.id) {
+      fetchStyleFeed();
+    }
+  }, [currentMember.id, currentMember.gender]);
 
   const displayFeedItems = activeCategory === 'For You' 
     ? feedItems 
-    : feedItems.filter(item => item.categories.includes(activeCategory));
+    : feedItems.filter(item => 
+        (Array.isArray(item.style_tags) && item.style_tags.includes(activeCategory)) || 
+        (Array.isArray(item.occasion_tags) && item.occasion_tags.includes(activeCategory))
+      );
 
   const toggleSave = (id) => {
     if (savedItems.includes(id)) {
@@ -78,7 +96,7 @@ export default function StyleFeedTab() {
 
       {/* Categories */}
       <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-        {['For You', 'Trending', 'Workwear', 'Street Style', 'Party'].map((cat) => (
+        {categories.map((cat) => (
           <button 
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -92,51 +110,61 @@ export default function StyleFeedTab() {
       </div>
 
       {/* Masonry Grid */}
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-        {displayFeedItems.map((item) => (
-          <div key={item.id} className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer">
-            <img 
-              src={item.image} 
-              alt={item.title} 
-              className="w-full object-cover transition-transform duration-500 group-hover:scale-105" 
-            />
-            
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+      {isLoading ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="w-8 h-8 border-4 border-[#3A10E5] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : displayFeedItems.length > 0 ? (
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+          {displayFeedItems.map((item) => (
+            <div key={item.id} className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer">
+              <img 
+                src={item.images && item.images.length > 0 ? item.images[0] : '/images/placeholder.jpg'} 
+                alt={item.title} 
+                className="w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+              />
               
-              <div className="flex justify-end gap-2">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); toast('Link copied!'); }}
-                  className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors"
-                >
-                  <Share2 size={14} />
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); toggleSave(item.id); }}
-                  className={`w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-colors ${
-                    savedItems.includes(item.id) 
-                      ? 'bg-pink-500 text-white' 
-                      : 'bg-white/20 text-white hover:bg-white/40'
-                  }`}
-                >
-                  <Heart size={14} className={savedItems.includes(item.id) ? 'fill-current' : ''} />
-                </button>
-              </div>
-
-              <div>
-                <h4 className="text-white font-bold text-sm mb-1">{item.title}</h4>
-                <div className="flex items-center justify-between">
-                  <p className="text-white/80 text-xs font-medium">{item.likes} saves</p>
-                  <button className="text-white/90 hover:text-white transition-colors">
-                    <Maximize2 size={16} />
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+                
+                <div className="flex justify-end gap-2">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toast('Link copied!'); }}
+                    className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors"
+                  >
+                    <Share2 size={14} />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleSave(item.id); }}
+                    className={`w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-colors ${
+                      savedItems.includes(item.id) 
+                        ? 'bg-pink-500 text-white' 
+                        : 'bg-white/20 text-white hover:bg-white/40'
+                    }`}
+                  >
+                    <Heart size={14} className={savedItems.includes(item.id) ? 'fill-current' : ''} />
                   </button>
                 </div>
-              </div>
 
+                <div>
+                  <h4 className="text-white font-bold text-sm mb-1">{item.title}</h4>
+                  <div className="flex items-center justify-between">
+                    <p className="text-white/80 text-xs font-medium">₹{item.price}</p>
+                    <button className="text-white/90 hover:text-white transition-colors">
+                      <Maximize2 size={16} />
+                    </button>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-10 bg-gray-50 rounded-2xl">
+          <p className="text-gray-500 font-medium">No items found matching this category.</p>
+        </div>
+      )}
 
     </div>
   );

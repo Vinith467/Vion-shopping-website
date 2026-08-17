@@ -67,7 +67,7 @@ export default function MembersTab() {
               <span>{primaryConsumer.weight || 'N/A'}</span>
             </div>
             <div className="text-[11px] text-gray-500 font-medium mb-1">
-              {primaryConsumer.bodyShape} Body Shape
+              Size {primaryConsumer.size}
             </div>
             <div className="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 mb-4">
               <span>Skin Tone:</span>
@@ -178,7 +178,7 @@ export default function MembersTab() {
                     <span>{member.weight}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium mb-2">
-                    <span>Body Shape: {member.bodyShape}</span>
+                    <span>Size: {member.size}</span>
                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                     <span className="flex items-center gap-1.5">
                       Skin Tone: 

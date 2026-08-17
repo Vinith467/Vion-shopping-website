@@ -41,13 +41,13 @@ export default function ProductDetailScreen() {
       if (userHeightCm > 170) heightRange = 'Tall';
       
       const userSkinTone = primaryMember.skinTone || 'Medium';
-      const userBodyShape = primaryMember.bodyShape || 'Hourglass';
+      const userSize = primaryMember.size || 'M';
       
       // Find exact match first
       let bestMatchIndex = product.variations.findIndex(v => 
         (v.skinTone === userSkinTone || v.skinTone === 'all') && 
         (v.heightRange === heightRange || v.heightRange === 'all') &&
-        (!v.bodyShape || v.bodyShape === userBodyShape || v.bodyShape === 'all')
+        (!v.size || v.size === userSize || v.size === 'all')
       );
       
       if (bestMatchIndex !== -1) {
@@ -87,7 +87,7 @@ export default function ProductDetailScreen() {
 
   const fitScore = product.score ? `${Math.min(100, Math.round((product.score / 5) * 100))}%` : '95%';
   const recommendedSize = primaryMember?.recommendedSize || 'M';
-  const bodyShape = primaryMember?.bodyShape || 'Hourglass';
+  const size = primaryMember?.size || 'M';
 
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col bg-white min-h-screen">
@@ -260,7 +260,7 @@ export default function ProductDetailScreen() {
                 <User2 size={16} className="text-[#6344D4]" />
               </div>
               <div className="flex flex-col justify-center h-8">
-                <p className="font-medium leading-relaxed">Perfect fit for your body type <span className="font-bold text-gray-900">({bodyShape})</span></p>
+                <p className="font-medium leading-relaxed">Perfect fit for your size <span className="font-bold text-gray-900">({size})</span></p>
               </div>
             </div>
             <div className="flex items-start gap-4 text-sm text-gray-700">

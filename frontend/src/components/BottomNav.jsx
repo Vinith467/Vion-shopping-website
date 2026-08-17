@@ -27,7 +27,7 @@ export default function BottomNav() {
               to={item.to}
               className="flex flex-col items-center gap-1 -mt-5"
             >
-              <div className="w-14 h-14 bg-[#6344D4] rounded-full flex items-center justify-center text-white shadow-lg shadow-[#6344D4]/30">
+              <div className="w-14 h-14 bg-[#986427] rounded-full flex items-center justify-center text-white shadow-lg shadow-[#986427]/30">
                 <Icon size={24} strokeWidth={1.5} />
               </div>
               <span className="text-[10px] font-medium text-gray-500">{item.label}</span>
@@ -40,7 +40,7 @@ export default function BottomNav() {
             key={item.label}
             to={item.to}
             className={({ isActive }) => 
-              `flex flex-col items-center gap-1 ${isActive ? "text-[#6344D4]" : "text-gray-400 hover:text-gray-600"}`
+              `flex flex-col items-center gap-1 ${isActive ? "text-[#986427]" : "text-gray-400 hover:text-gray-600"}`
             }
           >
             {({ isActive }) => (

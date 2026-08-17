@@ -1,179 +1,454 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  User, Ruler, Users, ShoppingBag, Heart, 
-  Sliders, Sparkles, MapPin, CreditCard, 
-  Settings, HelpCircle, LogOut, ArrowRight, Home as HomeIcon,
-  Menu, X, ArrowLeft
-} from 'lucide-react';
-import HomeTab from '../components/HomeTab';
-import MyMeasurementsTab from '../components/MyMeasurementsTab';
-import MembersTab from '../components/MembersTab';
-import MyOrdersTab from '../components/MyOrdersTab';
-import SavedOutfitsTab from '../components/SavedOutfitsTab';
-import PreferencesTab from '../components/PreferencesTab';
-import StyleFeedTab from '../components/StyleFeedTab';
-import AddressBookTab from '../components/AddressBookTab';
-import AccountSettingsTab from '../components/AccountSettingsTab';
-import HelpSupportTab from '../components/HelpSupportTab';
-import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
-
-const sidebarItems = [
-  { id: 'app_home', label: 'Home', icon: HomeIcon },
-  { id: 'home', label: 'Profile', icon: User },
-  { id: 'members', label: 'Members', icon: Users },
-  { id: 'measurements', label: 'Measurements', icon: Ruler },
-  { id: 'orders', label: 'My Orders', icon: ShoppingBag },
-  { id: 'saved', label: 'Saved Outfits', icon: Heart },
-  { id: 'preferences', label: 'Preferences', icon: Sliders },
-  { id: 'stylefeed', label: 'Style Feed', icon: Sparkles },
-  { id: 'address', label: 'Address Book', icon: MapPin },
-  { id: 'settings', label: 'Account Settings', icon: Settings },
-  { id: 'help', label: 'Help & Support', icon: HelpCircle },
-  { id: 'logout', label: 'Logout', icon: LogOut, isDanger: true },
-];
+import { 
+  User, MapPin, ShoppingBag, Heart, LogOut, ChevronRight, 
+  Phone, Plus, Edit2, Trash2, CheckCircle2, Save, X
+} from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AccountScreen() {
-  const location = useLocation();
-  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'home');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAppContext();
+  const { selectedConsumerId } = useAppContext();
+  const [activeTab, setActiveTab] = useState('details');
+  const [profile, setProfile] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+  const [addresses, setAddresses] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Phone Editing State
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [phoneInput, setPhoneInput] = useState('');
+  const [isSavingPhone, setIsSavingPhone] = useState(false);
+  
+  // UI States
+  const [showAddAddress, setShowAddAddress] = useState(false);
+  const [addressForm, setAddressForm] = useState({
+    full_name: '', phone: '', street_address: '', city: '', state: '', zip_code: '', country: 'India', is_default: false
+  });
 
-  useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-    }
-  }, [location.state]);
+  const handleSavePhone = async () => {
+    if (!profile || !profile.id) return;
+    setIsSavingPhone(true);
+    try {
+      const currentMeasurements = profile.measurements || {};
+      const newMeasurements = { ...currentMeasurements, phone: phoneInput };
+      
+      const { error } = await supabase
+        .from('consumers')
+        .update({ measurements: newMeasurements })
+        .eq('id', profile.id);
 
-  const handleTabClick = async (id) => {
-    setIsMobileMenuOpen(false);
-    if (id === 'logout') {
-      await logout();
-      toast.success('Logged out successfully!');
-      navigate('/home');
-    } else if (id === 'app_home') {
-      navigate('/home');
-    } else {
-      setActiveTab(id);
+      if (error) throw error;
+      
+      setProfile({ ...profile, measurements: newMeasurements });
+      setIsEditingPhone(false);
+      toast.success('Phone number saved successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to save phone number');
+    } finally {
+      setIsSavingPhone(false);
     }
   };
 
-  return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] pb-12">
+  useEffect(() => {
+    fetchAccountData();
+  }, [selectedConsumerId]);
+
+  const fetchAccountData = async () => {
+    setIsLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
       
-      {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/home')} className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors shadow-sm">
-            <ArrowLeft size={18} />
-          </button>
-          <div>
-            <h2 className="text-lg font-bold font-serif text-gray-900 tracking-wide leading-none">
-              {sidebarItems.find(i => i.id === activeTab)?.label || 'Account'}
-            </h2>
-          </div>
-        </div>
-        <button 
-          onClick={() => setIsMobileMenuOpen(true)}
-          className="p-2 bg-gray-100 rounded-lg text-gray-700 shadow-sm"
-        >
-          <Menu size={24} />
-        </button>
+      setUserEmail(user.email);
+
+      // 1. Fetch Profile (Prefer selected profile, fallback to primary, then just latest)
+      let profileQuery = supabase.from('consumers').select('*').eq('user_id', user.id);
+      
+      if (selectedConsumerId) {
+        profileQuery = profileQuery.eq('id', selectedConsumerId);
+      } else {
+        // Fallback to primary if no selected ID exists
+        profileQuery = profileQuery.eq('is_primary', true);
+      }
+
+      const { data: profileData } = await profileQuery.limit(1).single();
+      
+      // If we still didn't get one (e.g., they only have one profile and it's not primary), fetch the first one available
+      if (!profileData) {
+        const { data: fallbackData } = await supabase.from('consumers').select('*').eq('user_id', user.id).limit(1).single();
+        setProfile(fallbackData);
+      } else {
+        setProfile(profileData);
+      }
+
+      // 2. Fetch Addresses
+      const { data: addressData } = await supabase
+        .from('addresses')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('is_default', { ascending: false });
+      
+      setAddresses(addressData || []);
+
+      // 3. Fetch Orders (Basic)
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      setOrders(orderData || []);
+
+    } catch (err) {
+      console.error('Error fetching account data:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSaveAddress = async (e) => {
+    e.preventDefault();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('addresses')
+        .insert({ ...addressForm, user_id: user.id })
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      setAddresses(prev => [data, ...prev].sort((a, b) => b.is_default - a.is_default));
+      setShowAddAddress(false);
+      setAddressForm({ full_name: '', phone: '', street_address: '', city: '', state: '', zip_code: '', country: 'India', is_default: false });
+      toast.success('Address saved successfully!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to save address');
+    }
+  };
+
+  const handleSetDefaultAddress = async (id) => {
+    try {
+      // Optistic UI update
+      setAddresses(prev => prev.map(a => ({ ...a, is_default: a.id === id })).sort((a, b) => b.is_default - a.is_default));
+      
+      // Update in DB (in reality we need an RPC or a 2-step update to remove old default)
+      const { data: { user } } = await supabase.auth.getUser();
+      await supabase.from('addresses').update({ is_default: false }).eq('user_id', user.id);
+      await supabase.from('addresses').update({ is_default: true }).eq('id', id);
+      toast.success('Default address updated');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteAddress = async (id) => {
+    try {
+      setAddresses(prev => prev.filter(a => a.id !== id));
+      await supabase.from('addresses').delete().eq('id', id);
+      toast.success('Address removed');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/login';
+  };
+
+  const tabs = [
+    { id: 'details', label: 'My Details', icon: User },
+    { id: 'addresses', label: 'Addresses', icon: MapPin },
+    { id: 'orders', label: 'My Orders', icon: ShoppingBag },
+    { id: 'wishlist', label: 'Wishlist', icon: Heart },
+  ];
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-[#e8d5c4] flex items-center justify-center font-serif italic text-gray-500">Loading your account...</div>;
+  }
+
+  return (
+    <div className="min-h-screen relative overflow-clip bg-[#e8d5c4] pt-12 pb-24">
+      {/* Background Glossy Elements (similar to Onboarding) */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-white/20 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-[#986427]/10 rounded-full blur-[120px]" />
       </div>
 
-      {/* Mobile Drawer Backdrop */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-[60] md:hidden transition-opacity" 
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl mt-4 md:mt-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10 flex flex-col md:flex-row gap-8">
         
-        <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
-          
-          {/* Left Sidebar / Mobile Drawer */}
-          <div className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 w-72 md:w-64 bg-[#F9FAFB] md:bg-transparent shrink-0 flex flex-col gap-1 md:sticky md:top-28 md:self-start z-[70] md:z-40 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none overflow-y-auto md:overflow-visible h-full md:h-max`}>
+        {/* Sidebar */}
+        <div className="w-full md:w-72 flex-shrink-0">
+          <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 sticky top-24">
             
-            <div className="md:hidden flex items-center justify-between p-6 border-b border-gray-200 bg-white">
-               <div>
-                 <h2 className="text-xl font-bold font-serif text-gray-900 tracking-wide">MY ACCOUNT</h2>
-               </div>
-               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-gray-900 bg-gray-100 rounded-lg transition-colors">
-                 <X size={20} />
-               </button>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/80 shadow-sm bg-white/50">
+                {profile?.avatar_url || profile?.image ? (
+                  <img src={profile?.avatar_url || profile?.image} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ece3] to-[#e8d5c4] text-[#986427]">
+                    <User size={24} strokeWidth={2} />
+                  </div>
+                )}
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-xl text-[#1A0A08]">{profile?.name || 'My Profile'}</h3>
+                <p className="text-sm text-gray-500">Manage your details</p>
+              </div>
             </div>
 
-            <div className="bg-white md:rounded-2xl md:shadow-sm md:border border-gray-100 p-3 overflow-y-auto md:max-h-[85vh] hide-scrollbar flex flex-col gap-1 flex-1 md:flex-none">
-              
-              {sidebarItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-                
+            <nav className="space-y-2">
+              {tabs.map(tab => {
+                const active = activeTab === tab.id;
                 return (
                   <button
-                    key={item.id}
-                    onClick={() => handleTabClick(item.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                      isActive 
-                        ? 'bg-[#F8F6FF] text-[#3A10E5]' 
-                        : item.isDanger 
-                          ? 'text-red-500 hover:bg-red-50 mt-auto md:mt-0 border-t border-gray-100 md:border-none' 
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 group ${
+                      active 
+                        ? 'bg-[#986427] text-white shadow-lg' 
+                        : 'hover:bg-white/60 text-gray-600 hover:text-[#986427]'
                     }`}
                   >
-                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                    {item.label}
+                    <div className="flex items-center gap-3">
+                      <tab.icon size={18} />
+                      <span className="font-medium">{tab.label}</span>
+                    </div>
+                    {activeTab === tab.id && <ChevronRight size={16} />}
                   </button>
                 );
               })}
-
-            </div>
-
-            {/* Unlock More Benefits Promo Card */}
-            <div className="bg-[#F8F9FA] md:rounded-2xl p-5 border-t md:border border-gray-100 mt-auto md:mt-2 flex flex-col gap-3 shrink-0">
-              <div className="flex items-center gap-2 text-[#3A10E5] font-bold text-sm">
-                <Sparkles size={16} />
-                Unlock More Benefits
+              
+              <div className="pt-4 mt-4 border-t border-white/40">
+                <button 
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium"
+                >
+                  <LogOut size={18} />
+                  <span>Log Out</span>
+                </button>
               </div>
-              <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                Complete your profile and get better size & style recommendations.
-              </p>
-              <button className="w-full bg-[#3A10E5] hover:bg-[#2A08B5] text-white text-xs font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 mt-2">
-                Complete Profile <ArrowRight size={14} />
-              </button>
-            </div>
+            </nav>
           </div>
-
-          {/* Right Content Area */}
-          <div className="flex-1 min-w-0 bg-transparent min-h-[500px]">
-            {activeTab === 'home' ? (
-              <HomeTab />
-            ) : activeTab === 'measurements' ? (
-              <MyMeasurementsTab />
-            ) : activeTab === 'members' ? (
-              <MembersTab />
-            ) : activeTab === 'orders' ? (
-              <MyOrdersTab />
-            ) : activeTab === 'saved' ? (
-              <SavedOutfitsTab />
-            ) : activeTab === 'preferences' ? (
-              <PreferencesTab />
-            ) : activeTab === 'stylefeed' ? (
-              <StyleFeedTab />
-            ) : activeTab === 'address' ? (
-              <AddressBookTab />
-            ) : activeTab === 'settings' ? (
-              <AccountSettingsTab />
-            ) : activeTab === 'help' ? (
-              <HelpSupportTab />
-            ) : null}
-          </div>
-
         </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1">
+          <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 min-h-[500px]">
+            
+            {activeTab === 'details' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <h2 className="font-serif text-3xl font-bold text-[#1A0A08] mb-6">My Details</h2>
+                
+                <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/60 relative shadow-sm">
+                  {/* Global Edit Button for Details */}
+                  <button onClick={() => navigate('/onboarding')} className="absolute top-6 right-6 text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline">
+                    <Edit2 size={14} /> Edit
+                  </button>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Full Name</label>
+                      <p className="text-gray-900 font-medium text-lg">{profile?.name || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Email</label>
+                      <p className="text-gray-900 font-medium text-lg">{userEmail || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Phone Number</label>
+                      {isEditingPhone ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <input 
+                            type="text" 
+                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            value={phoneInput}
+                            onChange={(e) => setPhoneInput(e.target.value)}
+                            placeholder="Enter phone number"
+                            autoFocus
+                          />
+                          <button 
+                            onClick={handleSavePhone}
+                            disabled={isSavingPhone}
+                            className="bg-[#986427] text-white px-3 py-1.5 rounded-lg text-sm font-bold disabled:opacity-50"
+                          >
+                            Save
+                          </button>
+                          <button 
+                            onClick={() => setIsEditingPhone(false)}
+                            className="text-gray-500 hover:text-gray-700 p-1"
+                          >
+                            <X size={18} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.phone || 'Not provided'}</p>
+                          <button 
+                            onClick={() => {
+                              setPhoneInput(profile?.measurements?.phone || '');
+                              setIsEditingPhone(true);
+                            }} 
+                            className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
+                          >
+                            <Edit2 size={14} /> {profile?.measurements?.phone ? 'Edit' : 'Add'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Skin Tone</label>
+                      <p className="text-gray-900 font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Size</label>
+                      <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Height</label>
+                      <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : 'Not set')}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'addresses' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08]">Saved Addresses</h2>
+                  <button onClick={() => setShowAddAddress(!showAddAddress)} className="flex items-center gap-2 text-[#986427] font-bold text-sm bg-[#986427]/10 px-4 py-2 rounded-full hover:bg-[#986427]/20 transition-colors">
+                    {showAddAddress ? <><X size={16} /> Cancel</> : <><Plus size={16} /> Add New</>}
+                  </button>
+                </div>
+                
+                {showAddAddress && (
+                  <form onSubmit={handleSaveAddress} className="bg-white/50 backdrop-blur-md rounded-2xl p-6 border-2 border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.05)] mb-6 animate-in fade-in zoom-in-95">
+                    <h3 className="font-bold text-lg mb-4 text-[#1A0A08]">Add a new address</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input required type="text" placeholder="Full Name" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.full_name} onChange={e => setAddressForm({...addressForm, full_name: e.target.value})} />
+                      <input required type="text" placeholder="Phone Number" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} />
+                      <input required type="text" placeholder="Street Address (Flat, House no., Building, Company, Apartment)" className="w-full md:col-span-2 bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.street_address} onChange={e => setAddressForm({...addressForm, street_address: e.target.value})} />
+                      <input required type="text" placeholder="City / Town" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} />
+                      <input required type="text" placeholder="State" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} />
+                      <input required type="text" placeholder="PIN Code / Zip Code" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.zip_code} onChange={e => setAddressForm({...addressForm, zip_code: e.target.value})} />
+                    </div>
+                    <label className="flex items-center gap-2 mt-4 cursor-pointer">
+                      <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm({...addressForm, is_default: e.target.checked})} className="w-4 h-4 text-[#986427] rounded focus:ring-[#986427]" />
+                      <span className="text-sm font-medium text-gray-700">Make this my default address</span>
+                    </label>
+                    <button type="submit" className="mt-6 w-full md:w-auto bg-[#1A0A08] text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#3E2312] transition-colors">
+                      <Save size={18} /> Save Address
+                    </button>
+                  </form>
+                )}
+                
+                {addresses.length === 0 && !showAddAddress && (
+                  <div className="text-center py-12 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
+                    <MapPin size={48} className="mx-auto text-gray-300 mb-4" />
+                    <p className="text-gray-500 font-medium">No saved addresses found</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {addresses.map(addr => (
+                    <div key={addr.id} className={`p-6 rounded-2xl border-2 transition-all relative ${
+                      addr.is_default 
+                        ? 'border-[#986427] bg-[#986427]/5 shadow-sm' 
+                        : 'border-white/60 bg-white/50 backdrop-blur-sm hover:border-[#986427]/30'
+                    }`}>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-bold text-lg text-gray-900">{addr.full_name}</h3>
+                            {addr.is_default && <span className="bg-[#986427] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Default</span>}
+                          </div>
+                          <p className="text-gray-600 text-sm leading-relaxed max-w-md">
+                            {addr.street_address}, {addr.city}, {addr.state} {addr.zip_code}, {addr.country}
+                          </p>
+                          <p className="text-gray-900 font-medium text-sm mt-2 flex items-center gap-1"><Phone size={14} className="text-gray-400" /> {addr.phone}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!addr.is_default && (
+                            <button onClick={() => handleSetDefaultAddress(addr.id)} className="text-xs font-bold text-gray-500 hover:text-[#986427] bg-gray-100 hover:bg-[#986427]/10 px-3 py-1.5 rounded-full transition-colors">
+                              Set Default
+                            </button>
+                          )}
+                          <button onClick={() => handleDeleteAddress(addr.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'orders' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <h2 className="font-serif text-3xl font-bold text-[#1A0A08] mb-6">Order History</h2>
+                {orders.length === 0 ? (
+                  <div className="text-center py-12 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
+                    <ShoppingBag size={48} className="mx-auto text-gray-300 mb-4" />
+                    <p className="text-gray-500 font-medium">No orders found</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {orders.map(order => (
+                      <div key={order.id} className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-bold text-lg text-gray-900">Order #{order.id.slice(0, 8)}</h3>
+                            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-[#986427]/10 text-[#986427]'}`}>
+                              {order.status || 'Pending'}
+                            </span>
+                          </div>
+                          <p className="text-gray-500 text-sm">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
+                          <p className="text-gray-900 font-bold mt-2">₹{(order.total_amount || 0).toLocaleString()}</p>
+                        </div>
+                        <button className="flex items-center gap-1 text-[#986427] font-bold text-sm hover:underline">
+                          View Details <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'wishlist' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08]">My Wishlist & Bag</h2>
+                </div>
+                <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-2xl">
+                  <Heart size={48} className="mx-auto text-[#986427]/40 mb-4" />
+                  <p className="text-gray-600 font-medium mb-4">Your saved outfits and cart items are tied to this profile.</p>
+                  <div className="flex items-center justify-center gap-4">
+                    <button onClick={() => window.location.href = '/explore'} className="bg-[#1A0A08] text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-[#3E2312] transition-colors">
+                      Browse Lookbook
+                    </button>
+                    <button onClick={() => window.location.href = '/cart'} className="bg-[#986427]/10 text-[#986427] px-6 py-2 rounded-full text-sm font-bold hover:bg-[#986427]/20 transition-colors">
+                      View Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+
       </div>
     </div>
   );

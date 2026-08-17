@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, CheckCircle2, Ruler, Weight, User, Save, Upload, AlertCircle, ArrowRight, Check, Target, ChevronDown, Sparkles, Loader2 } from 'lucide-react';
-import BodyShapeTooltip from './BodyShapeTooltip';
-import { useLocation } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
-
 import toast from 'react-hot-toast';
 import { supabase } from '../services/supabaseClient';
+
+const sizes = [
+  { id: 'S', name: 'S' },
+  { id: 'M', name: 'M' },
+  { id: 'L', name: 'L' },
+  { id: 'XL', name: 'XL' },
+  { id: 'XXL', name: 'XXL' }
+];
 
 export default function MyMeasurementsTab() {
   const location = useLocation();
@@ -18,21 +22,19 @@ export default function MyMeasurementsTab() {
   // For secondary members, globalMeasurements might not apply, but we fallback to it or parse their height.
   const initialHeightUnit = globalMeasurements.heightUnit || 'cm';
   const initialHeight = targetConsumer.height ? targetConsumer.height.replace(/[^0-9.]/g, '') : '';
-  const initialBodyShape = targetConsumer.bodyShape || globalMeasurements.bodyShape || 'Hourglass';
+  const initialSize = targetConsumer.size || globalMeasurements.size || 'M';
   
   const skinTones = [
-    { id: 'Very Light', color: '#F5D0B5' },
     { id: 'Light', color: '#E8BE95' },
     { id: 'Medium Light', color: '#D89F70' },
     { id: 'Medium', color: '#B57B52' },
-    { id: 'Medium Deep', color: '#8B5A33' },
-    { id: 'Deep', color: '#5C3A21' }
+    { id: 'Medium Deep', color: '#8B5A33' }
   ];
 
-  const initialSkinTone = targetConsumer.skinTone || 'Very Light';
+  const initialSkinTone = targetConsumer.skinTone || 'Light';
 
   const [heightUnit, setHeightUnit] = useState(initialHeightUnit);
-  const [selectedBodyType, setSelectedBodyType] = useState(initialBodyShape);
+  const [selectedSize, setSelectedSize] = useState(initialSize);
   const [selectedSkinTone, setSelectedSkinTone] = useState(initialSkinTone);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [localMeasurements, setLocalMeasurements] = useState({ ...globalMeasurements, ...(targetConsumer.measurements || {}), height: initialHeight });
@@ -53,7 +55,7 @@ export default function MyMeasurementsTab() {
     setName(targetConsumer.name || '');
     setGender(targetConsumer.gender || 'Female');
     setAge(targetConsumer.age || 25);
-    setSelectedBodyType(targetConsumer.bodyShape || 'Hourglass');
+    setSelectedSize(targetConsumer.size || 'M');
     if (targetConsumer.height) {
       setLocalMeasurements(prev => ({ ...prev, height: targetConsumer.height.replace(/[^0-9.]/g, '') }));
     }
@@ -80,7 +82,7 @@ export default function MyMeasurementsTab() {
         name: name,
         gender: gender,
         age: parseInt(age) || 25,
-        bodyShape: selectedBodyType,
+        size: selectedSize,
         height: updatedHeightCm,
         skinTone: selectedSkinTone,
         measurements: localMeasurements
@@ -90,7 +92,7 @@ export default function MyMeasurementsTab() {
       if (targetConsumer.isPrimary) {
         await saveMeasurements({
           ...localMeasurements,
-          bodyShape: selectedBodyType,
+          size: selectedSize,
           heightUnit,
         });
       }
@@ -331,30 +333,24 @@ export default function MyMeasurementsTab() {
           </div>
         </div>
 
-        {/* Body Type */}
+        {/* Size */}
         <div className="mb-8">
-          <h4 className="text-sm font-bold text-gray-900 mb-1">Body Type</h4>
+          <h4 className="text-sm font-bold text-gray-900 mb-1">Size</h4>
           <p className="text-xs text-gray-500 mb-4">Select the option that best represents you</p>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {bodyTypes.map((type) => (
-              <BodyShapeTooltip key={type.id} id={type.id} img={type.img}>
-                <div 
-                  onClick={() => setSelectedBodyType(type.id)}
-                  className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer h-full ${selectedBodyType === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 hover:border-gray-300'}`}
-                >
-                  <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                    <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
+          <div className="grid grid-cols-5 gap-3">
+            {sizes.map((sizeObj) => (
+              <div 
+                key={sizeObj.id}
+                onClick={() => setSelectedSize(sizeObj.id)}
+                className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-12 w-12 mx-auto ${selectedSize === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 shadow-sm'}`}
+              >
+                <span className="text-[12px] font-bold uppercase tracking-wider">{sizeObj.name}</span>
+                {selectedSize === sizeObj.id && (
+                  <div className="absolute -top-1 -right-1 bg-white text-[#3A10E5] rounded-full shadow-sm">
+                    <Check size={12} strokeWidth={4} />
                   </div>
-                  <div className={`w-full py-1.5 text-center border-t ${selectedBodyType === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
-                    <span className={`text-[10px] font-bold uppercase tracking-wide ${selectedBodyType === type.id ? 'text-[#3A10E5]' : 'text-gray-600'}`}>{type.id}</span>
-                  </div>
-                  {selectedBodyType === type.id && (
-                    <div className="absolute top-1.5 right-1.5 bg-[#3A10E5] text-white rounded-full p-1 shadow-sm">
-                      <Check size={12} strokeWidth={3} />
-                    </div>
-                  )}
-                </div>
-              </BodyShapeTooltip>
+                )}
+              </div>
             ))}
           </div>
         </div>

@@ -7,7 +7,7 @@ import { useAppContext } from '../context/AppContext';
 export default function ExploreScreen() {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
-  const bodyShapeParam = searchParams.get('body_shape');
+  const sizeParam = searchParams.get('size');
   
   const navigate = useNavigate();
   const { toggleWishlist, isInWishlist } = useAppContext();
@@ -31,8 +31,8 @@ export default function ExploreScreen() {
         }
       }
       
-      if (bodyShapeParam && bodyShapeParam !== 'all') {
-        query = query.in('body_shape', [bodyShapeParam, 'all']);
+      if (sizeParam && sizeParam !== 'all') {
+        query = query.in('size', [sizeParam, 'all']);
       }
       
       const { data } = await query;
@@ -42,12 +42,12 @@ export default function ExploreScreen() {
     }
     
     loadData();
-  }, [categoryParam, bodyShapeParam]);
+  }, [categoryParam, sizeParam]);
 
   return (
     <div className="bg-white min-h-screen w-full pb-20">
       {/* Header */}
-      <div className="sticky top-0 bg-white/90 backdrop-blur-md z-40 border-b border-gray-100">
+      <div className="sticky top-0 bg-white/95 backdrop-blur-sm z-40 border-b border-gray-100">
         <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} className="p-2 -ml-2 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
@@ -68,10 +68,10 @@ export default function ExploreScreen() {
           <p className="text-sm font-bold text-gray-500">
             {products.length} {products.length === 1 ? 'result' : 'results'} found
           </p>
-          {bodyShapeParam && bodyShapeParam !== 'all' && (
-            <span className="text-xs font-bold bg-[#F8F6FF] text-[#6344D4] px-3 py-1.5 rounded-full border border-[#6344D4]/10">
-              Matched for {bodyShapeParam} shape
-            </span>
+          {sizeParam && sizeParam !== 'all' && (
+            <div className="bg-white/80 backdrop-blur-md rounded-full px-4 py-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_2px_4px_rgba(0,0,0,0.05)] border border-[#1A0A08]/10 text-xs font-bold text-[#1A0A08] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#8B6544]"></span>Matched for size {sizeParam}
+            </div>
           )}
         </div>
 
@@ -105,6 +105,7 @@ export default function ExploreScreen() {
                   <img 
                     src={product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg'} 
                     alt={product.title} 
+                    loading="lazy"
                     className="w-full h-full object-cover shrink-0 mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
                   />
                   <button 

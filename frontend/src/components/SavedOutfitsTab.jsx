@@ -97,7 +97,7 @@ export default function SavedOutfitsTab() {
                 )}
               </div>
               <div className="text-sm font-medium text-gray-500 mb-3">
-                {selectedMember.bodyShape} Body Shape
+                Size {selectedMember.size}
               </div>
               <div className="flex items-center gap-2">
                 <div className="bg-[#3A10E5]/10 text-[#3A10E5] text-xs font-bold px-3 py-1.5 rounded-md">
@@ -300,7 +300,7 @@ export default function SavedOutfitsTab() {
                   <span>{member.height}</span>
                 </div>
                 <div className="text-xs font-medium text-gray-500 mb-4">
-                  {member.bodyShape} Body Shape
+                  Size {member.size}
                 </div>
                 <div className="bg-[#3A10E5]/10 text-[#3A10E5] text-xs font-bold px-3 py-1 rounded-md">
                   Recommended Size: {member.recommendedSize}

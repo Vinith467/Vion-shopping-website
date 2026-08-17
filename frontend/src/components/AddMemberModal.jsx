@@ -4,14 +4,12 @@ import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
 import toast from 'react-hot-toast';
 import heic2any from 'heic2any';
-import BodyShapeTooltip from './BodyShapeTooltip';
-
-const bodyTypes = [
-  { id: 'Inverted Triangle', img: '/images/shapes/inverted_triangle.png' },
-  { id: 'Apple', img: '/images/shapes/apple.png' },
-  { id: 'Hourglass', img: '/images/shapes/hourglass.png' },
-  { id: 'Pear', img: '/images/shapes/pear.png' },
-  { id: 'Rectangle', img: '/images/shapes/rectangle.png' }
+const sizes = [
+  { id: 'S', name: 'S' },
+  { id: 'M', name: 'M' },
+  { id: 'L', name: 'L' },
+  { id: 'XL', name: 'XL' },
+  { id: 'XXL', name: 'XXL' }
 ];
 
 export default function AddMemberModal({ isOpen, onClose, memberToEdit = null }) {
@@ -27,7 +25,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
     gender: 'Female',
     height: '',
     weight: '',
-    bodyShape: 'Hourglass',
+    size: 'M',
   });
 
   useEffect(() => {
@@ -40,11 +38,11 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
           gender: memberToEdit.gender || 'Female',
           height: memberToEdit.height ? memberToEdit.height.toString().replace(' cm', '') : '',
           weight: memberToEdit.weight ? memberToEdit.weight.toString().replace(' kg', '') : '',
-          bodyShape: memberToEdit.bodyShape || 'Hourglass',
+          size: memberToEdit.size || 'M',
         });
         setAvatarPreview(memberToEdit.image && !memberToEdit.image.includes('body_') ? memberToEdit.image : null);
       } else {
-        setFormData({ name: '', dob: '', gender: 'Female', height: '', weight: '', bodyShape: 'Hourglass' });
+        setFormData({ name: '', dob: '', gender: 'Female', height: '', weight: '', size: 'M' });
         setAvatarPreview(null);
       }
     } else {
@@ -156,7 +154,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
         gender: 'Female',
         height: '',
         weight: '',
-        bodyShape: 'Hourglass',
+        size: 'M',
       });
       
       onClose();
@@ -315,27 +313,21 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                 </div>
               </div>
               <div className="bg-gray-50/50 p-3 rounded-2xl border border-gray-100/80 flex-1 flex flex-col">
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Body Shape</label>
-                <div className="grid grid-cols-3 gap-2 flex-1">
-                  {bodyTypes.map((type) => (
-                    <BodyShapeTooltip key={type.id} id={type.id} img={type.img}>
-                      <div 
-                        onClick={() => handleChange({ target: { name: 'bodyShape', value: type.id } })}
-                        className={`relative flex flex-col overflow-hidden rounded-xl border-2 transition-all cursor-pointer h-full ${formData.bodyShape === type.id ? 'border-[#3A10E5] ring-1 ring-[#3A10E5]' : 'border-gray-200 bg-white hover:border-gray-300 shadow-sm'}`}
-                      >
-                        <div className="w-full aspect-[4/5] bg-gray-50 flex items-center justify-center">
-                          <img src={type.img} alt={type.id} className="w-full h-full object-cover" />
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Size</label>
+                <div className="grid grid-cols-5 gap-2 flex-1 items-center justify-center">
+                  {sizes.map((sizeObj) => (
+                    <div 
+                      key={sizeObj.id}
+                      onClick={() => handleChange({ target: { name: 'size', value: sizeObj.id } })}
+                      className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-10 w-10 mx-auto ${formData.size === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 shadow-sm'}`}
+                    >
+                      <span className="text-[12px] font-bold uppercase tracking-wider">{sizeObj.name}</span>
+                      {formData.size === sizeObj.id && (
+                        <div className="absolute -top-1 -right-1 bg-white text-[#3A10E5] rounded-full shadow-sm">
+                          <Check size={12} strokeWidth={4} />
                         </div>
-                        <div className={`w-full py-1 text-center border-t ${formData.bodyShape === type.id ? 'bg-[#3A10E5]/5 border-[#3A10E5]/20' : 'bg-white border-gray-100'}`}>
-                          <span className={`text-[8px] font-bold uppercase tracking-wider ${formData.bodyShape === type.id ? 'text-[#3A10E5]' : 'text-gray-500'}`}>{type.id}</span>
-                        </div>
-                        {formData.bodyShape === type.id && (
-                          <div className="absolute top-1 right-1 bg-[#3A10E5] text-white rounded-full p-0.5 shadow-sm">
-                            <Check size={10} strokeWidth={3} />
-                          </div>
-                        )}
-                      </div>
-                    </BodyShapeTooltip>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
