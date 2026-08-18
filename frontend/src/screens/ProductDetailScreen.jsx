@@ -226,7 +226,7 @@ export default function ProductDetailScreen() {
                 </div>
 
                 {/* Actions */}
-                <div className="fixed bottom-[72px] left-0 right-0 z-50 bg-[#F5F0E8]/90 backdrop-blur-md border-t border-gray-200/50 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
+                <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F5F0E8]/90 backdrop-blur-md border-t border-gray-200/50 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
                   <button 
                     onClick={() => {
                       addToCart({
