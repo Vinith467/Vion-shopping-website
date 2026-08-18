@@ -8,6 +8,7 @@ export default function ExploreScreen() {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
   const sizeParam = searchParams.get('size');
+  const classParam = searchParams.get('class');
   
   const navigate = useNavigate();
   const { toggleWishlist, isInWishlist } = useAppContext();
@@ -29,6 +30,12 @@ export default function ExploreScreen() {
           query = query.eq('category_id', catData.id);
           setCategoryName(catData.name);
         }
+      }
+      
+      // If class was passed (Casual, Exclusive, Exclusive Plus), filter by target_body_shapes
+      if (classParam) {
+        query = query.contains('target_body_shapes', [classParam]);
+        setCategoryName(`${classParam} Collection`);
       }
       
       if (sizeParam && sizeParam !== 'all') {

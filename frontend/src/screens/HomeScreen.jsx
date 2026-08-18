@@ -223,11 +223,11 @@ export default function HomeScreen() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {[
-            { name: "CASUAL", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
-            { name: "EXCLUSIVE", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
-            { name: "EXCLUSIVE PLUS", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
+            { name: "CASUAL", value: "Casual", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
+            { name: "EXCLUSIVE", value: "Exclusive", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
+            { name: "EXCLUSIVE PLUS", value: "Exclusive Plus", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
           ].map((cat, idx) => (
-            <div key={idx} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
+            <div key={idx} onClick={() => navigate(`/explore?class=${encodeURIComponent(cat.value)}`)} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                {/* Full background image */}
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
                {/* Gradient overlay for text readability */}
