@@ -225,16 +225,16 @@ export default function HomeScreen() {
           {/* Top Row: Bento Grid */}
           <div 
             onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
-            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[220px] sm:h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
           >
              <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
-                <h4 className="text-[1.6rem] lg:text-[2.2rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>DISCOVER COLLECTION</h4>
-                <p className="text-[12px] md:text-[14px] text-white/90 leading-relaxed font-medium max-w-[80%] md:max-w-[60%] mb-4">
+             <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-10">
+                <h4 className="text-[1.5rem] lg:text-[2.2rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>DISCOVER COLLECTION</h4>
+                <p className="text-[11px] md:text-[14px] text-white/90 leading-relaxed font-medium max-w-[90%] md:max-w-[60%] mb-3 md:mb-4">
                   Explore our curated fashion selections tailored to your unique profile and style.
                 </p>
-                <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-2 w-fit hover:bg-white/25 transition-colors">
+                <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 transition-colors">
                    Explore <ArrowRight size={10} />
                 </button>
              </div>
