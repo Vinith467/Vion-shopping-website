@@ -332,7 +332,7 @@ export default function ProductDetailScreen() {
             
             <div className="space-y-6">
               {(() => {
-                const SIZES_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+                const SIZES_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
                 const sortSizes = (sizes) => sizes.sort((a, b) => SIZES_ORDER.indexOf(a) - SIZES_ORDER.indexOf(b));
                 
                 const uniqueTopSizes = Array.from(new Set(
@@ -362,6 +362,19 @@ export default function ProductDetailScreen() {
                     .filter(s => s && s !== 'all')
                 ));
                 const displayBottomSizes = uniqueBottomSizes.length > 0 ? sortSizes(uniqueBottomSizes) : displayTopSizes;
+
+                // Handle size group pre-selection
+                import('../utils/sizeGroups').then(({ getSizeGroupArray }) => {
+                  const groupSizes = getSizeGroupArray(primaryMember?.size || '');
+                  if (!displayTopSizes.includes(profile.size)) {
+                    const match = displayTopSizes.find(s => groupSizes.includes(s));
+                    if (match && profile.size !== match) {
+                      setProfile(prev => ({ ...prev, size: match }));
+                    } else if (displayTopSizes.length > 0 && profile.size !== displayTopSizes[0] && !match) {
+                      setProfile(prev => ({ ...prev, size: displayTopSizes[0] }));
+                    }
+                  }
+                });
 
                 return (
                   <>

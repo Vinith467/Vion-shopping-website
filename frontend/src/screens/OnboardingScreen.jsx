@@ -5,11 +5,11 @@ import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
 
 const sizes = [
-  { id: 'S', name: 'S', femaleImg: '/images/size/female/f1.png', maleImg: '/images/size/male/m1.png' },
-  { id: 'M', name: 'M', femaleImg: '/images/size/female/f2.png', maleImg: '/images/size/male/m2.png' },
-  { id: 'L', name: 'L', femaleImg: '/images/size/female/f3.png', maleImg: '/images/size/male/m3.png' },
-  { id: 'XL', name: 'XL', femaleImg: '/images/size/female/f4.png', maleImg: '/images/size/male/m4.png' },
-  { id: 'XXL', name: 'XXL', femaleImg: '/images/size/female/f5.png', maleImg: '/images/size/male/m5.png' }
+  { id: 'XS - M', name: 'XS - M', femaleImg: '/images/size/female/f1.png', maleImg: '/images/size/male/m1.png' },
+  { id: 'L', name: 'L', femaleImg: '/images/size/female/f2.png', maleImg: '/images/size/male/m2.png' },
+  { id: 'XL - XXL', name: 'XL - XXL', femaleImg: '/images/size/female/f3.png', maleImg: '/images/size/male/m3.png' },
+  { id: '3XL - 4XL', name: '3XL - 4XL', femaleImg: '/images/size/female/f4.png', maleImg: '/images/size/male/m4.png' },
+  { id: '5XL', name: '5XL', femaleImg: '/images/size/female/f5.png', maleImg: '/images/size/male/m5.png' }
 ];
 
 const heights = [

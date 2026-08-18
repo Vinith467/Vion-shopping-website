@@ -15,11 +15,15 @@ const skinTonesMap = [
 
 const sizesMap = [
   { id: 'all', name: 'All Sizes' },
+  { id: 'XS', name: 'XS' },
   { id: 'S', name: 'S' },
   { id: 'M', name: 'M' },
   { id: 'L', name: 'L' },
   { id: 'XL', name: 'XL' },
-  { id: 'XXL', name: 'XXL' }
+  { id: 'XXL', name: 'XXL' },
+  { id: '3XL', name: '3XL' },
+  { id: '4XL', name: '4XL' },
+  { id: '5XL', name: '5XL' }
 ];
 
 const heightsMap = [

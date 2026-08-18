@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Filter, Heart, Search } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
+import { matchesSizeGroup } from '../utils/sizeGroups';
 
 export default function ExploreScreen() {
   const [searchParams] = useSearchParams();
@@ -38,13 +39,21 @@ export default function ExploreScreen() {
         setCategoryName(`${classParam} Collection`);
       }
       
-      if (sizeParam && sizeParam !== 'all') {
-        query = query.in('size', [sizeParam, 'all']);
-      }
+      // Removed the buggy Supabase .in query for sizes since size is a comma-separated string
+      // if (sizeParam && sizeParam !== 'all') {
+      //   query = query.in('size', [sizeParam, 'all']);
+      // }
       
       const { data } = await query;
       
-      setProducts(data || []);
+      let finalProducts = data || [];
+      
+      // Filter by size group locally
+      if (sizeParam && sizeParam !== 'all') {
+        finalProducts = finalProducts.filter(p => matchesSizeGroup(p.size, sizeParam));
+      }
+      
+      setProducts(finalProducts);
       setIsLoading(false);
     }
     
