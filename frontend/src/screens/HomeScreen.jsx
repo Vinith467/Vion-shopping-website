@@ -226,13 +226,13 @@ export default function HomeScreen() {
             { 
               name: "DISCOVER COLLECTION", 
               desc: "Explore our curated fashion selections tailored to your unique profile and style.", 
-              img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop",
+              img: "/DISCOVER COLLECTION IMAGE.png",
               onClick: () => navigate('/onboarding', { state: { resetStep: true } })
             },
             { 
               name: "BOOK A CONSULTATION", 
               desc: "Schedule a one-on-one session with our fashion experts for a personalized bespoke experience.", 
-              img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop",
+              img: "/BOOK A CONSULTATION.png",
               onClick: () => navigate('/onboarding', { state: { resetStep: true } })
             }
           ].map((cat, idx) => (
