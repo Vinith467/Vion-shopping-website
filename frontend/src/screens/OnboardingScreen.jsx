@@ -1025,7 +1025,8 @@ export default function OnboardingScreen() {
           </div>
         )}
 
-        {step >= 3 && (
+        <div className="md:hidden">
+          {step >= 3 && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-500 mb-8">
             <div className="flex items-center mb-4 w-full">
               <button 
@@ -1182,6 +1183,140 @@ export default function OnboardingScreen() {
         )}
 
 
+
+        </div>
+
+<div className="hidden md:block">
+          {step >= 3 && (
+          <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-4xl font-serif text-gray-900">Your VION Collection for <span className="italic text-[#A3523B]">{profile.name}</span></h1>
+              <Heart className="text-gray-400 w-6 h-6 ml-2" />
+            </div>
+            <p className="text-gray-600 mb-8">Handpicked styles that fit size {profile.size}, {profile.height} height and {profile.skinTone} skin tone.</p>
+
+            <div className="flex flex-col lg:flex-row gap-8">
+              
+              <div className="flex-1 w-full min-w-0">
+                {/* Filters Row */}
+                <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <User size={16} /> Size: {profile.size}
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <div className="w-4 flex justify-center font-bold">I</div> Height: {profile.height}
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
+                    </div>
+                  </div>
+                  <div className="flex items-center ml-auto">
+                    <button onClick={prevStep} className="flex items-center gap-2.5 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-1.5 pr-4 py-1.5 hover:bg-white/40 transition-all group">
+                       {profile.avatarUrl ? (
+                         <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
+                       ) : (
+                         <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
+                       )}
+                       <span className="text-sm font-bold text-[#1A0A08] max-w-[120px] truncate">{profile.name}</span>
+                       <Edit2 size={14} className="text-[#1A0A08]/50 group-hover:text-[#1A0A08] ml-1 transition-colors" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-5 mb-8 flex items-start gap-3">
+                  <Sparkles className="text-[#8B6544] shrink-0 mt-0.5" size={18} />
+                  <p className="text-sm font-medium text-[#1A0A08]/90">These outfits are chosen to enhance proportion, highlight your best features, and match your category preference.</p>
+                </div>
+
+                {/* Tabs */}
+                <div className="flex items-center border-b border-white/30 mb-6 overflow-x-auto hide-scrollbar">
+                  {['All Recommendations', ...categories.map(c => c.name)].map((tab) => (
+                    <button 
+                      key={tab} 
+                      onClick={() => setActiveCollectionTab(tab)}
+                      className={`px-6 py-3 text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCollectionTab === tab ? 'text-[#1A0A08] border-b-2 border-[#1A0A08] drop-shadow-sm' : 'text-[#1A0A08]/60 hover:text-[#1A0A08]'}`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                  <div className="ml-auto flex items-center gap-2 pb-2 pl-4">
+                     <span className="text-sm font-medium text-[#1A0A08]/70">Sort by:</span>
+                     <select className="bg-transparent text-sm font-bold text-[#1A0A08] focus:outline-none cursor-pointer">
+                        <option>Recommended</option>
+                        <option>Newest</option>
+                        <option>Price: Low to High</option>
+                     </select>
+                  </div>
+                </div>
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {isLoadingProducts ? (
+                    <div className="col-span-full py-20 flex justify-center">
+                      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#986427] rounded-full animate-spin"></div>
+                    </div>
+                  ) : fetchedProducts.length === 0 ? (
+                    <div className="col-span-full py-20 text-center text-gray-500 font-serif text-lg">
+                      No exact matches found for your profile. Try adjusting your preferences.
+                    </div>
+                  ) : (
+                    fetchedProducts.filter(item => {
+                      if (activeCollectionTab === 'All Recommendations') return true;
+                      return item.category?.name === activeCollectionTab;
+                    }).map((item) => {
+                      const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
+                      const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
+                      const displayColor = matchingVar?.color_name || "";
+                      const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
+
+                      return (
+                      <div 
+                        key={item.id} 
+                        onClick={() => {
+                          setSelectedProduct({
+                            id: item.id,
+                            name: displayTitle,
+                            price: `₹ ${(item.price || 0).toLocaleString()}`,
+                            image: displayImage,
+                            description: item.description || "A beautifully crafted piece for your wardrobe.",
+                            highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
+                            originalItem: item
+                          });
+                          navigate(`/product/${item.id}`);
+                        }}
+                        className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                      >
+                        <div className="relative rounded-xl overflow-hidden mb-3 aspect-[3/4] bg-black/5 shadow-inner">
+                          <img src={displayImage} alt={item.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                          <button onClick={(e) => { e.stopPropagation(); }} className="absolute top-3 right-3 p-2 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
+                            <Heart size={16} />
+                          </button>
+                        </div>
+                        <h4 className="font-bold text-[#1A0A08] text-sm mb-1 px-1 drop-shadow-sm line-clamp-1">{displayTitle}</h4>
+                        <div className="flex justify-between items-center px-1 mb-1">
+                          <span className="font-bold text-[#1A0A08]/80 text-sm">₹ {(item.price || 0).toLocaleString()}</span>
+                        </div>
+                        <div className="mt-auto pt-2">
+                          <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] rounded-xl text-xs font-bold text-[#1A0A08] transition-all uppercase tracking-wider">
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    )})
+                  )}
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+        )}
+
+
+
+        </div>
 
         {/* End of content wrapping div */}
       </div>
