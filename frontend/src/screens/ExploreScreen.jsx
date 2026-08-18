@@ -12,7 +12,7 @@ export default function ExploreScreen() {
   const classParam = searchParams.get('class');
   
   const navigate = useNavigate();
-  const { toggleWishlist, isInWishlist } = useAppContext();
+  const { toggleWishlist, isInWishlist, members, selectedConsumerId } = useAppContext();
   
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,9 +48,20 @@ export default function ExploreScreen() {
       
       let finalProducts = data || [];
       
+      const activeProfile = members?.find(m => m.id === selectedConsumerId);
+      
       // Filter by size group locally
       if (sizeParam && sizeParam !== 'all') {
         finalProducts = finalProducts.filter(p => matchesSizeGroup(p.size, sizeParam));
+      }
+      
+      // Filter by height if profile exists
+      if (activeProfile?.height) {
+        finalProducts = finalProducts.filter(p => {
+          if (!p.body_shape || p.body_shape === 'all') return true;
+          const productHeights = p.body_shape.split(',').map(h => h.trim());
+          return productHeights.includes('all') || productHeights.includes(activeProfile.height);
+        });
       }
       
       setProducts(finalProducts);
@@ -58,7 +69,7 @@ export default function ExploreScreen() {
     }
     
     loadData();
-  }, [categoryParam, sizeParam]);
+  }, [categoryParam, sizeParam, classParam, members, selectedConsumerId]);
 
   return (
     <div className="bg-white min-h-screen w-full pb-20">
@@ -115,11 +126,16 @@ export default function ExploreScreen() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {products.map((product) => (
+            {products.map((product) => {
+              const activeProfile = members?.find(m => m.id === selectedConsumerId);
+              const matchingVar = product.variations?.find(v => v.skinTone === activeProfile?.skinTone || v.skin_tone === activeProfile?.skinTone);
+              const displayImage = matchingVar?.image_urls?.[0] || (product.images && product.images[0]) || '/images/placeholder.jpg';
+
+              return (
               <Link to={`/product/${product.id}`} key={product.id} className="flex flex-col gap-3 group cursor-pointer">
                 <div className="relative aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-shadow group-hover:shadow-md">
                   <img 
-                    src={product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg'} 
+                    src={displayImage} 
                     alt={product.title} 
                     loading="lazy"
                     className="w-full h-full object-cover shrink-0 mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
@@ -150,7 +166,8 @@ export default function ExploreScreen() {
                   </div>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

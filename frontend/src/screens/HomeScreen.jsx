@@ -85,7 +85,7 @@ export default function HomeScreen() {
             
             <div className="flex flex-wrap items-center gap-4 mb-5">
               <button 
-                onClick={() => navigate('/onboarding', { state: { resetStep: true, redirectToExplore: true } })}
+                onClick={() => navigate('/onboarding', { state: { resetStep: true } })}
                 className="px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(to bottom, #4A1A18, #2A0C0A)',
