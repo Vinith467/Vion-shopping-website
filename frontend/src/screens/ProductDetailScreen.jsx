@@ -101,10 +101,10 @@ export default function ProductDetailScreen() {
 
   return (
     <div className="bg-[#F5F0E8] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-8 lg:pt-12">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         
         <div className="animate-in fade-in slide-in-from-right-8 duration-500">
-          <div className="flex items-center gap-4 mb-6">
+          <div className="sticky top-0 z-40 bg-[#F5F0E8]/95 backdrop-blur-md pt-8 lg:pt-12 pb-4 mb-6 flex items-center gap-4 -mx-4 px-4 md:-mx-8 md:px-8">
             <button onClick={() => navigate(-1)} className="p-2 bg-white/40 hover:bg-white/60 backdrop-blur-md border border-white/50 text-[#1A0A08] rounded-full transition-colors shadow-sm">
               <ArrowLeft size={20} />
             </button>
@@ -113,7 +113,7 @@ export default function ProductDetailScreen() {
 
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 items-start">
             {/* LEFT COLUMN: Gallery */}
-            <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-28 lg:h-max">
+            <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-36 lg:h-max">
               <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
                 {variationImages.map((img, idx) => (
                   <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
