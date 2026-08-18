@@ -280,49 +280,6 @@ export default function HomeScreen() {
         </div>
       </section>
 
-      {/* 5. Shop by Occasion */}
-      <section className="w-full px-8 lg:px-20 pb-28 max-w-[1350px] mx-auto">
-        <div className="flex flex-col lg:flex-row items-end gap-8">
-          
-          <div className="w-full lg:w-44 shrink-0 pb-3">
-            <h2 className="leading-snug uppercase tracking-[0.1em] relative inline-block" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: '1.2rem', color: '#1A1A1A' }}>
-              Shop By<br/>Occasion
-              <div className="absolute -bottom-3 left-0 w-9 h-[1.5px] bg-[#BFA679]"></div>
-            </h2>
-          </div>
-
-          <div className="flex-1 w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-             
-             {categories.map((cat, i) => (
-                <Link 
-                  to={`/explore?category=${cat.name}`} 
-                  key={cat.id || i} 
-                  className="group relative h-[170px] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all block"
-                >
-                  <img 
-                    src={cat.image_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80&auto=format&fit=crop'} 
-                    alt={cat.name} 
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-                  
-                  <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                    <div>
-                      <h3 className="text-white text-[11px] tracking-[0.1em] uppercase mb-0.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h3>
-                      <p className="text-[#BFA679] text-[7px] font-bold tracking-[0.1em] uppercase">EXPLORE NOW</p>
-                    </div>
-                    <div className="w-5 h-5 rounded-full border border-[#BFA679]/60 flex items-center justify-center shrink-0 group-hover:bg-[#BFA679]/20 transition-colors text-[#BFA679]">
-                       <ArrowRight size={8} />
-                    </div>
-                  </div>
-                </Link>
-             ))}
-             
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

@@ -255,7 +255,7 @@ export default function AdminCategories() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50">
           <div className="bg-[#f5ece3] rounded-3xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh] border border-gray-200 shadow-2xl">
             <div className="flex items-center justify-between p-5 border-b border-gray-200 bg-[#f5ece3] z-10">
-              <h2 className="text-lg font-bold text-[#1A0A08]">{editingId ? 'Edit Occasion' : 'Create Occasion'}</h2>
+              <h2 className="text-lg font-bold text-[#1A0A08]">{editingId ? 'Edit Category' : 'Create Category'}</h2>
               <button onClick={() => setShowModal(false)} className="p-2 text-gray-500 hover:bg-white hover:text-[#1A0A08] rounded-full transition-colors">
                 <X size={20} />
               </button>
@@ -264,7 +264,7 @@ export default function AdminCategories() {
             <form onSubmit={handleSubmit} className="p-5 overflow-y-auto text-[#1A0A08]">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Occasion Name *</label>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Category Name *</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -277,14 +277,8 @@ export default function AdminCategories() {
                       });
                     }}
                     className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-gray-400 outline-none transition-colors"
-                    placeholder="e.g. Wedding, Festive"
-                    list="predefined-occasions"
+                    placeholder="e.g. Dresses, Tops"
                   />
-                  <datalist id="predefined-occasions">
-                    {PREDEFINED_OCCASIONS.map(occasion => (
-                      <option key={occasion} value={occasion} />
-                    ))}
-                  </datalist>
                 </div>
                 
                 <div>

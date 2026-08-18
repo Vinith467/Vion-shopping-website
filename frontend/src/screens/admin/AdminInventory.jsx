@@ -682,25 +682,6 @@ export default function AdminInventory() {
                       </div>
                     </div>
 
-                    <div>
-                      <TagInput 
-                        label="Occasion Tags" 
-                        placeholder="e.g. Office / Work, Party" 
-                        tags={formData.occasion_tags || []} 
-                        onChange={(newTags) => setFormData({ ...formData, occasion_tags: newTags })} 
-                        suggestions={availableOccasionTags}
-                      />
-                    </div>
-
-                    <div>
-                      <TagInput 
-                        label="Style Tags" 
-                        placeholder="e.g. Workwear, Party" 
-                        tags={formData.style_tags || []} 
-                        onChange={(newTags) => setFormData({ ...formData, style_tags: newTags })} 
-                        suggestions={availableStyleTags}
-                      />
-                    </div>
 
                     <div>
                       <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Category *</label>
