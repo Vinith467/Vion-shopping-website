@@ -227,7 +227,7 @@ export default function HomeScreen() {
             onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
             className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
           >
-             <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
+             <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
                 <h4 className="text-[1.6rem] lg:text-[2.2rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>DISCOVER COLLECTION</h4>
