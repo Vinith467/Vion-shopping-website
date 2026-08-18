@@ -108,6 +108,8 @@ export default function OnboardingScreen() {
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [showNameModal, setShowNameModal] = useState(false);
   const [activeCollectionTab, setActiveCollectionTab] = useState('All Recommendations');
+  const [selectedCategoryForStep4, setSelectedCategoryForStep4] = useState(null);
+  const [isProfileDetailsExpanded, setIsProfileDetailsExpanded] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(() => {
     const saved = sessionStorage.getItem('onboardingSelectedProduct');
     return saved ? JSON.parse(saved) : null;
@@ -323,7 +325,7 @@ export default function OnboardingScreen() {
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 3 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your VION Collection<br/><span className={`text-[12px] md:text-[13px] ${step >= 3 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Recommended for them)</span></span>
             </div>
 
-            <div className={`items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start cursor-default ${step === 4 || step === 3 ? 'flex' : 'hidden md:flex'}`}>
+            <div className={`items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start ${selectedCategoryForStep4 ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'} ${step === 4 || step === 3 ? 'flex' : 'hidden md:flex'}`} onClick={() => selectedCategoryForStep4 && setStep(4)}>
               <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 4 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>4</div>
               <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 4 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Shop with<br/>Confidence</span>
             </div>
@@ -1023,130 +1025,150 @@ export default function OnboardingScreen() {
           </div>
         )}
 
-        {step === 3 && (
-          <div className="animate-in fade-in slide-in-from-right-8 duration-500">
-            <div className="flex items-center gap-2 mb-2">
-              <h1 className="text-4xl font-serif text-gray-900">Your VION Collection for <span className="italic text-[#A3523B]">{profile.name}</span></h1>
-              <Heart className="text-gray-400 w-6 h-6 ml-2" />
+        {step >= 3 && (
+          <div className="animate-in fade-in slide-in-from-right-8 duration-500 mb-8">
+            <div className="flex items-center justify-end mb-4">
+              <button 
+                onClick={() => {
+                  if (step === 3) setIsProfileDetailsExpanded(!isProfileDetailsExpanded);
+                  else {
+                    setStep(3);
+                    setIsProfileDetailsExpanded(true);
+                  }
+                }}
+                className="flex items-center gap-2.5 bg-white/40 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-1.5 pr-4 py-1.5 hover:bg-white/60 transition-all group"
+              >
+                 {profile.avatarUrl ? (
+                   <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
+                 ) : (
+                   <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
+                 )}
+                 <span className="text-sm font-bold text-[#1A0A08] max-w-[150px] truncate">{profile.name}'s VION Collection</span>
+                 <Edit2 size={14} className="text-[#1A0A08]/50 group-hover:text-[#1A0A08] ml-1 transition-colors" />
+              </button>
             </div>
-            <p className="text-gray-600 mb-8">Handpicked styles that fit size {profile.size}, {profile.height} height and {profile.skinTone} skin tone.</p>
+            
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isProfileDetailsExpanded ? 'max-h-[800px] opacity-100 mb-8' : 'max-h-0 opacity-0 mb-0'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-4xl font-serif text-gray-900">Your VION Collection for <span className="italic text-[#A3523B]">{profile.name}</span></h1>
+                <Heart className="text-gray-400 w-6 h-6 ml-2" />
+              </div>
+              <p className="text-gray-600 mb-6">Handpicked styles that fit size {profile.size}, {profile.height} height and {profile.skinTone} skin tone.</p>
 
-            <div className="flex flex-col lg:flex-row gap-8">
-              
-              <div className="flex-1 w-full min-w-0">
-                {/* Filters Row */}
-                <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                      <User size={16} /> Size: {profile.size}
-                    </div>
-                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                      <div className="w-4 flex justify-center font-bold">I</div> Height: {profile.height}
-                    </div>
-                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                      <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
-                    </div>
-                  </div>
-                  <div className="flex items-center ml-auto">
-                    <button onClick={prevStep} className="flex items-center gap-2.5 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-1.5 pr-4 py-1.5 hover:bg-white/40 transition-all group">
-                       {profile.avatarUrl ? (
-                         <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
-                       ) : (
-                         <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
-                       )}
-                       <span className="text-sm font-bold text-[#1A0A08] max-w-[120px] truncate">{profile.name}</span>
-                       <Edit2 size={14} className="text-[#1A0A08]/50 group-hover:text-[#1A0A08] ml-1 transition-colors" />
-                    </button>
-                  </div>
+              <div className="flex items-center gap-3 flex-wrap mb-6">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                  <User size={16} /> Size: {profile.size}
                 </div>
-
-                <div className="bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-5 mb-8 flex items-start gap-3">
-                  <Sparkles className="text-[#8B6544] shrink-0 mt-0.5" size={18} />
-                  <p className="text-sm font-medium text-[#1A0A08]/90">These outfits are chosen to enhance proportion, highlight your best features, and match your category preference.</p>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                  <div className="w-4 flex justify-center font-bold">I</div> Height: {profile.height}
                 </div>
-
-                {/* Tabs */}
-                <div className="flex items-center border-b border-white/30 mb-6 overflow-x-auto hide-scrollbar">
-                  {['All Recommendations', ...categories.map(c => c.name)].map((tab) => (
-                    <button 
-                      key={tab} 
-                      onClick={() => setActiveCollectionTab(tab)}
-                      className={`px-6 py-3 text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCollectionTab === tab ? 'text-[#1A0A08] border-b-2 border-[#1A0A08] drop-shadow-sm' : 'text-[#1A0A08]/60 hover:text-[#1A0A08]'}`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                  <div className="ml-auto flex items-center gap-2 pb-2 pl-4">
-                     <span className="text-sm font-medium text-[#1A0A08]/70">Sort by:</span>
-                     <select className="bg-transparent text-sm font-bold text-[#1A0A08] focus:outline-none cursor-pointer">
-                        <option>Recommended</option>
-                        <option>Newest</option>
-                        <option>Price: Low to High</option>
-                     </select>
-                  </div>
-                </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {isLoadingProducts ? (
-                    <div className="col-span-full py-20 flex justify-center">
-                      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#986427] rounded-full animate-spin"></div>
-                    </div>
-                  ) : fetchedProducts.length === 0 ? (
-                    <div className="col-span-full py-20 text-center text-gray-500 font-serif text-lg">
-                      No exact matches found for your profile. Try adjusting your preferences.
-                    </div>
-                  ) : (
-                    fetchedProducts.filter(item => {
-                      if (activeCollectionTab === 'All Recommendations') return true;
-                      return item.category?.name === activeCollectionTab;
-                    }).map((item) => {
-                      const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
-                      const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
-                      const displayColor = matchingVar?.color_name || "";
-                      const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
-
-                      return (
-                      <div 
-                        key={item.id} 
-                        onClick={() => {
-                          setSelectedProduct({
-                            id: item.id,
-                            name: displayTitle,
-                            price: `₹ ${(item.price || 0).toLocaleString()}`,
-                            image: displayImage,
-                            description: item.description || "A beautifully crafted piece for your wardrobe.",
-                            highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
-                            originalItem: item
-                          });
-                          navigate(`/product/${item.id}`);
-                        }}
-                        className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
-                      >
-                        <div className="relative rounded-xl overflow-hidden mb-3 aspect-[3/4] bg-black/5 shadow-inner">
-                          <img src={displayImage} alt={item.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                          <button onClick={(e) => { e.stopPropagation(); }} className="absolute top-3 right-3 p-2 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
-                            <Heart size={16} />
-                          </button>
-                        </div>
-                        <h4 className="font-bold text-[#1A0A08] text-sm mb-1 px-1 drop-shadow-sm line-clamp-1">{displayTitle}</h4>
-                        <div className="flex justify-between items-center px-1 mb-1">
-                          <span className="font-bold text-[#1A0A08]/80 text-sm">₹ {(item.price || 0).toLocaleString()}</span>
-                        </div>
-                        <div className="mt-auto pt-2">
-                          <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] rounded-xl text-xs font-bold text-[#1A0A08] transition-all uppercase tracking-wider">
-                            View Details
-                          </button>
-                        </div>
-                      </div>
-                    )})
-                  )}
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                  <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
                 </div>
               </div>
-
-
+              
+              <div className="bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-5 flex items-start gap-3">
+                <Sparkles className="text-[#8B6544] shrink-0 mt-0.5" size={18} />
+                <p className="text-sm font-medium text-[#1A0A08]/90">These outfits are chosen to enhance proportion, highlight your best features, and match your category preference.</p>
+              </div>
             </div>
+          </div>
+        )}
 
+        {step === 3 && (
+          <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+            <h2 className="text-2xl font-serif text-[#1A0A08] mb-6">Select a Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {categories.map((cat) => {
+                const categoryImage = cat.image_url || '/images/placeholder.jpg';
+                return (
+                  <div 
+                    key={cat.id} 
+                    onClick={() => {
+                      setSelectedCategoryForStep4(cat.name);
+                      setStep(4);
+                      setIsProfileDetailsExpanded(false);
+                    }}
+                    className="relative aspect-square rounded-2xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500"
+                  >
+                    <img 
+                      src={categoryImage} 
+                      alt={cat.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center pb-6">
+                      <h3 className="text-white font-serif text-lg md:text-xl tracking-wider uppercase font-bold text-center drop-shadow-md">
+                        {cat.name}
+                      </h3>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-serif text-[#1A0A08]">{selectedCategoryForStep4}</h2>
+              <button onClick={() => setStep(3)} className="text-sm font-bold text-[#8B6544] hover:text-[#5A4232] flex items-center gap-1 transition-colors">
+                 <ArrowLeft size={16} /> Back to Categories
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+              {isLoadingProducts ? (
+                <div className="col-span-full py-20 flex justify-center">
+                  <div className="w-8 h-8 border-4 border-gray-200 border-t-[#986427] rounded-full animate-spin"></div>
+                </div>
+              ) : fetchedProducts.filter(item => item.category?.name === selectedCategoryForStep4).length === 0 ? (
+                <div className="col-span-full py-20 text-center text-gray-500 font-serif text-lg">
+                  No exact matches found in this category for your profile. Try adjusting your preferences.
+                </div>
+              ) : (
+                fetchedProducts.filter(item => item.category?.name === selectedCategoryForStep4).map((item) => {
+                  const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
+                  const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
+                  const displayColor = matchingVar?.color_name || "";
+                  const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
+
+                  return (
+                  <div 
+                    key={item.id} 
+                    onClick={() => {
+                      setSelectedProduct({
+                        id: item.id,
+                        name: displayTitle,
+                        price: `₹ ${(item.price || 0).toLocaleString()}`,
+                        image: displayImage,
+                        description: item.description || "A beautifully crafted piece for your wardrobe.",
+                        highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
+                        originalItem: item
+                      });
+                      navigate(`/product/${item.id}`);
+                    }}
+                    className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                  >
+                    <div className="relative rounded-xl overflow-hidden mb-3 aspect-[3/4] bg-black/5 shadow-inner">
+                      <img src={displayImage} alt={item.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                      <button onClick={(e) => { e.stopPropagation(); toggleWishlist(item.id); }} className="absolute top-3 right-3 p-2 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
+                        <Heart size={16} className={isInWishlist(item.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'} />
+                      </button>
+                    </div>
+                    <h4 className="font-bold text-[#1A0A08] text-sm mb-1 px-1 drop-shadow-sm line-clamp-1">{displayTitle}</h4>
+                    <div className="flex justify-between items-center px-1 mb-1">
+                      <span className="font-bold text-[#1A0A08]/80 text-sm">₹ {(item.price || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="mt-auto pt-2">
+                      <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] rounded-xl text-xs font-bold text-[#1A0A08] transition-all uppercase tracking-wider">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                )})
+              )}
+            </div>
           </div>
         )}
 
