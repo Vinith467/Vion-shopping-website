@@ -90,33 +90,65 @@ export function AppProvider({ children }) {
     return (wishlists[selectedConsumerId] || []).includes(productId);
   };
 
-  const addToCart = (product, size, variation = null, customMeasurements = null) => {
-    setCart(prev => {
-      // Also match by variation.id if variation exists
-      const existing = prev.find(item => 
-        item.product.id === product.id && 
-        item.size === size && 
-        (variation ? item.variation?.id === variation.id : true) &&
-        (!customMeasurements && !item.customMeasurements) // Don't group custom measured items unless they are identically matched (for simplicity, we just don't group custom measured items)
-      );
-      if (existing && !customMeasurements) {
-        return prev.map(item => item === existing ? { ...item, quantity: item.quantity + 1 } : item);
+  const addToCart = async (product, size, variation = null, customMeasurements = null) => {
+    if (!session?.user?.id) {
+      toast.error("Please login to add to bag.");
+      return;
+    }
+
+    const existing = cart.find(item => 
+      item.product.id === product.id && 
+      item.size === size && 
+      (variation ? item.variation?.id === variation.id : true) &&
+      (!customMeasurements && !item.customMeasurements)
+    );
+
+    if (existing && !customMeasurements) {
+      setCart(prev => prev.map(item => item === existing ? { ...item, quantity: item.quantity + 1 } : item));
+      if (!existing.id.startsWith('temp-')) {
+        await supabase.from('cart_items').update({ quantity: existing.quantity + 1 }).eq('id', existing.id);
       }
-      return [...prev, { product, size, variation, customMeasurements, quantity: 1, id: Date.now().toString() }];
-    });
+    } else {
+      const tempId = 'temp-' + Date.now().toString();
+      setCart(prev => [...prev, { id: tempId, product, size, variation, customMeasurements, quantity: 1 }]);
+      
+      const { data, error } = await supabase.from('cart_items').insert({
+        user_id: session.user.id,
+        product_id: product.id,
+        size: size,
+        variation: variation,
+        custom_measurements: customMeasurements,
+        quantity: 1
+      }).select().single();
+
+      if (data && !error) {
+        setCart(prev => prev.map(item => item.id === tempId ? { ...item, id: data.id } : item));
+      }
+    }
     toast.success("Added to bag!");
   };
 
-  const removeFromCart = (cartItemId) => {
+  const removeFromCart = async (cartItemId) => {
     setCart(prev => prev.filter(item => item.id !== cartItemId));
+    if (!cartItemId.startsWith('temp-')) {
+      await supabase.from('cart_items').delete().eq('id', cartItemId);
+    }
   };
 
-  const updateCartQuantity = (cartItemId, quantity) => {
+  const updateCartQuantity = async (cartItemId, quantity) => {
     if (quantity <= 0) return removeFromCart(cartItemId);
     setCart(prev => prev.map(item => item.id === cartItemId ? { ...item, quantity } : item));
+    if (!cartItemId.startsWith('temp-')) {
+      await supabase.from('cart_items').update({ quantity }).eq('id', cartItemId);
+    }
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = async () => {
+    setCart([]);
+    if (session?.user?.id) {
+      await supabase.from('cart_items').delete().eq('user_id', session.user.id);
+    }
+  };
 
   const fetchUserData = async (currentSession) => {
     if (!currentSession) return;
@@ -144,6 +176,24 @@ export function AppProvider({ children }) {
         .select('*')
         .eq('user_id', userId)
         .order('is_primary', { ascending: false });
+
+      // Fetch Cart Items
+      const { data: cartData } = await supabase
+        .from('cart_items')
+        .select('*, product:products(*)')
+        .eq('user_id', userId);
+
+      if (cartData) {
+        const mappedCart = cartData.map(item => ({
+          id: item.id,
+          product: item.product,
+          size: item.size,
+          variation: item.variation,
+          customMeasurements: item.custom_measurements,
+          quantity: item.quantity
+        }));
+        setCart(mappedCart);
+      }
 
       // If empty, wait a second and retry (in case the trigger is still running)
       if (!consumersData || consumersData.length === 0) {
