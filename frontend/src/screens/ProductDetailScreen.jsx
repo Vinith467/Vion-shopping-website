@@ -111,7 +111,7 @@ export default function ProductDetailScreen() {
             <h1 className="text-4xl font-serif text-[#1A0A08]">Product Details</h1>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 items-start">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 lg:items-start">
             {/* LEFT COLUMN: Gallery */}
             <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-36 lg:h-max">
               <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
@@ -226,7 +226,7 @@ export default function ProductDetailScreen() {
                 </div>
 
                 {/* Actions */}
-                <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F5F0E8]/90 backdrop-blur-md border-t border-gray-200/50 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2">
+                <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F5F0E8]/90 backdrop-blur-md border-t border-gray-200/50 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2 -mx-4 md:-mx-8 px-4 md:px-8 lg:mx-0">
                   <button 
                     onClick={() => {
                       addToCart({
