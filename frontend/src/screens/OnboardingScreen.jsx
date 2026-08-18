@@ -197,6 +197,46 @@ export default function OnboardingScreen() {
     fetchSkinToneColors();
   }, [profile?.skinTone]);
 
+  const generateCollectionForProfile = async (targetProfile) => {
+    setIsLoadingProducts(true);
+    try {
+      let query = supabase.from('products').select('*, category:categories(name)');
+      query = query.eq('status', 'active');
+      
+      if (targetProfile.gender) {
+        query = query.contains('target_genders', [targetProfile.gender]);
+      }
+      if (targetProfile.category) {
+        query = query.contains('target_body_shapes', [targetProfile.category]);
+      }
+      
+      const { data } = await query.order('created_at', { ascending: false }).limit(100);
+      
+      if (data) {
+        let finalProducts = data;
+        const { matchesSizeGroup } = await import('../utils/sizeGroups');
+        
+        if (targetProfile.size) {
+          finalProducts = finalProducts.filter(p => matchesSizeGroup(p.size, targetProfile.size));
+        }
+        
+        if (targetProfile.height) {
+          finalProducts = finalProducts.filter(p => {
+            if (!p.body_shape || p.body_shape === 'all') return true;
+            const productHeights = p.body_shape.split(',').map(h => h.trim());
+            return productHeights.includes('all') || productHeights.includes(targetProfile.height);
+          });
+        }
+        
+        setFetchedProducts(finalProducts.slice(0, 20));
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
+
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => Math.max(1, prev - 1));
 
@@ -280,7 +320,7 @@ export default function OnboardingScreen() {
                            {savedProfiles.map(p => {
                              const isMe = p.isPrimary;
                              return (
-                               <div key={p.id} onClick={() => { setProfile(p); setStep(3); }} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
+                               <div key={p.id} onClick={async () => { setProfile(p); setStep(3); await generateCollectionForProfile(p); }} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
                                  {profile.id === p.id ? (
                                    <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
                                  ) : (
@@ -775,50 +815,7 @@ export default function OnboardingScreen() {
                         });
                         
                         nextStep();
-                        
-                        // Fetch products based on profile
-                        setIsLoadingProducts(true);
-                        let query = supabase.from('products').select('*, category:categories(name)');
-                        // Only fetch active products
-                        query = query.eq('status', 'active');
-                        
-                        // Strict filters based on profile
-                        if (profile.gender) {
-                          query = query.contains('target_genders', [profile.gender]);
-                        }
-                        if (profile.category) { // Collection Class (Casual, Exclusive, etc)
-                          query = query.contains('target_body_shapes', [profile.category]);
-                        }
-                        // Size & Height filtering is now handled in JS to avoid parsing/string escape bugs
-                        // if (profile.size) { ... }
-                        // if (profile.height) { ... }
-                        // Occasions are handled by frontend tabs, so we don't strictly filter them in the DB query here.
-                        
-                        const { data } = await query.order('created_at', { ascending: false }).limit(100); // Fetch more before filtering locally
-                        
-                        if (data) {
-                          let finalProducts = data;
-                          
-                          // Dynamically import matchesSizeGroup to avoid circular dependencies or top-level import issues if any
-                          const { matchesSizeGroup } = await import('../utils/sizeGroups');
-                          
-                          // JS Size Filtering
-                          if (profile.size) {
-                            finalProducts = finalProducts.filter(p => matchesSizeGroup(p.size, profile.size));
-                          }
-                          
-                          // JS Height Filtering
-                          if (profile.height) {
-                            finalProducts = finalProducts.filter(p => {
-                              if (!p.body_shape || p.body_shape === 'all') return true;
-                              const productHeights = p.body_shape.split(',').map(h => h.trim());
-                              return productHeights.includes('all') || productHeights.includes(profile.height);
-                            });
-                          }
-                          
-                          setFetchedProducts(finalProducts.slice(0, 20)); // Keep the limit to 20 after filtering
-                        }
-                        setIsLoadingProducts(false);
+                        await generateCollectionForProfile(profile);
                       } finally {
                         setIsGenerating(false);
                       }
