@@ -8,7 +8,21 @@ export const sizeGroups = {
 
 export function getSizeGroupArray(groupName) {
   if (!groupName) return [];
-  return sizeGroups[groupName] || [groupName];
+  
+  // If the groupName is an exact key like 'XS - M'
+  if (sizeGroups[groupName]) {
+    return sizeGroups[groupName];
+  }
+  
+  // If the user selected an individual size (e.g. 'S'), find which group it belongs to
+  // and return that entire group array so they see all related products!
+  for (const [key, sizesArr] of Object.entries(sizeGroups)) {
+    if (sizesArr.includes(groupName)) {
+      return sizesArr;
+    }
+  }
+  
+  return [groupName];
 }
 
 export function matchesSizeGroup(productSizesStr, groupName) {
