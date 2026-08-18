@@ -329,6 +329,17 @@ export default function OnboardingScreen() {
                                  if (location.state?.defaultCategory) {
                                    pToUse.category = location.state.defaultCategory;
                                  }
+                                 
+                                 if (location.state?.redirectToExplore) {
+                                   setSelectedConsumerId(pToUse.id);
+                                   if (location.state?.defaultCategory) {
+                                     navigate(`/explore?class=${encodeURIComponent(location.state.defaultCategory)}&size=${encodeURIComponent(pToUse.size)}`);
+                                   } else {
+                                     navigate(`/explore?size=${encodeURIComponent(pToUse.size)}`);
+                                   }
+                                   return;
+                                 }
+
                                  setProfile(pToUse); 
                                  setStep(3); 
                                  await generateCollectionForProfile(pToUse); 
@@ -826,6 +837,15 @@ export default function OnboardingScreen() {
                           return [...prev, profile];
                         });
                         
+                        if (location.state?.redirectToExplore) {
+                          if (location.state?.defaultCategory) {
+                            navigate(`/explore?class=${encodeURIComponent(location.state.defaultCategory)}&size=${encodeURIComponent(profile.size)}`);
+                          } else {
+                            navigate(`/explore?size=${encodeURIComponent(profile.size)}`);
+                          }
+                          return;
+                        }
+
                         nextStep();
                         await generateCollectionForProfile(profile);
                       } finally {
