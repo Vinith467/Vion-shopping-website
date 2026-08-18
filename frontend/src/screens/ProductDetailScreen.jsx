@@ -286,21 +286,21 @@ export default function ProductDetailScreen() {
                       <div className="p-3.5 flex gap-3.5 items-start group">
                         <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/></div>
                         <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Casual</h4>
+                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Standard Fit</h4>
                           <p className="text-[11px] text-gray-500 leading-relaxed">Affordable styles for everyday you.<br/>Give size or measurements.</p>
                         </div>
                       </div>
                       <div className="p-3.5 flex gap-3.5 items-start group">
                         <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1.5"/></div>
                         <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive</h4>
+                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Tailored Fit</h4>
                           <p className="text-[11px] text-gray-500 leading-relaxed">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
                         </div>
                       </div>
                       <div className="p-3.5 flex gap-3.5 items-start group">
                         <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
                         <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Exclusive Plus</h4>
+                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Book A Stylist</h4>
                           <p className="text-[11px] text-gray-500 leading-relaxed">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
                         </div>
                       </div>

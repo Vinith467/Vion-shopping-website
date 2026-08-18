@@ -65,7 +65,7 @@ export default function AdminInventory() {
     occasion_tags: [],
     target_skin_tones: [],
     style_tags: [],
-    target_body_shapes: ['Casual'],
+    target_body_shapes: ['Standard Fit'],
     variations: []
   };
 
@@ -158,7 +158,7 @@ export default function AdminInventory() {
         occasion_tags: prod.occasion_tags || [],
         target_skin_tones: prod.target_skin_tones || [],
         style_tags: prod.style_tags || [],
-        target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Casual'],
+        target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
         variations: prod.variations || []
       });
     } else {
@@ -220,7 +220,7 @@ export default function AdminInventory() {
       occasion_tags: prod.occasion_tags || [],
       target_skin_tones: prod.target_skin_tones || [],
       style_tags: prod.style_tags || [],
-      target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Casual'],
+      target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
       variations: prod.variations || []
     });
 
@@ -645,13 +645,13 @@ export default function AdminInventory() {
                     <div>
                       <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection Class</label>
                       <select
-                        value={formData.target_body_shapes?.[0] || 'Casual'}
+                        value={formData.target_body_shapes?.[0] || 'Standard Fit'}
                         onChange={(e) => setFormData({ ...formData, target_body_shapes: [e.target.value] })}
                         className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
                       >
-                        <option value="Casual">Casual</option>
-                        <option value="Exclusive">Exclusive</option>
-                        <option value="Exclusive Plus">Exclusive Plus</option>
+                        <option value="Standard Fit">Standard Fit</option>
+                        <option value="Tailored Fit">Tailored Fit</option>
+                        <option value="Book A Stylist">Book A Stylist</option>
                       </select>
                     </div>
 

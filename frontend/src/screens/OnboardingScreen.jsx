@@ -28,9 +28,9 @@ const skinTones = [
 ];
 
 const categoriesToShop = [
-  { id: 'Casual', name: 'Casual', femaleImg: '/images/herobannerimage/casual.png', maleImg: '/images/herobannerimage/male version/casual.png', desc: 'Effortless everyday pieces.' },
-  { id: 'Exclusive', name: 'Exclusive', femaleImg: '/images/herobannerimage/exclusive.png', maleImg: '/images/herobannerimage/male version/exclusive.png', desc: 'Elevated craftsmanship.' },
-  { id: 'Exclusive Plus', name: 'Exclusive Plus', femaleImg: '/images/herobannerimage/exclusiveplus.png', maleImg: '/images/herobannerimage/male version/exclusiveplus.png', desc: 'Fully bespoke creations.' }
+  { id: 'Standard Fit', name: 'Standard Fit', femaleImg: '/images/herobannerimage/casual.png', maleImg: '/images/herobannerimage/male version/casual.png', desc: 'Effortless everyday pieces.' },
+  { id: 'Tailored Fit', name: 'Tailored Fit', femaleImg: '/images/herobannerimage/exclusive.png', maleImg: '/images/herobannerimage/male version/exclusive.png', desc: 'Elevated craftsmanship.' },
+  { id: 'Book A Stylist', name: 'Book A Stylist', femaleImg: '/images/herobannerimage/exclusiveplus.png', maleImg: '/images/herobannerimage/male version/exclusiveplus.png', desc: 'Fully bespoke creations.' }
 ];
 
 const occasionsList = [
@@ -82,7 +82,7 @@ export default function OnboardingScreen() {
         size: m.measurements?.size || 'M',
         height: m.height,
         skinTone: m.skinTone,
-        category: m.measurements?.category || 'Casual',
+        category: m.measurements?.category || 'Standard Fit',
         occasions: m.measurements?.occasions || ['Office / Work'],
         avatarUrl: m.image,
         measurements: m.measurements || { bust: '', waist: '', hips: '' }
@@ -98,7 +98,7 @@ export default function OnboardingScreen() {
     size: 'M',
     height: '5\'4" - 5\'7"',
     skinTone: 'Medium',
-    category: 'Casual',
+    category: 'Standard Fit',
     occasions: ['Office / Work'],
     avatarUrl: '',
     measurements: { bust: '', waist: '', hips: '' }
@@ -166,7 +166,7 @@ export default function OnboardingScreen() {
         size: m.measurements?.size || 'M',
         height: m.height,
         skinTone: m.skinTone,
-        category: m.measurements?.category || 'Casual',
+        category: m.measurements?.category || 'Standard Fit',
         occasions: m.measurements?.occasions || ['Office / Work'],
         avatarUrl: m.image,
         measurements: m.measurements || { bust: '', waist: '', hips: '' }

@@ -259,9 +259,9 @@ export default function HomeScreen() {
 
           {/* Bottom 3 Cards */}
           {[
-            { name: "CASUAL", value: "Casual", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
-            { name: "EXCLUSIVE", value: "Exclusive", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
-            { name: "EXCLUSIVE PLUS", value: "Exclusive Plus", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
+            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
+            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
+            { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
           ].map((cat, idx) => (
             <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value, redirectToExplore: true } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
