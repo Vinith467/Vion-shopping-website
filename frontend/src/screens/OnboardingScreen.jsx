@@ -241,6 +241,27 @@ export default function OnboardingScreen() {
     }
   };
 
+  const handleProfileSelect = async (p) => {
+    let pToUse = { ...p };
+    if (location.state?.defaultCategory) {
+      pToUse.category = location.state.defaultCategory;
+    }
+    
+    if (location.state?.redirectToExplore) {
+      setSelectedConsumerId(pToUse.id);
+      if (location.state?.defaultCategory) {
+        navigate(`/explore?class=${encodeURIComponent(location.state.defaultCategory)}&size=${encodeURIComponent(pToUse.size)}`);
+      } else {
+        navigate(`/explore?size=${encodeURIComponent(pToUse.size)}`);
+      }
+      return;
+    }
+
+    setProfile(pToUse); 
+    setStep(3); 
+    await generateCollectionForProfile(pToUse); 
+  };
+
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => Math.max(1, prev - 1));
 
@@ -307,9 +328,48 @@ export default function OnboardingScreen() {
                     </div>
                     
                     <div>
-                      <h3 className="font-serif text-[#1A0A08] text-2xl mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Your Profiles</h3>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-serif text-[#1A0A08] text-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Your Profiles</h3>
+                        
+                        {/* Mobile Add New Button */}
+                        <button 
+                          onClick={() => setIsAddingNew(true)} 
+                          className="md:hidden flex items-center gap-1.5 px-4 py-1.5 bg-white/40 border border-white/60 rounded-full text-sm font-bold text-[#3E2312] shadow-sm hover:bg-white/60 transition-colors"
+                        >
+                          <Plus size={16} /> Add New
+                        </button>
+                      </div>
                       
-                      <div className="relative group">
+                      {/* Mobile View: Grid of small squares */}
+                      <div className="grid grid-cols-2 gap-4 md:hidden mb-4">
+                        {savedProfiles.map(p => {
+                          const isMe = p.isPrimary;
+                          return (
+                            <div 
+                              key={p.id} 
+                              onClick={() => handleProfileSelect(p)} 
+                              className={`relative cursor-pointer rounded-2xl p-4 flex flex-col items-center justify-center aspect-[4/3] transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-sm ${profile?.id === p.id ? 'border-[#986427]/60 bg-white/20' : 'border-white/45 hover:bg-white/20'}`}
+                            >
+                              {isMe && <div className="absolute top-2 right-2 bg-[#986427] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">ME</div>}
+                              {!isMe && (
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); setProfileToDelete(p); }}
+                                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-red-500 hover:bg-red-50 hover:text-red-600 transition-all z-20"
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              )}
+                              
+                              <div className="w-14 h-14 rounded-full mb-2 overflow-hidden shadow-inner border-2 border-white/50 bg-[#E8DFD8]">
+                                {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[#986427]"><User size={20} /></div>}
+                              </div>
+                              <h4 className="font-bold text-[#1A0A08] text-center w-full truncate px-1 text-lg leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{p.name}</h4>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="relative group hidden md:block">
                          {/* Removed scroll fade indicators to prevent border blur */ }
 
                          <div className="flex gap-4 overflow-x-auto px-1 pt-3 pb-6 snap-x hide-scrollbar relative z-0">
@@ -324,27 +384,8 @@ export default function OnboardingScreen() {
                            {savedProfiles.map(p => {
                              const isMe = p.isPrimary;
                              return (
-                               <div key={p.id} onClick={async () => { 
-                                 let pToUse = { ...p };
-                                 if (location.state?.defaultCategory) {
-                                   pToUse.category = location.state.defaultCategory;
-                                 }
-                                 
-                                 if (location.state?.redirectToExplore) {
-                                   setSelectedConsumerId(pToUse.id);
-                                   if (location.state?.defaultCategory) {
-                                     navigate(`/explore?class=${encodeURIComponent(location.state.defaultCategory)}&size=${encodeURIComponent(pToUse.size)}`);
-                                   } else {
-                                     navigate(`/explore?size=${encodeURIComponent(pToUse.size)}`);
-                                   }
-                                   return;
-                                 }
-
-                                 setProfile(pToUse); 
-                                 setStep(3); 
-                                 await generateCollectionForProfile(pToUse); 
-                               }} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
-                                 {profile.id === p.id ? (
+                               <div key={p.id} onClick={() => handleProfileSelect(p)} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile?.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
+                                 {profile?.id === p.id ? (
                                    <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
                                  ) : (
                                    <div className="absolute top-4 right-4 w-5 h-5 rounded-full border border-[#986427]/40"></div>
