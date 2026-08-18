@@ -39,8 +39,18 @@ export function AppProvider({ children }) {
   const [members, setMembers] = useState([]);
 
   // Cart State
-  const [cart, setCart] = useState([]);
-  
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vion_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vion_cart', JSON.stringify(cart));
+  }, [cart]);
   // Per-Profile Wishlist State
   const [wishlists, setWishlists] = useState(() => {
     try {
