@@ -100,7 +100,7 @@ export default function ProductDetailScreen() {
   const isWishlisted = isInWishlist && isInWishlist(product.id);
 
   return (
-    <div className="bg-[#F5F0E8] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 overflow-x-hidden">
+    <div className="bg-[#F5F0E8] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-8 lg:pt-12">
         
         <div className="animate-in fade-in slide-in-from-right-8 duration-500">
