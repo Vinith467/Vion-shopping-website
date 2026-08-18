@@ -789,16 +789,28 @@ export default function OnboardingScreen() {
                         if (profile.category) { // Collection Class (Casual, Exclusive, etc)
                           query = query.contains('target_body_shapes', [profile.category]);
                         }
-                        if (profile.size) {
-                          query = query.or(`size.eq.all,size.ilike.%${profile.size}%`);
-                        }
+                        // Size filtering is now handled in JS using matchesSizeGroup
+                        // if (profile.size) {
+                        //   query = query.or(`size.eq.all,size.ilike.%${profile.size}%`);
+                        // }
                         if (profile.height) {
                           query = query.or(`body_shape.eq.all,body_shape.ilike.%${profile.height}%`);
                         }
                         // Occasions are handled by frontend tabs, so we don't strictly filter them in the DB query here.
                         
-                        const { data } = await query.order('created_at', { ascending: false }).limit(20);
-                        if (data) setFetchedProducts(data);
+                        const { data } = await query.order('created_at', { ascending: false }).limit(50); // Increased limit to fetch more before filtering
+                        
+                        if (data) {
+                          let finalProducts = data;
+                          
+                          // Dynamically import matchesSizeGroup to avoid circular dependencies or top-level import issues if any
+                          const { matchesSizeGroup } = await import('../utils/sizeGroups');
+                          if (profile.size) {
+                            finalProducts = finalProducts.filter(p => matchesSizeGroup(p.size, profile.size));
+                          }
+                          
+                          setFetchedProducts(finalProducts.slice(0, 20)); // Keep the limit to 20 after filtering
+                        }
                         setIsLoadingProducts(false);
                       } finally {
                         setIsGenerating(false);
