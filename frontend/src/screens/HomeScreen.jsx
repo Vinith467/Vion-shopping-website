@@ -220,55 +220,55 @@ export default function HomeScreen() {
 
       {/* 4. Highlight Actions & Categories */}
       <section className="w-full px-8 lg:px-20 mb-20 max-w-[1350px] mx-auto">
-        {/* Top 2 Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-          {[
-            { 
-              name: "DISCOVER COLLECTION", 
-              desc: "Explore our curated fashion selections tailored to your unique profile and style.", 
-              img: "/DISCOVER COLLECTION IMAGE.png",
-              onClick: () => navigate('/onboarding', { state: { resetStep: true } })
-            },
-            { 
-              name: "BOOK A CONSULTATION", 
-              desc: "Schedule a one-on-one session with our fashion experts for a personalized bespoke experience.", 
-              img: "/BOOK A CONSULTATION.png",
-              onClick: () => navigate('/onboarding', { state: { resetStep: true } })
-            }
-          ].map((cat, idx) => (
-            <div key={idx} onClick={cat.onClick} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
-               <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
-               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-               <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-                  <h4 className="text-[1.4rem] lg:text-[1.6rem] tracking-wide text-white mb-1.5 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h4>
-                  <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[85%] mb-3">
-                    {cat.desc}
-                  </p>
-                  <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
-                     Explore <ArrowRight size={9} />
-                  </button>
-               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom 3 Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
+          {/* Top Row: Bento Grid */}
+          <div 
+            onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
+            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+          >
+             <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                <h4 className="text-[1.6rem] lg:text-[2.2rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>DISCOVER COLLECTION</h4>
+                <p className="text-[12px] md:text-[14px] text-white/90 leading-relaxed font-medium max-w-[80%] md:max-w-[60%] mb-4">
+                  Explore our curated fashion selections tailored to your unique profile and style.
+                </p>
+                <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-2 w-fit hover:bg-white/25 transition-colors">
+                   Explore <ArrowRight size={10} />
+                </button>
+             </div>
+          </div>
+
+          <div 
+            onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
+            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-1 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+          >
+             <img src="/BOOK A CONSULTATION.png" alt="BOOK A CONSULTATION" className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+             <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-10">
+                <h4 className="text-[1.4rem] lg:text-[1.7rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>BOOK A<br/>CONSULTATION</h4>
+                <p className="text-[11px] md:text-[12px] text-white/85 leading-relaxed font-medium max-w-[95%] mb-4">
+                  Schedule a one-on-one session with our experts.
+                </p>
+                <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
+                   Explore <ArrowRight size={9} />
+                </button>
+             </div>
+          </div>
+
+          {/* Bottom 3 Cards */}
           {[
             { name: "CASUAL", value: "Casual", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
             { name: "EXCLUSIVE", value: "Exclusive", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
             { name: "EXCLUSIVE PLUS", value: "Exclusive Plus", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
           ].map((cat, idx) => (
-            <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value, redirectToExplore: true } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
-               {/* Full background image */}
+            <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value, redirectToExplore: true } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
-               {/* Gradient overlay for text readability */}
-               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-               {/* Text content at bottom */}
-               <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-10">
                   <h4 className="text-[1.4rem] lg:text-[1.6rem] tracking-wide text-white mb-1.5 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h4>
-                  <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[85%] mb-3">
+                  <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[90%] mb-3">
                     {cat.desc}
                   </p>
                   <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
@@ -277,7 +277,6 @@ export default function HomeScreen() {
                </div>
             </div>
           ))}
-
         </div>
       </section>
 
