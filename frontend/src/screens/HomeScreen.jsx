@@ -218,8 +218,41 @@ export default function HomeScreen() {
         </div>
       </section>
 
-      {/* 4. Three Categories */}
+      {/* 4. Highlight Actions & Categories */}
       <section className="w-full px-8 lg:px-20 mb-20 max-w-[1350px] mx-auto">
+        {/* Top 2 Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          {[
+            { 
+              name: "DISCOVER COLLECTION", 
+              desc: "Explore our curated fashion selections tailored to your unique profile and style.", 
+              img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop",
+              onClick: () => navigate('/onboarding', { state: { resetStep: true } })
+            },
+            { 
+              name: "BOOK A CONSULTATION", 
+              desc: "Schedule a one-on-one session with our fashion experts for a personalized bespoke experience.", 
+              img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop",
+              onClick: () => navigate('/onboarding', { state: { resetStep: true } })
+            }
+          ].map((cat, idx) => (
+            <div key={idx} onClick={cat.onClick} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
+               <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+               <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+                  <h4 className="text-[1.4rem] lg:text-[1.6rem] tracking-wide text-white mb-1.5 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h4>
+                  <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[85%] mb-3">
+                    {cat.desc}
+                  </p>
+                  <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
+                     Explore <ArrowRight size={9} />
+                  </button>
+               </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom 3 Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {[
