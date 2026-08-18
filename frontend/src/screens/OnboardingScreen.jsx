@@ -941,19 +941,31 @@ export default function OnboardingScreen() {
               
               <div className="flex-1 w-full min-w-0">
                 {/* Filters Row */}
-                <div className="flex items-center gap-3 mb-6 flex-wrap">
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                    <User size={16} /> Size: {profile.size}
+                <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <User size={16} /> Size: {profile.size}
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <div className="w-4 flex justify-center font-bold">I</div> Height: {profile.height}
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
+                      <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                    <div className="w-4 flex justify-center font-bold">I</div> Height: {profile.height}
+                  <div className="flex items-center gap-3 ml-auto">
+                    <div className="flex items-center gap-2.5 bg-white/20 backdrop-blur-md border border-white/50 shadow-sm rounded-full pl-1.5 pr-4 py-1.5">
+                       {profile.avatarUrl ? (
+                         <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
+                       ) : (
+                         <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
+                       )}
+                       <span className="text-sm font-bold text-[#1A0A08] max-w-[100px] truncate">{profile.name}</span>
+                    </div>
+                    <button onClick={prevStep} className="flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full px-5 py-2.5 text-sm font-bold text-[#1A0A08] hover:bg-white/40 transition-all">
+                      Edit Profile <Edit2 size={14} />
+                    </button>
                   </div>
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] drop-shadow-sm">
-                    <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
-                  </div>
-                  <button onClick={prevStep} className="flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full px-4 py-2 text-sm font-bold text-[#1A0A08] hover:bg-white/30 transition-all ml-auto">
-                    Edit Preference <Edit2 size={14} />
-                  </button>
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl p-5 mb-8 flex items-start gap-3">
@@ -1040,88 +1052,7 @@ export default function OnboardingScreen() {
                 </div>
               </div>
 
-              {/* Right Sidebar */}
-              <div className="w-full lg:w-80 shrink-0">
-               <div className="bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] rounded-3xl p-7 sticky top-24">
-                 <div className="flex items-center justify-between mb-6 border-b border-white/20 pb-4">
-                   <h3 className="font-bold text-[#1A0A08] text-[20px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Profile Summary</h3>
-                   <button onClick={prevStep} className="text-[#8B6544] hover:text-[#5E422B] transition-colors flex items-center gap-1"><span className="text-xs font-bold uppercase tracking-wider">Edit</span> <Edit2 size={12} /></button>
-                 </div>
-                 
-                 <div className="flex flex-col items-center mb-6">
-                   <div className="relative">
-                    <label className="relative cursor-pointer group block mb-2 w-24 h-24 rounded-full border-4 border-white/80 shadow-[0_8px_20px_rgba(0,0,0,0.15)] overflow-hidden">
-                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                      {profile.avatarUrl ? <img src={profile.avatarUrl} alt="Profile Avatar" className="w-full h-full object-cover transition-opacity group-hover:opacity-70" /> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ece3] to-[#e8d5c4] text-[#986427] transition-opacity group-hover:opacity-70"><User size={36} /></div>}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                        <Camera size={24} className="text-white drop-shadow-md" />
-                      </div>
-                    </label>
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#1A0A08] px-3 py-0.5 rounded-full text-[10px] font-bold text-white shadow-md whitespace-nowrap">{profile.name}</span>
-                   </div>
-                 </div>
 
-                 <div className="space-y-4">
-                   <div className="flex items-center gap-4 bg-white/10 rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]">
-                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center shadow-inner"><User size={16} className="text-[#1A0A08]" /></div>
-                      <div>
-                        <p className="text-[9px] text-[#1A0A08]/60 font-bold uppercase tracking-wider mb-0.5">Size</p>
-                        <p className="text-sm font-bold text-[#1A0A08] drop-shadow-sm">{profile.size}</p>
-                      </div>
-                   </div>
-                   <div className="flex items-center gap-4 bg-white/10 rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]">
-                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center shadow-inner"><div className="w-[18px] flex justify-center text-[#1A0A08] font-bold">I</div></div>
-                      <div>
-                        <p className="text-[9px] text-[#1A0A08]/60 font-bold uppercase tracking-wider mb-0.5">Height</p>
-                        <p className="text-sm font-bold text-[#1A0A08] drop-shadow-sm">{profile.height}</p>
-                      </div>
-                   </div>
-                   <div className="flex items-center gap-4 bg-white/10 rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]">
-                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center shadow-inner"><div className="w-4 h-4 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div></div>
-                      <div>
-                        <p className="text-[9px] text-[#1A0A08]/60 font-bold uppercase tracking-wider mb-0.5">Skin Tone</p>
-                        <p className="text-sm font-bold text-[#1A0A08] drop-shadow-sm">{profile.skinTone}</p>
-                      </div>
-                   </div>
-                   <div className="flex items-center gap-4 bg-white/10 rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]">
-                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center shadow-inner"><Award size={16} className="text-[#1A0A08]" /></div>
-                      <div>
-                        <p className="text-[9px] text-[#1A0A08]/60 font-bold uppercase tracking-wider mb-0.5">Category</p>
-                        <p className="text-sm font-bold text-[#1A0A08] drop-shadow-sm">{profile.category}</p>
-                      </div>
-                   </div>
-                 </div>
-
-                  <div className="mt-6 bg-white/20 backdrop-blur-md rounded-2xl p-5 border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.05)]">
-                    <h4 className="font-bold text-sm text-[#1A0A08] mb-2 drop-shadow-sm">Best color collection for you</h4>
-                    <p className="text-xs text-[#1A0A08]/80 mb-4 leading-relaxed font-medium">These colours complement {profile.gender === 'Male' ? 'his' : 'her'} skin tone beautifully and enhance {profile.gender === 'Male' ? 'his' : 'her'} natural glow.</p>
-                    
-                    {(() => {
-                      if (skinToneColors.length > 0) {
-                        return (
-                          <div className="grid grid-cols-4 gap-3">
-                            {skinToneColors.map((color, idx) => (
-                              <div key={idx} className="flex flex-col items-center gap-1">
-                                <div className="w-8 h-8 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.4),_0_2px_4px_rgba(0,0,0,0.1)] border border-white/30 overflow-hidden bg-[#e8d5c4]/50 flex items-center justify-center">
-                                  {color.shade_image_url ? (
-                                    <img src={color.shade_image_url} alt={color.colorName} className="w-full h-full object-cover" />
-                                  ) : (
-                                    <span className="text-[10px] text-[#1A0A08]/40">?</span>
-                                  )}
-                                </div>
-                                <span className="text-[9px] text-center font-bold text-[#1A0A08]/70 leading-tight uppercase tracking-wider line-clamp-1 w-full px-1">{color.colorName}</span>
-                              </div>
-                            ))}
-                          </div>
-                        );
-                      }
-                      
-                      return <p className="text-xs text-[#1A0A08]/60 italic font-medium">We are curating colors for your skin tone.</p>;
-                    })()}
-                  </div>
-
-               </div>
-              </div>
             </div>
 
           </div>
