@@ -67,6 +67,7 @@ export default function OnboardingScreen() {
     const saved = sessionStorage.getItem('onboardingProducts');
     return saved ? JSON.parse(saved) : [];
   });
+  const [categories, setCategories] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [shoppingFor, setShoppingFor] = useState('Myself');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -137,6 +138,14 @@ export default function OnboardingScreen() {
       sessionStorage.setItem('onboardingProducts', JSON.stringify(fetchedProducts));
     }
   }, [fetchedProducts]);
+
+  React.useEffect(() => {
+    async function loadCategories() {
+      const { data } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+      if (data) setCategories(data);
+    }
+    loadCategories();
+  }, []);
 
   React.useEffect(() => {
     if (selectedProduct) {
@@ -219,7 +228,7 @@ export default function OnboardingScreen() {
   const generateCollectionForProfile = async (targetProfile) => {
     setIsLoadingProducts(true);
     try {
-      let query = supabase.from('products').select('*, category:categories(name)');
+      let query = supabase.from('products').select('*, category:categories(name, slug)');
       query = query.eq('status', 'active');
       
       if (targetProfile.gender) {
@@ -1058,7 +1067,7 @@ export default function OnboardingScreen() {
 
                 {/* Tabs */}
                 <div className="flex items-center border-b border-white/30 mb-6 overflow-x-auto hide-scrollbar">
-                  {['All Recommendations', 'Work & Everyday', 'Elegant & Festive', 'Smart Casual', 'Occasion Wear'].map((tab) => (
+                  {['All Recommendations', ...categories.map(c => c.name)].map((tab) => (
                     <button 
                       key={tab} 
                       onClick={() => setActiveCollectionTab(tab)}
@@ -1090,7 +1099,7 @@ export default function OnboardingScreen() {
                   ) : (
                     fetchedProducts.filter(item => {
                       if (activeCollectionTab === 'All Recommendations') return true;
-                      return item.occasion_tags?.includes(activeCollectionTab);
+                      return item.category?.name === activeCollectionTab;
                     }).map((item) => {
                       const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
                       const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";

@@ -6,7 +6,7 @@ import { useAppContext } from '../context/AppContext';
 import { matchesSizeGroup } from '../utils/sizeGroups';
 
 export default function ExploreScreen() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
   const sizeParam = searchParams.get('size');
   const classParam = searchParams.get('class');
@@ -17,11 +17,15 @@ export default function ExploreScreen() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryName, setCategoryName] = useState('All Products');
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
       
+      const { data: catList } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+      if (catList) setCategories(catList);
+
       let query = supabase.from('products').select('*, category:categories(name, slug)');
       
       // If a category was passed, we need to find its ID to filter products
@@ -88,6 +92,33 @@ export default function ExploreScreen() {
           </div>
         </div>
       </div>
+
+      {/* Categories Filter Bar */}
+      {categories.length > 0 && (
+        <div className="flex items-center gap-3 px-6 py-3 border-b border-gray-100 overflow-x-auto hide-scrollbar bg-white/50 backdrop-blur-sm sticky top-[65px] z-30">
+          <button 
+            onClick={() => {
+              searchParams.delete('category');
+              setSearchParams(searchParams);
+            }}
+            className={`px-4 py-1.5 text-[13px] font-bold whitespace-nowrap rounded-full transition-all border ${!categoryParam ? 'bg-[#1A0A08] text-white border-[#1A0A08]' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 shadow-sm'}`}
+          >
+            All
+          </button>
+          {categories.map(c => (
+            <button 
+              key={c.id}
+              onClick={() => {
+                searchParams.set('category', c.id);
+                setSearchParams(searchParams);
+              }}
+              className={`px-4 py-1.5 text-[13px] font-bold whitespace-nowrap rounded-full transition-all border ${categoryParam === c.id ? 'bg-[#1A0A08] text-white border-[#1A0A08]' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 shadow-sm'}`}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-6 pt-6">
         {/* Results Info */}

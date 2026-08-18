@@ -95,7 +95,7 @@ export default function AdminCategories() {
       const { error } = await supabase.from('categories').update(payload).eq('id', editingId);
       if (error) toast.error(error.message);
       else {
-        toast.success('Occasion updated!');
+        toast.success('Category updated!');
         setShowModal(false);
         fetchCategories(false);
       }
@@ -103,7 +103,7 @@ export default function AdminCategories() {
       const { error } = await supabase.from('categories').insert([payload]);
       if (error) toast.error(error.message);
       else {
-        toast.success('Occasion created!');
+        toast.success('Category created!');
         setShowModal(false);
         fetchCategories(false);
       }
@@ -112,11 +112,11 @@ export default function AdminCategories() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this occasion?')) return;
+    if (!window.confirm('Are you sure you want to delete this category?')) return;
     const { error } = await supabase.from('categories').delete().eq('id', id);
     if (error) toast.error(error.message);
     else {
-      toast.success('Occasion deleted!');
+      toast.success('Category deleted!');
       fetchCategories(false);
     }
   };
@@ -151,14 +151,14 @@ export default function AdminCategories() {
     <div className="p-4 md:p-8 max-w-6xl mx-auto animate-fade-in">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold font-serif text-[#1A0A08]">Occasions</h1>
-          <p className="text-gray-600 mt-1">Manage your shop by occasion</p>
+          <h1 className="text-3xl font-bold font-serif text-[#1A0A08]">Categories</h1>
+          <p className="text-gray-600 mt-1">Manage your shop by category</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
           className="bg-[#1A0A08] text-white hover:bg-gray-800 transition-colors px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2"
         >
-          <Plus size={18} /> Add Occasion
+          <Plus size={18} /> Add Category
         </button>
       </div>
 
@@ -183,7 +183,7 @@ export default function AdminCategories() {
                 {categories.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="px-6 py-12 text-center text-gray-500 font-medium bg-white">
-                      No occasions found. Create one to get started!
+                      No categories found. Create one to get started!
                     </td>
                   </tr>
                 ) : (

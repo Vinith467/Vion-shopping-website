@@ -703,14 +703,14 @@ export default function AdminInventory() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection *</label>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Category *</label>
                       <select
                         value={formData.category_id}
                         onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                         className="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:bg-white focus:border-[#986427] outline-none font-medium text-[#1A0A08]"
                         required
                       >
-                        <option value="">Select Collection</option>
+                        <option value="">Select Category</option>
                         {categories.map(c => {
                           const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
                           const catShape = shapeMatch ? shapeMatch[1] : 'all';
