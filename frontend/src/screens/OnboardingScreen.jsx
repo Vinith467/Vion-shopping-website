@@ -1027,7 +1027,7 @@ export default function OnboardingScreen() {
 
         {step >= 3 && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-500 mb-8">
-            <div className="flex items-center justify-end mb-4">
+            <div className="flex items-center mb-4 w-full">
               <button 
                 onClick={() => {
                   if (step === 3) setIsProfileDetailsExpanded(!isProfileDetailsExpanded);
@@ -1036,15 +1036,24 @@ export default function OnboardingScreen() {
                     setIsProfileDetailsExpanded(true);
                   }
                 }}
-                className="flex items-center gap-2.5 bg-white/40 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-1.5 pr-4 py-1.5 hover:bg-white/60 transition-all group"
+                className="flex items-center gap-3 bg-white/40 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-2 pr-2 py-2 hover:bg-white/60 transition-all group w-full"
               >
                  {profile.avatarUrl ? (
-                   <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
+                   <img src={profile.avatarUrl} alt={profile.name} className="w-8 h-8 rounded-full object-cover border border-[#8B6544]/30 shrink-0" />
                  ) : (
-                   <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
+                   <div className="w-8 h-8 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427] shrink-0"><User size={16} /></div>
                  )}
-                 <span className="text-sm font-bold text-[#1A0A08] max-w-[150px] truncate">{profile.name}'s VION Collection</span>
-                 <Edit2 size={14} className="text-[#1A0A08]/50 group-hover:text-[#1A0A08] ml-1 transition-colors" />
+                 <span className="text-[15px] font-bold text-[#1A0A08] truncate text-left flex-1">{profile.name}'s VION Collection</span>
+                 
+                 <div 
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     setStep(2);
+                   }}
+                   className="p-2 rounded-full bg-white/40 hover:bg-white/80 border border-white/50 transition-colors shrink-0 ml-auto flex items-center justify-center"
+                 >
+                   <Edit2 size={14} className="text-[#1A0A08]/70 group-hover:text-[#1A0A08] transition-colors" />
+                 </div>
               </button>
             </div>
             
