@@ -81,7 +81,8 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, logout, profile, members, selectedConsumerId, cart } = useAppContext();
-  const activeMember = members?.find(m => m.id === selectedConsumerId) || members?.find(m => m.isPrimary) || members?.[0];
+  // The header should always show the primary account owner, not the active shopping consumer
+  const primaryMember = members?.find(m => m.isPrimary) || members?.[0];
   const isMainTab = ['/home', '/explore', '/wardrobe', '/account', '/onboarding'].includes(location.pathname);
   const isHome = location.pathname === '/home';
   const isOnboarding = location.pathname === '/onboarding';
@@ -221,14 +222,14 @@ function App() {
                     <span className="text-[12px] font-bold uppercase tracking-wider bg-[#3E1210] text-[#E5CDA7] px-3 py-1 rounded-full">Admin</span>
                   ) : (
                     <div className="flex items-center gap-1.5">
-                      {activeMember?.image ? (
-                        <img src={activeMember.image} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-[#BFA679]" />
+                      {primaryMember?.image ? (
+                        <img src={primaryMember.image} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-[#BFA679]" />
                       ) : (
                         <div className="w-7 h-7 rounded-full border border-[#BFA679] flex items-center justify-center bg-[#f5ece3] text-[#986427]">
                           <User size={16} />
                         </div>
                       )}
-                      <span className="text-[14px] lg:text-[15px] font-bold tracking-wide hidden xl:block text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Hi, {activeMember?.name || profile?.firstName || 'User'}</span>
+                      <span className="text-[14px] lg:text-[15px] font-bold tracking-wide hidden xl:block text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Hi, {primaryMember?.name || profile?.firstName || 'User'}</span>
                       <ChevronDown size={14} className="text-[#111111]" />
                     </div>
                   )

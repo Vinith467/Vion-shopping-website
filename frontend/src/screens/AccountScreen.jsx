@@ -56,7 +56,7 @@ export default function AccountScreen() {
 
   useEffect(() => {
     fetchAccountData();
-  }, [selectedConsumerId]);
+  }, []);
 
   const fetchAccountData = async () => {
     setIsLoading(true);
@@ -66,15 +66,8 @@ export default function AccountScreen() {
       
       setUserEmail(user.email);
 
-      // 1. Fetch Profile (Prefer selected profile, fallback to primary, then just latest)
-      let profileQuery = supabase.from('consumers').select('*').eq('user_id', user.id);
-      
-      if (selectedConsumerId) {
-        profileQuery = profileQuery.eq('id', selectedConsumerId);
-      } else {
-        // Fallback to primary if no selected ID exists
-        profileQuery = profileQuery.eq('is_primary', true);
-      }
+      // 1. Fetch Profile (Always fetch the primary account owner)
+      let profileQuery = supabase.from('consumers').select('*').eq('user_id', user.id).eq('is_primary', true);
 
       const { data: profileData } = await profileQuery.limit(1).single();
       
