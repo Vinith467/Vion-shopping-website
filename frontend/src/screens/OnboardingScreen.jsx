@@ -996,7 +996,7 @@ export default function OnboardingScreen() {
                             highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
                             originalItem: item
                           });
-                          setStep(4);
+                          navigate(`/product/${item.id}`);
                         }}
                         className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
                       >
@@ -1510,7 +1510,7 @@ export default function OnboardingScreen() {
       {showBespokeFitModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-md" onClick={() => setShowBespokeFitModal(false)}></div>
-          <div className="relative w-full max-w-4xl bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-300">
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl flex flex-col md:flex-row animate-in zoom-in-95 duration-300">
             <button onClick={() => setShowBespokeFitModal(false)} className="absolute top-4 right-4 z-10 p-2 bg-white/50 rounded-full text-[#1A0A08] hover:bg-white transition-colors"><X size={20} /></button>
             
             {/* Left Column: Image */}

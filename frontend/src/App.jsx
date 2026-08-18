@@ -80,7 +80,7 @@ const AdminRoute = ({ children }) => {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, logout, profile, members, selectedConsumerId } = useAppContext();
+  const { isLoggedIn, logout, profile, members, selectedConsumerId, cart } = useAppContext();
   const activeMember = members?.find(m => m.id === selectedConsumerId) || members?.find(m => m.isPrimary) || members?.[0];
   const isMainTab = ['/home', '/explore', '/wardrobe', '/account', '/onboarding'].includes(location.pathname);
   const isHome = location.pathname === '/home';
@@ -193,7 +193,9 @@ function App() {
                 title="Cart"
               >
                 <ShoppingBag size={21} strokeWidth={1.8} />
-                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">2</span>
+                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">
+                  {cart?.length || 0}
+                </span>
               </button>
             </div>
             
@@ -305,7 +307,9 @@ function App() {
               className="text-white hover:text-[#E5B8D9] transition-colors relative"
             >
               <ShoppingBag size={18} />
-              <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-[#E5B8D9] text-black text-[8px] font-bold rounded-full flex items-center justify-center">0</span>
+              <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-[#E5B8D9] text-black text-[8px] font-bold rounded-full flex items-center justify-center">
+                {cart?.length || 0}
+              </span>
             </button>
           </div>
         </nav>
