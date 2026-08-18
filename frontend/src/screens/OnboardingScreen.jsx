@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
@@ -45,8 +45,12 @@ const occasionsList = [
 
 export default function OnboardingScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToCart, addMember, updateMember, deleteMember, setSelectedConsumerId, setPrimaryMember, members } = useAppContext();
-  const [step, setStep] = useState(() => parseInt(sessionStorage.getItem('onboardingStep')) || 1);
+  const [step, setStep] = useState(() => {
+    if (location.state?.resetStep) return 1;
+    return parseInt(sessionStorage.getItem('onboardingStep')) || 1;
+  });
   const [fetchedProducts, setFetchedProducts] = useState(() => {
     const saved = sessionStorage.getItem('onboardingProducts');
     return saved ? JSON.parse(saved) : [];
@@ -320,7 +324,15 @@ export default function OnboardingScreen() {
                            {savedProfiles.map(p => {
                              const isMe = p.isPrimary;
                              return (
-                               <div key={p.id} onClick={async () => { setProfile(p); setStep(3); await generateCollectionForProfile(p); }} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
+                               <div key={p.id} onClick={async () => { 
+                                 let pToUse = { ...p };
+                                 if (location.state?.defaultCategory) {
+                                   pToUse.category = location.state.defaultCategory;
+                                 }
+                                 setProfile(pToUse); 
+                                 setStep(3); 
+                                 await generateCollectionForProfile(pToUse); 
+                               }} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
                                  {profile.id === p.id ? (
                                    <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
                                  ) : (
@@ -415,7 +427,7 @@ export default function OnboardingScreen() {
                         <div 
                           onClick={() => { 
                             setShoppingFor('Myself'); 
-                            setProfile(prev => ({...defaultProfile, name: 'Myself', gender: ''}));
+                            setProfile(prev => ({...defaultProfile, name: 'Myself', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
                           className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Myself' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}
@@ -436,7 +448,7 @@ export default function OnboardingScreen() {
                         <div 
                           onClick={() => { 
                             setShoppingFor('Someone Else'); 
-                            setProfile(prev => ({...defaultProfile, name: '', gender: ''}));
+                            setProfile(prev => ({...defaultProfile, name: '', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
                           className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Someone Else' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}
@@ -457,7 +469,7 @@ export default function OnboardingScreen() {
                         <div 
                           onClick={() => { 
                             setShoppingFor('Gift'); 
-                            setProfile(prev => ({...defaultProfile, name: '', gender: ''}));
+                            setProfile(prev => ({...defaultProfile, name: '', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
                           className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Gift' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}

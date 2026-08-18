@@ -85,7 +85,7 @@ export default function HomeScreen() {
             
             <div className="flex flex-wrap items-center gap-4 mb-5">
               <button 
-                onClick={() => navigate('/onboarding')}
+                onClick={() => navigate('/onboarding', { state: { resetStep: true } })}
                 className="px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(to bottom, #4A1A18, #2A0C0A)',
@@ -227,7 +227,7 @@ export default function HomeScreen() {
             { name: "EXCLUSIVE", value: "Exclusive", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
             { name: "EXCLUSIVE PLUS", value: "Exclusive Plus", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
           ].map((cat, idx) => (
-            <div key={idx} onClick={() => navigate(`/explore?class=${encodeURIComponent(cat.value)}`)} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
+            <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                {/* Full background image */}
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
                {/* Gradient overlay for text readability */}
