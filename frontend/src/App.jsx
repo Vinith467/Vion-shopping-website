@@ -319,7 +319,7 @@ function App() {
       {/* Main Content Area */}
       <div 
         className={`flex-1 w-full ${isMainTab ? 'pb-24 md:pb-0' : 'pb-0'}`}
-        style={{ backgroundColor: isHome ? '#DDD4C6' : undefined }}
+        style={{ backgroundColor: isHome ? '#DDD4C6' : isOnboarding ? '#e8d5c4' : undefined }}
       >
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
