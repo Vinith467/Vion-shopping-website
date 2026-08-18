@@ -129,11 +129,22 @@ export function AppProvider({ children }) {
       }
 
       // Fetch Consumers (Members)
-      const { data: consumersData } = await supabase
+      let { data: consumersData } = await supabase
         .from('consumers')
         .select('*')
         .eq('user_id', userId)
         .order('is_primary', { ascending: false });
+
+      // If empty, wait a second and retry (in case the trigger is still running)
+      if (!consumersData || consumersData.length === 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const retry = await supabase
+          .from('consumers')
+          .select('*')
+          .eq('user_id', userId)
+          .order('is_primary', { ascending: false });
+        consumersData = retry.data;
+      }
 
       if (consumersData && consumersData.length > 0) {
         // QUICK CLEANUP: If there are multiple consumers (due to race condition bugs), let's keep only the oldest primary one (the real one)
