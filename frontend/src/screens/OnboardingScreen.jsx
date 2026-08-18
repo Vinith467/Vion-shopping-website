@@ -950,17 +950,15 @@ export default function OnboardingScreen() {
                       <div className="w-4 h-4 rounded-full border border-white shadow-sm" style={{ backgroundColor: skinTones.find(t=>t.id === profile.skinTone)?.color }}></div> Skin Tone: {profile.skinTone}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 ml-auto">
-                    <div className="flex items-center gap-2.5 bg-white/20 backdrop-blur-md border border-white/50 shadow-sm rounded-full pl-1.5 pr-4 py-1.5">
+                  <div className="flex items-center ml-auto">
+                    <button onClick={prevStep} className="flex items-center gap-2.5 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full pl-1.5 pr-4 py-1.5 hover:bg-white/40 transition-all group">
                        {profile.avatarUrl ? (
                          <img src={profile.avatarUrl} alt={profile.name} className="w-7 h-7 rounded-full object-cover border border-[#8B6544]/30" />
                        ) : (
                          <div className="w-7 h-7 rounded-full bg-[#f5ece3] border border-[#8B6544]/30 flex items-center justify-center text-[#986427]"><User size={14} /></div>
                        )}
-                       <span className="text-sm font-bold text-[#1A0A08] max-w-[100px] truncate">{profile.name}</span>
-                    </div>
-                    <button onClick={prevStep} className="flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.08)] rounded-full px-5 py-2.5 text-sm font-bold text-[#1A0A08] hover:bg-white/40 transition-all">
-                      Edit Profile <Edit2 size={14} />
+                       <span className="text-sm font-bold text-[#1A0A08] max-w-[120px] truncate">{profile.name}</span>
+                       <Edit2 size={14} className="text-[#1A0A08]/50 group-hover:text-[#1A0A08] ml-1 transition-colors" />
                     </button>
                   </div>
                 </div>
