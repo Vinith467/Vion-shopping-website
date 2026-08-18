@@ -61,7 +61,7 @@ export default function OnboardingScreen() {
     } else {
       nextStep = newStepOrUpdater;
     }
-    setSearchParams({ step: nextStep.toString() });
+    setSearchParams({ step: nextStep.toString() }, { state: location.state });
   };
   const [fetchedProducts, setFetchedProducts] = useState(() => {
     const saved = sessionStorage.getItem('onboardingProducts');
@@ -127,10 +127,10 @@ export default function OnboardingScreen() {
 
   React.useEffect(() => {
     if (!stepParam) {
-      setSearchParams({ step: step.toString() }, { replace: true });
+      setSearchParams({ step: step.toString() }, { replace: true, state: location.state });
     }
     sessionStorage.setItem('onboardingStep', step.toString());
-  }, [step, stepParam, setSearchParams]);
+  }, [step, stepParam, setSearchParams, location.state]);
 
   React.useEffect(() => {
     if (fetchedProducts.length > 0) {
