@@ -93,45 +93,42 @@ export default function ExploreScreen() {
         </div>
       </div>
 
-      {/* Categories Filter Bar */}
-      {categories.length > 0 && (
-        <div className="flex items-center gap-3 px-6 py-3 border-b border-gray-100 overflow-x-auto hide-scrollbar bg-white/50 backdrop-blur-sm sticky top-[65px] z-30">
-          <button 
-            onClick={() => {
-              searchParams.delete('category');
-              setSearchParams(searchParams);
-            }}
-            className={`px-4 py-1.5 text-[13px] font-bold whitespace-nowrap rounded-full transition-all border ${!categoryParam ? 'bg-[#1A0A08] text-white border-[#1A0A08]' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 shadow-sm'}`}
-          >
-            All
-          </button>
-          {categories.map(c => (
-            <button 
-              key={c.id}
-              onClick={() => {
-                searchParams.set('category', c.id);
-                setSearchParams(searchParams);
-              }}
-              className={`px-4 py-1.5 text-[13px] font-bold whitespace-nowrap rounded-full transition-all border ${categoryParam === c.id ? 'bg-[#1A0A08] text-white border-[#1A0A08]' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 shadow-sm'}`}
-            >
-              {c.name}
-            </button>
-          ))}
-        </div>
-      )}
-
       <div className="max-w-7xl mx-auto px-6 pt-6">
-        {/* Results Info */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm font-bold text-gray-500">
-            {products.length} {products.length === 1 ? 'result' : 'results'} found
-          </p>
-          {sizeParam && sizeParam !== 'all' && (
-            <div className="bg-white/80 backdrop-blur-md rounded-full px-4 py-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_2px_4px_rgba(0,0,0,0.05)] border border-[#1A0A08]/10 text-xs font-bold text-[#1A0A08] flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#8B6544]"></span>Matched for size {sizeParam}
+        {!categoryParam && classParam && categories.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {categories.map((cat, i) => (
+              <Link 
+                to={`/explore?class=${classParam}&category=${cat.id}`} 
+                key={cat.id || i} 
+                className="group relative aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all block cursor-pointer"
+              >
+                <img 
+                  src={cat.image_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80&auto=format&fit=crop'} 
+                  alt={cat.name} 
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                
+                <div className="absolute inset-0 flex items-center justify-center p-4 text-center z-10">
+                   <h3 className="text-white text-xl md:text-2xl tracking-[0.1em] uppercase drop-shadow-lg" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <>
+            {/* Results Info */}
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm font-bold text-gray-500">
+                {products.length} {products.length === 1 ? 'result' : 'results'} found
+              </p>
+              {sizeParam && sizeParam !== 'all' && (
+                <div className="bg-white/80 backdrop-blur-md rounded-full px-4 py-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_2px_4px_rgba(0,0,0,0.05)] border border-[#1A0A08]/10 text-xs font-bold text-[#1A0A08] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#8B6544]"></span>Matched for size {sizeParam}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
         {/* Product Grid */}
         {isLoading ? (
@@ -200,6 +197,8 @@ export default function ExploreScreen() {
               );
             })}
           </div>
+        )}
+        </>
         )}
       </div>
     </div>
