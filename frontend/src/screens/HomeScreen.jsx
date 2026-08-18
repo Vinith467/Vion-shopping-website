@@ -219,7 +219,7 @@ export default function HomeScreen() {
       </section>
 
       {/* 4. Highlight Actions & Categories */}
-      <section className="w-full px-8 lg:px-20 mb-20 max-w-[1350px] mx-auto">
+      <section className="w-full px-8 lg:px-20 pb-32 max-w-[1350px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* Top Row: Bento Grid */}
