@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-dom';
 import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
@@ -46,11 +46,23 @@ const occasionsList = [
 export default function OnboardingScreen() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart, addMember, updateMember, deleteMember, setSelectedConsumerId, setPrimaryMember, members } = useAppContext();
-  const [step, setStep] = useState(() => {
-    if (location.state?.resetStep) return 1;
-    return parseInt(sessionStorage.getItem('onboardingStep')) || 1;
-  });
+  
+  const stepParam = searchParams.get('step');
+  const step = stepParam 
+    ? parseInt(stepParam) 
+    : (location.state?.resetStep ? 1 : (parseInt(sessionStorage.getItem('onboardingStep')) || 1));
+
+  const setStep = (newStepOrUpdater) => {
+    let nextStep;
+    if (typeof newStepOrUpdater === 'function') {
+      nextStep = newStepOrUpdater(step);
+    } else {
+      nextStep = newStepOrUpdater;
+    }
+    setSearchParams({ step: nextStep.toString() });
+  };
   const [fetchedProducts, setFetchedProducts] = useState(() => {
     const saved = sessionStorage.getItem('onboardingProducts');
     return saved ? JSON.parse(saved) : [];
@@ -114,8 +126,11 @@ export default function OnboardingScreen() {
   const [profile, setProfile] = useState(() => savedProfiles.length > 0 ? savedProfiles[0] : defaultProfile);
 
   React.useEffect(() => {
-    sessionStorage.setItem('onboardingStep', step);
-  }, [step]);
+    if (!stepParam) {
+      setSearchParams({ step: step.toString() }, { replace: true });
+    }
+    sessionStorage.setItem('onboardingStep', step.toString());
+  }, [step, stepParam, setSearchParams]);
 
   React.useEffect(() => {
     if (fetchedProducts.length > 0) {
