@@ -79,7 +79,7 @@ export default function ProductDetailScreen() {
   const activeVariation = product.variations && product.variations[activeVariationIndex];
   
   // Combine image_urls array with fallback image_url
-  const variationImages = [];
+  let variationImages = [];
   if (activeVariation?.image_urls && activeVariation.image_urls.length > 0) {
     variationImages.push(...activeVariation.image_urls);
   } else if (activeVariation?.image_url) {
@@ -88,11 +88,12 @@ export default function ProductDetailScreen() {
     if (product.images && product.images.length > 0) {
       variationImages.push(...product.images);
     } else if (product.image_url) {
-      variationImages.push(...product.image_url.split(',').filter(Boolean));
+      variationImages.push(...product.image_url.split(','));
     } else {
       variationImages.push('/images/placeholder.jpg');
     }
   }
+  variationImages = variationImages.filter(Boolean);
 
   const currentImage = variationImages[activeImageIndex] || variationImages[0];
   const price = parseFloat(product.price);
@@ -104,7 +105,7 @@ export default function ProductDetailScreen() {
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         
         <div className="animate-in fade-in slide-in-from-right-8 duration-500">
-          <div className="sticky top-0 z-40 bg-[#F5F0E8]/95 backdrop-blur-md pt-8 lg:pt-12 pb-4 mb-6 flex items-center gap-4 -mx-4 px-4 md:-mx-8 md:px-8">
+          <div className="sticky top-0 z-40 bg-[#F5F0E8]/95 backdrop-blur-md pt-4 lg:pt-6 pb-4 mb-4 flex items-center gap-4 -mx-4 px-4 md:-mx-8 md:px-8">
             <button onClick={() => navigate(-1)} className="p-2 bg-white/40 hover:bg-white/60 backdrop-blur-md border border-white/50 text-[#1A0A08] rounded-full transition-colors shadow-sm">
               <ArrowLeft size={20} />
             </button>
@@ -113,23 +114,37 @@ export default function ProductDetailScreen() {
 
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 lg:items-start">
             {/* LEFT COLUMN: Gallery */}
-            <div className="flex gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-36 lg:h-max">
-              <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
-                {variationImages.map((img, idx) => (
-                  <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </div>
-                ))}
+            <div className="flex flex-col gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-24 lg:h-max">
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
+                  {variationImages.slice(0, 5).map((img, idx) => (
+                    <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex-1 bg-white/50 rounded-2xl overflow-hidden relative h-auto flex items-start justify-center group shadow-sm border border-gray-100">
+                  <img src={currentImage} alt={product.name} className="w-full h-auto mix-blend-multiply" />
+                  <button 
+                    onClick={() => toggleWishlist && toggleWishlist(product)}
+                    className={`absolute top-4 right-4 p-2.5 rounded-full transition-colors shadow-sm backdrop-blur-md ${isWishlisted ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-white/60 hover:bg-white text-[#1A0A08] hover:text-red-500'}`}
+                  >
+                    <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
+                  </button>
+                </div>
               </div>
-              <div className="flex-1 bg-white/50 rounded-2xl overflow-hidden relative h-auto flex items-start justify-center group shadow-sm border border-gray-100">
-                <img src={currentImage} alt={product.name} className="w-full h-auto mix-blend-multiply" />
-                <button 
-                  onClick={() => toggleWishlist && toggleWishlist(product)}
-                  className={`absolute top-4 right-4 p-2.5 rounded-full transition-colors shadow-sm backdrop-blur-md ${isWishlisted ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-white/60 hover:bg-white text-[#1A0A08] hover:text-red-500'}`}
-                >
-                  <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
-                </button>
-              </div>
+              {variationImages.length > 5 && (
+                <div className="flex gap-4 hidden sm:flex">
+                  {variationImages.slice(5, 11).map((img, idx) => {
+                    const actualIdx = idx + 5;
+                    return (
+                      <div key={actualIdx} onClick={() => setActiveImageIndex(actualIdx)} className={`w-16 xl:w-20 aspect-square shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === actualIdx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
+                        <img src={img} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* RIGHT COLUMN: Details & Actions */}
@@ -253,7 +268,16 @@ export default function ProductDetailScreen() {
                   {/* Why it suits you */}
                   <div className="bg-white/40 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)]">
                     <h4 className="font-bold text-[13px] text-[#1A0A08] mb-4 uppercase tracking-wide">Why it suits you</h4>
-                    {primaryMember ? (
+                    {product.suitability_points && product.suitability_points.filter(p => p.trim()).length > 0 ? (
+                      <ul className="space-y-3 text-xs text-gray-700 font-medium">
+                        {product.suitability_points.filter(p => p.trim()).map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2.5">
+                            <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : primaryMember ? (
                       <ul className="space-y-3 text-xs text-gray-700 font-medium">
                         <li className="flex items-start gap-2.5">
                           <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />

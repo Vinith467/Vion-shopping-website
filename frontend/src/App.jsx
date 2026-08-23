@@ -110,7 +110,7 @@ function App() {
               VION
             </span>
             <span className="text-[10px] lg:text-[11px] font-serif font-semibold text-[#5A4232] tracking-wide mt-1" style={{ letterSpacing: '0.04em' }}>
-              Made For You. Made To Suit You.
+              The Finest Italian Fabrics. Crafted to Perfection
             </span>
           </Link>
 

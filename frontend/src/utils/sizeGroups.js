@@ -37,3 +37,49 @@ export function matchesSizeGroup(productSizesStr, groupName) {
   // If product has any size that is in the requested group, it's a match
   return productSizes.some(size => groupSizes.includes(size));
 }
+
+export function findBestMatchingVariation(variations, profile) {
+  if (!variations || !variations.length || !profile) return null;
+  
+  const userSkinTone = profile.skinTone || profile.skin_tone;
+  const userHeight = profile.height;
+  const userSize = profile.size;
+  const userSizeGroup = getSizeGroupArray(userSize);
+
+  let bestMatch = null;
+  let bestScore = -1;
+
+  for (const v of variations) {
+    let score = 0;
+    
+    // Check skin tone
+    const varSkin = v.skinTone || v.skin_tone || 'all';
+    if (varSkin === userSkinTone) score += 10;
+    else if (varSkin === 'all') score += 5;
+    else continue; // disqualifies
+    
+    // Check height
+    let varHeights = v.heightRange || ['all'];
+    if (!Array.isArray(varHeights)) varHeights = [varHeights];
+    if (varHeights.includes(userHeight)) score += 10;
+    else if (varHeights.includes('all')) score += 5;
+    else continue; // disqualifies
+    
+    // Check size
+    let varSizes = [];
+    if (v.size_top) varSizes = varSizes.concat(Array.isArray(v.size_top) ? v.size_top : [v.size_top]);
+    if (v.size_bottom) varSizes = varSizes.concat(Array.isArray(v.size_bottom) ? v.size_bottom : [v.size_bottom]);
+    if (v.size) varSizes = varSizes.concat(Array.isArray(v.size) ? v.size : [v.size]);
+    
+    if (varSizes.some(s => userSizeGroup.includes(s))) score += 10;
+    else if (varSizes.length === 0 || varSizes.includes('all')) score += 5;
+    else continue; // disqualifies
+    
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = v;
+    }
+  }
+  
+  return bestMatch;
+}

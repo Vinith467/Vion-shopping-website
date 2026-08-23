@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-do
 import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
+import { findBestMatchingVariation } from '../utils/sizeGroups';
 
 const sizes = [
   { id: 'XS - M', name: 'XS - M', femaleImg: '/images/size/female/f1.png', maleImg: '/images/size/male/m1.png' },
@@ -49,6 +50,12 @@ export default function OnboardingScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart, addMember, updateMember, deleteMember, setSelectedConsumerId, setPrimaryMember, members } = useAppContext();
   
+  const [wishlist, setWishlist] = useState([]);
+  const toggleWishlist = (id) => {
+    setWishlist(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+  };
+  const isInWishlist = (id) => wishlist.includes(id);
+
   const stepParam = searchParams.get('step');
   const step = stepParam 
     ? parseInt(stepParam) 
@@ -108,7 +115,9 @@ export default function OnboardingScreen() {
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [showNameModal, setShowNameModal] = useState(false);
   const [activeCollectionTab, setActiveCollectionTab] = useState('All Recommendations');
-  const [selectedCategoryForStep4, setSelectedCategoryForStep4] = useState(null);
+  const [selectedCategoryForStep4, setSelectedCategoryForStep4] = useState(() => {
+    return sessionStorage.getItem('onboardingCategory') || null;
+  });
   const [isProfileDetailsExpanded, setIsProfileDetailsExpanded] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(() => {
     const saved = sessionStorage.getItem('onboardingSelectedProduct');
@@ -140,6 +149,14 @@ export default function OnboardingScreen() {
       sessionStorage.setItem('onboardingProducts', JSON.stringify(fetchedProducts));
     }
   }, [fetchedProducts]);
+
+  React.useEffect(() => {
+    if (selectedCategoryForStep4) {
+      sessionStorage.setItem('onboardingCategory', selectedCategoryForStep4);
+    } else {
+      sessionStorage.removeItem('onboardingCategory');
+    }
+  }, [selectedCategoryForStep4]);
 
   React.useEffect(() => {
     async function loadCategories() {
@@ -1138,7 +1155,7 @@ export default function OnboardingScreen() {
                 </div>
               ) : (
                 fetchedProducts.filter(item => item.category?.name === selectedCategoryForStep4).map((item) => {
-                  const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
+                  const matchingVar = findBestMatchingVariation(item.variations, profile);
                   const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
                   const displayColor = matchingVar?.color_name || "";
                   const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
@@ -1229,83 +1246,101 @@ export default function OnboardingScreen() {
                   <p className="text-sm font-medium text-[#1A0A08]/90">These outfits are chosen to enhance proportion, highlight your best features, and match your category preference.</p>
                 </div>
 
-                {/* Tabs */}
-                <div className="flex items-center border-b border-white/30 mb-6 overflow-x-auto hide-scrollbar">
-                  {['All Recommendations', ...categories.map(c => c.name)].map((tab) => (
-                    <button 
-                      key={tab} 
-                      onClick={() => setActiveCollectionTab(tab)}
-                      className={`px-6 py-3 text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCollectionTab === tab ? 'text-[#1A0A08] border-b-2 border-[#1A0A08] drop-shadow-sm' : 'text-[#1A0A08]/60 hover:text-[#1A0A08]'}`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                  <div className="ml-auto flex items-center gap-2 pb-2 pl-4">
-                     <span className="text-sm font-medium text-[#1A0A08]/70">Sort by:</span>
-                     <select className="bg-transparent text-sm font-bold text-[#1A0A08] focus:outline-none cursor-pointer">
-                        <option>Recommended</option>
-                        <option>Newest</option>
-                        <option>Price: Low to High</option>
-                     </select>
+                {step === 3 && (
+                  <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+                    <h2 className="text-2xl font-serif text-[#1A0A08] mb-6">Select a Category</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                      {categories.map((cat) => {
+                        const categoryImage = cat.image_url || '/images/placeholder.jpg';
+                        return (
+                          <div 
+                            key={cat.id} 
+                            onClick={() => {
+                              setSelectedCategoryForStep4(cat.name);
+                              setStep(4);
+                            }}
+                            className="relative aspect-square rounded-2xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500"
+                          >
+                            <img 
+                              src={categoryImage} 
+                              alt={cat.name} 
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center pb-6">
+                              <h3 className="text-white font-serif text-lg md:text-xl tracking-wider uppercase font-bold text-center drop-shadow-md">
+                                {cat.name}
+                              </h3>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {isLoadingProducts ? (
-                    <div className="col-span-full py-20 flex justify-center">
-                      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#986427] rounded-full animate-spin"></div>
+                {step === 4 && (
+                  <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-2xl font-serif text-[#1A0A08]">{selectedCategoryForStep4}</h2>
+                      <button onClick={() => setStep(3)} className="text-sm font-bold text-[#8B6544] hover:text-[#5A4232] flex items-center gap-1 transition-colors">
+                         <ArrowLeft size={16} /> Back to Categories
+                      </button>
                     </div>
-                  ) : fetchedProducts.length === 0 ? (
-                    <div className="col-span-full py-20 text-center text-gray-500 font-serif text-lg">
-                      No exact matches found for your profile. Try adjusting your preferences.
-                    </div>
-                  ) : (
-                    fetchedProducts.filter(item => {
-                      if (activeCollectionTab === 'All Recommendations') return true;
-                      return item.category?.name === activeCollectionTab;
-                    }).map((item) => {
-                      const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
-                      const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
-                      const displayColor = matchingVar?.color_name || "";
-                      const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {isLoadingProducts ? (
+                        <div className="col-span-full py-20 flex justify-center">
+                          <div className="w-8 h-8 border-4 border-gray-200 border-t-[#986427] rounded-full animate-spin"></div>
+                        </div>
+                      ) : fetchedProducts.filter(item => item.category?.name === selectedCategoryForStep4).length === 0 ? (
+                        <div className="col-span-full py-20 text-center text-gray-500 font-serif text-lg">
+                          No exact matches found in this category for your profile. Try adjusting your preferences.
+                        </div>
+                      ) : (
+                        fetchedProducts.filter(item => item.category?.name === selectedCategoryForStep4).map((item) => {
+                          const matchingVar = item.variations?.find(v => v.skinTone === profile.skinTone || v.skin_tone === profile.skinTone);
+                          const displayImage = (matchingVar?.image_urls?.[0]) || (item.images && item.images[0]) || "/images/herobannerimage/casual.png";
+                          const displayColor = matchingVar?.color_name || "";
+                          const displayTitle = item.title + (displayColor ? ` - ${displayColor}` : '');
 
-                      return (
-                      <div 
-                        key={item.id} 
-                        onClick={() => {
-                          setSelectedProduct({
-                            id: item.id,
-                            name: displayTitle,
-                            price: `₹ ${(item.price || 0).toLocaleString()}`,
-                            image: displayImage,
-                            description: item.description || "A beautifully crafted piece for your wardrobe.",
-                            highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
-                            originalItem: item
-                          });
-                          navigate(`/product/${item.id}`);
-                        }}
-                        className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
-                      >
-                        <div className="relative rounded-xl overflow-hidden mb-3 aspect-[3/4] bg-black/5 shadow-inner">
-                          <img src={displayImage} alt={item.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                          <button onClick={(e) => { e.stopPropagation(); }} className="absolute top-3 right-3 p-2 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
-                            <Heart size={16} />
-                          </button>
-                        </div>
-                        <h4 className="font-bold text-[#1A0A08] text-sm mb-1 px-1 drop-shadow-sm line-clamp-1">{displayTitle}</h4>
-                        <div className="flex justify-between items-center px-1 mb-1">
-                          <span className="font-bold text-[#1A0A08]/80 text-sm">₹ {(item.price || 0).toLocaleString()}</span>
-                        </div>
-                        <div className="mt-auto pt-2">
-                          <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] rounded-xl text-xs font-bold text-[#1A0A08] transition-all uppercase tracking-wider">
-                            View Details
-                          </button>
-                        </div>
-                      </div>
-                    )})
-                  )}
-                </div>
+                          return (
+                          <div 
+                            key={item.id} 
+                            onClick={() => {
+                              setSelectedProduct({
+                                id: item.id,
+                                name: displayTitle,
+                                price: `₹ ${(item.price || 0).toLocaleString()}`,
+                                image: displayImage,
+                                description: item.description || "A beautifully crafted piece for your wardrobe.",
+                                highlights: ["Premium breathable fabric", "Flattering silhouette", "Easy care"],
+                                originalItem: item
+                              });
+                              navigate(`/product/${item.id}`);
+                            }}
+                            className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/40 rounded-2xl p-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),_0_8px_16px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                          >
+                            <div className="relative rounded-xl overflow-hidden mb-3 aspect-[3/4] bg-black/5 shadow-inner">
+                              <img src={displayImage} alt={item.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                              <button onClick={(e) => { e.stopPropagation(); }} className="absolute top-3 right-3 p-2 bg-white/40 hover:bg-white/60 rounded-full text-[#1A0A08] hover:text-red-500 transition-colors backdrop-blur-md border border-white/50 shadow-sm">
+                                <Heart size={16} />
+                              </button>
+                            </div>
+                            <h4 className="font-bold text-[#1A0A08] text-sm mb-1 px-1 drop-shadow-sm line-clamp-1">{displayTitle}</h4>
+                            <div className="flex justify-between items-center px-1 mb-1">
+                              <span className="font-bold text-[#1A0A08]/80 text-sm">₹ {(item.price || 0).toLocaleString()}</span>
+                            </div>
+                            <div className="mt-auto pt-2">
+                              <button className="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] rounded-xl text-xs font-bold text-[#1A0A08] transition-all uppercase tracking-wider">
+                                View Details
+                              </button>
+                            </div>
+                          </div>
+                        )})
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
 

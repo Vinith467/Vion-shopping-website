@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Filter, Heart, Search } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
-import { matchesSizeGroup } from '../utils/sizeGroups';
+import { matchesSizeGroup, findBestMatchingVariation } from '../utils/sizeGroups';
 
 export default function ExploreScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -156,7 +156,7 @@ export default function ExploreScreen() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {products.map((product) => {
               const activeProfile = members?.find(m => m.id === selectedConsumerId);
-              const matchingVar = product.variations?.find(v => v.skinTone === activeProfile?.skinTone || v.skin_tone === activeProfile?.skinTone);
+              const matchingVar = findBestMatchingVariation(product.variations, activeProfile);
               const displayImage = matchingVar?.image_urls?.[0] || (product.images && product.images[0]) || '/images/placeholder.jpg';
 
               return (

@@ -151,27 +151,68 @@ export default function HomeScreen() {
         </div>
       </section>
 
-      {/* 2. Trust Bar */}
+      {/* 2. The Art of Italian Tailoring & Trust Bar */}
       <section className="relative z-20 w-full px-6 lg:px-16 -mt-8 lg:-mt-14 mb-8">
-        <div className="max-w-[1300px] mx-auto bg-white/15 backdrop-blur-lg border border-white/50 rounded-2xl shadow-[inset_0_1.5px_2.5px_rgba(255,255,255,0.85),_inset_0_-1.5px_3px_rgba(0,0,0,0.1),_0_12px_32px_rgba(0,0,0,0.08)] py-5 px-10 flex flex-wrap items-center justify-between gap-4">
-           
-           {[
-             { icon: <Leaf className="w-8 h-8 text-[#8B6544]" strokeWidth={1.5} />, title: "Ethically Made", desc: "Conscious production, responsible by choice." },
-             { icon: <div className="w-8 h-8 rounded-full border-[1.5px] border-[#8B6544] flex items-center justify-center"><BadgeCheck className="w-5 h-5 text-[#8B6544]" strokeWidth={1.5} /></div>, title: "Award Winning", desc: "Recognised for design excellence and client satisfaction." },
-             { icon: <Truck className="w-8 h-8 text-[#8B6544]" strokeWidth={1.5} />, title: "Worldwide Delivery", desc: "Complimentary shipping on all orders." },
-             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#8B6544]"><path d="M7 16V9a5 5 0 0 1 10 0v7"/><path d="M5 18l2-2h10l2 2"/><path d="M8 18v2"/><path d="M16 18v2"/></svg>, title: "Private Client Care", desc: "Dedicated support for a seamless experience." }
-           ].map((item, idx, arr) => (
-             <div key={idx} className="flex items-center gap-3 flex-1 min-w-[200px]">
-               <div className="flex items-start gap-3 flex-1">
-                 <div className="shrink-0 mt-0.5">{item.icon}</div>
-                 <div>
-                   <p className="text-[12px] font-bold uppercase tracking-[0.1em] text-[#1A1A1A] mb-0.5">{item.title}</p>
-                   <p className="text-[11px] text-[#555] leading-snug max-w-[160px]">{item.desc}</p>
+        <div className="max-w-[1350px] mx-auto bg-white/15 backdrop-blur-xl border border-white/50 rounded-2xl shadow-[inset_0_1.5px_2.5px_rgba(255,255,255,0.85),_inset_0_-1.5px_3px_rgba(0,0,0,0.1),_0_16px_40px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
+          
+          {/* Top Section: Art of Tailoring */}
+          <div className="flex flex-col xl:flex-row p-8 lg:p-10 gap-8 xl:gap-12">
+            
+            {/* Left Content */}
+            <div className="w-full xl:w-[28%] shrink-0">
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A87B45] mb-3">THE ART OF ITALIAN TAILORING</h4>
+              <h2 className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3vw, 2.6rem)', lineHeight: 1.05, color: '#1A1A1A' }}>
+                The Finest Italian Fabrics.<br/>Crafted to Perfection.
+              </h2>
+              <p className="text-[14px] text-[#555] leading-[1.6]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
+                Every piece begins with a story. Yours.<br/>
+                From fabric to final stitch, crafted in Italy, exclusively for you.
+              </p>
+            </div>
+            
+            {/* Right Content: 4 Images/Steps */}
+            <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+              {[
+                { img: "/images/art_fabric.png", num: "01.", title: "THE FABRIC", desc: "The finest materials, carefully selected in Italy." },
+                { img: "/images/art_craft.png", num: "02.", title: "THE CRAFT", desc: "Handcut, hand-sewn, crafted by master artisans." },
+                { img: "/images/art_fit.png", num: "03.", title: "THE FIT", desc: "Tailored to your shape. Perfected in every detail." },
+                { img: "/images/art_experience.png", num: "04.", title: "THE EXPERIENCE", desc: "A personal journey from first fitting to forever." }
+              ].map((step, idx) => (
+                <div key={idx} className="flex flex-col group">
+                  <div className="w-full aspect-[4/3] mb-4 overflow-hidden rounded-lg shadow-sm border border-white/40">
+                    <img src={step.img} alt={step.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                         onError={(e) => { e.target.src = `https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=400&h=300`; }} />
+                  </div>
+                  <h4 className="text-[12px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A] mb-1.5 flex items-center gap-1.5">
+                    <span className="text-[#A87B45] font-serif text-[14px]">{step.num}</span> {step.title}
+                  </h4>
+                  <p className="text-[13px] text-[#555] leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Bottom Section: Dark Glass Trust Bar */}
+          <div className="bg-[#1A1A1A]/85 backdrop-blur-md py-6 px-8 lg:px-10 flex flex-wrap items-center justify-between gap-6 border-t border-white/10">
+             {[
+               { icon: <Leaf className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: "ETHICALLY MADE", desc: "Conscious production, responsible by choice." },
+               { icon: <div className="w-7 h-7 rounded-full border-[1.5px] border-[#C49A5C] flex items-center justify-center"><BadgeCheck className="w-[18px] h-[18px] text-[#C49A5C]" strokeWidth={1.5} /></div>, title: "AWARD WINNING", desc: "Recognised for design excellence and client satisfaction." },
+               { icon: <Truck className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: "WORLDWIDE DELIVERY", desc: "Complimentary shipping on all orders." },
+               { icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#C49A5C]"><path d="M7 16V9a5 5 0 0 1 10 0v7"/><path d="M5 18l2-2h10l2 2"/><path d="M8 18v2"/><path d="M16 18v2"/></svg>, title: "PRIVATE CLIENT CARE", desc: "Dedicated support for a seamless experience." }
+             ].map((item, idx, arr) => (
+               <div key={idx} className="flex items-center gap-4 flex-1 min-w-[220px]">
+                 <div className="flex items-start gap-3 flex-1">
+                   <div className="shrink-0 mt-0.5">{item.icon}</div>
+                   <div>
+                     <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#E5CDA7] mb-1">{item.title}</p>
+                     <p className="text-[13px] text-white/70 leading-snug max-w-[170px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.desc}</p>
+                   </div>
                  </div>
+                 {idx < arr.length - 1 && <div className="hidden lg:block w-[1px] h-8 bg-white/10"></div>}
                </div>
-               {idx < arr.length - 1 && <div className="hidden lg:block w-[1px] h-10 bg-[#C5B8A8]"></div>}
-             </div>
-           ))}
+             ))}
+          </div>
+
         </div>
       </section>
 
@@ -235,7 +276,7 @@ export default function HomeScreen() {
                   Explore our curated fashion selections tailored to your unique profile and style.
                 </p>
                 <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 transition-colors">
-                   Explore <ArrowRight size={10} />
+                   Buy Now <ArrowRight size={10} />
                 </button>
              </div>
           </div>
@@ -252,16 +293,16 @@ export default function HomeScreen() {
                   Schedule a one-on-one session with our experts.
                 </p>
                 <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
-                   Explore <ArrowRight size={9} />
+                   Book Now <ArrowRight size={9} />
                 </button>
              </div>
           </div>
 
           {/* Bottom 3 Cards */}
           {[
-            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png" },
-            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png" },
-            { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png" }
+            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png", buttonText: "Buy Now" },
+            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png", buttonText: "Buy Now" },
+            { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png", buttonText: "Book Now" }
           ].map((cat, idx) => (
             <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value, redirectToExplore: true } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
@@ -272,7 +313,7 @@ export default function HomeScreen() {
                     {cat.desc}
                   </p>
                   <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
-                     Explore <ArrowRight size={9} />
+                     {cat.buttonText} <ArrowRight size={9} />
                   </button>
                </div>
             </div>

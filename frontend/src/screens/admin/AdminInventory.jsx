@@ -35,6 +35,20 @@ const heightsMap = [
   { id: 'Above 6\'0"', name: 'Above 6\'0"' }
 ];
 
+const IMAGE_SLOTS = [
+  'Main Image',
+  'Front View',
+  'Left View',
+  'Back View',
+  'Right View',
+  'Folded Costume',
+  'Product Details (Why wear)',
+  'Lifestyle Image 1',
+  'Lifestyle Image 2',
+  'Lifestyle Image 3',
+  'Lifestyle Image 4'
+];
+
 export default function AdminInventory() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -54,7 +68,7 @@ export default function AdminInventory() {
     price: '',
     compare_at_price: '',
     sku: '',
-    quantity: '0',
+    quantity: 0,
     category_id: '',
     status: 'draft',
     image_url: '',
@@ -66,6 +80,7 @@ export default function AdminInventory() {
     target_skin_tones: [],
     style_tags: [],
     target_body_shapes: ['Standard Fit'],
+    suitability_points: ['', '', ''],
     variations: []
   };
 
@@ -130,6 +145,83 @@ export default function AdminInventory() {
     setShowModal(false);
   };
 
+  const handleDragStart = (e, idx, isVariation = false, varIdx = null) => {
+    e.dataTransfer.setData('text/plain', JSON.stringify({ idx, isVariation, varIdx }));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDrop = (e, targetIdx, isVariationTarget = false, varIdxTarget = null) => {
+    e.preventDefault();
+    try {
+      const dataStr = e.dataTransfer.getData('text/plain');
+      if (!dataStr) return;
+      
+      const data = JSON.parse(dataStr);
+      if (data.isVariation !== isVariationTarget) return;
+      if (data.isVariation && data.varIdx !== varIdxTarget) return;
+      
+      const sourceIdx = data.idx;
+      if (sourceIdx === targetIdx) return;
+
+      if (isVariationTarget) {
+        setVariationImages(prev => {
+          const newArr = [...(prev[varIdxTarget] || [])];
+          const temp = newArr[sourceIdx];
+          newArr[sourceIdx] = newArr[targetIdx];
+          newArr[targetIdx] = temp;
+          return { ...prev, [varIdxTarget]: newArr };
+        });
+      } else {
+        setProductImages(prev => {
+          const newArr = [...prev];
+          const temp = newArr[sourceIdx];
+          newArr[sourceIdx] = newArr[targetIdx];
+          newArr[targetIdx] = temp;
+          return newArr;
+        });
+      }
+    } catch (err) {
+      console.error('Drag and drop error', err);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const initializeImagesWithLabels = (urls = []) => {
+    let result = [];
+    let defaultLabels = [...IMAGE_SLOTS];
+    
+    for (let i = 0; i < urls.length; i++) {
+      let url = urls[i];
+      if (!url) continue;
+      
+      let label = defaultLabels[i] || `Image ${i+1}`;
+      let cleanUrl = url;
+      
+      if (url.includes('#label=')) {
+        const parts = url.split('#label=');
+        cleanUrl = parts[0];
+        try {
+          label = decodeURIComponent(parts[1]);
+        } catch (e) {
+          label = parts[1];
+        }
+        defaultLabels = defaultLabels.filter(l => l !== label);
+      }
+      
+      result.push({ type: 'existing', url: cleanUrl, fullUrl: url, label });
+    }
+    
+    while (result.length < 11) {
+      result.push({ type: 'empty', label: defaultLabels.shift() || `Extra Image ${result.length+1}` });
+    }
+    
+    return result;
+  };
+
   const handleOpenModal = (prod = null) => {
     // Also clean up any lingering URLs if reopening without properly closing
     productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
@@ -147,7 +239,7 @@ export default function AdminInventory() {
         price: prod.price || '',
         compare_at_price: prod.compare_at_price || '',
         sku: prod.sku || '',
-        quantity: prod.quantity || '0',
+        quantity: prod.quantity !== undefined ? prod.quantity : 0,
         category_id: prod.category_id || '',
         status: prod.status || 'draft',
         image_url: prod.image_url || '',
@@ -159,6 +251,7 @@ export default function AdminInventory() {
         target_skin_tones: prod.target_skin_tones || [],
         style_tags: prod.style_tags || [],
         target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
+        suitability_points: prod.suitability_points || ['', '', ''],
         variations: prod.variations || []
       });
     } else {
@@ -167,19 +260,22 @@ export default function AdminInventory() {
     }
 
     // Initialize productImages from existing urls
-    if (prod && prod.image_url) {
-      const urls = prod.image_url.split(',').filter(Boolean);
-      setProductImages(urls.map(url => ({ type: 'existing', url })));
+    let urls = [];
+    if (prod && (prod.images || prod.image_url)) {
+      if (prod.images && Array.isArray(prod.images)) {
+        urls = prod.images;
+      } else if (prod.image_url) {
+        urls = prod.image_url.split(',');
+      }
     }
+    setProductImages(initializeImagesWithLabels(urls));
 
     // Initialize variationImages and shadeImages from existing urls
     if (prod && prod.variations) {
       const vImages = {};
       const sImages = {};
       prod.variations.forEach((v, idx) => {
-        if (v.image_urls && v.image_urls.length > 0) {
-          vImages[idx] = v.image_urls.map(url => ({ type: 'existing', url }));
-        }
+        vImages[idx] = initializeImagesWithLabels(v.image_urls || []);
         if (v.shade_image_url) {
           sImages[idx] = { type: 'existing', url: v.shade_image_url };
         }
@@ -221,23 +317,27 @@ export default function AdminInventory() {
       target_skin_tones: prod.target_skin_tones || [],
       style_tags: prod.style_tags || [],
       target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
+      suitability_points: prod.suitability_points || ['', '', ''],
       variations: prod.variations || []
     });
 
     // Initialize productImages from existing urls
-    if (prod && prod.image_url) {
-      const urls = prod.image_url.split(',').filter(Boolean);
-      setProductImages(urls.map(url => ({ type: 'existing', url })));
+    let urlsDup = [];
+    if (prod && (prod.images || prod.image_url)) {
+      if (prod.images && Array.isArray(prod.images)) {
+        urlsDup = prod.images;
+      } else if (prod.image_url) {
+        urlsDup = prod.image_url.split(',');
+      }
     }
+    setProductImages(initializeImagesWithLabels(urlsDup));
 
     // Initialize variationImages and shadeImages from existing urls
     if (prod && prod.variations) {
       const vImages = {};
       const sImages = {};
       prod.variations.forEach((v, idx) => {
-        if (v.image_urls && v.image_urls.length > 0) {
-          vImages[idx] = v.image_urls.map(url => ({ type: 'existing', url }));
-        }
+        vImages[idx] = initializeImagesWithLabels(v.image_urls || []);
         if (v.shade_image_url) {
           sImages[idx] = { type: 'existing', url: v.shade_image_url };
         }
@@ -266,6 +366,14 @@ export default function AdminInventory() {
     setImages(newImages);
   };
 
+  const handleClearProductImageSlot = (index) => {
+    const newImages = [...productImages];
+    const removed = newImages[index];
+    if (removed && removed.type === 'new') URL.revokeObjectURL(removed.preview);
+    newImages[index] = { type: 'empty' };
+    setProductImages(newImages);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.price || !formData.category_id) {
@@ -277,18 +385,22 @@ export default function AdminInventory() {
     // Main Product Images
     const finalImagesArray = [];
     for (const img of productImages) {
-      if (img.type === 'existing') {
-        finalImagesArray.push(img.url);
+      if (!img || img.type === 'empty') {
+        finalImagesArray.push('');
+      } else if (img.type === 'existing') {
+        finalImagesArray.push(`${img.url}#label=${encodeURIComponent(img.label || '')}`);
       } else if (img.type === 'new') {
         try {
           const uploadedUrl = await uploadImage(img.file, 'products', 'public-images');
-          finalImagesArray.push(uploadedUrl);
+          finalImagesArray.push(`${uploadedUrl}#label=${encodeURIComponent(img.label || '')}`);
         } catch (err) {
           toast.error('Failed to upload product image');
           console.error(err);
           setIsSubmitting(false);
           return;
         }
+      } else {
+        finalImagesArray.push('');
       }
     }
 
@@ -297,13 +409,19 @@ export default function AdminInventory() {
     for (let i = 0; i < updatedVariations.length; i++) {
       const vImages = variationImages[i] || [];
       const varFinalUrls = [];
-      for (const img of vImages) {
+      for (let j = 0; j < 11; j++) {
+        const img = vImages[j];
+        if (!img || img.type === 'empty') {
+          varFinalUrls.push('');
+          continue;
+        }
+        
         if (img.type === 'existing') {
-          varFinalUrls.push(img.url);
+          varFinalUrls.push(`${img.url}#label=${encodeURIComponent(img.label || '')}`);
         } else if (img.type === 'new') {
           try {
             const uploadedUrl = await uploadImage(img.file, `products/variations`, 'public-images');
-            varFinalUrls.push(uploadedUrl);
+            varFinalUrls.push(`${uploadedUrl}#label=${encodeURIComponent(img.label || '')}`);
           } catch (err) {
             toast.error('Failed to upload variation image');
             console.error(err);
@@ -336,18 +454,34 @@ export default function AdminInventory() {
 
     // Combine size_top and size_bottom into size for backward compatibility
     const allSizes = new Set();
+    const allHeights = new Set();
+    const allSkinTones = new Set();
+
     updatedVariations.forEach(v => {
-      if (v.size_top) v.size_top.forEach(s => s !== 'all' && allSizes.add(s));
-      if (v.size_bottom) v.size_bottom.forEach(s => s !== 'all' && allSizes.add(s));
-      // fallback for old variations
+      if (v.size_top) {
+        const tops = Array.isArray(v.size_top) ? v.size_top : [v.size_top];
+        tops.forEach(s => s && s !== 'all' && allSizes.add(s));
+      }
+      if (v.size_bottom) {
+        const bottoms = Array.isArray(v.size_bottom) ? v.size_bottom : [v.size_bottom];
+        bottoms.forEach(s => s && s !== 'all' && allSizes.add(s));
+      }
       if (v.size) {
          if (Array.isArray(v.size)) v.size.forEach(s => s !== 'all' && allSizes.add(s));
          else if (v.size !== 'all') allSizes.add(v.size);
       }
+      if (v.heightRange) {
+        const heights = Array.isArray(v.heightRange) ? v.heightRange : [v.heightRange];
+        heights.forEach(h => h && h !== 'all' && allHeights.add(h));
+      }
+      if (v.skinTone && v.skinTone !== 'all') {
+        allSkinTones.add(v.skinTone);
+      }
     });
+
     const derivedSizes = Array.from(allSizes);
-    const derivedSkinTones = Array.from(new Set(updatedVariations.map(v => v.skinTone).filter(s => s && s !== 'all')));
-    const derivedHeights = Array.from(new Set(updatedVariations.map(v => v.heightRange).filter(h => h && h !== 'all')));
+    const derivedSkinTones = Array.from(allSkinTones);
+    const derivedHeights = Array.from(allHeights);
 
     const payload = {
       title: formData.title,
@@ -367,6 +501,7 @@ export default function AdminInventory() {
       occasion_tags: formData.occasion_tags,
       target_skin_tones: derivedSkinTones,
       style_tags: formData.style_tags,
+      suitability_points: formData.suitability_points,
       variations: updatedVariations,
       images: finalImagesArray
     };
@@ -557,6 +692,25 @@ export default function AdminInventory() {
                         className="w-full px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none text-sm text-gray-900 min-h-[60px]"
                       ></textarea>
                     </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">Why It Suits You (3 Points)</label>
+                      <div className="space-y-2">
+                        {[0, 1, 2].map(idx => (
+                          <input
+                            key={idx}
+                            type="text"
+                            placeholder={`e.g. Flattering for your Hourglass body shape`}
+                            value={formData.suitability_points[idx] || ''}
+                            onChange={(e) => {
+                              const newPoints = [...formData.suitability_points];
+                              newPoints[idx] = e.target.value;
+                              setFormData({ ...formData, suitability_points: newPoints });
+                            }}
+                            className="w-full px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none text-sm text-gray-900"
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Pricing */}
@@ -614,8 +768,12 @@ export default function AdminInventory() {
                         <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Quantity</label>
                         <input
                           type="number"
-                          value={formData.quantity}
-                          onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                          min="0"
+                          value={formData.quantity === 0 ? 0 : formData.quantity || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setFormData({ ...formData, quantity: val === '' ? '' : parseInt(val, 10) });
+                          }}
                           className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
                         />
                       </div>
@@ -736,53 +894,68 @@ export default function AdminInventory() {
 
                   {/* Media */}
                   <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Media</h3>
-                    <div>
-                      <label className="block text-xs font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-1.5">Product Images</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={(e) => {
-                          if (e.target.files) {
-                            const newFiles = Array.from(e.target.files);
-                            const newImageObjects = newFiles.map(f => ({ type: 'new', file: f, preview: URL.createObjectURL(f) }));
-                            setProductImages(prev => [...prev, ...newImageObjects]);
-                            e.target.value = ''; // reset so same files can be uploaded again
-                          }
-                        }}
-                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:bg-white focus:border-[#986427] outline-none font-medium text-[#1A0A08] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#1A0A08] file:text-[#e8d5c4] hover:file:bg-[#3E2312] transition-all cursor-pointer"
-                      />
-                    </div>
-
-                    {productImages.length > 0 && (
-                      <div className="flex gap-4 mt-4 overflow-x-auto pb-4 custom-scrollbar">
-                        {productImages.map((img, idx) => (
-                          <div key={idx} className="relative group shrink-0 w-28 flex flex-col gap-2">
-                            <div className="relative w-28 h-36 rounded-xl bg-gray-50 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#986427] transition-colors">
-                              <img src={img.type === 'new' ? img.preview : img.url} alt={`Slot ${idx}`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
-
-                              {/* Hover Controls */}
-                              <div className="absolute inset-0 bg-[#1A0A08]/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
-                                <div className="flex justify-end">
-                                  <button type="button" onClick={() => handleRemoveImage(productImages, setProductImages, idx)} className="w-6 h-6 bg-red-500 text-white rounded flex items-center justify-center hover:bg-red-600 transition-colors">
+                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Product Images (11 Slots)</h3>
+                    
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                      {productImages.map((img, idx) => {
+                        if (!img) return null;
+                        const slotName = img.label || IMAGE_SLOTS[idx] || `Image ${idx + 1}`;
+                        const hasImage = img.type !== 'empty';
+                        
+                        return (
+                          <div 
+                            key={idx} 
+                            className="flex flex-col gap-1.5 group"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, idx)}
+                            onDrop={(e) => handleDrop(e, idx)}
+                            onDragOver={handleDragOver}
+                          >
+                            <label className="text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider h-6 line-clamp-2 cursor-grab active:cursor-grabbing flex items-center justify-between">
+                              {slotName}
+                              <div className="text-gray-300 group-hover:text-[#986427]" title="Drag to reorder">
+                                <span className="text-[8px] leading-none">⣿</span>
+                              </div>
+                            </label>
+                            
+                            {hasImage ? (
+                              <div className="relative w-full aspect-[3/4] rounded-xl bg-gray-50 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#986427] transition-colors cursor-grab active:cursor-grabbing">
+                                <img src={img.type === 'new' ? img.preview : img.url} alt={slotName} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                                <div className="absolute top-2 right-2">
+                                  <button type="button" onClick={() => {
+                                      const newImages = [...productImages];
+                                      if (newImages[idx].type === 'new') URL.revokeObjectURL(newImages[idx].preview);
+                                      newImages[idx] = { type: 'empty', label: slotName };
+                                      setProductImages(newImages);
+                                    }} className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10" title="Remove image">
                                     <X size={14} />
                                   </button>
                                 </div>
-                                <div className="flex justify-between mt-auto gap-1">
-                                  <button type="button" disabled={idx === 0} onClick={() => handleMoveImage(productImages, setProductImages, idx, -1)} className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${idx === 0 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-white/90 text-[#1A0A08] hover:bg-white'}`}>
-                                    <ChevronLeft size={16} />
-                                  </button>
-                                  <button type="button" disabled={idx === productImages.length - 1} onClick={() => handleMoveImage(productImages, setProductImages, idx, 1)} className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${idx === productImages.length - 1 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-white/90 text-[#1A0A08] hover:bg-white'}`}>
-                                    <ChevronRight size={16} />
-                                  </button>
-                                </div>
                               </div>
-                            </div>
+                            ) : (
+                              <label className="w-full aspect-[3/4] rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 hover:border-[#986427] hover:bg-[#986427]/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
+                                <Plus size={24} className="mb-2" />
+                                <span className="text-[10px] font-bold text-center px-2">Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      const file = e.target.files[0];
+                                      const newImages = [...productImages];
+                                      newImages[idx] = { type: 'new', file, preview: URL.createObjectURL(file), label: slotName };
+                                      setProductImages(newImages);
+                                      e.target.value = '';
+                                    }
+                                  }}
+                                />
+                              </label>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -799,6 +972,10 @@ export default function AdminInventory() {
                         ...prev,
                         variations: [...prev.variations, { id: Date.now(), size_top: ['S'], size_bottom: ['S'], skinTone: 'all', heightRange: ['all'], colorName: '', image_urls: [] }]
                       }));
+                      setVariationImages(prev => ({
+                        ...prev,
+                        [formData.variations.length]: Array(11).fill(null).map(() => ({ type: 'empty' }))
+                      }));
                     }}
                     className="text-xs font-bold bg-[#986427]/10 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#986427]/20 text-[#986427] transition-colors"
                   >
@@ -811,8 +988,9 @@ export default function AdminInventory() {
                 ) : (
                   <div className="space-y-4 pr-2">
                     {formData.variations.map((v, index) => (
-                      <div key={v.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex gap-4">
-                        <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div key={v.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col">
+                        <div className="flex gap-4 w-full">
+                          <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-3">
                           <div className="col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-100 pb-4">
                             <div>
                               <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Size (Top)</label>
@@ -993,75 +1171,91 @@ export default function AdminInventory() {
                               )}
                             </div>
                           </div>
-                          <div>
-                            <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Images</label>
-                            <input
-                              type="file"
-                              multiple
-                              accept="image/*"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
-                                  const newFiles = Array.from(e.target.files);
-                                  const newImageObjects = newFiles.map(f => ({ type: 'new', file: f, preview: URL.createObjectURL(f) }));
-                                  setVariationImages(prev => ({
-                                    ...prev,
-                                    [index]: [...(prev[index] || []), ...newImageObjects]
-                                  }));
-                                  e.target.value = '';
-                                }
-                              }}
-                              className="w-full text-[10px] file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-gray-200"
-                            />
-                            <div className="text-[9px] text-gray-500 mt-1 pl-1">Hold Ctrl/Cmd to select multiple files</div>
-                          </div>
                         </div>
 
-                        <div className="w-32 shrink-0 flex flex-col items-center gap-2">
-                          {variationImages[index] && variationImages[index].length > 0 ? (
-                            <div className="flex gap-1 overflow-x-auto pb-1 custom-scrollbar w-full">
-                              {variationImages[index].map((img, idx) => (
-                                <div key={idx} className="relative group shrink-0 w-12 h-16 rounded-lg bg-gray-100 overflow-hidden border border-gray-200 shadow-sm">
-                                  <img src={img.type === 'new' ? img.preview : img.url} loading="lazy" alt="preview" className="w-full h-full object-cover" />
-
-                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col justify-between p-0.5 transition-opacity">
-                                    <button type="button" onClick={() => {
-                                      const newArr = [...variationImages[index]];
-                                      const removed = newArr.splice(idx, 1)[0];
-                                      if (removed.type === 'new') URL.revokeObjectURL(removed.preview);
-                                      setVariationImages(prev => ({ ...prev, [index]: newArr }));
-                                    }} className="self-end text-white hover:text-red-400 p-0.5"><X size={10} /></button>
-                                    <div className="flex justify-between w-full pb-0.5">
-                                      <button type="button" disabled={idx === 0} onClick={() => {
-                                        const newArr = [...variationImages[index]];
-                                        [newArr[idx - 1], newArr[idx]] = [newArr[idx], newArr[idx - 1]];
-                                        setVariationImages(prev => ({ ...prev, [index]: newArr }));
-                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronLeft size={12} /></button>
-                                      <button type="button" disabled={idx === variationImages[index].length - 1} onClick={() => {
-                                        const newArr = [...variationImages[index]];
-                                        [newArr[idx + 1], newArr[idx]] = [newArr[idx], newArr[idx + 1]];
-                                        setVariationImages(prev => ({ ...prev, [index]: newArr }));
-                                      }} className="text-white hover:text-[#3A10E5] disabled:opacity-30"><ChevronRight size={12} /></button>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="w-12 h-16 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center">
-                              <ImageIcon size={14} className="text-gray-300" />
-                            </div>
-                          )}
+                        <div className="w-16 shrink-0 flex flex-col items-center gap-2">
                           <button
                             type="button"
                             onClick={() => {
-                              v.imagePreviews?.forEach(url => URL.revokeObjectURL(url));
+                              if (variationImages[index]) {
+                                variationImages[index].forEach(img => {
+                                  if (img.type === 'new') URL.revokeObjectURL(img.preview);
+                                });
+                              }
                               const newVars = formData.variations.filter((_, i) => i !== index);
                               setFormData({ ...formData, variations: newVars });
                             }}
-                            className="text-[10px] text-red-500 font-bold hover:underline"
+                            className="w-full py-2 bg-red-50 text-red-500 rounded-lg text-[10px] font-bold hover:bg-red-100 transition-colors border border-red-100 mt-5"
                           >
                             Remove
                           </button>
+                        </div>
+                        </div>
+
+                        <div className="mt-4 border-t border-gray-200 pt-4">
+                          <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-3">Variation Specific Images (Overrides Main Images)</label>
+                          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+                            {(variationImages[index] || Array(11).fill(null).map((_, i) => ({ type: 'empty', label: IMAGE_SLOTS[i] || `Image ${i+1}` }))).map((img, slotIdx) => {
+                              if (!img) return null;
+                              const slotName = img.label || IMAGE_SLOTS[slotIdx] || `Image ${slotIdx + 1}`;
+                              const hasImage = img.type !== 'empty';
+                              
+                              return (
+                                <div 
+                                  key={slotIdx} 
+                                  className="flex flex-col gap-1 group"
+                                  draggable
+                                  onDragStart={(e) => handleDragStart(e, slotIdx, true, index)}
+                                  onDrop={(e) => handleDrop(e, slotIdx, true, index)}
+                                  onDragOver={handleDragOver}
+                                >
+                                  <label className="text-[9px] font-bold text-[#1A0A08]/60 uppercase tracking-wider h-6 line-clamp-2 cursor-grab active:cursor-grabbing flex items-center justify-between">
+                                    {slotName}
+                                    <div className="text-gray-300 group-hover:text-[#986427]" title="Drag to reorder">
+                                      <span className="text-[8px] leading-none">⣿</span>
+                                    </div>
+                                  </label>
+                                  
+                                  {hasImage ? (
+                                    <div className="relative w-full aspect-[3/4] rounded-lg bg-white overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#986427] transition-colors cursor-grab active:cursor-grabbing">
+                                      <img src={img.type === 'new' ? img.preview : img.url} alt={slotName} className="w-full h-full object-cover" />
+                                      <div className="absolute top-1.5 right-1.5">
+                                        <button type="button" onClick={() => {
+                                          const newImages = [...(variationImages[index] || [])];
+                                          if (newImages[slotIdx].type === 'new') URL.revokeObjectURL(newImages[slotIdx].preview);
+                                          newImages[slotIdx] = { type: 'empty', label: slotName };
+                                          setVariationImages(prev => ({ ...prev, [index]: newImages }));
+                                        }} className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10" title="Remove image">
+                                          <X size={12} />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <label className="w-full aspect-[3/4] rounded-lg bg-white border border-dashed border-gray-300 hover:border-[#986427] hover:bg-[#986427]/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
+                                      <Plus size={16} className="mb-1" />
+                                      <span className="text-[9px] font-bold text-center px-1">Upload</span>
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                          if (e.target.files && e.target.files[0]) {
+                                            const file = e.target.files[0];
+                                            const newImages = (variationImages[index] || []).length === 11 
+                                              ? [...variationImages[index]] 
+                                              : Array(11).fill(null).map((_, i) => ({ type: 'empty', label: IMAGE_SLOTS[i] || `Image ${i+1}` }));
+                                            newImages[slotIdx] = { type: 'new', file, preview: URL.createObjectURL(file), label: slotName };
+                                            setVariationImages(prev => ({ ...prev, [index]: newImages }));
+                                            e.target.value = '';
+                                          }
+                                        }}
+                                      />
+                                    </label>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     ))}
