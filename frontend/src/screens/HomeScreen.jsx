@@ -10,6 +10,7 @@ export default function HomeScreen() {
   const [categories, setCategories] = useState([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTailoringStep, setActiveTailoringStep] = useState(0);
 
   useEffect(() => {
     async function loadData() {
@@ -41,7 +42,7 @@ export default function HomeScreen() {
         {/* Full Background Image */}
         <div className="absolute inset-0 z-0">
            <img 
-             src="/images/herobannerimage/herobannerimage.png" 
+             src="/images/herobannerimage/hero banner 2 .png" 
              alt="Fashion Model Background" 
              className="w-full h-full object-cover object-[65%_top] md:object-top" 
              onError={(e) => { 
@@ -58,30 +59,37 @@ export default function HomeScreen() {
           
           {/* Left Content */}
           <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-auto md:mt-0">
-            <h1 className="mb-5 uppercase text-4xl md:text-5xl lg:text-6xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.01em', color: '#1A1A1A' }}>
-              Clothing<br/>
-              Crafted For<br/>
-              Your{' '}
+            <div className="flex items-center gap-3 mb-4">
+               <div className="h-[1px] w-8 md:w-12 bg-[#A87B45]"></div>
+               <span className="text-[#A87B45] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">Sartoria Di Lusso</span>
+            </div>
+            
+            <h1 className="mb-4 uppercase text-4xl md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.05, letterSpacing: '0.02em', color: '#1A0F0A' }}>
+              Italian<br/>
               <span 
-                className="inline-block"
+                className="inline-block mt-1"
                 style={{ 
                   fontFamily: "'Great Vibes', cursive", 
                   fontWeight: 400,
-                  fontSize: '1.1em',
-                  lineHeight: 0.9,
-                  color: '#C49A5C',
+                  fontSize: '1.3em',
+                  lineHeight: 0.85,
+                  color: '#8B5A2B',
                   textTransform: 'none',
-                  verticalAlign: 'baseline',
-                  position: 'relative',
-                  top: '0.04em'
+                  paddingRight: '0.2em',
+                  textShadow: '0 2px 10px rgba(139, 90, 43, 0.15)'
                 }}>
-                Story
+                Elegance
               </span>
             </h1>
             
-            <p className="text-[12px] md:text-[13px] 2xl:text-[14px] mb-6 max-w-[22rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, color: '#555', lineHeight: 1.65, letterSpacing: '0.01em' }}>
-              Bespoke clothing. Timeless design. Crafted with intention, made for you.
-            </p>
+            <div className="relative mb-6 md:mb-8 max-w-[26rem]">
+              {/* Elegant soft glow behind text for legibility - hidden on mobile to avoid washing out the image */}
+              <div className="hidden md:block absolute -inset-y-4 -inset-x-6 bg-[#F5F0E8]/60 blur-xl rounded-full z-0"></div>
+              
+              <p className="relative z-10 text-[14px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: '#2A1810', lineHeight: 1.6, letterSpacing: '0.01em' }}>
+                Timeless style. Unmatched grace. Experience the pinnacle of trusted Italian craftsmanship, tailored flawlessly to elevate your legacy.
+              </p>
+            </div>
             
             <div className="flex flex-wrap items-center gap-4 mb-5">
               <button 
@@ -152,7 +160,7 @@ export default function HomeScreen() {
       </section>
 
       {/* 2. The Art of Italian Tailoring & Trust Bar */}
-      <section className="relative z-20 w-full px-6 lg:px-16 -mt-8 lg:-mt-14 mb-8">
+      <section className="relative z-20 w-full px-6 lg:px-16 mt-8 lg:-mt-14 mb-8 pb-32 lg:pb-8 order-4 lg:order-2">
         <div className="max-w-[1350px] mx-auto bg-white/15 backdrop-blur-xl border border-white/50 rounded-2xl shadow-[inset_0_1.5px_2.5px_rgba(255,255,255,0.85),_inset_0_-1.5px_3px_rgba(0,0,0,0.1),_0_16px_40px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
           
           {/* Top Section: Art of Tailoring */}
@@ -171,15 +179,15 @@ export default function HomeScreen() {
             </div>
             
             {/* Right Content: 4 Images/Steps */}
-            <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mt-6 xl:mt-0">
               {[
-                { img: "/images/art_fabric.png", num: "01.", title: "THE FABRIC", desc: "The finest materials, carefully selected in Italy." },
-                { img: "/images/art_craft.png", num: "02.", title: "THE CRAFT", desc: "Handcut, hand-sewn, crafted by master artisans." },
-                { img: "/images/art_fit.png", num: "03.", title: "THE FIT", desc: "Tailored to your shape. Perfected in every detail." },
-                { img: "/images/art_experience.png", num: "04.", title: "THE EXPERIENCE", desc: "A personal journey from first fitting to forever." }
+                { img: "/card image/1.png", num: "01.", title: "THE FABRIC", desc: "The finest materials, carefully selected in Italy." },
+                { img: "/card image/2.png", num: "02.", title: "THE CRAFT", desc: "Handcut, hand-sewn, crafted by master artisans." },
+                { img: "/card image/3.png", num: "03.", title: "THE FIT", desc: "Tailored to your shape. Perfected in every detail." },
+                { img: "/card image/4.png", num: "04.", title: "THE EXPERIENCE", desc: "A personal journey from first fitting to forever." }
               ].map((step, idx) => (
                 <div key={idx} className="flex flex-col group">
-                  <div className="w-full aspect-[4/3] mb-4 overflow-hidden rounded-lg shadow-sm border border-white/40">
+                  <div className="w-full aspect-square mb-4 overflow-hidden rounded-lg shadow-sm border border-white/40">
                     <img src={step.img} alt={step.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                          onError={(e) => { e.target.src = `https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=400&h=300`; }} />
                   </div>
@@ -217,7 +225,7 @@ export default function HomeScreen() {
       </section>
 
       {/* 3. Your Personalised Journey */}
-      <section className="w-full px-8 lg:px-20 mb-10 max-w-[1350px] mx-auto">
+      <section className="w-full px-8 lg:px-20 mb-10 max-w-[1350px] mx-auto order-3">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
           
           <div className="w-full lg:w-[24%] shrink-0 text-center lg:text-left">
@@ -260,7 +268,7 @@ export default function HomeScreen() {
       </section>
 
       {/* 4. Highlight Actions & Categories */}
-      <section className="w-full px-8 lg:px-20 pb-32 max-w-[1350px] mx-auto">
+      <section className="relative z-20 w-full px-8 lg:px-20 -mt-8 lg:mt-0 pb-10 lg:pb-32 max-w-[1350px] mx-auto order-2 lg:order-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* Top Row: Bento Grid */}
