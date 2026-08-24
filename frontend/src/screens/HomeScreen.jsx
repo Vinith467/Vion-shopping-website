@@ -37,46 +37,62 @@ export default function HomeScreen() {
     <div onClickCapture={handlePageClick} className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
       
       {/* 1. Hero Section */}
-      <section className="relative w-full max-w-[1983px] mx-auto min-h-[85svh] lg:min-h-0 lg:aspect-[1983/793] flex flex-col justify-end md:justify-center overflow-hidden">
+      <section className="relative w-full max-w-[1983px] mx-auto flex flex-col md:justify-center overflow-hidden">
         
-        {/* Full Background Image */}
-        <div className="absolute inset-0 z-0">
+        {/* Desktop Background Image (Absolute) */}
+        <div className="hidden md:block absolute inset-0 z-0">
            <img 
              src="/images/herobannerimage/hero banner 2 .png" 
-             alt="Fashion Model Background" 
-             className="w-full h-full object-cover object-[65%_top] md:object-top" 
+             alt="Fashion Model Background (Desktop)" 
+             className="w-full h-full object-cover object-[70%_center]" 
              onError={(e) => { 
                 e.target.onerror = null; 
                 e.target.style.display = 'none'; 
              }} 
            />
-           {/* Subtle overlay only on left for text readability - no whitewash */}
-           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#EDE6DC] md:from-[#EDE6DC]/60 via-[#EDE6DC]/60 md:via-transparent to-transparent"></div>
+           <div className="absolute inset-0 bg-gradient-to-r from-[#EDE6DC]/60 via-transparent to-transparent"></div>
+        </div>
+
+        {/* Mobile Background Image (Stacked naturally at the top) */}
+        <div className="w-full relative block md:hidden -mt-16"> {/* Pull up to sit under absolute transparent header */}
+           <img 
+             src="/images/herobannerimage/mobile hero banner .png" 
+             alt="Fashion Model Background (Mobile)" 
+             className="w-full h-auto aspect-[4/5.2] object-cover object-[50%_40%]" 
+             style={{ 
+                WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+                maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)' 
+             }}
+             onError={(e) => { 
+                e.target.onerror = null; 
+                e.target.style.display = 'none'; 
+             }} 
+           />
         </div>
 
         {/* Hero Content Container */}
-        <div className="relative z-10 w-full px-6 sm:px-8 md:px-12 lg:px-20 2xl:px-24 flex justify-between items-start h-full pt-16 md:pt-4 lg:pt-6 xl:pt-8 pb-16 md:pb-0">
-          
-          {/* Left Content */}
-          <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-auto md:mt-0">
+        <div className="relative z-10 w-full px-6 sm:px-8 md:px-12 lg:px-20 2xl:px-24 flex justify-between items-start -mt-16 md:mt-0 pt-0 md:pt-4 lg:pt-6 xl:pt-8 pb-16 md:pb-0 h-full md:min-h-[85svh] lg:min-h-0 lg:aspect-[1983/793]">
+           
+           {/* Left Content */}
+           <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-0 md:mt-auto relative z-20">
             <div className="flex items-center gap-3 mb-4">
                <div className="h-[1px] w-8 md:w-12 bg-[#A87B45]"></div>
                <span className="text-[#A87B45] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">Sartoria Di Lusso</span>
             </div>
             
-            <h1 className="mb-4 uppercase text-4xl md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.05, letterSpacing: '0.02em', color: '#1A0F0A' }}>
+            <h1 className="mb-4 uppercase text-[2.75rem] leading-none md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '0.02em', color: '#1A0F0A' }}>
               Italian<br/>
               <span 
-                className="inline-block mt-1"
+                className="inline-block mt-2"
                 style={{ 
                   fontFamily: "'Great Vibes', cursive", 
-                  fontWeight: 400,
-                  fontSize: '1.3em',
+                  fontWeight: 600,
+                  fontSize: '1.4em',
                   lineHeight: 0.85,
                   color: '#8B5A2B',
                   textTransform: 'none',
                   paddingRight: '0.2em',
-                  textShadow: '0 2px 10px rgba(139, 90, 43, 0.15)'
+                  textShadow: '0 2px 8px rgba(139, 90, 43, 0.2)'
                 }}>
                 Elegance
               </span>
@@ -86,7 +102,7 @@ export default function HomeScreen() {
               {/* Elegant soft glow behind text for legibility - hidden on mobile to avoid washing out the image */}
               <div className="hidden md:block absolute -inset-y-4 -inset-x-6 bg-[#F5F0E8]/60 blur-xl rounded-full z-0"></div>
               
-              <p className="relative z-10 text-[14px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, color: '#2A1810', lineHeight: 1.6, letterSpacing: '0.01em' }}>
+              <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: '#1A0F0A', lineHeight: 1.5, letterSpacing: '0.02em' }}>
                 Timeless style. Unmatched grace. Experience the pinnacle of trusted Italian craftsmanship, tailored flawlessly to elevate your legacy.
               </p>
             </div>
