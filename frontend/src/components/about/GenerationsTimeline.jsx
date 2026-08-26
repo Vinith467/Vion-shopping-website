@@ -4,79 +4,104 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function GenerationsTimeline() {
   const containerRef = useRef(null);
-  const textRef = useRef(null);
   const imageRef = useRef(null);
+  const cardRef = useRef(null);
+  const textElementsRef = useRef([]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      gsap.from(textRef.current.children, {
+      
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 70%",
-        },
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out"
+          start: "top top",
+          end: "+=100%", // Pin for 1 screen height
+          pin: true,
+          scrub: 1,
+        }
       });
 
-      gsap.from(imageRef.current, {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 70%",
-        },
-        x: -50,
-        opacity: 0,
-        duration: 1.2,
+      // Initial state
+      gsap.set(imageRef.current, { scale: 1.3, filter: "grayscale(100%) brightness(0.5)" });
+      gsap.set(cardRef.current, { x: "100%", opacity: 0 });
+
+      // Animation
+      tl.to(imageRef.current, {
+        scale: 1,
+        filter: "grayscale(0%) brightness(1)",
+        duration: 1,
         ease: "power2.out"
+      }, 0)
+      .to(cardRef.current, {
+        x: "0%",
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out"
+      }, 0.2);
+
+      // Stagger text elements inside the card
+      textElementsRef.current.forEach((el, i) => {
+        tl.fromTo(el, 
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          0.5 + (i * 0.1)
+        );
       });
+
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
+  const addToRefs = (el) => {
+    if (el && !textElementsRef.current.includes(el)) {
+      textElementsRef.current.push(el);
+    }
+  };
+
   return (
-    <section ref={containerRef} className="py-24 md:py-32 w-full bg-[#F5F0E8] text-[#151515]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-16">
-        
-        {/* Left side: Image */}
-        <div className="w-full md:w-1/2 relative">
-          <div ref={imageRef} className="aspect-[4/5] w-full overflow-hidden shadow-2xl">
-            <img 
-              src="/images/about/craft_03_artisans_1787726458130.jpg" 
-              alt="Three Generations of Craft" 
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-            />
-          </div>
-          {/* Decorative element */}
-          <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#151515] -z-10 hidden md:block"></div>
-        </div>
-
-        {/* Right side: Text */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center">
-          <div ref={textRef}>
-            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Three Generations of Craft.<br/>One Vision for the Future.
-            </h2>
-            
-            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed">
-              <p>
-                VION Corporate is built on three generations of experience in the clothing and tailoring business. For decades, our family has worked with fabrics, tailoring, fit and craftsmanship, developing an understanding of what makes clothing not only look exceptional, but feel exceptional.
-              </p>
-              <p className="font-medium text-[#151515]">
-                Today, the youngest generation is carrying that heritage forward.
-              </p>
-              <p>
-                We are combining the knowledge and craftsmanship passed down through generations with modern technology, contemporary design and a customer-first approach to create a completely different experience for professional attire and institutional clothing.
-              </p>
-              <p>
-                Our ambition is to take this experience across India and build VION into a trusted Pan-India partner for corporates, universities, colleges, institutes and organizations.
-              </p>
-            </div>
-          </div>
-        </div>
-
+    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden">
+      
+      {/* Background Image that reveals and colors up */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          ref={imageRef}
+          src="/images/about/vion_heritage_chalk.jpg" 
+          alt="Master Tailor Chalking Fabric" 
+          className="w-full h-full object-cover origin-center"
+        />
       </div>
+
+      {/* Glassmorphism Content Card sliding from right */}
+      <div className="absolute inset-y-0 right-0 w-full md:w-[55%] lg:w-[45%] z-10 flex items-center p-6 md:p-12">
+        <div 
+          ref={cardRef}
+          className="w-full h-[90%] md:h-auto max-h-[90vh] overflow-y-auto bg-[#151515]/80 backdrop-blur-xl border border-[#F5F0E8]/10 p-8 md:p-12 shadow-2xl custom-scrollbar"
+        >
+          <h2 
+            ref={addToRefs}
+            className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" 
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
+            Three Generations of Craft.<br/>One Vision for the Future.
+          </h2>
+          
+          <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/90 font-sans font-light leading-relaxed">
+            <p ref={addToRefs}>
+              VION Corporate is built on three generations of experience in the clothing and tailoring business. For decades, our family has worked with fabrics, tailoring, fit and craftsmanship, developing an understanding of what makes clothing not only look exceptional, but feel exceptional.
+            </p>
+            <p ref={addToRefs} className="font-medium text-[#F5F0E8]">
+              Today, the youngest generation is carrying that heritage forward.
+            </p>
+            <p ref={addToRefs}>
+              We are combining the knowledge and craftsmanship passed down through generations with modern technology, contemporary design and a customer-first approach to create a completely different experience for professional attire and institutional clothing.
+            </p>
+            <p ref={addToRefs}>
+              Our ambition is to take this experience across India and build VION into a trusted Pan-India partner for corporates, universities, colleges, institutes and organizations.
+            </p>
+          </div>
+        </div>
+      </div>
+
     </section>
   );
 }
