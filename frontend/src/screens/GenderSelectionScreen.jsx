@@ -41,12 +41,8 @@ export default function GenderSelectionScreen() {
         sessionStorage.setItem('temp_gender', gender);
       }
       
-      // Navigate to the next step
-      if (hasSize) {
-        navigate(redirectTo);
-      } else {
-        navigate(`/select-size?redirect=${encodeURIComponent(redirectTo)}`);
-      }
+      // Always navigate to the size selection step when gender is chosen
+      navigate(`/select-size?redirect=${encodeURIComponent(redirectTo)}`);
     } catch (error) {
       console.error("Error saving gender:", error);
       toast.error("Something went wrong. Please try again.");
