@@ -1,353 +1,216 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../services/supabaseClient';
-import { uploadImage } from '../../services/storageService';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, Edit2, X, Check } from 'lucide-react';
+import { Save, Image as ImageIcon } from 'lucide-react';
 
-const defaultTagTypes = [
-  { id: 'style', label: 'Style Preference' },
-  { id: 'color', label: 'Color' },
-  { id: 'fit', label: 'Fit/Silhouette' },
-  { id: 'fabric', label: 'Fabric/Material' },
-  { id: 'occasion', label: 'Occasion' },
-  { id: 'content', label: 'Content Preference' }
+// Default data representing the initial state
+const DEFAULT_DATA = [
+  {
+    id: "premium-materials",
+    number: "01.",
+    title: "PREMIUM MATERIALS",
+    subtitle: "Sourced from the world's finest mills.",
+    description: "Our fabrics are the foundation of our legacy. We travel the globe to source the rarest, most exquisite wools, silks, and cashmeres. Each thread is chosen for its unparalleled softness, durability, and drape, ensuring that every VION garment feels as exceptional as it looks. This meticulous selection process is the first step in our commitment to uncompromising quality.",
+    images: [
+      { src: "/images/craftsmanship/craft_01_hero.jpg", alt: "Premium suiting fabrics on a tailoring table", type: "hero" },
+      { src: "/images/craftsmanship/craft_01_macro.jpg", alt: "Macro detail of fabric texture", type: "macro" },
+      { src: "/images/craftsmanship/craft_01_selection.jpg", alt: "Clients selecting fabrics with a master tailor", type: "editorial" },
+    ]
+  },
+  {
+    id: "timeless-elegance",
+    number: "02.",
+    title: "TIMELESS ELEGANCE",
+    subtitle: "Designed to be worn. Loved for a lifetime.",
+    description: "VION designs transcend fleeting trends. We focus on clean lines, perfect proportions, and a silhouette that flatters the individual. Our aesthetic is one of sophisticated understatement, where true luxury is found in the subtle details and the confidence it instills in the wearer. A VION piece is not just for a season; it is an investment in enduring style.",
+    images: [
+      { src: "/images/craftsmanship/craft_02_hero.jpg", alt: "Elegant couple in bespoke formalwear", type: "hero" },
+      { src: "/images/craftsmanship/craft_02_woman.jpg", alt: "Sophisticated woman in a tailored blazer", type: "portrait" },
+      { src: "/images/craftsmanship/craft_02_man.jpg", alt: "Sophisticated man in a deep navy bespoke suit", type: "portrait" },
+    ]
+  },
+  {
+    id: "finest-craftsmanship",
+    number: "03.",
+    title: "FINEST CRAFTSMANSHIP",
+    subtitle: "Handmade by master artisans, always.",
+    description: "Every VION garment is a testament to the art of tailoring. Our master artisans employ time-honored techniques, dedicating countless hours to hand-stitching, pressing, and finishing each piece. From the precise cut of the lapel to the perfect roll of the shoulder, this dedication to handcraftsmanship ensures a fit and feel that machines simply cannot replicate.",
+    images: [
+      { src: "/images/craftsmanship/craft_03_hero.jpg", alt: "Tailor hand-stitching a lapel", type: "hero" },
+      { src: "/images/craftsmanship/craft_03_cutting.jpg", alt: "Tailor cutting fabric", type: "editorial" },
+      { src: "/images/craftsmanship/craft_03_details.jpg", alt: "Macro detail of hand-finished buttonhole", type: "macro" },
+      { src: "/images/craftsmanship/craft_03_artisans.jpg", alt: "Artisans working in the atelier", type: "editorial" },
+    ]
+  },
+  {
+    id: "personalised-experience",
+    number: "04.",
+    title: "PERSONALISED EXPERIENCE",
+    subtitle: "Crafted around you, in every detail.",
+    description: "The VION bespoke experience is an intimate collaboration. We begin by understanding your lifestyle, preferences, and unique physique. Through a series of personalized fittings, we sculpt the garment to your exact measurements, making adjustments until it becomes a second skin. It is a journey of co-creation, resulting in a piece that is unmistakably yours.",
+    images: [
+      { src: "/images/craftsmanship/craft_04_hero.jpg", alt: "Stylist conducting a private consultation", type: "hero" },
+      { src: "/images/craftsmanship/craft_04_measuring.jpg", alt: "Stylist measuring a client", type: "editorial" },
+      { src: "/images/craftsmanship/craft_04_male_fitting.jpg", alt: "Male fitting session", type: "editorial" },
+      { src: "/images/craftsmanship/craft_04_measuring.jpg", alt: "Female fitting session", type: "editorial" },
+    ]
+  }
 ];
 
 export default function AdminPreferences() {
-  const [tags, setTags] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  const [dynamicTagTypes, setDynamicTagTypes] = useState(defaultTagTypes);
-  const [showModal, setShowModal] = useState(false);
-  const [editingTag, setEditingTag] = useState(null);
-  
-  // Form State
-  const [name, setName] = useState('');
-  const [type, setType] = useState('style');
-  const [customTypeLabel, setCustomTypeLabel] = useState('');
-  const [hexColor, setHexColor] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sections, setSections] = useState(DEFAULT_DATA);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetchTags();
+    // Load data from local storage if it exists
+    const savedData = localStorage.getItem('vion_craftsmanship_content');
+    if (savedData) {
+      try {
+        setSections(JSON.parse(savedData));
+      } catch (e) {
+        console.error("Failed to parse saved data");
+      }
+    }
   }, []);
 
-  const fetchTags = async () => {
-    setIsLoading(true);
-    const { data, error } = await supabase
-      .from('preference_tags')
-      .select('*')
-      .order('type', { ascending: true })
-      .order('created_at', { ascending: false });
-      
-    if (error) {
-      toast.error('Failed to load tags');
-      console.error(error);
-    } else {
-      const fetchedTags = data || [];
-      setTags(fetchedTags);
-      
-      // Extract unique custom types that are not in defaultTagTypes
-      const uniqueTypes = [...new Set(fetchedTags.map(t => t.type))];
-      const customTypes = uniqueTypes
-        .filter(t => !defaultTagTypes.find(dt => dt.id === t))
-        .map(t => ({ id: t, label: t.charAt(0).toUpperCase() + t.slice(1).replace(/-/g, ' ') }));
-        
-      setDynamicTagTypes([...defaultTagTypes, ...customTypes]);
-    }
-    setIsLoading(false);
+  const handleSectionChange = (index, field, value) => {
+    const newSections = [...sections];
+    newSections[index][field] = value;
+    setSections(newSections);
   };
 
-  const openCreateModal = () => {
-    setEditingTag(null);
-    setName('');
-    setType('style');
-    setCustomTypeLabel('');
-    setHexColor('');
-    setImageUrl('');
-    setImageFile(null);
-    setImagePreview(null);
-    setShowModal(true);
+  const handleImageChange = (sectionIndex, imageIndex, field, value) => {
+    const newSections = [...sections];
+    newSections[sectionIndex].images[imageIndex][field] = value;
+    setSections(newSections);
   };
 
-  const openEditModal = (tag) => {
-    setEditingTag(tag);
-    setName(tag.name);
-    setType(tag.type);
-    setHexColor(tag.hex_color || '');
-    setImageUrl(tag.image_url || '');
-    setImageFile(null);
-    setImagePreview(null);
-    setShowModal(true);
+  const saveContent = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      localStorage.setItem('vion_craftsmanship_content', JSON.stringify(sections));
+      setIsSaving(false);
+      toast.success("Page content updated successfully!");
+    }, 600);
   };
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    if (!name.trim()) return toast.error("Name is required");
-    if (type === 'custom' && !customTypeLabel.trim()) return toast.error("Custom tag type name is required");
-
-    setIsSubmitting(true);
-    
-    // Determine the actual type ID to use
-    let finalType = type;
-    if (type === 'custom') {
-      finalType = customTypeLabel.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const resetToDefault = () => {
+    if (window.confirm("Are you sure you want to reset to default content? All unsaved changes will be lost.")) {
+      setSections(DEFAULT_DATA);
+      localStorage.setItem('vion_craftsmanship_content', JSON.stringify(DEFAULT_DATA));
+      toast.success("Reset to default content.");
     }
-
-    let finalImageUrl = imageUrl;
-    if (imageFile) {
-      try {
-        finalImageUrl = await uploadImage(imageFile, 'preferences', 'public-images');
-      } catch (err) {
-        toast.error('Failed to upload image: ' + err.message);
-        setIsSubmitting(false);
-        return;
-      }
-    }
-
-    const payload = {
-      name,
-      type: finalType,
-      hex_color: hexColor || null,
-      image_url: finalImageUrl || null
-    };
-
-    if (editingTag) {
-      const { error } = await supabase
-        .from('preference_tags')
-        .update(payload)
-        .eq('id', editingTag.id);
-        
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Tag updated!");
-        setShowModal(false);
-        fetchTags();
-      }
-    } else {
-      const { error } = await supabase
-        .from('preference_tags')
-        .insert([payload]);
-        
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Tag created!");
-        setShowModal(false);
-        fetchTags();
-      }
-    }
-    setIsSubmitting(false);
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this tag? It may break products linked to it.")) return;
-    
-    const { error } = await supabase
-      .from('preference_tags')
-      .delete()
-      .eq('id', id);
-      
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Tag deleted");
-      fetchTags();
-    }
-  };
-
-  const groupedTags = tags.reduce((acc, tag) => {
-    if (!acc[tag.type]) acc[tag.type] = [];
-    acc[tag.type].push(tag);
-    return acc;
-  }, {});
+  }
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto animate-fade-in">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto animate-fade-in font-sans pb-32">
+      <div className="flex justify-between items-center mb-8 bg-white/60 backdrop-blur p-6 rounded-2xl border border-white/50 shadow-sm sticky top-20 z-10">
         <div>
-          <h1 className="text-3xl font-bold font-serif text-gray-900">Preference Tags</h1>
-          <p className="text-gray-600 mt-1">Manage dynamic preferences (styles, colors, etc.) for users and products.</p>
+          <h1 className="text-3xl font-bold font-serif text-gray-900">Page Content</h1>
+          <p className="text-gray-600 mt-1">Manage the content and images for the Craftsmanship page.</p>
         </div>
-        <button 
-          onClick={openCreateModal}
-          className="glass-button px-4 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm"
-        >
-          <Plus size={16} /> Create Tag
-        </button>
+        <div className="flex gap-3">
+            <button 
+            onClick={resetToDefault}
+            className="px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-white transition-all font-bold text-sm"
+            >
+            Reset Defaults
+            </button>
+            <button 
+            onClick={saveContent}
+            disabled={isSaving}
+            className="bg-[#6344D4] hover:bg-[#5036aa] text-white px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm shadow-md transition-all"
+            >
+            <Save size={16} /> {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+        </div>
       </div>
 
-      {isLoading ? (
-        <div className="animate-pulse space-y-4">
-          <div className="h-20 bg-gray-100 rounded-xl"></div>
-          <div className="h-20 bg-gray-100 rounded-xl"></div>
-        </div>
-      ) : (
-        <div className="space-y-8">
-          {dynamicTagTypes.map((typeGroup) => {
-            const typeTags = groupedTags[typeGroup.id] || [];
-            if (typeTags.length === 0) return null;
+      <div className="space-y-12">
+        {sections.map((section, idx) => (
+          <div key={section.id} className="glass-panel p-0 overflow-hidden shadow-sm border border-white/60 bg-white/20">
+            <div className="bg-white/40 backdrop-blur px-6 py-4 border-b border-white/40 flex justify-between items-center">
+              <h2 className="font-bold text-xl text-gray-900 font-serif flex items-center gap-3">
+                <span className="text-[#6344D4] bg-white px-3 py-1 rounded-lg text-sm shadow-sm">{section.number}</span>
+                {section.title || `Section ${idx + 1}`}
+              </h2>
+            </div>
             
-            return (
-              <div key={typeGroup.id} className="glass-panel p-0 overflow-hidden mb-6">
-                <div className="bg-white/20 backdrop-blur px-6 py-4 border-b border-white/30">
-                  <h2 className="font-bold text-gray-900">{typeGroup.label} <span className="text-gray-600 font-normal ml-2">({typeTags.length})</span></h2>
-                </div>
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {typeTags.map(tag => (
-                    <div key={tag.id} className="flex items-center justify-between border border-white/30 bg-white/20 backdrop-blur-md p-4 rounded-xl hover:bg-white/30 transition-colors">
-                      <div className="flex items-center gap-3">
-                        {tag.type === 'color' && tag.hex_color && (
-                          <div className="w-8 h-8 rounded-full border border-gray-200 shadow-sm shrink-0" style={{ background: tag.hex_color }}></div>
-                        )}
-                        {tag.image_url && tag.type !== 'color' && (
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0">
-                            <img src={tag.image_url} alt={tag.name} className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                        <div>
-                          <p className="font-bold text-gray-900">{tag.name}</p>
-                          {tag.hex_color && <p className="text-xs text-gray-600 font-mono">{tag.hex_color}</p>}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button onClick={() => openEditModal(tag)} className="p-2 text-gray-600 hover:text-black hover:bg-white/50 rounded-lg transition-colors">
-                          <Edit2 size={16} />
-                        </button>
-                        <button onClick={() => handleDelete(tag.id)} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
+            <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                {/* Text Content */}
+                <div className="space-y-5">
+                    <h3 className="font-bold text-gray-800 uppercase tracking-wide text-xs mb-4 border-b border-gray-200 pb-2">Text Content</h3>
+                    
+                    <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Title</label>
+                        <input 
+                            type="text" 
+                            value={section.title} 
+                            onChange={(e) => handleSectionChange(idx, 'title', e.target.value)}
+                            className="w-full p-3 rounded-xl border border-gray-200 bg-white/50 text-gray-900 font-medium focus:ring-2 focus:ring-[#6344D4]/30 outline-none transition-all"
+                        />
                     </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-          
-          {Object.keys(groupedTags).length === 0 && (
-            <div className="text-center py-20 glass-panel border-dashed">
-              <p className="text-gray-600 mb-4">No preference tags created yet.</p>
-              <button onClick={openCreateModal} className="text-[#3A10E5] font-bold hover:underline">Create your first tag</button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
-          <div className="glass-panel-darker rounded-3xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200 p-0 border border-white/60">
-            <div className="px-6 py-4 border-b border-white/30 bg-white/20 flex justify-between items-center backdrop-blur-md">
-              <h3 className="font-bold text-lg text-gray-900">{editingTag ? 'Edit Tag' : 'Create Tag'}</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-700 hover:text-black p-1 hover:bg-white/50 rounded-full transition-colors">
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={handleSave} className="p-6 space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Tag Type</label>
-                <select 
-                  value={type} 
-                  onChange={(e) => setType(e.target.value)}
-                  className="w-full p-2.5 rounded-xl glass-input mb-3 text-gray-900 font-medium"
-                  disabled={!!editingTag}
-                >
-                  {dynamicTagTypes.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
-                  {!editingTag && <option value="custom">+ Add Custom Type...</option>}
-                </select>
-
-                {type === 'custom' && (
-                  <div>
-                    <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">New Tag Type Name</label>
-                    <input 
-                      type="text" 
-                      value={customTypeLabel} 
-                      onChange={(e) => setCustomTypeLabel(e.target.value)}
-                      placeholder="e.g. Pattern, Season..."
-                      className="w-full p-2.5 rounded-xl glass-input text-gray-900 font-medium"
-                      required
-                    />
-                  </div>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Name</label>
-                <input 
-                  type="text" 
-                  value={name} 
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Minimal, Black, Cotton..."
-                  className="w-full p-2.5 rounded-xl glass-input text-gray-900 font-medium"
-                  required
-                />
-              </div>
-
-              {type === 'color' && (
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Hex Color Code</label>
-                  <div className="flex gap-3">
-                    <input 
-                      type="text" 
-                      value={hexColor} 
-                      onChange={(e) => setHexColor(e.target.value)}
-                      placeholder="#000000"
-                      className="flex-1 p-2.5 rounded-xl glass-input font-mono text-sm text-gray-900"
-                    />
-                    <div className="w-11 h-11 rounded-xl border border-white/40 shrink-0 shadow-sm" style={{ background: hexColor || '#fff' }}></div>
-                  </div>
-                </div>
-              )}
-
-              {type !== 'color' && (
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Image URL (Optional)</label>
-                  <input 
-                    type="file" 
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files[0]) {
-                        setImageFile(e.target.files[0]);
-                        setImagePreview(URL.createObjectURL(e.target.files[0]));
-                      }
-                    }}
-                    className="w-full px-4 py-2.5 rounded-xl glass-input font-medium text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-black file:text-white hover:file:bg-gray-800 transition-all cursor-pointer"
-                  />
-                  <p className="text-xs text-gray-600 mt-1">Provide an image to represent this style/fabric.</p>
-                  
-                  {(imagePreview || imageUrl) && (
-                    <div className="mt-3 aspect-video w-full rounded-xl overflow-hidden border border-white/40 shadow-sm bg-white/20">
-                      <img src={imagePreview || imageUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                    
+                    <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Subtitle</label>
+                        <input 
+                            type="text" 
+                            value={section.subtitle} 
+                            onChange={(e) => handleSectionChange(idx, 'subtitle', e.target.value)}
+                            className="w-full p-3 rounded-xl border border-gray-200 bg-white/50 text-gray-900 font-medium focus:ring-2 focus:ring-[#6344D4]/30 outline-none transition-all"
+                        />
                     </div>
-                  )}
+                    
+                    <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Description</label>
+                        <textarea 
+                            value={section.description} 
+                            onChange={(e) => handleSectionChange(idx, 'description', e.target.value)}
+                            rows={6}
+                            className="w-full p-3 rounded-xl border border-gray-200 bg-white/50 text-gray-900 font-medium focus:ring-2 focus:ring-[#6344D4]/30 outline-none transition-all resize-none leading-relaxed"
+                        />
+                    </div>
                 </div>
-              )}
 
-              <div className="pt-6 flex gap-3 -mx-6 -mb-6 bg-white/10 p-6 border-t border-white/30">
-                <button 
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 px-5 py-3 rounded-xl text-sm font-bold text-gray-700 hover:bg-white/50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 glass-button px-5 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Saving...' : <><Check size={18} /> Save</>}
-                </button>
-              </div>
-            </form>
+                {/* Images */}
+                <div className="space-y-5">
+                    <h3 className="font-bold text-gray-800 uppercase tracking-wide text-xs mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                        <ImageIcon size={14} /> Images ({section.images.length})
+                    </h3>
+                    
+                    <div className="space-y-4">
+                        {section.images.map((img, imgIdx) => (
+                            <div key={imgIdx} className="flex gap-4 items-start p-4 bg-white/40 rounded-xl border border-white/60">
+                                <div className="w-24 h-24 rounded-lg bg-gray-200 shrink-0 overflow-hidden shadow-sm">
+                                    <img src={img.src} alt="Preview" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/150' }} />
+                                </div>
+                                <div className="flex-1 space-y-3">
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Image URL ({img.type})</label>
+                                        <input 
+                                            type="text" 
+                                            value={img.src} 
+                                            onChange={(e) => handleImageChange(idx, imgIdx, 'src', e.target.value)}
+                                            className="w-full p-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 focus:ring-2 focus:ring-[#6344D4]/30 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Alt Text</label>
+                                        <input 
+                                            type="text" 
+                                            value={img.alt} 
+                                            onChange={(e) => handleImageChange(idx, imgIdx, 'alt', e.target.value)}
+                                            className="w-full p-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 focus:ring-2 focus:ring-[#6344D4]/30 outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }

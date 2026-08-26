@@ -80,7 +80,7 @@ export default function AdminLayout() {
           </NavLink>
           <NavLink onClick={closeMenu} to="/admin/preferences" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
             <Tags size={20} />
-            Preference Tags
+            Page Content
           </NavLink>
 
           <NavLink onClick={closeMenu} to="/admin/users" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>

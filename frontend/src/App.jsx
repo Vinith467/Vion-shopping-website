@@ -9,6 +9,7 @@ import LoginScreen from './screens/LoginScreen';
 import AccountScreen from './screens/AccountScreen';
 import ExploreScreen from './screens/ExploreScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
+import CraftsmanshipScreen from './screens/CraftsmanshipScreen';
 import AdminLayout from './screens/admin/AdminLayout';
 import AdminDashboard from './screens/admin/AdminDashboard';
 import AdminUsers from './screens/admin/AdminUsers';
@@ -339,6 +340,7 @@ function App() {
           <Route path="/order-success" element={<ProtectedRoute><OrderSuccessScreen /></ProtectedRoute>} />
           <Route path="/order/:id" element={<ProtectedRoute><OrderDetailsScreen /></ProtectedRoute>} />
           <Route path="/explore" element={<ExploreScreen />} />
+          <Route path="/craftsmanship" element={<CraftsmanshipScreen />} />
           <Route path="/wardrobe" element={<ProtectedRoute><PlaceholderScreen title="Wardrobe" /></ProtectedRoute>} />
           
           {/* Admin Routes */}

@@ -121,16 +121,14 @@ export default function HomeScreen() {
               </button>
               
               <button 
-                className="group cursor-pointer px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:scale-[1.02] hover:bg-[#2A0C0A]/60 active:scale-[0.98]"
+                className="group cursor-pointer px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:scale-[1.02] hover:opacity-95 active:scale-[0.98]"
                 style={{
-                  background: 'rgba(42, 12, 10, 0.3)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(191, 166, 121, 0.7)',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                  background: 'linear-gradient(135deg, #C49A5C 0%, #A87B45 50%, #8B5A2B 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 4px 15px rgba(139, 90, 43, 0.35)'
                 }}
               >
-                <span className="text-[#E5CDA7] group-hover:text-white transition-colors duration-300 text-[9px] 2xl:text-[10px] font-bold tracking-[0.16em]" style={{ fontFamily: "'Inter', sans-serif" }}>BOOK A CONSULTATION</span>
+                <span className="text-white text-[9px] 2xl:text-[10px] font-bold tracking-[0.16em] drop-shadow-sm" style={{ fontFamily: "'Inter', sans-serif" }}>BOOK A CONSULTATION</span>
               </button>
             </div>
 
@@ -142,8 +140,8 @@ export default function HomeScreen() {
                   <img src="https://i.pravatar.cc/100?img=12" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 object-cover grayscale" alt="User" />
                </div>
                <div>
-                  <h4 className="text-base 2xl:text-lg leading-none mb-0.5 text-[#F5F0E8] drop-shadow-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>10,000+</h4>
-                  <p className="text-[10px] 2xl:text-[11px] font-medium tracking-wide text-[#F5F0E8]/90 drop-shadow-md">Clients trust VION</p>
+                  <h4 className="text-base 2xl:text-lg leading-none mb-0.5 text-[#1A0F0A] md:text-[#F5F0E8] md:drop-shadow-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>10,000+</h4>
+                  <p className="text-[10px] 2xl:text-[11px] font-medium tracking-wide text-[#555] md:text-[#F5F0E8]/90 md:drop-shadow-md">Clients trust VION</p>
                </div>
             </div>
           </div>
@@ -180,7 +178,14 @@ export default function HomeScreen() {
                 { img: "/card image/3.png", num: "03.", title: "FINEST CRAFTSMANSHIP", desc: "Handmade by master artisans, always." },
                 { img: "/card image/4.png", num: "04.", title: "PERSONALISED EXPERIENCE", desc: "Crafted around you, in every detail." }
               ].map((step, idx) => (
-                <div key={idx} className="flex flex-col group cursor-pointer">
+                <div 
+                  key={idx} 
+                  className="flex flex-col group cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate('/craftsmanship', { state: { activeSection: idx } });
+                  }}
+                >
                   <div className="w-full aspect-square mb-4 overflow-hidden rounded-lg shadow-sm border border-white/40 group-hover:shadow-md group-hover:border-[#C49A5C]/60 transition-all duration-300">
                     <img src={step.img} alt={step.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                          onError={(e) => { e.target.src = `https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=400&h=300`; }} />

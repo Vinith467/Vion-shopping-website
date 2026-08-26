@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-dom';
-import { User, Users, Gift, Check, ChevronRight, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
+import { User, Users, Gift, Check, ChevronRight, ChevronLeft, ChevronDown, Edit2, ShieldCheck, Heart, Award, ArrowRight, ArrowLeft, RotateCcw, Search, ShoppingBag, Sparkles, Diamond, Truck, Headphones, Camera, Plus, Ruler, Palette, Scissors, UserPlus, Shirt, X, Trash2, Info, Box, RefreshCw, Calendar, Clock, MapPin } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../services/supabaseClient';
 import { findBestMatchingVariation } from '../utils/sizeGroups';
@@ -313,8 +313,8 @@ export default function OnboardingScreen() {
       {/* Background Image & Gradient - Hide on Step 4 for clean layout */}
       <div className={`absolute inset-0 z-0 transition-opacity duration-500 ${step === 4 ? 'opacity-0' : 'opacity-100'}`}>
         <div className="absolute top-0 right-0 w-full lg:w-2/3 h-full">
-          <img src="/images/onboarding_bg.jpg" alt="Background" className="w-full h-full object-cover object-center opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#e8d5c4]/50 to-[#e8d5c4] lg:via-[#e8d5c4]/80 lg:to-[#e8d5c4]"></div>
+          <img src="/images/herobannerimage/hero banner 2 .png" alt="Background" className="w-full h-full object-cover object-[center_30%] opacity-40 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#e8d5c4]/60 to-[#e8d5c4] lg:via-[#e8d5c4]/80 lg:to-[#e8d5c4]"></div>
         </div>
         <div className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-[#e8d5c4]"></div>
       </div>
@@ -323,30 +323,60 @@ export default function OnboardingScreen() {
 
 
         {/* Progress Bar Header */}
-        <div className="px-0 md:px-6 lg:px-12 pt-5 pb-3 w-full max-w-7xl mx-auto relative overflow-hidden">
-          <div className="flex items-center justify-start md:justify-between gap-8 md:gap-0 relative overflow-x-auto hide-scrollbar px-6 md:px-0 snap-x">
-            <div className="absolute top-1/2 left-[5%] w-[90%] h-[1px] bg-black/10 -z-10 -translate-y-1/2 hidden md:block"></div>
-            
-            <div className={`items-center gap-2.5 pr-6 md:pr-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 1 || (step === 2 && false) || (step === 4 && false) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(1)}>
-              <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 1 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>1</div>
-              <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 1 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Who are you<br/>shopping for?</span>
-            </div>
+        <div className="px-2 md:px-6 lg:px-12 pt-5 pb-3 w-full max-w-[90rem] mx-auto relative overflow-hidden flex items-center justify-between">
+           {/* Back Button */}
+           <button 
+             onClick={prevStep} 
+             disabled={step === 1}
+             className={`w-10 h-10 rounded-full border flex items-center justify-center shadow-sm transition-all z-20 shrink-0 mx-2 md:mx-0 ${step === 1 ? 'border-black/10 text-black/20 cursor-not-allowed bg-transparent' : 'bg-white/60 backdrop-blur-md border-[#986427]/30 text-[#3E2312] hover:bg-white hover:border-[#986427] hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:-translate-x-0.5'}`}
+             aria-label="Previous Step"
+           >
+             <ChevronLeft size={20} strokeWidth={2} />
+           </button>
+          
+          <div className="flex-1 overflow-x-auto hide-scrollbar px-2 md:px-6">
+            <div className="flex items-center justify-center md:justify-between gap-8 md:gap-0 relative min-w-max mx-auto px-4 md:px-0">
+              <div className="absolute top-1/2 left-[5%] w-[90%] h-[1px] bg-black/10 -z-10 -translate-y-1/2 hidden md:block"></div>
+              
+              <div className={`items-center gap-2.5 pr-6 md:pr-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 1 || (step === 2 && false) || (step === 4 && false) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(1)}>
+                <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 1 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>1</div>
+                <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 1 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Who are you<br/>shopping for?</span>
+              </div>
 
-            <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 2 || step === 1 ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(2)}>
-              <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 2 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>2</div>
-              <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 2 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Tell us about them<br/><span className={`text-[12px] md:text-[13px] ${step >= 2 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Profile Details)</span></span>
-            </div>
+              <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 2 || step === 1 ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(2)}>
+                <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 2 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>2</div>
+                <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 2 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Tell us about them<br/><span className={`text-[12px] md:text-[13px] ${step >= 2 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Profile Details)</span></span>
+              </div>
 
-            <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 3 || step === 2 || (step === 4) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(3)}>
-              <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 3 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>3</div>
-              <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 3 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your VION Collection<br/><span className={`text-[12px] md:text-[13px] ${step >= 3 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Recommended for them)</span></span>
-            </div>
+              <div className={`items-center gap-2.5 px-6 md:px-4 shrink-0 z-10 snap-start cursor-pointer hover:opacity-80 transition-opacity ${step === 3 || step === 2 || (step === 4) ? 'flex' : 'hidden md:flex'}`} onClick={() => setStep(3)}>
+                <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 3 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>3</div>
+                <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 3 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your VION Collection<br/><span className={`text-[12px] md:text-[13px] ${step >= 3 ? 'font-[600]' : 'font-[600] text-[#1A0A08]/60'}`}>(Recommended for them)</span></span>
+              </div>
 
-            <div className={`items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start ${selectedCategoryForStep4 ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'} ${step === 4 || step === 3 ? 'flex' : 'hidden md:flex'}`} onClick={() => selectedCategoryForStep4 && setStep(4)}>
-              <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 4 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>4</div>
-              <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 4 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Shop with<br/>Confidence</span>
+              <div className={`items-center gap-2.5 pl-6 md:pl-4 shrink-0 z-10 snap-start ${selectedCategoryForStep4 ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'} ${step === 4 || step === 3 ? 'flex' : 'hidden md:flex'}`} onClick={() => selectedCategoryForStep4 && setStep(4)}>
+                <div className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-base shadow-md transition-colors ${step >= 4 ? 'bg-[#986427] text-white shadow-[0_4px_12px_rgba(152,100,39,0.3)]' : 'bg-[#EAE1D7] text-[#5A4232] border border-[#E5D5C5] shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]'}`}>4</div>
+                <span className={`text-[14px] md:text-[15px] font-[700] leading-tight ${step >= 4 ? 'text-[#3E2312]' : 'text-[#1A0A08]/80'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>Shop with<br/>Confidence</span>
+              </div>
             </div>
           </div>
+          
+           {/* Forward Button */}
+           <button 
+             onClick={() => {
+               if (step === 1 && profile) nextStep();
+               else if (step === 2) nextStep();
+               else if (step === 3 && selectedCategoryForStep4) nextStep();
+             }}
+             disabled={
+               (step === 1 && !profile) || 
+               (step === 3 && !selectedCategoryForStep4) || 
+               step === 4
+             }
+             className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-all z-20 shrink-0 mx-2 md:mx-0 ${((step === 1 && !profile) || (step === 3 && !selectedCategoryForStep4) || step === 4) ? 'bg-[#986427]/40 text-white/70 cursor-not-allowed' : 'bg-[#986427] text-white hover:bg-[#82531d] hover:shadow-[0_4px_15px_rgba(152,100,39,0.3)] hover:translate-x-0.5'}`}
+             aria-label="Next Step"
+           >
+             <ChevronRight size={20} strokeWidth={2} />
+           </button>
         </div>
 
       <div className="px-6 lg:px-12 max-w-7xl mx-auto flex-1 w-full pb-8">
@@ -360,164 +390,112 @@ export default function OnboardingScreen() {
                 
                 {savedProfiles.length > 0 && !isAddingNew ? (
                   <div className="space-y-8">
-                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-2">
-                       <div>
-                          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A0A08] mb-4 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
-                            Who are you <br className="hidden sm:block"/>
-                            <span className="italic text-[#986427] pr-1.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>shopping for?</span>
-                          </h1>
-                          <p className="text-[#3E2312]/90 text-[15px] md:text-[16px] lg:text-[18px] max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.6 }}>Select a profile to get personalised outfit recommendations.</p>
-                       </div>
-                    </div>
+                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-2">
+                        <div>
+                           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A0A08] mb-4 leading-tight flex flex-wrap gap-x-3 items-center" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+                             <span>Who are you</span>
+                             <span className="italic text-[#986427] pr-1.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>shopping for?</span>
+                           </h1>
+                           <p className="text-[#3E2312]/90 text-[15px] md:text-[16px] lg:text-[18px] max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.6 }}>Select a profile to get personalised outfit recommendations.</p>
+                        </div>
+                     </div>
                     
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-serif text-[#1A0A08] text-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Your Profiles</h3>
-                        
-                        {/* Mobile Add New Button */}
-                        <button 
-                          onClick={() => setIsAddingNew(true)} 
-                          className="md:hidden flex items-center gap-1.5 px-4 py-1.5 bg-white/40 border border-white/60 rounded-full text-sm font-bold text-[#3E2312] shadow-sm hover:bg-white/60 transition-colors"
-                        >
-                          <Plus size={16} /> Add New
-                        </button>
+                        <h3 className="font-serif text-[#1A0A08] text-2xl lg:pl-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Your Profiles</h3>
                       </div>
                       
-                      {/* Mobile View: Grid of small squares */}
-                      <div className="grid grid-cols-2 gap-4 md:hidden mb-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch w-full mb-6">
+                        {/* Add Someone New Card */}
+                        <div onClick={() => setIsAddingNew(true)} className="group/add relative cursor-pointer rounded-2xl overflow-hidden flex flex-col justify-center text-center transition-all duration-500 min-h-[320px] bg-white/5 backdrop-blur-sm border-[1.5px] border-dashed border-[#986427]/40 hover:bg-white/10 hover:border-[#986427] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] hover:-translate-y-1">
+                          <div className="relative z-10 p-6 flex flex-col items-center justify-center h-full w-full">
+                            <div className="w-16 h-16 rounded-full bg-[#986427]/10 border border-[#986427]/30 flex items-center justify-center text-[#986427] group-hover/add:bg-[#986427] group-hover/add:text-white transition-all duration-500 shadow-sm mb-4">
+                              <Plus size={28} strokeWidth={2} />
+                            </div>
+                            <span className="font-bold text-[#1A0A08] text-[20px] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Add Someone<br/>New</span>
+                          </div>
+                        </div>
+
                         {savedProfiles.map(p => {
                           const isMe = p.isPrimary;
                           return (
-                            <div 
-                              key={p.id} 
-                              onClick={() => handleProfileSelect(p)} 
-                              className={`relative cursor-pointer rounded-2xl p-4 flex flex-col items-center justify-center aspect-[4/3] transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-sm ${profile?.id === p.id ? 'border-[#986427]/60 bg-white/20' : 'border-white/45 hover:bg-white/20'}`}
-                            >
-                              {isMe && <div className="absolute top-2 right-2 bg-[#986427] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">ME</div>}
+                            <div key={p.id} onClick={() => handleProfileSelect(p)} className={`group/card relative cursor-pointer rounded-2xl overflow-hidden flex flex-col justify-end transition-all duration-500 min-h-[320px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.2)] ${profile?.id === p.id ? 'ring-2 ring-[#986427] ring-offset-2 ring-offset-[#e8d5c4] -translate-y-1' : 'hover:-translate-y-1'}`}>
+                              
+                              {/* Background Image */}
+                              {p.avatarUrl ? (
+                                <img src={p.avatarUrl} alt={p.name} className="absolute inset-0 w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700" />
+                              ) : (
+                                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#8B6544] to-[#3E2312] group-hover/card:scale-105 transition-transform duration-700 flex items-center justify-center">
+                                  <User size={80} className="text-white/10" />
+                                </div>
+                              )}
+                              <div className={`absolute inset-0 transition-opacity duration-500 ${profile?.id === p.id ? 'bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-90' : 'bg-gradient-to-t from-white/95 via-white/80 to-white/40 opacity-95 group-hover/card:opacity-85'}`}></div>
+                              
+                              {/* Top Actions */}
+                              {profile?.id === p.id ? (
+                                <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1.5 shadow-sm z-20"><Check size={16} strokeWidth={3} /></div>
+                              ) : (
+                                <div className="absolute top-4 right-4 w-6 h-6 rounded-full border border-[#1A0A08]/30 z-20 bg-white/40 backdrop-blur-sm"></div>
+                              )}
+                              
+                              {isMe && <div className={`absolute top-4 left-4 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-20 ${profile?.id === p.id ? 'bg-[#986427] text-white' : 'bg-black/5 border border-[#1A0A08]/20 text-[#1A0A08]'}`}>ME</div>}
+                              
                               {!isMe && (
                                 <button 
                                   onClick={(e) => { e.stopPropagation(); setProfileToDelete(p); }}
-                                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-red-500 hover:bg-red-50 hover:text-red-600 transition-all z-20"
+                                  className="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-red-400 opacity-0 group-hover/card:opacity-100 hover:bg-red-500 hover:text-white transition-all shadow-sm z-20"
+                                  title="Delete Profile"
                                 >
-                                  <Trash2 size={12} />
+                                  <Trash2 size={14} />
                                 </button>
                               )}
-                              
-                              <div className="w-14 h-14 rounded-full mb-2 overflow-hidden shadow-inner border-2 border-white/50 bg-[#E8DFD8]">
-                                {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[#986427]"><User size={20} /></div>}
+
+                              {/* Content */}
+                              <div className="relative z-10 p-6 text-left w-full mt-auto">
+                                 <h4 className={`font-bold mb-4 text-[24px] tracking-wide ${profile?.id === p.id ? 'text-white' : 'text-[#1A0A08]'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>{p.name}</h4>
+                                 
+                                 <div className="w-full grid grid-cols-2 gap-y-3 gap-x-4">
+                                    <div className="flex flex-col">
+                                      <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${profile?.id === p.id ? 'text-white/50' : 'text-[#1A0A08]/50'}`}>Size</span>
+                                      <span className={`text-[13px] font-medium truncate ${profile?.id === p.id ? 'text-white/90' : 'text-[#1A0A08]/90'}`}>{p.size || '-'}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${profile?.id === p.id ? 'text-white/50' : 'text-[#1A0A08]/50'}`}>Height</span>
+                                      <span className={`text-[13px] font-medium truncate ${profile?.id === p.id ? 'text-white/90' : 'text-[#1A0A08]/90'}`}>{p.height || '-'}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${profile?.id === p.id ? 'text-white/50' : 'text-[#1A0A08]/50'}`}>Skin</span>
+                                      <span className={`text-[13px] font-medium truncate ${profile?.id === p.id ? 'text-white/90' : 'text-[#1A0A08]/90'}`}>{p.skinTone || '-'}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${profile?.id === p.id ? 'text-white/50' : 'text-[#1A0A08]/50'}`}>Meas</span>
+                                      <span className={`text-[13px] font-medium truncate ${profile?.id === p.id ? 'text-white/90' : 'text-[#1A0A08]/90'}`}>
+                                        {p.measurements?.bust || p.measurements?.waist || p.measurements?.hips 
+                                          ? `${p.measurements.bust || '-'}-${p.measurements.waist || '-'}` 
+                                          : '-'}
+                                      </span>
+                                    </div>
+                                 </div>
                               </div>
-                              <h4 className="font-bold text-[#1A0A08] text-center w-full truncate px-1 text-lg leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{p.name}</h4>
                             </div>
                           );
                         })}
                       </div>
-
-                      <div className="relative group hidden md:block">
-                         {/* Removed scroll fade indicators to prevent border blur */ }
-
-                         <div className="flex gap-4 overflow-x-auto px-1 pt-3 pb-6 snap-x hide-scrollbar relative z-0">
-                           {/* Add Someone New Card */}
-                           <div onClick={() => setIsAddingNew(true)} className="relative cursor-pointer min-w-[200px] rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all duration-300 bg-white/5 border-[1.5px] border-dashed border-[#986427]/40 hover:bg-white/10 hover:border-[#986427]/60 snap-center">
-                             <div className="w-16 h-16 rounded-full bg-white/30 border border-white/60 flex items-center justify-center text-[#1A0A08] shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.05)] mb-4">
-                               <Plus size={28} strokeWidth={1.5} />
-                             </div>
-                             <span className="font-bold text-[#1A0A08] text-[18px] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Add<br/>Someone New</span>
-                           </div>
-
-                           {savedProfiles.map(p => {
-                             const isMe = p.isPrimary;
-                             return (
-                               <div key={p.id} onClick={() => handleProfileSelect(p)} className={`group/card relative cursor-pointer min-w-[240px] max-w-[240px] rounded-2xl p-6 flex flex-col items-center transition-all duration-300 bg-white/10 backdrop-blur-xl border shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] snap-center ${profile?.id === p.id ? 'border-[#986427]/60 bg-white/20 -translate-y-1' : 'border-white/45 hover:bg-white/20 hover:border-white/60'}`}>
-                                 {profile?.id === p.id ? (
-                                   <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
-                                 ) : (
-                                   <div className="absolute top-4 right-4 w-5 h-5 rounded-full border border-[#986427]/40"></div>
-                                 )}
-                                 
-                                 {isMe && <div className="absolute top-4 left-4 bg-[#986427] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">ME</div>}
-                                 
-                                 {!isMe && (
-                                   <button 
-                                     onClick={(e) => { e.stopPropagation(); setProfileToDelete(p); }}
-                                     className="absolute top-4 left-4 w-7 h-7 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-red-500 opacity-0 group-hover/card:opacity-100 hover:bg-red-50 hover:text-red-600 transition-all shadow-sm z-20"
-                                     title="Delete Profile"
-                                   >
-                                     <Trash2 size={14} />
-                                   </button>
-                                 )}
-                              
-                              <div className="w-24 h-24 rounded-full mb-4 mt-2 overflow-hidden shadow-inner border-[3px] border-white/50 bg-[#E8DFD8]">
-                                {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[#986427]"><User size={36} /></div>}
-                              </div>
-                              <h4 className="font-bold text-[#1A0A08] mb-5 text-[22px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{p.name}</h4>
-                              
-                              <div className="w-full space-y-4 text-left">
-                                 <div className="flex items-start gap-3">
-                                   <span className="text-[#8B6544] mt-0.5"><Shirt size={16} strokeWidth={1.5} /></span>
-                                   <div>
-                                     <div className="text-[11px] font-bold uppercase tracking-wider text-[#1A0A08]/60">Size</div>
-                                     <div className="text-[14px] font-medium text-[#1A0A08]">{p.size || '-'}</div>
-                                   </div>
-                                 </div>
-                                 <div className="flex items-start gap-3">
-                                   <span className="text-[#8B6544] mt-0.5"><Ruler size={16} strokeWidth={1.5} /></span>
-                                   <div>
-                                     <div className="text-[11px] font-bold uppercase tracking-wider text-[#1A0A08]/60">Height</div>
-                                     <div className="text-[14px] font-medium text-[#1A0A08]">{p.height || '-'}</div>
-                                   </div>
-                                 </div>
-                                 <div className="flex items-start gap-3">
-                                   <span className="text-[#8B6544] mt-0.5"><Palette size={16} strokeWidth={1.5} /></span>
-                                   <div>
-                                     <div className="text-[11px] font-bold uppercase tracking-wider text-[#1A0A08]/60">Skin Tone</div>
-                                     <div className="text-[14px] font-medium text-[#1A0A08]">{p.skinTone || '-'}</div>
-                                   </div>
-                                 </div>
-                                 {p.measurements && (p.measurements.bust || p.measurements.waist || p.measurements.hips) ? (
-                                   <div className="flex items-start gap-3">
-                                     <span className="text-[#8B6544] mt-0.5"><Scissors size={16} strokeWidth={1.5} /></span>
-                                     <div>
-                                       <div className="text-[11px] font-bold uppercase tracking-wider text-[#1A0A08]/60">Measurement</div>
-                                       <div className="text-[14px] font-medium text-[#1A0A08]">{p.measurements.bust || '-'}-{p.measurements.waist || '-'}-{p.measurements.hips || '-'} in</div>
-                                     </div>
-                                   </div>
-                                 ) : (
-                                   <div className="flex items-start gap-3">
-                                     <span className="text-[#8B6544] mt-0.5"><Scissors size={16} strokeWidth={1.5} /></span>
-                                     <div>
-                                       <div className="text-[11px] font-bold uppercase tracking-wider text-[#1A0A08]/60">Measurement</div>
-                                       <div className="text-[14px] font-medium text-[#1A0A08]">-</div>
-                                     </div>
-                                   </div>
-                                 )}
-                              </div>
-                           </div>
-                               );})}
-                         </div>
-                      </div>
                     </div>
                   </div>
                 ) : (
-                  <>
-                    <div className="mb-6">
-                      <h1 className="text-5xl lg:text-6xl font-serif text-[#1A0A08] mb-4 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
-                        Who are you <br/>
-                        <span 
-                          className="italic text-[#986427] pr-1.5"
-                          style={{ 
-                            fontFamily: "'Cormorant Garamond', serif", 
-                            fontWeight: 600
-                          }}>
-                          shopping for
-                        </span> today?
+                  <div className="lg:-mt-4">
+                    <div className="mb-8 lg:mb-10 lg:pl-2">
+                      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#1A0A08] mb-4 leading-tight tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+                        Who are you <span className="italic text-[#986427] pr-1.5" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>shopping for</span> today?
                       </h1>
-                      <p className="text-[#3E2312]/90 text-[16px] lg:text-[18px] max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, lineHeight: 1.6 }}>Create a profile for yourself or someone else to get personalised outfit recommendations.</p>
+                      <p className="text-[#3E2312]/90 text-[16px] lg:text-[20px] max-w-4xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, lineHeight: 1.6 }}>Create a profile for yourself or someone else to get personalised outfit recommendations.</p>
                     </div>
 
                     <div className="space-y-6">
-                      <h3 className="font-serif text-[#1A0A08] text-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Create a Profile</h3>
+                      <h3 className="font-serif text-[#1A0A08] text-2xl lg:pl-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Create a Profile</h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                         {/* Myself */}
                         <div 
                           onClick={() => { 
@@ -525,18 +503,24 @@ export default function OnboardingScreen() {
                             setProfile(prev => ({...defaultProfile, name: 'Myself', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
-                          className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Myself' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}
+                          className={`group relative cursor-pointer rounded-2xl overflow-hidden flex flex-col justify-end transition-all duration-500 min-h-[320px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 ${shoppingFor === 'Myself' ? 'ring-2 ring-[#986427] ring-offset-2 ring-offset-[#e8d5c4]' : ''}`}
                         >
+                          <img src="/images/onboarding/myself.jpg" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Myself" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                          
                           {shoppingFor === 'Myself' ? (
-                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
+                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm z-20"><Check size={16} strokeWidth={3} /></div>
                           ) : (
-                            <div className="absolute top-4 right-4"><div className="w-6 h-6 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-[#986427] text-sm font-bold">+</div></div>
+                            <div className="absolute top-4 right-4 z-20"><div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white transition-colors group-hover:bg-[#986427] group-hover:border-[#986427]"><Plus size={18} /></div></div>
                           )}
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-[#986427] text-white">
-                            <User size={24} />
+                          
+                          <div className="relative z-10 p-6 text-left w-full">
+                             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center mb-3 text-white shadow-sm">
+                               <User size={18} />
+                             </div>
+                             <h4 className="font-bold text-white mb-2 text-[22px] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For Myself</h4>
+                             <p className="text-[13px] text-white/80 leading-relaxed font-medium">Find styles that suit your unique body, height, skin tone and style.</p>
                           </div>
-                          <h4 className="font-bold text-[#1A0A08] mb-2 text-[18px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For Myself</h4>
-                          <p className="text-[14px] text-[#3E2312]/90 leading-relaxed font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Find styles that suit your unique body, height, skin tone and style.</p>
                         </div>
 
                         {/* Someone Else */}
@@ -546,18 +530,24 @@ export default function OnboardingScreen() {
                             setProfile(prev => ({...defaultProfile, name: '', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
-                          className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Someone Else' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}
+                          className={`group relative cursor-pointer rounded-2xl overflow-hidden flex flex-col justify-end transition-all duration-500 min-h-[320px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 ${shoppingFor === 'Someone Else' ? 'ring-2 ring-[#986427] ring-offset-2 ring-offset-[#e8d5c4]' : ''}`}
                         >
+                          <img src="/images/onboarding/someone_else.jpg" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Someone Else" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                          
                           {shoppingFor === 'Someone Else' ? (
-                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
+                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm z-20"><Check size={16} strokeWidth={3} /></div>
                           ) : (
-                            <div className="absolute top-4 right-4"><div className="w-6 h-6 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-[#986427] text-sm font-bold">+</div></div>
+                            <div className="absolute top-4 right-4 z-20"><div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white transition-colors group-hover:bg-[#986427] group-hover:border-[#986427]"><Plus size={18} /></div></div>
                           )}
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-[#986427] text-white">
-                            <Users size={24} />
+                          
+                          <div className="relative z-10 p-6 text-left w-full">
+                             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center mb-3 text-white shadow-sm">
+                               <Users size={18} />
+                             </div>
+                             <h4 className="font-bold text-white mb-2 text-[22px] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For Someone Else</h4>
+                             <p className="text-[13px] text-white/80 leading-relaxed font-medium">Create a profile for your loved one and find the perfect outfits for them.</p>
                           </div>
-                          <h4 className="font-bold text-[#1A0A08] mb-2 text-[18px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For Someone Else</h4>
-                          <p className="text-[14px] text-[#3E2312]/90 leading-relaxed font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Create a profile for your loved one and find the perfect outfits for them.</p>
                         </div>
 
                         {/* Gift */}
@@ -567,27 +557,31 @@ export default function OnboardingScreen() {
                             setProfile(prev => ({...defaultProfile, name: '', gender: '', category: location.state?.defaultCategory || defaultProfile.category}));
                             setShowNameModal(true);
                           }}
-                          className={`relative cursor-pointer rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] ${shoppingFor === 'Gift' ? 'bg-white/25 border-white/70 -translate-y-1' : ''}`}
+                          className={`group relative cursor-pointer rounded-2xl overflow-hidden flex flex-col justify-end transition-all duration-500 min-h-[320px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 ${shoppingFor === 'Gift' ? 'ring-2 ring-[#986427] ring-offset-2 ring-offset-[#e8d5c4]' : ''}`}
                         >
+                          <img src="/images/onboarding/gift.jpg" className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" alt="Gift" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                          
                           {shoppingFor === 'Gift' ? (
-                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm"><Check size={14} strokeWidth={3} /></div>
+                            <div className="absolute top-4 right-4 bg-[#986427] text-white rounded-full p-1 shadow-sm z-20"><Check size={16} strokeWidth={3} /></div>
                           ) : (
-                            <div className="absolute top-4 right-4"><div className="w-6 h-6 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-[#986427] text-sm font-bold">+</div></div>
+                            <div className="absolute top-4 right-4 z-20"><div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white transition-colors group-hover:bg-[#986427] group-hover:border-[#986427]"><Plus size={18} /></div></div>
                           )}
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-[#986427] text-white">
-                            <Gift size={24} />
+                          
+                          <div className="relative z-10 p-6 text-left w-full">
+                             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center mb-3 text-white shadow-sm">
+                               <Gift size={18} />
+                             </div>
+                             <h4 className="font-bold text-white mb-2 text-[22px] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For a Gift</h4>
+                             <p className="text-[13px] text-white/80 leading-relaxed font-medium">Not sure who yet? You can update the details later.</p>
                           </div>
-                          <h4 className="font-bold text-[#1A0A08] mb-2 text-[18px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>For a Gift</h4>
-                          <p className="text-[14px] text-[#3E2312]/90 leading-relaxed font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Not sure who yet? You can update the details later.</p>
                         </div>
                       </div>
-
-
                     </div>
-                  </>
+                  </div>
                 )}
                   {/* Safety bar */}
-                  <div className="bg-white/10 backdrop-blur-xl rounded-xl p-5 flex items-center gap-4 border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] mt-2">
+                  <div className="bg-white/10 backdrop-blur-xl rounded-xl p-5 flex items-center gap-4 border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] mt-8">
                     <ShieldCheck className="text-[#8B6544] w-6 h-6 shrink-0" strokeWidth={2} />
                     <div>
                       <h4 className="font-bold text-[15px] text-[#1A0A08] mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your information is safe with VION</h4>
@@ -621,32 +615,37 @@ export default function OnboardingScreen() {
               {/* Info Sidebar (when no profiles or adding new) */}
               {(savedProfiles.length === 0 || isAddingNew) && (
                 <div className="hidden lg:block w-[280px] xl:w-[320px] shrink-0 animate-in fade-in slide-in-from-right-4 duration-500">
-                  <div className="bg-[#8B6544]/5 backdrop-blur-xl border border-[#8B6544]/20 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6)] rounded-3xl p-7 sticky top-24">
-                    <h4 className="font-bold text-[#1A0A08] mb-6 text-[20px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Why create a profile?</h4>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><User size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Personalised for You</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><Sparkles size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Better Recommendations</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><Heart size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Shop for Everyone</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><ShoppingBag size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Faster Checkout</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><Diamond size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Exclusive Perks</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/40 p-2 rounded-full shrink-0 text-[#8B6544] shadow-sm border border-white/50"><Headphones size={16} strokeWidth={2.5} /></div>
-                        <span className="text-[14px] font-bold text-[#3E2312]/90">Priority Support</span>
+                  <div className="relative overflow-hidden border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.15)] rounded-3xl sticky top-24 group">
+                    <img src="/images/onboarding/why_create_profile_bg.jpg" alt="Bespoke Tailoring" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-[#3E2312]/70 to-black/40 backdrop-blur-[2px]"></div>
+                    
+                    <div className="relative z-10 p-7">
+                      <h4 className="font-bold text-white mb-6 text-[22px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Why create a profile?</h4>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><User size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Personalised for You</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><Sparkles size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Better Recommendations</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><Heart size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Shop for Everyone</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><ShoppingBag size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Faster Checkout</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><Diamond size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Exclusive Perks</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30"><Headphones size={16} strokeWidth={2.5} /></div>
+                          <span className="text-[14.5px] font-bold text-white/90">Priority Support</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -655,82 +654,87 @@ export default function OnboardingScreen() {
 
               {/* Right Sidebar */}
               {savedProfiles.length > 0 && !isAddingNew && (
-                <div className="w-full lg:w-[340px] xl:w-[360px] shrink-0 animate-in fade-in slide-in-from-right-4 duration-500">
-                  <div className="bg-white/10 backdrop-blur-xl border border-white/45 rounded-3xl p-6 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] sticky top-24">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-2xl text-[#1A0A08] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Selected Profile</h3>
-                      <button onClick={() => nextStep()} className="text-[14px] font-bold flex items-center gap-1.5 text-[#1A0A08] hover:text-[#5E422B] transition-colors">Edit <Edit2 size={14} /></button>
-                    </div>
+                <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 animate-in fade-in slide-in-from-right-4 duration-500">
+                  <div className="relative overflow-hidden border border-white/20 rounded-3xl sticky top-24 group shadow-[0_12px_40px_rgba(0,0,0,0.15)]">
+                    <img src="/images/onboarding/why_create_profile_bg.jpg" alt="Selected Profile" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-[#3E2312]/70 to-black/40 backdrop-blur-[2px]"></div>
                     
-                    {profile.isPrimary ? (
-                      <div className="bg-[#E8DFD8]/80 text-[#8B6544] text-[11px] font-bold px-3 py-1 rounded-full shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] w-fit mb-6 border border-white/50">Default</div>
-                    ) : (
-                      <button 
-                        onClick={() => {
-                          setPrimaryMember(profile.id);
-                          setProfile(prev => ({ ...prev, isPrimary: true }));
-                          setSavedProfiles(prev => prev.map(p => ({ ...p, isPrimary: p.id === profile.id })));
-                        }}
-                        className="bg-white/40 hover:bg-white/70 text-[#1A0A08] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm w-fit mb-6 border border-white/60 transition-colors"
-                      >
-                        Set as Default
-                      </button>
-                    )}
-                    
-                    <div className="flex flex-col items-center mb-6">
-                      <div className="w-[100px] h-[100px] rounded-full mb-3 overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.1)] border-4 border-white/60 bg-[#E8DFD8]">
-                        {profile.avatarUrl ? <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[#986427]"><User size={40} /></div>}
+                    <div className="relative z-10 p-6">
+                      <div className="flex items-center justify-between mb-5 border-b border-white/20 pb-3">
+                        <h3 className="text-[22px] text-white font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Selected Profile</h3>
+                        <button onClick={() => nextStep()} className="text-[11px] font-bold flex items-center gap-1.5 text-white hover:text-[#e8d5c4] transition-colors bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 shadow-sm">Edit <Edit2 size={10} /></button>
                       </div>
-                      <h4 className="font-bold text-[24px] text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.name}</h4>
-                    </div>
+                      
+                      {profile.isPrimary ? (
+                        <div className="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full w-fit mb-5 border border-white/40 shadow-sm flex items-center gap-1.5"><Check size={10} strokeWidth={3} /> Default</div>
+                      ) : (
+                        <button 
+                          onClick={() => {
+                            setPrimaryMember(profile.id);
+                            setProfile(prev => ({ ...prev, isPrimary: true }));
+                            setSavedProfiles(prev => prev.map(p => ({ ...p, isPrimary: p.id === profile.id })));
+                          }}
+                          className="bg-white/10 hover:bg-white/30 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full w-fit mb-5 border border-white/30 transition-colors shadow-sm"
+                        >
+                          Set as Default
+                        </button>
+                      )}
+                      
+                      <div className="flex flex-col items-center mb-6">
+                        <div className="w-[80px] h-[80px] rounded-full mb-3 overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.3)] border-[2.5px] border-white/80 bg-[#E8DFD8]">
+                          {profile.avatarUrl ? <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[#986427]"><User size={32} /></div>}
+                        </div>
+                        <h4 className="font-bold text-[24px] text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.name}</h4>
+                      </div>
 
-                    <div className="space-y-4 pt-2">
-                      <div className="flex items-start gap-4 pb-4 border-b border-[#1A0A08]/5">
-                        <span className="text-[#8B6544] mt-0.5"><Shirt size={18} strokeWidth={1.5} /></span>
-                        <div>
-                          <div className="text-[13px] font-bold text-[#1A0A08] mb-0.5">Size</div>
-                          <div className="text-[14px] font-medium text-[#555]">{profile.size || '-'}</div>
+                      <div className="space-y-4 pt-1">
+                        <div className="flex items-start gap-3 pb-4 border-b border-white/10">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30 mt-0.5"><Shirt size={14} strokeWidth={2} /></div>
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-0.5">Size</div>
+                            <div className="text-[14px] font-medium text-white/90">{profile.size || '-'}</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-4 pb-4 border-b border-[#1A0A08]/5">
-                        <span className="text-[#8B6544] mt-0.5"><Ruler size={18} strokeWidth={1.5} /></span>
-                        <div>
-                          <div className="text-[13px] font-bold text-[#1A0A08] mb-0.5">Height</div>
-                          <div className="text-[14px] font-medium text-[#555]">{profile.height || '-'}</div>
+                        <div className="flex items-start gap-3 pb-4 border-b border-white/10">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30 mt-0.5"><Ruler size={14} strokeWidth={2} /></div>
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-0.5">Height</div>
+                            <div className="text-[14px] font-medium text-white/90">{profile.height || '-'}</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-4 pb-4 border-b border-[#1A0A08]/5">
-                        <span className="text-[#8B6544] mt-0.5"><Palette size={18} strokeWidth={1.5} /></span>
-                        <div>
-                          <div className="text-[13px] font-bold text-[#1A0A08] mb-0.5">Skin Tone</div>
-                          <div className="text-[14px] font-medium text-[#555]">{profile.skinTone || '-'}</div>
+                        <div className="flex items-start gap-3 pb-4 border-b border-white/10">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30 mt-0.5"><Palette size={14} strokeWidth={2} /></div>
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-0.5">Skin Tone</div>
+                            <div className="text-[14px] font-medium text-white/90">{profile.skinTone || '-'}</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-4 pb-4 border-b border-[#1A0A08]/5">
-                        <span className="text-[#8B6544] mt-0.5"><Scissors size={18} strokeWidth={1.5} /></span>
-                        <div>
-                          <div className="text-[13px] font-bold text-[#1A0A08] mb-0.5">Measurement</div>
-                          <div className="text-[14px] font-medium text-[#555]">
-                            {profile.measurements?.bust || profile.measurements?.waist || profile.measurements?.hips 
-                              ? `${profile.measurements.bust || '-'}-${profile.measurements.waist || '-'}-${profile.measurements.hips || '-'} in` 
-                              : '-'}
+                        <div className="flex items-start gap-3 pb-4 border-b border-white/10">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30 mt-0.5"><Scissors size={14} strokeWidth={2} /></div>
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-0.5">Measurement</div>
+                            <div className="text-[14px] font-medium text-white/90">
+                              {profile.measurements?.bust || profile.measurements?.waist || profile.measurements?.hips 
+                                ? `${profile.measurements.bust || '-'}-${profile.measurements.waist || '-'}-${profile.measurements.hips || '-'} in` 
+                                : '-'}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 pb-3">
+                          <div className="bg-white/20 backdrop-blur-md p-2 rounded-full shrink-0 text-white shadow-sm border border-white/30 mt-0.5"><User size={14} strokeWidth={2} /></div>
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-white/70 mb-0.5">Lifestyle Preference</div>
+                            <div className="text-[14px] font-medium text-white/90">{profile.occasions?.length > 0 ? profile.occasions.join(' & ') : 'Work & Everyday'}</div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-start gap-4 pb-4">
-                        <span className="text-[#8B6544] mt-0.5"><User size={18} strokeWidth={1.5} /></span>
-                        <div>
-                          <div className="text-[13px] font-bold text-[#1A0A08] mb-0.5">Lifestyle Preference</div>
-                          <div className="text-[14px] font-medium text-[#555]">{profile.occasions?.length > 0 ? profile.occasions.join(' & ') : 'Work & Everyday'}</div>
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="mt-2 bg-white/20 backdrop-blur-md rounded-2xl p-4 flex gap-3 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.7)] border border-white/40">
-                      <Sparkles size={20} className="text-[#8B6544] shrink-0 mt-0.5" />
-                      <p className="text-[13px] font-medium text-[#3E2312]/90 leading-snug">
-                        We'll show outfits based on this profile and preferences. You can change them anytime during your shopping.
-                      </p>
+                      <div className="mt-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 flex gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-white/20">
+                        <Sparkles size={16} className="text-white shrink-0 mt-0.5" />
+                        <p className="text-[12px] font-medium text-white/90 leading-snug">
+                          We'll show outfits based on this profile and preferences. You can change them anytime.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
