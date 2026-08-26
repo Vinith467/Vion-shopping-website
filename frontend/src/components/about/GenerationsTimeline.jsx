@@ -75,7 +75,7 @@ export default function GenerationsTimeline() {
       <div className="absolute inset-y-0 right-0 w-full md:w-[55%] lg:w-[45%] z-10 flex items-center p-6 md:p-12">
         <div 
           ref={cardRef}
-          className="w-full h-[90%] md:h-auto max-h-[90vh] overflow-y-auto bg-[#151515]/80 backdrop-blur-xl border border-[#F5F0E8]/10 p-8 md:p-12 shadow-2xl custom-scrollbar"
+          className="w-full h-auto bg-[#151515]/80 backdrop-blur-xl border border-[#F5F0E8]/10 p-8 md:p-12 shadow-2xl"
         >
           <h2 
             ref={addToRefs}
