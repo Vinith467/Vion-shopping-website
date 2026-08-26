@@ -40,7 +40,7 @@ export default function GlobalCraftsmanship() {
       cardsRef.current.forEach((card, index) => {
         ScrollTrigger.create({
           trigger: card,
-          start: "top " + (20 + index * 140) + "px", // Pinned higher up, offset matches text block height
+          start: "top " + (120 + index * 40) + "px", // Stack them with a 40px offset
           endTrigger: containerRef.current,
           end: "bottom bottom",
           pin: true,
@@ -86,25 +86,24 @@ export default function GlobalCraftsmanship() {
         </div>
 
         {/* Right Side: Stacking Cards */}
-        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-[50vh]">
+        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-32">
           {locations.map((loc, i) => (
             <div 
               key={i} 
               ref={addToRefs}
-              className="w-full bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col border border-white/5"
+              className="w-full bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col"
               style={{ zIndex: i + 1 }}
             >
-              {/* Text at the TOP so it acts like a visible tab when stacked */}
-              <div className="p-6 md:p-8 z-10 bg-[#151515] relative">
-                <h3 className="text-xl md:text-2xl font-serif uppercase tracking-widest mb-3 text-[#C49A5C]">{loc.name}</h3>
-                <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/80 max-w-2xl line-clamp-2 md:line-clamp-none">
+              <div className="w-full h-[40vh] overflow-hidden relative">
+                <img src={loc.img} alt={loc.name} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+              </div>
+              <div className="p-8 md:p-12 relative -mt-16 z-10">
+                <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-widest mb-4 text-[#C49A5C]">{loc.name}</h3>
+                <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
+                <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/80 max-w-xl">
                   {loc.desc}
                 </p>
-              </div>
-              
-              {/* Image below text */}
-              <div className="w-full h-[40vh] md:h-[50vh] overflow-hidden relative">
-                <img src={loc.img} alt={loc.name} className="w-full h-full object-cover" />
               </div>
             </div>
           ))}
