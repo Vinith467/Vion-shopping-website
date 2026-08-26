@@ -22,6 +22,12 @@ export default function AccountScreen() {
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [phoneInput, setPhoneInput] = useState('');
   const [isSavingPhone, setIsSavingPhone] = useState(false);
+
+  // Additional Editing States
+  const [isEditingSkinTone, setIsEditingSkinTone] = useState(false);
+  const [skinToneInput, setSkinToneInput] = useState('');
+  const [isEditingHeight, setIsEditingHeight] = useState(false);
+  const [heightInput, setHeightInput] = useState('');
   
   // UI States
   const [showAddAddress, setShowAddAddress] = useState(false);
@@ -51,6 +57,47 @@ export default function AccountScreen() {
       toast.error('Failed to save phone number');
     } finally {
       setIsSavingPhone(false);
+    }
+  };
+
+  const handleSaveSkinTone = async () => {
+    if (!profile || !profile.id) return;
+    try {
+      const { error } = await supabase
+        .from('consumers')
+        .update({ skin_tone: skinToneInput })
+        .eq('id', profile.id);
+
+      if (error) throw error;
+      
+      setProfile({ ...profile, skin_tone: skinToneInput });
+      setIsEditingSkinTone(false);
+      toast.success('Skin tone saved successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to save skin tone');
+    }
+  };
+
+  const handleSaveHeight = async () => {
+    if (!profile || !profile.id) return;
+    try {
+      const currentMeasurements = profile.measurements || {};
+      const newMeasurements = { ...currentMeasurements, height_string: heightInput };
+      
+      const { error } = await supabase
+        .from('consumers')
+        .update({ measurements: newMeasurements })
+        .eq('id', profile.id);
+
+      if (error) throw error;
+      
+      setProfile({ ...profile, measurements: newMeasurements });
+      setIsEditingHeight(false);
+      toast.success('Height saved successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to save height');
     }
   };
 
@@ -297,7 +344,33 @@ export default function AccountScreen() {
                     </div>
                     <div>
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Skin Tone</label>
-                      <p className="text-gray-900 font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
+                      {isEditingSkinTone ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <input 
+                            type="text" 
+                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            value={skinToneInput}
+                            onChange={(e) => setSkinToneInput(e.target.value)}
+                            placeholder="e.g. Medium, Fair, Deep"
+                            autoFocus
+                          />
+                          <button onClick={handleSaveSkinTone} className="bg-[#986427] text-white px-3 py-1.5 rounded-lg text-sm font-bold">Save</button>
+                          <button onClick={() => setIsEditingSkinTone(false)} className="text-gray-500 hover:text-gray-700 p-1"><X size={18} /></button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <p className="text-gray-900 font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
+                          <button 
+                            onClick={() => {
+                              setSkinToneInput(profile?.skin_tone || '');
+                              setIsEditingSkinTone(true);
+                            }} 
+                            className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
+                          >
+                            <Edit2 size={14} /> {profile?.skin_tone ? 'Edit' : 'Add'}
+                          </button>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Gender</label>
@@ -325,7 +398,33 @@ export default function AccountScreen() {
                     </div>
                     <div>
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Height</label>
-                      <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : 'Not set')}</p>
+                      {isEditingHeight ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <input 
+                            type="text" 
+                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            value={heightInput}
+                            onChange={(e) => setHeightInput(e.target.value)}
+                            placeholder="e.g. 5'6 or 168cm"
+                            autoFocus
+                          />
+                          <button onClick={handleSaveHeight} className="bg-[#986427] text-white px-3 py-1.5 rounded-lg text-sm font-bold">Save</button>
+                          <button onClick={() => setIsEditingHeight(false)} className="text-gray-500 hover:text-gray-700 p-1"><X size={18} /></button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : 'Not set')}</p>
+                          <button 
+                            onClick={() => {
+                              setHeightInput(profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : ''));
+                              setIsEditingHeight(true);
+                            }} 
+                            className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
+                          >
+                            <Edit2 size={14} /> {profile?.measurements?.height_string || profile?.height_cm ? 'Edit' : 'Add'}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
