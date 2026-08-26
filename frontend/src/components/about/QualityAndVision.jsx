@@ -2,37 +2,76 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+const promises = [
+  "High-quality fabrics",
+  "Exceptional craftsmanship",
+  "Personalized fit",
+  "Thoughtful design",
+  "Reliable delivery",
+  "Accessible pricing",
+];
+
 export default function QualityAndVision() {
   const containerRef = useRef(null);
+  const listRef = useRef([]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      gsap.utils.toArray('.fade-up').forEach((el) => {
-        gsap.from(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
+      listRef.current.forEach((item, index) => {
+        gsap.fromTo(item, 
+          { 
+            opacity: 0.1, 
+            x: 50 
           },
-          y: 30,
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out"
-        });
+          {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 80%",
+              end: "top 50%",
+              scrub: 1,
+            }
+          }
+        );
       });
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
+  const addToListRefs = (el) => {
+    if (el && !listRef.current.includes(el)) {
+      listRef.current.push(el);
+    }
+  };
+
   return (
-    <div ref={containerRef}>
-      {/* QUALITY WITHOUT THE UNNECESSARY PRICE */}
-      <section className="py-24 bg-[#F5F0E8] text-[#151515]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-16">
-          <div className="w-full lg:w-1/2">
-            <h2 className="fade-up text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Quality Without the<br/>Unnecessary Price
+    <section ref={containerRef} className="py-32 bg-[#F5F0E8] text-[#151515] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        
+        {/* Massive Image Banner */}
+        <div className="w-full h-[50vh] md:h-[60vh] rounded-2xl overflow-hidden mb-24 relative shadow-2xl">
+          <img 
+            src="/images/about/craft_03_details_1787726445718.jpg" 
+            alt="Craftsmanship Details" 
+            className="w-full h-full object-cover" 
+          />
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-widest text-[#F5F0E8] text-center px-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Quality Without The<br/>Unnecessary Price
             </h2>
-            <div className="fade-up space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed mb-8">
+          </div>
+        </div>
+
+        {/* Content Split */}
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+          
+          {/* Left: Paragraphs */}
+          <div className="w-full lg:w-5/12">
+            <div className="lg:sticky lg:top-32 space-y-6 text-base md:text-lg text-[#151515]/80 font-sans font-light leading-relaxed">
               <p>
                 We want people and organizations to experience high-quality fabrics, excellent craftsmanship and thoughtful design without paying an unnecessarily high price.
               </p>
@@ -41,54 +80,32 @@ export default function QualityAndVision() {
               </p>
             </div>
           </div>
-          <div className="w-full lg:w-1/2">
-            <div className="fade-up bg-[#151515] text-[#F5F0E8] p-10 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#C49A5C]/10 rounded-full -translate-y-16 translate-x-16 blur-2xl"></div>
-              <h3 className="text-xl font-serif uppercase tracking-widest text-[#C49A5C] mb-6 border-b border-[#F5F0E8]/10 pb-4">Our Promise</h3>
-              <ul className="space-y-4 font-sans font-light tracking-wide">
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> High-quality fabrics.</li>
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> Exceptional craftsmanship.</li>
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> Personalized fit.</li>
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> Thoughtful design.</li>
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> Reliable delivery.</li>
-                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#C49A5C] rounded-full"></span> Accessible pricing.</li>
-              </ul>
+
+          {/* Right: The Promise List */}
+          <div className="w-full lg:w-7/12 pt-8 lg:pt-0">
+            <h3 className="text-[#C49A5C] font-mono text-sm tracking-widest uppercase mb-12">Our Promise</h3>
+            
+            <div className="flex flex-col gap-8 md:gap-12">
+              {promises.map((promise, index) => (
+                <div 
+                  key={index} 
+                  ref={addToListRefs}
+                  className="flex items-center gap-6 border-b border-[#151515]/10 pb-8"
+                >
+                  <span className="text-2xl md:text-3xl font-serif text-[#C49A5C]/50 font-light italic">
+                    0{index + 1}
+                  </span>
+                  <h4 className="text-2xl md:text-4xl font-serif uppercase tracking-wider text-[#151515]">
+                    {promise}
+                  </h4>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* OUR VISION */}
-      <section className="py-32 bg-[#151515] text-[#F5F0E8] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-           <img src="/images/about/craft_02_hero_1787726332878.jpg" alt="Vision Background" className="w-full h-full object-cover grayscale" />
         </div>
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
-          <h2 className="fade-up text-sm tracking-[0.3em] uppercase font-bold text-[#C49A5C] mb-8">Our Vision</h2>
-          
-          <div className="fade-up space-y-8 text-lg md:text-xl text-[#F5F0E8] font-serif leading-relaxed mb-16">
-            <p>
-              Our vision is to build VION into a Pan-India platform for personalized professional attire and institutional clothing.
-            </p>
-            <p className="font-light text-[#F5F0E8]/80">
-              For corporates, we create professional attire and formalwear that gives people the freedom to choose what works for them while maintaining a strong organizational identity.
-            </p>
-            <p className="font-light text-[#F5F0E8]/80">
-              For universities, colleges and institutions, we design and deliver uniforms and institutional attire that create identity, belonging and pride.
-            </p>
-            <p>
-              We want to bring together global fabrics, international craftsmanship, Indian artistry, modern technology and generations of experience into one seamless VION experience.
-            </p>
-          </div>
 
-          <div className="fade-up inline-block text-left border-l-2 border-[#C49A5C] pl-6">
-            <p className="tracking-widest uppercase text-sm md:text-base font-bold mb-3">Three generations behind us.</p>
-            <p className="tracking-widest uppercase text-sm md:text-base font-bold mb-3">A world of craftsmanship around us.</p>
-            <p className="tracking-widest uppercase text-sm md:text-base font-bold mb-6">Technology taking us forward.</p>
-            <p className="tracking-widest uppercase text-xl md:text-2xl font-bold text-[#C49A5C]">One vision ahead — VION.</p>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
