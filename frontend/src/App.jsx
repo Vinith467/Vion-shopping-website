@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
+import { supabase } from './services/supabaseClient';
 import HomeScreen from './screens/HomeScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import CartScreen from './screens/CartScreen';
@@ -83,7 +84,7 @@ const AdminRoute = ({ children }) => {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, logout, profile, members, selectedConsumerId, cart } = useAppContext();
+  const { isLoggedIn, logout, profile, members, selectedConsumerId, cart, updateMember } = useAppContext();
   // The header should always show the primary account owner, not the active shopping consumer
   const primaryMember = members?.find(m => m.isPrimary) || members?.[0];
   const isMainTab = ['/home', '/explore', '/wardrobe', '/account', '/onboarding'].includes(location.pathname);
@@ -92,6 +93,20 @@ function App() {
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+
+  const handleNavGenderSelect = async (gender) => {
+    try {
+      if (selectedConsumerId) {
+        updateMember(selectedConsumerId, { gender });
+        await supabase.from('consumers').update({ gender }).eq('id', selectedConsumerId);
+      } else {
+        sessionStorage.setItem('temp_gender', gender);
+      }
+      navigate('/select-size?redirect=/explore');
+    } catch (error) {
+      console.error("Error saving gender from nav:", error);
+    }
+  };
 
   useEffect(() => {
     const handleOpenLogin = () => setShowSignupModal(true);
@@ -162,15 +177,11 @@ function App() {
             </div>
           ) : (
             <div className="flex items-center gap-4 lg:gap-6 text-[16px] lg:text-[18px] font-bold text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
-              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Women</button>
-              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Men</button>
-              <button onClick={() => navigate('/home#occasions')} className="hover:text-[#A87B45] transition-colors">Occasion</button>
-              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">New In</button>
-              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors">Lookbook</button>
-              <button onClick={() => navigate('/explore')} className="hover:text-[#A87B45] transition-colors flex items-center gap-1.5">
-                <span>VION For You</span>
-                <span className="bg-gradient-to-r from-[#B88746] to-[#906227] text-white text-[9px] font-sans font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">NEW</span>
-              </button>
+              <button onClick={() => handleNavGenderSelect('Female')} className="hover:text-[#A87B45] transition-colors">Women</button>
+              <button onClick={() => handleNavGenderSelect('Male')} className="hover:text-[#A87B45] transition-colors">Men</button>
+              <button onClick={() => navigate('/consultation')} className="hover:text-[#A87B45] transition-colors">Book Consultant</button>
+              <button onClick={() => navigate('/about')} className="hover:text-[#A87B45] transition-colors">About Us</button>
+              <button onClick={() => navigate('/corporate')} className="hover:text-[#A87B45] transition-colors">VION Corporate</button>
             </div>
           )}
 
