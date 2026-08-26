@@ -3,14 +3,14 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const steps = [
-  { num: '01', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.' },
-  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.' },
-  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.' },
-  { num: '04', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.' },
-  { num: '05', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.' },
-  { num: '06', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.' },
-  { num: '07', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.' },
-  { num: '08', title: 'We Support You', desc: 'If there is a fitting issue, alteration requirement or any other concern, we work with you to resolve it.' },
+  { num: '01', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.', img: '/images/about/corporate_gallery_editorial_1787745065973.jpg' },
+  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.', img: '/images/about/craft_02_man_1787726381257.jpg' },
+  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.', img: '/images/about/craft_01_selection_1787726319333.jpg' },
+  { num: '04', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.', img: '/images/about/corporate_fabric_wool_1787744950103.jpg' },
+  { num: '05', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.', img: '/images/about/craft_04_measuring_1787726583981.jpg' },
+  { num: '06', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.', img: '/images/about/craft_03_cutting_1787726412577.jpg' },
+  { num: '07', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.', img: '/images/about/craft_02_woman_1787726369150.jpg' },
+  { num: '08', title: 'We Support You', desc: 'If there is a fitting issue, alteration requirement or any other concern, we work with you to resolve it.', img: '/images/about/craft_04_male_fitting_1787726621418.jpg' },
 ];
 
 export default function OurApproach() {
@@ -81,23 +81,31 @@ export default function OurApproach() {
           {steps.map((step, i) => (
             <div 
               key={i} 
-              className="w-[85vw] md:w-[400px] h-[50vh] md:h-[60vh] shrink-0 bg-[#F5F0E8]/5 backdrop-blur-md border border-[#F5F0E8]/10 rounded-xl p-8 md:p-12 flex flex-col justify-between relative group hover:bg-[#F5F0E8]/10 transition-colors duration-500"
+              className="w-[85vw] md:w-[450px] h-[55vh] md:h-[65vh] shrink-0 rounded-xl overflow-hidden relative group transition-all duration-500 shadow-2xl"
             >
-              {/* Massive background number */}
-              <span className="absolute top-4 right-4 text-8xl font-bold font-serif opacity-[0.03] text-[#F5F0E8] group-hover:text-[#C49A5C] transition-colors duration-500 pointer-events-none">
+              {/* Background Image */}
+              <div className="absolute inset-0 z-0">
+                <img src={step.img} alt={step.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-[#151515]/80 to-black/30"></div>
+              </div>
+              
+              {/* Massive background number overlay */}
+              <span className="absolute top-4 right-6 text-7xl md:text-8xl font-bold font-serif opacity-10 text-[#F5F0E8] group-hover:text-[#C49A5C] group-hover:opacity-30 transition-all duration-500 z-10 pointer-events-none">
                 {step.num}
               </span>
               
-              <div>
-                <h4 className="text-[#C49A5C] font-mono text-sm tracking-widest mb-4">STEP {step.num}</h4>
-                <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-wider text-[#F5F0E8] mb-6">
-                  {step.title}
-                </h3>
+              {/* Content */}
+              <div className="relative z-20 p-8 md:p-12 flex flex-col justify-end h-full">
+                <div>
+                  <h4 className="text-[#C49A5C] font-mono text-sm tracking-widest mb-3">STEP {step.num}</h4>
+                  <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-wider text-[#F5F0E8] mb-6">
+                    {step.title}
+                  </h3>
+                  <p className="font-sans font-light text-base leading-relaxed text-[#F5F0E8]/80">
+                    {step.desc}
+                  </p>
+                </div>
               </div>
-              
-              <p className="font-sans font-light text-base md:text-lg leading-relaxed text-[#F5F0E8]/70">
-                {step.desc}
-              </p>
             </div>
           ))}
           
