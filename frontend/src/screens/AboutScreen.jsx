@@ -7,7 +7,6 @@ import 'lenis/dist/lenis.css';
 import HeroSection from '../components/about/HeroSection';
 import GenerationsTimeline from '../components/about/GenerationsTimeline';
 import GlobalCraftsmanship from '../components/about/GlobalCraftsmanship';
-import FabricExperience from '../components/about/FabricExperience';
 import HeritageTechnology from '../components/about/HeritageTechnology';
 import OurApproach from '../components/about/OurApproach';
 import QualityAndVision from '../components/about/QualityAndVision';
@@ -58,7 +57,6 @@ export default function AboutScreen() {
       <HeroSection />
       <GenerationsTimeline />
       <GlobalCraftsmanship />
-      <FabricExperience />
       <HeritageTechnology />
       <OurApproach />
       <QualityAndVision />
