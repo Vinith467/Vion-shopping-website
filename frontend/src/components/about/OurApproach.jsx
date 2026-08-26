@@ -3,73 +3,109 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const steps = [
-  { num: '1', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.' },
-  { num: '2', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.' },
-  { num: '3', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.' },
-  { num: '4', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.' },
-  { num: '5', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.' },
-  { num: '6', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.' },
-  { num: '7', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.' },
-  { num: '8', title: 'We Support You', desc: 'If there is a fitting issue, alteration requirement or any other concern, we work with you to resolve it.' },
+  { num: '01', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.' },
+  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.' },
+  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.' },
+  { num: '04', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.' },
+  { num: '05', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.' },
+  { num: '06', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.' },
+  { num: '07', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.' },
+  { num: '08', title: 'We Support You', desc: 'If there is a fitting issue, alteration requirement or any other concern, we work with you to resolve it.' },
 ];
 
 export default function OurApproach() {
   const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const trackRef = useRef(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      gsap.utils.toArray('.step-card').forEach((card, i) => {
-        gsap.from(card, {
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-          },
-          y: 40,
-          opacity: 0,
-          duration: 0.8,
-          delay: (i % 2) * 0.1, // Slight stagger for grid
-          ease: "power2.out"
-        });
+      
+      // Calculate how far we need to move the track
+      // It's the full width of the track MINUS the width of the viewport
+      const getScrollAmount = () => {
+        let trackWidth = trackRef.current.scrollWidth;
+        return -(trackWidth - window.innerWidth);
+      };
+
+      const tween = gsap.to(trackRef.current, {
+        x: getScrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: scrollContainerRef.current,
+          start: "top top",
+          end: () => `+=${getScrollAmount() * -1}`, // The scroll distance equals the physical width of the track
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true, // Recalculates on resize
+        }
       });
+
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#151515] text-[#F5F0E8]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        
-        <div className="text-center mb-20 max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Our Approach
-          </h2>
-          <p className="text-sm md:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed mb-4">
-            We don't believe organizations should simply choose from whatever is already available. We believe clothing should be designed around the organization, the people who wear it and the identity it represents.
+    <div ref={containerRef} className="bg-[#151515] relative overflow-hidden">
+      
+      {/* Intro Section - Static, scrolls normally */}
+      <section className="pt-32 pb-16 px-6 md:px-12 max-w-5xl mx-auto text-center relative z-10">
+        <h2 className="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          Our Approach
+        </h2>
+        <div className="space-y-6 text-sm md:text-lg text-[#F5F0E8]/80 font-sans font-light leading-relaxed max-w-3xl mx-auto">
+          <p>
+            We don't believe organizations should simply choose from whatever is already available.
           </p>
-          <p className="font-medium text-[#C49A5C] uppercase tracking-widest text-sm">
+          <p>
+            We believe clothing should be designed around the organization, the people who wear it and the identity it represents.
+          </p>
+          <p className="font-medium text-[#C49A5C] uppercase tracking-widest text-sm pt-4">
             Our process begins with understanding.
           </p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, i) => (
-            <div key={i} className="step-card p-6 border border-[#F5F0E8]/10 hover:border-[#C49A5C]/50 transition-colors duration-300 relative group">
-              <span className="absolute -top-6 -left-2 text-7xl font-bold font-serif opacity-5 text-[#F5F0E8] group-hover:text-[#C49A5C] transition-colors duration-300 pointer-events-none">
-                0{step.num}
-              </span>
-              <div className="relative z-10">
-                <h3 className="text-xl font-serif uppercase tracking-wider text-[#C49A5C] mb-4">
-                  {step.title}
-                </h3>
-                <p className="font-sans font-light text-sm leading-relaxed text-[#F5F0E8]/70">
-                  {step.desc}
-                </p>
-              </div>
-            </div>
-          ))}
+      {/* Horizontal Scroll Section - Pins and slides */}
+      <section ref={scrollContainerRef} className="h-screen flex items-center relative z-10">
+        
+        {/* Faint Background Text for texture */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none overflow-hidden">
+          <h1 className="text-[20vw] font-serif font-bold text-[#F5F0E8] whitespace-nowrap">THE PROCESS</h1>
         </div>
 
-      </div>
-    </section>
+        <div 
+          ref={trackRef} 
+          className="flex gap-8 px-6 md:px-24 flex-nowrap w-max items-center h-full"
+        >
+          {steps.map((step, i) => (
+            <div 
+              key={i} 
+              className="w-[85vw] md:w-[400px] h-[50vh] md:h-[60vh] shrink-0 bg-[#F5F0E8]/5 backdrop-blur-md border border-[#F5F0E8]/10 rounded-xl p-8 md:p-12 flex flex-col justify-between relative group hover:bg-[#F5F0E8]/10 transition-colors duration-500"
+            >
+              {/* Massive background number */}
+              <span className="absolute top-4 right-4 text-8xl font-bold font-serif opacity-[0.03] text-[#F5F0E8] group-hover:text-[#C49A5C] transition-colors duration-500 pointer-events-none">
+                {step.num}
+              </span>
+              
+              <div>
+                <h4 className="text-[#C49A5C] font-mono text-sm tracking-widest mb-4">STEP {step.num}</h4>
+                <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-wider text-[#F5F0E8] mb-6">
+                  {step.title}
+                </h3>
+              </div>
+              
+              <p className="font-sans font-light text-base md:text-lg leading-relaxed text-[#F5F0E8]/70">
+                {step.desc}
+              </p>
+            </div>
+          ))}
+          
+          {/* Spacer at the end so the last card doesn't touch the very edge when scrolling finishes */}
+          <div className="w-[10vw] shrink-0"></div>
+        </div>
+      </section>
+
+    </div>
   );
 }
