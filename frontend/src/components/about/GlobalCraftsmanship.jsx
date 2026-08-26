@@ -32,10 +32,22 @@ const locations = [
 
 export default function GlobalCraftsmanship() {
   const containerRef = useRef(null);
+  const leftTextRef = useRef(null);
   const cardsRef = useRef([]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
+      
+      // Pin the left text container so it doesn't scroll out of view and leave the left side empty
+      ScrollTrigger.create({
+        trigger: leftTextRef.current,
+        start: "top top+=120", 
+        endTrigger: containerRef.current,
+        end: "bottom bottom",
+        pin: true,
+        pinSpacing: false,
+      });
+
       // Create a stacking effect for the cards on the right
       cardsRef.current.forEach((card, index) => {
         ScrollTrigger.create({
@@ -63,8 +75,8 @@ export default function GlobalCraftsmanship() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Side: Sticky Intro Text */}
-        <div className="w-full lg:w-1/3 relative z-10">
-          <div className="lg:sticky lg:top-32">
+        <div className="w-full lg:w-1/3 relative z-10" ref={leftTextRef}>
+          <div className="pt-12">
             <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
