@@ -3,12 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const promises = [
-  "High-quality fabrics",
-  "Exceptional craftsmanship",
-  "Personalized fit",
-  "Thoughtful design",
-  "Reliable delivery",
-  "Accessible pricing",
+  { title: "High-quality fabrics", img: "/images/about/vion_craft_global_1787748349602.jpg" },
+  { title: "Exceptional craftsmanship", img: "/images/about/craft_03_cutting_1787726412577.jpg" },
+  { title: "Personalized fit", img: "/images/about/craft_04_measuring_1787726583981.jpg" },
+  { title: "Thoughtful design", img: "/images/about/corporate_hero_tailor_hands_1787744904933.jpg" },
+  { title: "Reliable delivery", img: "/images/about/media_1787749277512.jpg" }, // Use a suitable placeholder for delivery
+  { title: "Accessible pricing", img: "/images/about/craft_01_macro_1787726302160.jpg" },
 ];
 
 export default function QualityAndVision() {
@@ -85,19 +85,30 @@ export default function QualityAndVision() {
           <div className="w-full lg:w-7/12 pt-8 lg:pt-0">
             <h3 className="text-[#C49A5C] font-mono text-sm tracking-widest uppercase mb-12">Our Promise</h3>
             
-            <div className="flex flex-col gap-8 md:gap-12">
+            <div className="flex flex-col gap-0 md:gap-4">
               {promises.map((promise, index) => (
                 <div 
                   key={index} 
                   ref={addToListRefs}
-                  className="flex items-center gap-6 border-b border-[#151515]/10 pb-8"
+                  className="group flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#151515]/10 py-8 cursor-pointer relative"
                 >
-                  <span className="text-2xl md:text-3xl font-serif text-[#C49A5C]/50 font-light italic">
-                    0{index + 1}
-                  </span>
-                  <h4 className="text-2xl md:text-4xl font-serif uppercase tracking-wider text-[#151515]">
-                    {promise}
-                  </h4>
+                  <div className="flex items-center gap-6 z-10 relative">
+                    <span className="text-2xl md:text-3xl font-serif text-[#C49A5C]/50 font-light italic transition-colors duration-500 group-hover:text-[#C49A5C]">
+                      0{index + 1}
+                    </span>
+                    <h4 className="text-2xl md:text-4xl font-serif uppercase tracking-wider text-[#151515] transition-transform duration-500 md:group-hover:translate-x-4">
+                      {promise.title}
+                    </h4>
+                  </div>
+                  
+                  {/* Image Reveal */}
+                  <div className="w-full h-48 md:w-48 md:h-24 lg:w-64 lg:h-32 overflow-hidden rounded opacity-100 md:opacity-0 md:-translate-x-8 md:group-hover:translate-x-0 md:group-hover:opacity-100 transition-all duration-500 ease-out z-0">
+                    <img 
+                      src={promise.img} 
+                      alt={promise.title} 
+                      className="w-full h-full object-cover scale-110 md:group-hover:scale-100 transition-transform duration-700 ease-out" 
+                    />
+                  </div>
                 </div>
               ))}
             </div>
