@@ -99,7 +99,7 @@ export default function QualityAndVision() {
         <div className="flex flex-col lg:flex-row gap-16 relative">
           
           {/* Left: Sticky Image Container */}
-          <div className="hidden lg:block w-full lg:w-1/2 relative h-[80vh]">
+          <div className="hidden lg:block w-full lg:w-1/2 relative">
             <div className="sticky top-[10vh] w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
               {promises.map((promise, index) => (
                 <div 
