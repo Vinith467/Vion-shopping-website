@@ -86,7 +86,7 @@ export default function OurVision() {
       {/* Background Image with Parallax */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
-          src="/images/about/vision_1_bg.png" 
+          src="/images/about/vision_1_bg.png?v=2" 
           alt="Vion Vision" 
           className="vision-bg w-full h-[120%] object-cover opacity-20 -mt-[10%]"
         />
@@ -146,13 +146,20 @@ export default function OurVision() {
             </h2>
             <div className="w-[1px] h-32 bg-[#C49A5C] mx-auto mb-12"></div>
             <img 
-              src="/images/about/vision_2_future.png" 
+              src="/images/about/vision_2_future.png?v=2" 
               alt="Vion Future" 
               className="w-full max-w-2xl mx-auto h-[40vh] md:h-[60vh] object-cover rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000 mb-12"
             />
-            <h1 className="text-7xl md:text-9xl lg:text-[12rem] font-serif font-bold uppercase tracking-widest text-[#F5F0E8] leading-none">
-              VION.
-            </h1>
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <img 
+                src="/images/about/logo.png" 
+                alt="VION Logo" 
+                className="w-48 md:w-64 lg:w-80 object-contain invert opacity-90"
+              />
+              <p className="text-[#C49A5C] font-mono tracking-[0.3em] uppercase text-sm md:text-base">
+                Corporate
+              </p>
+            </div>
           </div>
         </div>
 
