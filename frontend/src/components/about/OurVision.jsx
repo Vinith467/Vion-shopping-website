@@ -152,11 +152,11 @@ export default function OurVision() {
             />
             <div className="flex flex-col items-center justify-center space-y-4">
               <img 
-                src="/images/about/logo.png" 
-                alt="VION Logo" 
-                className="w-48 md:w-64 lg:w-80 object-contain invert opacity-90"
+                src="/icon/icon.png" 
+                alt="VION Icon" 
+                className="w-32 md:w-48 lg:w-56 object-contain shadow-2xl rounded-3xl"
               />
-              <p className="text-[#C49A5C] font-mono tracking-[0.3em] uppercase text-sm md:text-base">
+              <p className="text-[#C49A5C] font-mono tracking-[0.3em] uppercase text-sm md:text-base mt-4">
                 Corporate
               </p>
             </div>
