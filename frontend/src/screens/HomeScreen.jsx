@@ -22,19 +22,14 @@ export default function HomeScreen() {
     loadData();
   }, []);
 
-  const handlePageClick = (e) => {
-    if (!isLoggedIn && !localStorage.getItem('hasSeenOnboarding')) {
-      localStorage.setItem('hasSeenOnboarding', 'true');
-      navigate('/onboarding');
-    }
-  };
+
 
   // Shared crystal 3D glass card style
   const glassCard = "bg-white/10 backdrop-blur-xl border border-white/45 rounded-2xl shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)]";
   const glassCardHover = "hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] transition-all duration-300";
 
   return (
-    <div onClickCapture={handlePageClick} className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
+    <div className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
       
       {/* 1. Hero Section */}
       <section className="relative w-full max-w-[1983px] mx-auto flex flex-col md:justify-center overflow-hidden">
@@ -109,7 +104,7 @@ export default function HomeScreen() {
             
             <div className="flex flex-wrap items-center gap-4 mb-5">
               <button 
-                onClick={() => navigate('/onboarding', { state: { resetStep: true } })}
+                onClick={() => navigate('/select-gender')}
                 className="cursor-pointer px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(to bottom, #4A1A18, #2A0C0A)',
@@ -272,7 +267,7 @@ export default function HomeScreen() {
           
           {/* Top Row: Bento Grid */}
           <div 
-            onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
+            onClick={() => navigate('/select-gender')} 
             className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[220px] sm:h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
           >
              <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
@@ -289,7 +284,7 @@ export default function HomeScreen() {
           </div>
 
           <div 
-            onClick={() => navigate('/onboarding', { state: { resetStep: true } })} 
+            onClick={() => navigate('/select-gender')} 
             className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-1 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
           >
              <img src="/BOOK A CONSULTATION.png" alt="BOOK A CONSULTATION" className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
@@ -311,7 +306,7 @@ export default function HomeScreen() {
             { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png", buttonText: "Buy Now" },
             { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png", buttonText: "Book Now" }
           ].map((cat, idx) => (
-            <div key={idx} onClick={() => navigate('/onboarding', { state: { resetStep: true, defaultCategory: cat.value, redirectToExplore: true } })} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
+            <div key={idx} onClick={() => navigate(`/select-gender?class=${encodeURIComponent(cat.value)}`)} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-10">

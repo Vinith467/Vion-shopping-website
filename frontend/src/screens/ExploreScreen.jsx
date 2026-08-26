@@ -18,6 +18,19 @@ export default function ExploreScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [categoryName, setCategoryName] = useState('All Products');
   const [categories, setCategories] = useState([]);
+  
+  // Get active profile gender
+  const activeProfile = members?.find(m => m.id === selectedConsumerId);
+  const tempGender = sessionStorage.getItem('temp_gender');
+  const userGender = activeProfile?.gender || tempGender;
+
+  useEffect(() => {
+    if (!userGender && !isLoading) {
+      // Redirect to select gender if we don't have one
+      const currentSearchParams = new URLSearchParams(searchParams).toString();
+      navigate(`/select-gender?redirect=${encodeURIComponent('/explore?' + currentSearchParams)}`);
+    }
+  }, [userGender, navigate, searchParams, isLoading]);
 
   useEffect(() => {
     async function loadData() {
@@ -94,11 +107,23 @@ export default function ExploreScreen() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 pt-6">
-        {!categoryParam && classParam && categories.length > 0 ? (
+        {userGender === 'Male' ? (
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+              <span className="text-4xl text-[#A87B45]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>V</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl text-[#1A0A08] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+              Men's Collection
+            </h2>
+            <p className="text-[15px] text-[#555] max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+              Our exclusive men's collection is currently being crafted by our master artisans. <br/><br/>Coming soon.
+            </p>
+          </div>
+        ) : !categoryParam && categories.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {categories.map((cat, i) => (
-              <Link 
-                to={`/explore?class=${classParam}&category=${cat.id}`} 
+              <div 
+                onClick={() => navigate(`/select-size?${classParam ? `class=${classParam}&` : ''}category=${cat.id}`)} 
                 key={cat.id || i} 
                 className="group relative aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all block cursor-pointer"
               >
@@ -113,7 +138,7 @@ export default function ExploreScreen() {
                 <div className="absolute inset-0 flex items-center justify-center p-4 text-center z-10">
                    <h3 className="text-white text-xl md:text-2xl tracking-[0.1em] uppercase drop-shadow-lg" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h3>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         ) : (

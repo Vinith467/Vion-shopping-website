@@ -435,27 +435,35 @@ export function AppProvider({ children }) {
       const heightVal = updatedMember.height;
       const isNumericHeight = heightVal && /^\d+$/.test(String(heightVal).trim());
       
-      const updates = {
-        name: updatedMember.name,
-        age: parseInt(updatedMember.age) || null,
-        gender: updatedMember.gender,
-        height_cm: isNumericHeight ? parseInt(heightVal) : null,
-        body_shape: updatedMember.bodyShape || null,
-        skin_tone: updatedMember.skinTone || null,
-      };
+      const updates = {};
+      if (updatedMember.name !== undefined) updates.name = updatedMember.name;
+      if (updatedMember.age !== undefined) updates.age = parseInt(updatedMember.age) || null;
+      if (updatedMember.gender !== undefined) updates.gender = updatedMember.gender;
+      if (updatedMember.height !== undefined) updates.height_cm = isNumericHeight ? parseInt(heightVal) : null;
+      if (updatedMember.bodyShape !== undefined) updates.body_shape = updatedMember.bodyShape || null;
+      if (updatedMember.skinTone !== undefined) updates.skin_tone = updatedMember.skinTone || null;
       
       if (updatedMember.avatarUrl !== undefined) {
         updates.avatar_url = updatedMember.avatarUrl || null;
       }
       
-      const currentMeasurements = updatedMember.measurements || {};
-      updates.measurements = { 
-        ...currentMeasurements, 
-        size: updatedMember.size !== undefined ? updatedMember.size : currentMeasurements.size,
-        category: updatedMember.category !== undefined ? updatedMember.category : currentMeasurements.category,
-        occasions: updatedMember.occasions !== undefined ? updatedMember.occasions : currentMeasurements.occasions,
-        height_string: updatedMember.height !== undefined ? updatedMember.height : currentMeasurements.height_string
-      };
+      let updatedMeasurements = undefined;
+      if (updatedMember.measurements !== undefined || updatedMember.size !== undefined || updatedMember.category !== undefined || updatedMember.occasions !== undefined || updatedMember.height !== undefined) {
+        // Fetch current member to merge measurements properly
+        const currentMember = members.find(m => m.id === memberId);
+        const currentMeasurements = currentMember?.measurements || {};
+        const passedMeasurements = updatedMember.measurements || {};
+        
+        updates.measurements = { 
+          ...currentMeasurements,
+          ...passedMeasurements,
+          size: updatedMember.size !== undefined ? updatedMember.size : (passedMeasurements.size !== undefined ? passedMeasurements.size : currentMeasurements.size),
+          category: updatedMember.category !== undefined ? updatedMember.category : (passedMeasurements.category !== undefined ? passedMeasurements.category : currentMeasurements.category),
+          occasions: updatedMember.occasions !== undefined ? updatedMember.occasions : (passedMeasurements.occasions !== undefined ? passedMeasurements.occasions : currentMeasurements.occasions),
+          height_string: updatedMember.height !== undefined ? updatedMember.height : (passedMeasurements.height_string !== undefined ? passedMeasurements.height_string : currentMeasurements.height_string)
+        };
+        updatedMeasurements = updates.measurements;
+      }
 
       const { error } = await supabase
         .from('consumers')
@@ -466,14 +474,14 @@ export function AppProvider({ children }) {
 
       setMembers((prev) => prev.map(m => m.id === memberId ? {
         ...m,
-        name: updatedMember.name,
-        age: parseInt(updatedMember.age) || null,
-        gender: updatedMember.gender,
+        name: updatedMember.name !== undefined ? updatedMember.name : m.name,
+        age: updatedMember.age !== undefined ? (parseInt(updatedMember.age) || null) : m.age,
+        gender: updatedMember.gender !== undefined ? updatedMember.gender : m.gender,
         height: updatedMember.height !== undefined ? updatedMember.height : m.height,
-        bodyShape: updatedMember.bodyShape || m.bodyShape,
+        bodyShape: updatedMember.bodyShape !== undefined ? (updatedMember.bodyShape || m.bodyShape) : m.bodyShape,
         skinTone: updatedMember.skinTone !== undefined ? updatedMember.skinTone : m.skinTone,
         image: updatedMember.avatarUrl !== undefined ? (updatedMember.avatarUrl || '') : m.image,
-        measurements: updates.measurements,
+        measurements: updatedMeasurements !== undefined ? updatedMeasurements : m.measurements,
       } : m));
       toast.success('Member updated successfully!');
     } catch (err) {

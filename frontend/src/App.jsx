@@ -10,6 +10,8 @@ import AccountScreen from './screens/AccountScreen';
 import ExploreScreen from './screens/ExploreScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import CraftsmanshipScreen from './screens/CraftsmanshipScreen';
+import GenderSelectionScreen from './screens/GenderSelectionScreen';
+import SizeSelectionScreen from './screens/SizeSelectionScreen';
 import AdminLayout from './screens/admin/AdminLayout';
 import AdminDashboard from './screens/admin/AdminDashboard';
 import AdminUsers from './screens/admin/AdminUsers';
@@ -334,7 +336,8 @@ function App() {
           <Route path="/onboarding" element={<ProtectedRoute><OnboardingScreen /></ProtectedRoute>} />
           <Route path="/add-consumer" element={<ProtectedRoute><PlaceholderScreen title="Add Consumer" /></ProtectedRoute>} />
 
-          <Route path="/select-size" element={<ProtectedRoute><PlaceholderScreen title="Size Selection" /></ProtectedRoute>} />
+          <Route path="/select-size" element={<SizeSelectionScreen />} />
+          <Route path="/select-gender" element={<GenderSelectionScreen />} />
           <Route path="/cart" element={<ProtectedRoute><CartScreen /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutScreen /></ProtectedRoute>} />
           <Route path="/order-success" element={<ProtectedRoute><OrderSuccessScreen /></ProtectedRoute>} />

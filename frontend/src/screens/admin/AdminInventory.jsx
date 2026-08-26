@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../services/supabaseClient';
 import { uploadImage } from '../../services/storageService';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, Edit2, X, Check, Image as ImageIcon, Package, DollarSign, Copy, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Check, Image as ImageIcon, Package, DollarSign, Copy, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import TagInput from '../../components/TagInput';
 
 const skinTonesMap = [
@@ -1063,8 +1063,10 @@ export default function AdminInventory() {
                             </div>
 
                             <div>
-                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-2">Skin Tone</label>
-                              <div className="flex gap-2 flex-wrap pb-1">
+                              <label className="flex items-center gap-2 block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-2">
+                                Skin Tone <Lock size={10} className="text-gray-400" /> <span className="normal-case text-[9px] text-gray-400 font-normal">(Locked for now)</span>
+                              </label>
+                              <div className="flex gap-2 flex-wrap pb-1 opacity-40 pointer-events-none">
                                 {skinTonesMap.map((tone) => (
                                   <button
                                     key={tone.id}
@@ -1087,8 +1089,10 @@ export default function AdminInventory() {
 
                           <div className="col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-100 pb-4">
                             <div>
-                              <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Height Range</label>
-                              <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                              <label className="flex items-center gap-2 block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">
+                                Height Range <Lock size={10} className="text-gray-400" /> <span className="normal-case text-[9px] text-gray-400 font-normal">(Locked for now)</span>
+                              </label>
+                              <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar opacity-40 pointer-events-none">
                                 {heightsMap.map(h => {
                                   const currentHeights = Array.isArray(v.heightRange) ? v.heightRange : (v.heightRange ? [v.heightRange] : ['all']);
                                   const isSelected = currentHeights.includes(h.id);
