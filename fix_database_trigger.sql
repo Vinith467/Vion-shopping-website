@@ -7,8 +7,8 @@ BEGIN
     fallback_name := COALESCE(NEW.raw_user_meta_data->>'full_name', 'My Profile');
 
     -- 1. Create the profile
-    INSERT INTO public.profiles (id, full_name, avatar_url)
-    VALUES (NEW.id, fallback_name, NEW.raw_user_meta_data->>'avatar_url');
+    INSERT INTO public.profiles (id, full_name, email)
+    VALUES (NEW.id, fallback_name, NEW.email);
 
     -- 2. Create the primary consumer/member automatically
     INSERT INTO public.consumers (
