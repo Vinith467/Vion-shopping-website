@@ -243,10 +243,7 @@ export default function AccountScreen() {
                 <h2 className="font-serif text-3xl font-bold text-[#1A0A08] mb-6">My Details</h2>
                 
                 <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/60 relative shadow-sm">
-                  {/* Global Edit Button for Details */}
-                  <button onClick={() => navigate('/onboarding')} className="absolute top-6 right-6 text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline">
-                    <Edit2 size={14} /> Edit
-                  </button>
+                  {/* Global Edit Button removed since onboarding is deprecated */}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div>
@@ -303,8 +300,28 @@ export default function AccountScreen() {
                       <p className="text-gray-900 font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
                     </div>
                     <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Gender</label>
+                      <div className="flex items-center justify-between">
+                        <p className="text-gray-900 font-medium text-lg capitalize">{profile?.gender || 'Not set'}</p>
+                        <button 
+                          onClick={() => navigate('/select-gender?redirect=/account')} 
+                          className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
+                        >
+                          <Edit2 size={14} /> Edit
+                        </button>
+                      </div>
+                    </div>
+                    <div>
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Size</label>
-                      <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
+                        <button 
+                          onClick={() => navigate('/select-size?redirect=/account')} 
+                          className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
+                        >
+                          <Edit2 size={14} /> Edit
+                        </button>
+                      </div>
                     </div>
                     <div>
                       <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Height</label>

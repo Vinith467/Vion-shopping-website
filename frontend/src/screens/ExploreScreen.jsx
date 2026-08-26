@@ -123,7 +123,7 @@ export default function ExploreScreen() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {categories.map((cat, i) => (
               <div 
-                onClick={() => navigate(`/select-size?${classParam ? `class=${classParam}&` : ''}category=${cat.id}`)} 
+                onClick={() => navigate(`/explore?${classParam ? `class=${classParam}&` : ''}category=${cat.id}`)} 
                 key={cat.id || i} 
                 className="group relative aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all block cursor-pointer"
               >

@@ -58,13 +58,9 @@ export default function SizeSelectionScreen() {
           .eq('id', selectedConsumerId);
       }
       
-      // Navigate to explore with category and size
-      let url = `/explore?`;
-      if (categoryId) url += `category=${categoryId}&`;
-      if (classParam) url += `class=${classParam}&`;
-      url += `size=${sizeId}`;
-      
-      navigate(url);
+      // Navigate to explore with category and size (or wherever redirect says)
+      const redirectTo = searchParams.get('redirect') || '/explore';
+      navigate(redirectTo);
     } catch (error) {
       console.error("Error saving size:", error);
       toast.error("Something went wrong. Please try again.");
@@ -104,7 +100,7 @@ export default function SizeSelectionScreen() {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 w-full max-w-5xl mx-auto px-2 sm:px-0">
+        <div className="flex justify-center gap-2 sm:gap-4 w-full max-w-5xl mx-auto px-4 h-[350px] sm:h-[400px] md:h-[500px]">
           {sizes.map((s, idx) => {
             const imgUrl = userGender === 'Male' ? s.maleImg : s.femaleImg;
             
@@ -112,22 +108,26 @@ export default function SizeSelectionScreen() {
               <div 
                 key={idx}
                 onClick={() => handleSizeSelect(s.id)}
-                className="group cursor-pointer flex flex-col items-center p-2.5 sm:p-3 md:p-4 rounded-[1.25rem] bg-white/50 backdrop-blur-sm border border-[#E5CDA7]/50 shadow-sm hover:shadow-md hover:border-[#C49A5C]/60 hover:bg-white/80 transition-all duration-300 w-[calc(50%-0.375rem)] sm:w-[140px] md:w-[170px]"
+                className="group cursor-pointer relative overflow-hidden rounded-full border border-white/40 shadow-sm hover:shadow-xl hover:border-[#C49A5C]/60 transition-all duration-500 flex-1 max-w-[75px] sm:max-w-[120px] md:max-w-[160px] bg-white/30 backdrop-blur-sm"
               >
-                <div className="w-full aspect-[3/4] mb-4 overflow-hidden rounded-xl bg-gray-100">
-                  <img 
-                    src={imgUrl} 
-                    alt={s.name} 
-                    className="w-full h-full object-cover object-top mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=400';
-                    }}
-                  />
+                <img 
+                  src={imgUrl} 
+                  alt={s.name} 
+                  className="absolute inset-0 w-full h-full object-cover object-top mix-blend-multiply group-hover:scale-110 transition-transform duration-700 opacity-90" 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=400';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 pb-8 sm:pb-10 flex flex-col items-center justify-end h-full">
+                  <h3 className="text-white text-xl md:text-3xl font-bold tracking-widest group-hover:text-[#E5CDA7] transition-colors duration-300" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    {s.id}
+                  </h3>
+                  <span className="text-white/80 text-[8px] md:text-xs uppercase tracking-wider mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap hidden sm:block">
+                    {s.name}
+                  </span>
                 </div>
-                <h3 className="text-[#1A0A08] text-sm md:text-base font-bold tracking-wider" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  {s.name}
-                </h3>
               </div>
             );
           })}

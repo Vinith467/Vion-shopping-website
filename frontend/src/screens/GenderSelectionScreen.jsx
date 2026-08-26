@@ -20,10 +20,16 @@ export default function GenderSelectionScreen() {
 
   const handleGenderSelect = async (gender) => {
     try {
+      let hasSize = false;
       if (selectedConsumerId) {
         // Update local context
         updateMember(selectedConsumerId, { gender });
         
+        const activeMember = members.find(m => m.id === selectedConsumerId);
+        if (activeMember?.measurements?.size) {
+           hasSize = true;
+        }
+
         // Update Supabase
         await supabase
           .from('consumers')
@@ -36,7 +42,11 @@ export default function GenderSelectionScreen() {
       }
       
       // Navigate to the next step
-      navigate(redirectTo);
+      if (hasSize) {
+        navigate(redirectTo);
+      } else {
+        navigate(`/select-size?redirect=${encodeURIComponent(redirectTo)}`);
+      }
     } catch (error) {
       console.error("Error saving gender:", error);
       toast.error("Something went wrong. Please try again.");
