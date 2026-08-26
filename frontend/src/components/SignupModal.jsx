@@ -34,10 +34,7 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         options: {
           data: {
             full_name: email.split('@')[0],
-            age: 25,
-            gender: sessionStorage.getItem('temp_gender') || 'Female',
-            height_cm: 165,
-            body_shape: 'Hourglass'
+            gender: sessionStorage.getItem('temp_gender') || 'Female'
           }
         }
       });
