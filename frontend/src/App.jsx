@@ -116,6 +116,15 @@ function App() {
     return () => window.removeEventListener('openLoginModal', handleOpenLogin);
   }, []);
 
+  // Subdomain Routing Logic
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    // If the user visits corporate.vionfashion.com (or corporate.localhost), redirect to /corporate
+    if (hostname.startsWith('corporate.') && (location.pathname === '/' || location.pathname === '/home')) {
+      navigate('/corporate', { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <div className="bg-white min-h-[100dvh] w-full flex flex-col">
       <ScrollToTop />
