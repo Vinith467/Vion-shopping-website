@@ -8,7 +8,7 @@ export default function CorporateHero() {
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="/images/corporate/corp_hero.jpg" 
+          src="/images/corporate/corp_hero.png" 
           alt="VION Corporate Attire" 
           className="w-full h-full object-cover opacity-60"
         />
