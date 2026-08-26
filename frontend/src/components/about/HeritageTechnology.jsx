@@ -88,8 +88,8 @@ export default function HeritageTechnology() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-           <h3 className="text-white text-3xl font-serif tracking-widest uppercase">Heritage</h3>
+        <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-500">
+           <h3 className="text-white text-3xl md:text-5xl font-serif tracking-widest uppercase opacity-80">Heritage</h3>
         </div>
       </div>
 
@@ -104,14 +104,10 @@ export default function HeritageTechnology() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-           <h3 className="text-white text-3xl font-serif tracking-widest uppercase">Technology</h3>
+        <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-500">
+           <h3 className="text-white text-3xl md:text-5xl font-serif tracking-widest uppercase opacity-80">Technology</h3>
         </div>
       </div>
-
-      {/* Initial Center Line to emphasize the split */}
-      <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-[#C49A5C]/30 z-20 pointer-events-none"></div>
-
     </section>
   );
 }
