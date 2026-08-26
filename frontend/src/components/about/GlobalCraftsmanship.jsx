@@ -38,12 +38,13 @@ export default function GlobalCraftsmanship() {
   useEffect(() => {
     let ctx = gsap.context(() => {
       
-      // Pin the left text container so it doesn't scroll out of view and leave the left side empty
+      // Pin the left text container so it doesn't scroll out of view
       ScrollTrigger.create({
         trigger: leftTextRef.current,
         start: "top top+=120", 
         endTrigger: containerRef.current,
-        end: "bottom bottom",
+        // Unpin exactly when the bottom of the container reaches the bottom of this pinned text
+        end: () => `bottom ${leftTextRef.current ? leftTextRef.current.offsetHeight + 120 : "bottom"}`,
         pin: true,
         pinSpacing: false,
       });
