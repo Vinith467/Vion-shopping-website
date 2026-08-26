@@ -3,12 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const promises = [
-  { title: "High-quality fabrics", desc: "Sourced from the finest mills across Italy, Japan, and the UK, ensuring exceptional drape and durability.", img: "/images/about/promise_1_fabrics.png" },
-  { title: "Exceptional craftsmanship", desc: "Generations of tailoring expertise go into every stitch, combining traditional techniques with modern precision.", img: "/images/about/promise_2_craft.png" },
-  { title: "Personalized fit", desc: "Measurements taken by our experts ensure a garment that drapes perfectly and moves with you.", img: "/images/about/promise_3_fit.png" },
-  { title: "Thoughtful design", desc: "Timeless silhouettes elevated by meticulous attention to detail, creating a wardrobe that never goes out of style.", img: "/images/about/promise_4_design.png" },
-  { title: "Reliable delivery", desc: "A streamlined process ensures your custom garments are crafted and delivered precisely when you need them.", img: "/images/about/promise_5_delivery.png" }, 
-  { title: "Accessible pricing", desc: "By streamlining our supply chain and working directly with craftsmen, we eliminate the unnecessary luxury markup.", img: "/images/about/promise_6_pricing.png" },
+  { title: "High-quality fabrics", desc: "Sourced from the finest mills across Italy, Japan, and the UK, ensuring exceptional drape and durability.", img: "/images/about/promise_1_fabrics.png?v=2" },
+  { title: "Exceptional craftsmanship", desc: "Generations of tailoring expertise go into every stitch, combining traditional techniques with modern precision.", img: "/images/about/promise_2_craft.png?v=2" },
+  { title: "Personalized fit", desc: "Measurements taken by our experts ensure a garment that drapes perfectly and moves with you.", img: "/images/about/promise_3_fit.png?v=2" },
+  { title: "Thoughtful design", desc: "Timeless silhouettes elevated by meticulous attention to detail, creating a wardrobe that never goes out of style.", img: "/images/about/promise_4_design.png?v=2" },
+  { title: "Reliable delivery", desc: "A streamlined process ensures your custom garments are crafted and delivered precisely when you need them.", img: "/images/about/promise_5_delivery.png?v=2" }, 
+  { title: "Accessible pricing", desc: "By streamlining our supply chain and working directly with craftsmen, we eliminate the unnecessary luxury markup.", img: "/images/about/promise_6_pricing.png?v=2" },
 ];
 
 export default function QualityAndVision() {
