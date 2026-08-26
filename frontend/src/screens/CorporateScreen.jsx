@@ -5,6 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CorporateHero from '../components/corporate/CorporateHero';
 import WhoWeServe from '../components/corporate/WhoWeServe';
 import WhyChooseVion from '../components/corporate/WhyChooseVion';
+import OurProcess from '../components/corporate/OurProcess';
+import OurOfferings from '../components/corporate/OurOfferings';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +47,8 @@ export default function CorporateScreen() {
       <CorporateHero />
       <WhoWeServe />
       <WhyChooseVion />
+      <OurProcess />
+      <OurOfferings />
       
       {/* 
         Placeholder for the rest of the sections that will be built next 
