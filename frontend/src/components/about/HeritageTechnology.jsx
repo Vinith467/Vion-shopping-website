@@ -99,7 +99,7 @@ export default function HeritageTechnology() {
         className="absolute top-0 right-0 w-1/2 h-full z-10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
       >
         <img 
-          src="/images/about/vion_split_technology_1787748617462.jpg" 
+          src="/images/about/vion_split_technology_new.jpg" 
           alt="Modern Technology" 
           className="w-full h-full object-cover"
         />
