@@ -4,64 +4,114 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function HeritageTechnology() {
   const containerRef = useRef(null);
+  const leftDoorRef = useRef(null);
+  const rightDoorRef = useRef(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      gsap.from('.ht-text', {
+      
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
-        },
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out"
+          start: "top top",
+          end: "+=150%", // Pin for 1.5 screen heights
+          pin: true,
+          scrub: 1,
+        }
       });
+
+      // Initially, text is hidden and scaled down
+      gsap.set(contentRef.current, { opacity: 0, scale: 0.8, y: 50 });
+
+      // The "Door Opening" effect
+      tl.to(leftDoorRef.current, {
+        x: "-30vw", // Move left door 30% of screen width out
+        ease: "power2.inOut",
+        duration: 1
+      }, 0)
+      .to(rightDoorRef.current, {
+        x: "30vw", // Move right door 30% out
+        ease: "power2.inOut",
+        duration: 1
+      }, 0)
+      // Fade and scale up text in the middle
+      .to(contentRef.current, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        ease: "power2.out",
+        duration: 0.8
+      }, 0.2);
+
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-16">
+    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden flex items-center justify-center">
+      
+      {/* Center Text (Revealed when doors open) */}
+      <div 
+        ref={contentRef} 
+        className="absolute z-0 w-full md:w-[60%] lg:w-[45%] text-center px-6"
+      >
+        <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          Where Heritage<br/>Meets Technology
+        </h2>
         
-        {/* Left Side: Text */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center order-2 md:order-1">
-          <div>
-            <h2 className="ht-text text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Where Heritage Meets Technology
-            </h2>
-            
-            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed">
-              <p className="ht-text font-medium text-[#151515]">
-                VION is not trying to replace traditional craftsmanship with technology.
-              </p>
-              <p className="ht-text">
-                We are using technology to make craftsmanship more accessible, scalable and convenient.
-              </p>
-              <p className="ht-text">
-                From customer consultations and digital communication to design development, measurements, production management and delivery, technology helps us create a smoother experience while our craftsmen remain at the heart of what we do.
-              </p>
-              <div className="ht-text pt-4 border-l border-[#C49A5C] pl-6 mt-8">
-                <p className="tracking-widest uppercase text-xs mb-2">Generations of craftsmanship.</p>
-                <p className="tracking-widest uppercase text-xs">Technology for tomorrow.</p>
-              </div>
-            </div>
+        <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
+          <p className="font-medium text-[#F5F0E8] text-lg">
+            VION is not trying to replace traditional craftsmanship with technology.
+          </p>
+          <p>
+            We are using technology to make craftsmanship more accessible, scalable and convenient.
+          </p>
+          <p>
+            From customer consultations and digital communication to design development, measurements, production management and delivery, technology helps us create a smoother experience while our craftsmen remain at the heart of what we do.
+          </p>
+          <div className="pt-8">
+            <p className="tracking-widest uppercase text-xs mb-3 text-[#C49A5C]">Generations of craftsmanship.</p>
+            <p className="tracking-widest uppercase text-xs text-[#C49A5C]">Technology for tomorrow.</p>
           </div>
         </div>
-
-        {/* Right Side: Image Grid */}
-        <div className="w-full md:w-1/2 relative order-1 md:order-2 grid grid-cols-2 gap-4">
-          <div className="aspect-[3/4] overflow-hidden rounded shadow-xl translate-y-8">
-            <img src="/images/about/craft_01_hero_1787726287527.jpg" alt="Heritage" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-          </div>
-          <div className="aspect-[3/4] overflow-hidden rounded shadow-xl -translate-y-8">
-            <img src="/images/about/corporate_gallery_editorial_1787745065973.jpg" alt="Technology" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-          </div>
-        </div>
-
       </div>
+
+      {/* Left Door: Heritage */}
+      <div 
+        ref={leftDoorRef} 
+        className="absolute top-0 left-0 w-1/2 h-full z-10 shadow-[20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+      >
+        <img 
+          src="/images/about/vion_split_heritage_1787748599966.jpg" 
+          alt="Traditional Craftsmanship" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
+           <h3 className="text-white text-3xl font-serif tracking-widest uppercase">Heritage</h3>
+        </div>
+      </div>
+
+      {/* Right Door: Technology */}
+      <div 
+        ref={rightDoorRef} 
+        className="absolute top-0 right-0 w-1/2 h-full z-10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+      >
+        <img 
+          src="/images/about/vion_split_technology_1787748617462.jpg" 
+          alt="Modern Technology" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
+           <h3 className="text-white text-3xl font-serif tracking-widest uppercase">Technology</h3>
+        </div>
+      </div>
+
+      {/* Initial Center Line to emphasize the split */}
+      <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-[#C49A5C]/30 z-20 pointer-events-none"></div>
+
     </section>
   );
 }
