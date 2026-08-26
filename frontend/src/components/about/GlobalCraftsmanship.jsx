@@ -40,7 +40,7 @@ export default function GlobalCraftsmanship() {
       cardsRef.current.forEach((card, index) => {
         ScrollTrigger.create({
           trigger: card,
-          start: "top " + (120 + index * 40) + "px", // Stack them with a 40px offset
+          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
           endTrigger: containerRef.current,
           end: "bottom bottom",
           pin: true,
@@ -86,7 +86,7 @@ export default function GlobalCraftsmanship() {
         </div>
 
         {/* Right Side: Stacking Cards */}
-        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-32">
+        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-[50vh]">
           {locations.map((loc, i) => (
             <div 
               key={i} 
