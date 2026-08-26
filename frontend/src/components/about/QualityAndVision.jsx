@@ -25,25 +25,33 @@ export default function QualityAndVision() {
       // Setup ScrollTriggers for each text block to reveal its corresponding image
       rightTextsRef.current.forEach((text, i) => {
         
+        const updateImages = (activeIndex) => {
+          leftImagesRef.current.forEach((img, index) => {
+            if (index === activeIndex) {
+              gsap.to(img, { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
+            } else {
+              gsap.to(img, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+            }
+          });
+        };
+
         ScrollTrigger.create({
           trigger: text,
           start: "top center",
           end: "bottom center",
           onEnter: () => {
-            gsap.to(leftImagesRef.current, { autoAlpha: 0, duration: 0.5 });
-            gsap.to(leftImagesRef.current[i], { autoAlpha: 1, duration: 0.5 });
-            gsap.to(text, { opacity: 1, x: 20, duration: 0.5 });
+            updateImages(i);
+            gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
           },
           onEnterBack: () => {
-            gsap.to(leftImagesRef.current, { autoAlpha: 0, duration: 0.5 });
-            gsap.to(leftImagesRef.current[i], { autoAlpha: 1, duration: 0.5 });
-            gsap.to(text, { opacity: 1, x: 20, duration: 0.5 });
+            updateImages(i);
+            gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
           },
           onLeave: () => {
-            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5 });
+            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
           },
           onLeaveBack: () => {
-            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5 });
+            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
           }
         });
       });
@@ -65,7 +73,7 @@ export default function QualityAndVision() {
   };
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative overflow-hidden">
+    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
         {/* Massive Image Banner */}
