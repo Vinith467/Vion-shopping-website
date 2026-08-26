@@ -10,6 +10,7 @@ import GlobalCraftsmanship from '../components/about/GlobalCraftsmanship';
 import HeritageTechnology from '../components/about/HeritageTechnology';
 import OurApproach from '../components/about/OurApproach';
 import QualityAndVision from '../components/about/QualityAndVision';
+import OurVision from '../components/about/OurVision';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,6 +61,7 @@ export default function AboutScreen() {
       <HeritageTechnology />
       <OurApproach />
       <QualityAndVision />
+      <OurVision />
       
     </div>
   );
