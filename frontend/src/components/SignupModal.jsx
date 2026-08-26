@@ -31,6 +31,15 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: email.split('@')[0],
+            age: 25,
+            gender: sessionStorage.getItem('temp_gender') || 'Female',
+            height_cm: 165,
+            body_shape: 'Hourglass'
+          }
+        }
       });
       
       if (authError) throw authError;
