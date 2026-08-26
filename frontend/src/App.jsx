@@ -176,12 +176,40 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-4 lg:gap-6 text-[16px] lg:text-[18px] font-bold text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
-              <button onClick={() => handleNavGenderSelect('Female')} className="hover:text-[#A87B45] transition-colors">Women</button>
-              <button onClick={() => handleNavGenderSelect('Male')} className="hover:text-[#A87B45] transition-colors">Men</button>
-              <button onClick={() => navigate('/consultation')} className="hover:text-[#A87B45] transition-colors">Book Consultant</button>
-              <button onClick={() => navigate('/about')} className="hover:text-[#A87B45] transition-colors">About Us</button>
-              <button onClick={() => navigate('/corporate')} className="hover:text-[#A87B45] transition-colors">VION Corporate</button>
+            <div className="flex items-center gap-5 lg:gap-8 text-[16px] lg:text-[18px] font-semibold text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+              {/* Gender Links */}
+              <div className="flex items-center gap-4">
+                <button onClick={() => handleNavGenderSelect('Female')} className="hover:text-[#A87B45] transition-colors relative group">
+                  Women
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <span className="text-[#111111]/20 font-light text-sm">|</span>
+                <button onClick={() => handleNavGenderSelect('Male')} className="hover:text-[#A87B45] transition-colors relative group">
+                  Men
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                </button>
+              </div>
+              
+              {/* Secondary Links */}
+              <div className="flex items-center gap-5">
+                <button onClick={() => navigate('/about')} className="hover:text-[#A87B45] transition-colors relative group">
+                  About Us
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                </button>
+                <button onClick={() => navigate('/corporate')} className="hover:text-[#A87B45] transition-colors relative group flex items-center gap-1.5">
+                  VION Corporate
+                  <span className="bg-gradient-to-r from-[#111] to-[#333] text-white text-[8px] font-sans font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-widest shadow-sm">B2B</span>
+                </button>
+              </div>
+
+              {/* CTA Button */}
+              <button 
+                onClick={() => navigate('/consultation')} 
+                className="ml-2 px-5 py-2 border border-[#111111]/30 hover:border-[#A87B45] hover:bg-[#A87B45] text-[#111111] hover:text-white transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm"
+              >
+                <Sparkles size={14} className="text-[#A87B45] group-hover:text-white transition-colors" />
+                <span className="font-bold">Book Consultant</span>
+              </button>
             </div>
           )}
 
