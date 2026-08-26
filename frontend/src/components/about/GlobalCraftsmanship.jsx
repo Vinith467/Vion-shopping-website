@@ -3,50 +3,76 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const locations = [
-  { name: 'Italian Craftsmanship', desc: 'Inspired by generations of Italian tailoring, we focus on refined construction, precision cutting, elegant silhouettes and timeless sartorial techniques.', img: '/images/about/craft_03_details_1787726445718.jpg' },
-  { name: 'French Refinement', desc: 'We draw from French approaches to sophistication and customization, with an emphasis on elegance, proportion, finishing and meticulous attention to detail.', img: '/images/about/craft_01_macro_1787726302160.jpg' },
-  { name: 'Japanese Precision', desc: 'Japanese technical innovation inspires our approach to precision, disciplined processes and painstaking attention to intricate details.', img: '/images/about/corporate_fabric_wool_1787744950103.jpg' },
-  { name: 'Indian Artistry', desc: 'India brings an extraordinary tradition of craftsmanship. Our expertise includes Indian hand embroidery and artisanal techniques, combining traditional skill with contemporary design.', img: '/images/about/craft_04_measuring_1787726583981.jpg' },
-  { name: 'Global Fabrics', desc: 'From Italian textiles to British, Japanese, Portuguese and Chinese fabrics, we explore materials from around the world and select them according to the purpose, performance, comfort and character required.', img: '/images/about/craft_01_selection_1787726319333.jpg' }
+  { 
+    name: 'Italian Craftsmanship', 
+    desc: 'Inspired by generations of Italian tailoring, we focus on refined construction, precision cutting, elegant silhouettes and timeless sartorial techniques.', 
+    img: '/images/about/vion_craft_italy_1787748254022.jpg' // I'll use the copied path below
+  },
+  { 
+    name: 'French Refinement', 
+    desc: 'We draw from French approaches to sophistication and customization, with an emphasis on elegance, proportion, finishing and meticulous attention to detail.', 
+    img: '/images/about/vion_craft_france_1787748294165.jpg' 
+  },
+  { 
+    name: 'Japanese Precision', 
+    desc: 'Japanese technical innovation inspires our approach to precision, disciplined processes and painstaking attention to intricate details.', 
+    img: '/images/about/vion_craft_japan_1787748309782.jpg' 
+  },
+  { 
+    name: 'Indian Artistry', 
+    desc: 'India brings an extraordinary tradition of craftsmanship. Our expertise includes Indian hand embroidery and artisanal techniques, combining traditional skill with contemporary design.', 
+    img: '/images/about/vion_craft_india_1787748328151.jpg' 
+  },
+  { 
+    name: 'Global Fabrics', 
+    desc: 'From Italian textiles to British, Japanese, Portuguese and Chinese fabrics, we explore materials from around the world and select them according to the purpose, performance, comfort and character required.', 
+    img: '/images/about/vion_craft_global_1787748349602.jpg' 
+  }
 ];
 
 export default function GlobalCraftsmanship() {
   const containerRef = useRef(null);
+  const cardsRef = useRef([]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      // Fade in location cards on scroll
-      gsap.utils.toArray('.location-row').forEach((row) => {
-        gsap.from(row, {
-          scrollTrigger: {
-            trigger: row,
-            start: "top 80%",
-          },
-          y: 50,
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out"
+      // Create a stacking effect for the cards on the right
+      cardsRef.current.forEach((card, index) => {
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top " + (120 + index * 40) + "px", // Stack them with a 40px offset
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
         });
       });
+
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
+  const addToRefs = (el) => {
+    if (el && !cardsRef.current.includes(el)) {
+      cardsRef.current.push(el);
+    }
+  };
+
   return (
-    <section ref={containerRef} className="py-24 bg-[#151515] text-[#F5F0E8] relative">
+    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Side: Sticky Intro Text */}
-        <div className="w-full lg:w-1/3 relative">
+        <div className="w-full lg:w-1/3 relative z-10">
           <div className="lg:sticky lg:top-32">
-            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
-            <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
+            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed">
               <p>
                 We believe exceptional clothing begins with exceptional materials. Our fabrics and materials are sourced from across the world, including Italy, the United Kingdom, Japan, Portugal, China and other renowned textile markets.
               </p>
-              <p>
+              <p className="font-medium text-[#151515]">
                 But fabric is only the beginning.
               </p>
               <p>
@@ -59,19 +85,23 @@ export default function GlobalCraftsmanship() {
           </div>
         </div>
 
-        {/* Right Side: Scrolling Locations */}
-        <div className="w-full lg:w-2/3 flex flex-col gap-24 pt-12 lg:pt-0">
+        {/* Right Side: Stacking Cards */}
+        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-32">
           {locations.map((loc, i) => (
-            <div key={i} className="location-row flex flex-col sm:flex-row items-center gap-8">
-              {/* Image */}
-              <div className="w-full sm:w-1/2 aspect-square overflow-hidden shadow-2xl">
-                <img src={loc.img} alt={loc.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+            <div 
+              key={i} 
+              ref={addToRefs}
+              className="w-full bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col"
+              style={{ zIndex: i + 1 }}
+            >
+              <div className="w-full h-[40vh] overflow-hidden relative">
+                <img src={loc.img} alt={loc.name} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
               </div>
-              {/* Text */}
-              <div className="w-full sm:w-1/2">
-                <h3 className="text-2xl font-serif uppercase tracking-widest mb-4 text-[#C49A5C]">{loc.name}</h3>
-                <div className="w-8 h-px bg-[#F5F0E8]/30 mb-4"></div>
-                <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/70">
+              <div className="p-8 md:p-12 relative -mt-16 z-10">
+                <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-widest mb-4 text-[#C49A5C]">{loc.name}</h3>
+                <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
+                <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/80 max-w-xl">
                   {loc.desc}
                 </p>
               </div>
