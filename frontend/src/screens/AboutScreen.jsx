@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -54,7 +55,17 @@ export default function AboutScreen() {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-clip">
+    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-clip relative">
+      
+      {/* Floating Back Button */}
+      <button 
+        onClick={() => navigate(-1)}
+        className="fixed top-8 left-6 md:left-12 z-50 flex items-center gap-2 text-[#F5F0E8]/70 hover:text-[#C49A5C] transition-colors bg-[#111111]/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 shadow-lg group"
+      >
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Back</span>
+      </button>
+
       <HeroSection />
       <GenerationsTimeline />
       <GlobalCraftsmanship />

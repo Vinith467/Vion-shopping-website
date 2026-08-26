@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -29,8 +30,8 @@ export default function CorporateScreen() {
         </div>
 
         <div className="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
-          <a href="#" className="text-[#C49A5C]">Home</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">About Us</a>
+          <Link to="/" className="text-[#C49A5C]">Home</Link>
+          <Link to="/about" className="hover:text-[#C49A5C] transition-colors">About Us</Link>
           <a href="#" className="hover:text-[#C49A5C] transition-colors">Solutions</a>
           <a href="#" className="hover:text-[#C49A5C] transition-colors">Our Process</a>
           <a href="#" className="hover:text-[#C49A5C] transition-colors">Our Work</a>
