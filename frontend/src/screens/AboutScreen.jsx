@@ -53,7 +53,7 @@ export default function AboutScreen() {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-clip">
       <HeroSection />
       <GenerationsTimeline />
       <GlobalCraftsmanship />

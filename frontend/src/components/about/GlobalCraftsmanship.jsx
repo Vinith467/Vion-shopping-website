@@ -38,16 +38,8 @@ export default function GlobalCraftsmanship() {
   useEffect(() => {
     let ctx = gsap.context(() => {
       
-      // Pin the left text container so it doesn't scroll out of view
-      ScrollTrigger.create({
-        trigger: leftTextRef.current,
-        start: "top top+=120", 
-        endTrigger: containerRef.current,
-        // Unpin exactly when the bottom of the container reaches the bottom of this pinned text
-        end: () => `bottom ${leftTextRef.current ? leftTextRef.current.offsetHeight + 120 : "bottom"}`,
-        pin: true,
-        pinSpacing: false,
-      });
+      // Pinning the left text is now handled natively by CSS sticky in the JSX.
+      // We removed the GSAP pin because pinning flex items breaks their width/layout.
 
       // Create a stacking effect for the cards on the right
       cardsRef.current.forEach((card, index) => {
@@ -76,8 +68,8 @@ export default function GlobalCraftsmanship() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Side: Sticky Intro Text */}
-        <div className="w-full lg:w-1/3 relative z-10" ref={leftTextRef}>
-          <div className="pt-12">
+        <div className="w-full lg:w-1/3 relative z-10">
+          <div className="lg:sticky lg:top-32">
             <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
