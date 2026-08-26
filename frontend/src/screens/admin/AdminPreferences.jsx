@@ -103,24 +103,24 @@ export default function AdminPreferences() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto animate-fade-in font-sans pb-32">
-      <div className="flex justify-between items-center mb-8 bg-white/60 backdrop-blur p-6 rounded-2xl border border-white/50 shadow-sm sticky top-20 z-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8 bg-white/80 md:bg-white/60 backdrop-blur-md p-5 md:p-6 rounded-2xl border border-white/50 shadow-sm md:sticky md:top-20 z-10">
         <div>
-          <h1 className="text-3xl font-bold font-serif text-gray-900">Page Content</h1>
-          <p className="text-gray-600 mt-1">Manage the content and images for the Craftsmanship page.</p>
+          <h1 className="text-2xl md:text-3xl font-bold font-serif text-gray-900">Page Content</h1>
+          <p className="text-sm md:text-base text-gray-600 mt-1 max-w-[280px] md:max-w-none">Manage the content and images for the Craftsmanship page.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 md:gap-3 w-full md:w-auto">
             <button 
             onClick={resetToDefault}
-            className="px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-white transition-all font-bold text-sm"
+            className="flex-1 md:flex-none px-3 md:px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-white transition-all font-bold text-xs md:text-sm text-center justify-center flex items-center"
             >
-            Reset Defaults
+            Reset
             </button>
             <button 
             onClick={saveContent}
             disabled={isSaving}
-            className="bg-[#6344D4] hover:bg-[#5036aa] text-white px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm shadow-md transition-all"
+            className="flex-1 md:flex-none bg-[#6344D4] hover:bg-[#5036aa] text-white px-4 md:px-6 py-2.5 rounded-xl flex items-center justify-center gap-1.5 md:gap-2 font-bold text-xs md:text-sm shadow-md transition-all whitespace-nowrap"
             >
-            <Save size={16} /> {isSaving ? 'Saving...' : 'Save Changes'}
+            <Save size={14} className="md:w-4 md:h-4" /> {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
         </div>
       </div>
