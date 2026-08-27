@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../services/supabaseClient";
 import { useAppContext } from '../context/AppContext';
+import { Badge } from 'antd';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -156,7 +157,8 @@ export default function HomeScreen() {
               </button>
               
               <button 
-                className="group cursor-pointer px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:scale-[1.02] hover:opacity-95 active:scale-[0.98]"
+                onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
+                className="group relative cursor-pointer px-7 py-2.5 2xl:px-9 2xl:py-3 rounded-full transition-all duration-300 hover:scale-[1.02] hover:opacity-95 active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(135deg, #C49A5C 0%, #A87B45 50%, #8B5A2B 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.3)',

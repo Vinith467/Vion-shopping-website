@@ -6,12 +6,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import HeroSection from '../components/about/HeroSection';
-import GenerationsTimeline from '../components/about/GenerationsTimeline';
 import GlobalCraftsmanship from '../components/about/GlobalCraftsmanship';
 import HeritageTechnology from '../components/about/HeritageTechnology';
 import OurApproach from '../components/about/OurApproach';
-import QualityAndVision from '../components/about/QualityAndVision';
-import OurVision from '../components/about/OurVision';
+import YourExperience from '../components/about/YourExperience';
+import QualityAndPricing from '../components/about/QualityAndPricing';
+import FashionVision from '../components/about/FashionVision';
+import CollectionsGallery from '../components/about/CollectionsGallery';
+import VionManifesto from '../components/about/VionManifesto';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,7 +57,7 @@ export default function AboutScreen() {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-clip relative">
+    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-x-clip relative">
       
       {/* Floating Back Button */}
       <button 
@@ -67,12 +69,13 @@ export default function AboutScreen() {
       </button>
 
       <HeroSection />
-      <GenerationsTimeline />
       <GlobalCraftsmanship />
       <HeritageTechnology />
       <OurApproach />
-      <QualityAndVision />
-      <OurVision />
+      <YourExperience />
+      <QualityAndPricing />
+      <FashionVision />
+      <VionManifesto />
       
     </div>
   );

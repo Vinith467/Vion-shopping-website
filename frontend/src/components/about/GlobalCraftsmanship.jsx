@@ -2,45 +2,36 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const locations = [
+const craftPillars = [
   { 
-    name: 'Italian Craftsmanship', 
-    desc: 'Inspired by generations of Italian tailoring, we focus on refined construction, precision cutting, elegant silhouettes and timeless sartorial techniques.', 
-    img: '/images/about/vion_craft_italy_1787748254022.jpg' // I'll use the copied path below
-  },
-  { 
-    name: 'French Refinement', 
-    desc: 'We draw from French approaches to sophistication and customization, with an emphasis on elegance, proportion, finishing and meticulous attention to detail.', 
-    img: '/images/about/vion_craft_france_1787748294165.jpg' 
+    name: 'Italian & French Heritage', 
+    desc: 'Inspired by generations of Italian tailoring, we focus on refined construction, precision cutting, and elegant silhouettes. We draw inspiration from French approaches to sophistication and customization, with an emphasis on proportion, finishing and meticulous attention to detail.', 
+    img: '/New folder/5.png' 
   },
   { 
     name: 'Japanese Precision', 
-    desc: 'Japanese technical innovation inspires our approach to precision, disciplined processes and painstaking attention to intricate details.', 
-    img: '/images/about/vion_craft_japan_1787748309782.jpg' 
+    desc: 'Japanese technical innovation inspires our approach to precision, disciplined processes and meticulous attention to intricate detail.', 
+    img: '/New folder/6.png' 
   },
   { 
     name: 'Indian Artistry', 
-    desc: 'India brings an extraordinary tradition of craftsmanship. Our expertise includes Indian hand embroidery and artisanal techniques, combining traditional skill with contemporary design.', 
-    img: '/images/about/vion_craft_india_1787748328151.jpg' 
+    desc: 'India has an extraordinary tradition of craftsmanship. Our expertise includes Indian hand embroidery and artisanal techniques, bringing traditional skills together with contemporary fashion.', 
+    img: '/New folder/7.png' 
   },
   { 
     name: 'Global Fabrics', 
-    desc: 'From Italian textiles to British, Japanese, Portuguese and Chinese fabrics, we explore materials from around the world and select them according to the purpose, performance, comfort and character required.', 
-    img: '/images/about/vion_craft_global_1787748349602.jpg' 
+    desc: 'From Italian textiles to British, Japanese, Portuguese and Chinese fabrics, we explore materials from around the world and select them based on their quality, comfort, performance, character and purpose.', 
+    img: '/New folder/4.png' 
   }
 ];
 
 export default function GlobalCraftsmanship() {
   const containerRef = useRef(null);
-  const leftTextRef = useRef(null);
   const cardsRef = useRef([]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
       
-      // Pinning the left text is now handled natively by CSS sticky in the JSX.
-      // We removed the GSAP pin because pinning flex items breaks their width/layout.
-
       // Create a stacking effect for the cards on the right
       cardsRef.current.forEach((card, index) => {
         ScrollTrigger.create({
@@ -64,50 +55,63 @@ export default function GlobalCraftsmanship() {
   };
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 relative">
+    <section ref={containerRef} className="py-24 bg-[#FDFBF7] text-[#1A1A1A] relative">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Side: Sticky Intro Text */}
-        <div className="w-full lg:w-1/3 relative z-10">
+        <div className="w-full lg:w-5/12 relative z-10">
           <div className="lg:sticky lg:top-32">
-            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            
+            <div className="mb-8 w-full h-[30vh] lg:h-[40vh] overflow-hidden rounded-2xl shadow-xl">
+              <img src="/New folder/4.png" alt="Global Sourcing" className="w-full h-full object-cover" />
+            </div>
+
+            <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-4">Global Sourcing</h3>
+            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
-            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed">
+            <div className="space-y-5 text-[15px] text-[#555] font-light leading-relaxed">
               <p>
-                We believe exceptional clothing begins with exceptional materials. Our fabrics and materials are sourced from across the world, including Italy, the United Kingdom, Japan, Portugal, China and other renowned textile markets.
+                We believe exceptional clothing begins with exceptional materials.
+                Our fabrics and materials are sourced from across the world, including Italy, the United Kingdom, Japan, Portugal, China and other renowned textile markets.
               </p>
-              <p className="font-medium text-[#151515]">
+              <p className="font-semibold text-[#111]">
                 But fabric is only the beginning.
               </p>
               <p>
                 What truly makes a garment exceptional is the craftsmanship, precision and attention to detail that transforms the material into something extraordinary.
               </p>
               <p>
-                At VION, we bring together a global perspective on craftsmanship with the expertise developed through generations of our own tailoring experience.
+                At VION, we bring together a global perspective on textiles and craftsmanship with the expertise developed through three generations of tailoring experience.
+              </p>
+            </div>
+            
+            <div className="mt-10 p-6 bg-[#1A1A1A] text-white rounded-xl shadow-2xl">
+              <p className="text-[16px] italic leading-relaxed" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                "The result is clothing that brings together global inspiration and Indian craftsmanship."
               </p>
             </div>
           </div>
         </div>
 
         {/* Right Side: Stacking Cards */}
-        <div className="w-full lg:w-2/3 flex flex-col pt-12 lg:pt-0 relative z-20 pb-[50vh]">
-          {locations.map((loc, i) => (
+        <div className="w-full lg:w-7/12 flex flex-col pt-12 lg:pt-0 relative z-20 pb-[50vh]">
+          {craftPillars.map((pillar, i) => (
             <div 
               key={i} 
               ref={addToRefs}
-              className="w-full bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col"
+              className="w-full bg-[#1A1A1A] text-white rounded-2xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col border border-white/10"
               style={{ zIndex: i + 1 }}
             >
-              <div className="w-full h-[40vh] overflow-hidden relative">
-                <img src={loc.img} alt={loc.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+              <div className="w-full h-[45vh] overflow-hidden relative">
+                <img src={pillar.img} alt={pillar.name} className="w-full h-full object-cover opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-black/20 to-transparent"></div>
               </div>
               <div className="p-8 md:p-12 relative -mt-16 z-10">
-                <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-widest mb-4 text-[#C49A5C]">{loc.name}</h3>
-                <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
-                <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/80 max-w-xl">
-                  {loc.desc}
+                <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-widest mb-4 text-[#E5CDA7]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{pillar.name}</h3>
+                <div className="w-12 h-[2px] bg-[#E5CDA7] mb-6"></div>
+                <p className="font-sans font-light text-[15px] leading-relaxed text-white/80 max-w-xl">
+                  {pillar.desc}
                 </p>
               </div>
             </div>

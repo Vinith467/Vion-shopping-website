@@ -22,16 +22,16 @@ export default function HeritageTechnology() {
       });
 
       // Initially, text is hidden and scaled down
-      gsap.set(contentRef.current, { opacity: 0, scale: 0.8, y: 50 });
+      gsap.set(contentRef.current, { opacity: 0, scale: 0.9, y: 30 });
 
       // The "Door Opening" effect
       tl.to(leftDoorRef.current, {
-        x: "-30vw", // Move left door 30% of screen width out
+        x: "-40vw", // Move left door out
         ease: "power2.inOut",
         duration: 1
       }, 0)
       .to(rightDoorRef.current, {
-        x: "30vw", // Move right door 30% out
+        x: "40vw", // Move right door out
         ease: "power2.inOut",
         duration: 1
       }, 0)
@@ -49,30 +49,36 @@ export default function HeritageTechnology() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden flex items-center justify-center">
+    <section ref={containerRef} className="relative h-screen w-full bg-[#FDFBF7] overflow-hidden flex items-center justify-center border-t border-black/5">
       
       {/* Center Text (Revealed when doors open) */}
       <div 
         ref={contentRef} 
-        className="absolute z-0 w-full md:w-[60%] lg:w-[45%] text-center px-6"
+        className="absolute z-0 w-full md:w-[75%] lg:w-[55%] text-center px-6 max-h-[90vh] overflow-y-auto no-scrollbar py-8 flex flex-col justify-center"
       >
-        <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Where Heritage<br/>Meets Technology
+        <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-3">Where Heritage Meets Technology</h3>
+        <h2 className="text-2xl md:text-4xl font-bold mb-5 md:mb-6 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          VION is not trying to replace traditional craftsmanship with technology.
         </h2>
         
-        <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
-          <p className="font-medium text-[#F5F0E8] text-lg">
-            VION is not trying to replace traditional craftsmanship with technology.
+        <div className="space-y-4 text-[14px] md:text-[15px] text-[#555] font-light leading-relaxed max-w-2xl mx-auto">
+          <p>
+            We are using technology to make great clothing more accessible, convenient and personal.
           </p>
           <p>
-            We are using technology to make craftsmanship more accessible, scalable and convenient.
+            From discovering collections and selecting sizes to customization, digital communication, order management and delivery, technology helps us create a smoother shopping experience.
+          </p>
+          <p className="font-semibold text-[#111]">
+            But behind every garment remains something technology cannot replace:<br/>
+            Human craftsmanship.
           </p>
           <p>
-            From customer consultations and digital communication to design development, measurements, production management and delivery, technology helps us create a smoother experience while our craftsmen remain at the heart of what we do.
+            Our craftsmen, designers and manufacturing partners remain at the heart of what we do.
           </p>
-          <div className="pt-8">
-            <p className="tracking-widest uppercase text-xs mb-3 text-[#C49A5C]">Generations of craftsmanship.</p>
-            <p className="tracking-widest uppercase text-xs text-[#C49A5C]">Technology for tomorrow.</p>
+          
+          <div className="pt-5 border-t border-black/10 flex flex-col items-center gap-2">
+            <p className="tracking-[0.15em] uppercase text-[10px] font-bold text-[#A87B45]">Generations of craftsmanship.</p>
+            <p className="tracking-[0.15em] uppercase text-[10px] font-bold text-[#A87B45]">Technology for tomorrow.</p>
           </div>
         </div>
       </div>
@@ -80,32 +86,32 @@ export default function HeritageTechnology() {
       {/* Left Door: Heritage */}
       <div 
         ref={leftDoorRef} 
-        className="absolute top-0 left-0 w-1/2 h-full z-10 shadow-[20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+        className="absolute top-0 left-0 w-1/2 h-full z-10 shadow-[20px_0_50px_rgba(0,0,0,0.15)] overflow-hidden"
       >
         <img 
-          src="/images/about/vion_split_heritage_1787748599966.jpg" 
+          src="/New folder/9.png" 
           alt="Traditional Craftsmanship" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-500">
-           <h3 className="text-white text-3xl md:text-5xl font-serif tracking-widest uppercase opacity-80">Heritage</h3>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+           <h3 className="text-white text-2xl md:text-4xl font-serif tracking-widest uppercase" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Heritage</h3>
         </div>
       </div>
 
       {/* Right Door: Technology */}
       <div 
         ref={rightDoorRef} 
-        className="absolute top-0 right-0 w-1/2 h-full z-10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+        className="absolute top-0 right-0 w-1/2 h-full z-10 shadow-[-20px_0_50px_rgba(0,0,0,0.15)] overflow-hidden"
       >
         <img 
-          src="/images/about/vion_split_technology_new.jpg" 
+          src="/New folder/8.png" 
           alt="Modern Technology" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-opacity duration-500">
-           <h3 className="text-white text-3xl md:text-5xl font-serif tracking-widest uppercase opacity-80">Technology</h3>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+           <h3 className="text-white text-2xl md:text-4xl font-serif tracking-widest uppercase" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Technology</h3>
         </div>
       </div>
     </section>

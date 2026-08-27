@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-export default function GenerationsTimeline() {
+export default function CorporateGenerationsTimeline() {
   const containerRef = useRef(null);
   const imageRef = useRef(null);
   const cardRef = useRef(null);

@@ -2,118 +2,118 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const steps = [
-  { num: '01', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.', img: '/images/about/corporate_gallery_editorial_1787745065973.jpg' },
-  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.', img: '/images/about/craft_02_man_1787726381257.jpg' },
-  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.', img: '/images/about/craft_01_selection_1787726319333.jpg' },
-  { num: '04', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.', img: '/images/about/corporate_fabric_wool_1787744950103.jpg' },
-  { num: '05', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.', img: '/images/about/craft_04_measuring_1787726583981.jpg' },
-  { num: '06', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.', img: '/images/about/craft_03_cutting_1787726412577.jpg' },
-  { num: '07', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.', img: '/images/about/craft_02_woman_1787726369150.jpg' },
-  { num: '08', title: 'We Support You', desc: 'If there is a fitting issue, alteration requirement or any other concern, we work with you to resolve it.', img: '/images/about/craft_04_male_fitting_1787726621418.jpg' },
-];
-
 export default function OurApproach() {
   const containerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
-  const trackRef = useRef(null);
+  const wordsRef = useRef([]);
+  const image1Ref = useRef(null);
+  const image2Ref = useRef(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      
-      // Calculate how far we need to move the track
-      // It's the full width of the track MINUS the width of the viewport
-      const getScrollAmount = () => {
-        let trackWidth = trackRef.current.scrollWidth;
-        return -(trackWidth - window.innerWidth);
-      };
 
-      const tween = gsap.to(trackRef.current, {
-        x: getScrollAmount,
+      // Parallax for detail image
+      gsap.to(image2Ref.current, {
+        yPercent: 15,
         ease: "none",
         scrollTrigger: {
-          trigger: scrollContainerRef.current,
-          start: "top top",
-          end: () => `+=${getScrollAmount() * -1}`, // The scroll distance equals the physical width of the track
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true, // Recalculates on resize
+          trigger: image2Ref.current.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
         }
+      });
+
+      // Stagger fade up the 6 words
+      wordsRef.current.forEach((word, i) => {
+        gsap.fromTo(word, 
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: word,
+              start: "top 85%",
+            }
+          }
+        );
       });
 
     }, containerRef);
     return () => ctx.revert();
   }, []);
 
+  const coreWords = ["Fit", "Fabric", "Design", "Comfort", "Detail", "You"];
+
   return (
-    <div ref={containerRef} className="bg-[#151515] relative overflow-hidden">
-      
-      {/* Intro Section - Static, scrolls normally */}
-      <section className="pt-32 pb-16 px-6 md:px-12 max-w-5xl mx-auto text-center relative z-10">
-        <h2 className="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Our Approach
-        </h2>
-        <div className="space-y-6 text-sm md:text-lg text-[#F5F0E8]/80 font-sans font-light leading-relaxed max-w-3xl mx-auto">
-          <p>
-            We don't believe organizations should simply choose from whatever is already available.
-          </p>
-          <p>
-            We believe clothing should be designed around the organization, the people who wear it and the identity it represents.
-          </p>
-          <p className="font-medium text-[#C49A5C] uppercase tracking-widest text-sm pt-4">
-            Our process begins with understanding.
-          </p>
-        </div>
-      </section>
-
-      {/* Horizontal Scroll Section - Pins and slides */}
-      <section ref={scrollContainerRef} className="h-screen flex items-center relative z-10">
+    <section ref={containerRef} className="py-24 md:py-32 bg-[#1A1A1A] text-white overflow-hidden relative">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
         
-        {/* Faint Background Text for texture */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none overflow-hidden">
-          <h1 className="text-[20vw] font-serif font-bold text-[#F5F0E8] whitespace-nowrap">THE PROCESS</h1>
+        {/* Intro Text */}
+        <div className="max-w-4xl mx-auto text-center mb-20 md:mb-32">
+          <h3 className="text-[11px] md:text-[13px] font-bold uppercase tracking-[0.25em] text-[#E5CDA7] mb-6">Fashion Designed Around You</h3>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            We don't believe great fashion should simply be about following trends.
+          </h2>
+          <div className="space-y-6 text-[16px] md:text-[18px] text-white/80 font-light leading-relaxed max-w-3xl mx-auto">
+            <p>
+              We believe clothing should help you express your personality, your confidence and your individuality.
+            </p>
+            <p>
+              That's why our collections are designed around the things that matter:
+            </p>
+          </div>
         </div>
 
-        <div 
-          ref={trackRef} 
-          className="flex gap-8 px-6 md:px-24 flex-nowrap w-max items-center h-full"
-        >
-          {steps.map((step, i) => (
-            <div 
-              key={i} 
-              className="w-[85vw] md:w-[450px] h-[55vh] md:h-[65vh] shrink-0 rounded-xl overflow-hidden relative group transition-all duration-500 shadow-2xl"
-            >
-              {/* Background Image */}
-              <div className="absolute inset-0 z-0">
-                <img src={step.img} alt={step.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-[#151515]/80 to-black/30"></div>
-              </div>
-              
-              {/* Massive background number overlay */}
-              <span className="absolute top-4 right-6 text-7xl md:text-8xl font-bold font-serif opacity-10 text-[#F5F0E8] group-hover:text-[#C49A5C] group-hover:opacity-30 transition-all duration-500 z-10 pointer-events-none">
-                {step.num}
-              </span>
-              
-              {/* Content */}
-              <div className="relative z-20 p-8 md:p-12 flex flex-col justify-end h-full">
-                <div>
-                  <h4 className="text-[#C49A5C] font-mono text-sm tracking-widest mb-3">STEP {step.num}</h4>
-                  <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-wider text-[#F5F0E8] mb-6">
-                    {step.title}
-                  </h3>
-                  <p className="font-sans font-light text-base leading-relaxed text-[#F5F0E8]/80">
-                    {step.desc}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Layout: Image left, Words right */}
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 mb-20 md:mb-32">
           
-          {/* Spacer at the end so the last card doesn't touch the very edge when scrolling finishes */}
-          <div className="w-[10vw] shrink-0"></div>
-        </div>
-      </section>
+          <div className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl relative">
+            <img src="/New folder/10.png" alt="Express your personality" className="w-full h-auto object-contain bg-[#111]" />
+            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+          </div>
 
-    </div>
+          <div className="w-full lg:w-1/2 flex flex-col justify-center items-start lg:pl-12">
+            <div className="flex flex-col space-y-4 md:space-y-8">
+              {coreWords.map((word, idx) => (
+                <div 
+                  key={idx}
+                  ref={el => wordsRef.current[idx] = el}
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#E5CDA7] tracking-wider uppercase" 
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  {word}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Layout: Text left, Image right */}
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
+          
+          <div className="w-full lg:w-1/2 flex flex-col justify-center">
+            <div className="bg-[#111] p-10 md:p-16 rounded-2xl border border-white/5 shadow-2xl">
+              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>The Freedom to Discover</h3>
+              <div className="w-12 h-[1px] bg-[#E5CDA7] mb-8"></div>
+              <p className="text-[16px] text-white/80 font-light leading-relaxed">
+                Whether you are looking for sophisticated formalwear, contemporary essentials or something distinctive for a special occasion, VION gives you the freedom to discover clothing that works for you.
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 h-[50vh] md:h-[70vh] overflow-hidden rounded-2xl shadow-2xl relative">
+            <div ref={image2Ref} className="absolute inset-0 w-full h-[115%]">
+              <img src="/New folder/11.png" alt="Fit and Fabric Details" className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute inset-0 bg-black/20"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
   );
 }

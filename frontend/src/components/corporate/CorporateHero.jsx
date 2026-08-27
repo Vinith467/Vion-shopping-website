@@ -3,7 +3,7 @@ import { ShieldCheck, PenTool, Truck, HeadphonesIcon } from 'lucide-react'; // P
 
 export default function CorporateHero() {
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col justify-end pb-12 pt-32 overflow-hidden bg-[#151515]">
+    <section className="relative w-full min-h-[45vh] flex flex-col justify-end pb-6 pt-20 overflow-hidden bg-[#151515]">
       
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
@@ -19,24 +19,24 @@ export default function CorporateHero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col items-start text-[#F5F0E8]">
         
-        <h3 className="text-[#C49A5C] font-bold tracking-widest uppercase text-xs md:text-sm mb-4">
+        <h3 className="text-[#C49A5C] font-bold tracking-widest uppercase text-xs md:text-sm mb-3">
           We Design. We Create. We Deliver.
         </h3>
         
-        <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight mb-6">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-4">
           Smart Attire.<br/>
           Strong <span className="text-[#C49A5C] italic font-medium">Identities.</span>
         </h1>
         
-        <p className="max-w-xl text-base md:text-lg font-light text-[#F5F0E8]/90 leading-relaxed mb-6">
+        <p className="max-w-xl text-base font-light text-[#F5F0E8]/90 leading-relaxed mb-4">
           VION Corporate designs and delivers professional attire and formalwear that represent your values, build unity and elevate your brand.
         </p>
 
-        <p className="text-[#C49A5C] font-bold tracking-wide text-lg mb-8">
+        <p className="text-[#C49A5C] font-bold tracking-wide text-sm md:text-base mb-6">
           For Corporates. For Universities & Institutes.
         </p>
 
-        <button className="bg-[#C49A5C] hover:bg-[#a8824b] text-white text-base font-bold px-8 py-3 rounded-sm transition-colors mb-24">
+        <button className="bg-[#C49A5C] hover:bg-[#a8824b] text-white text-sm md:text-base font-bold px-8 py-3 rounded-sm transition-colors mb-8">
           Book Consultation &rarr;
         </button>
 

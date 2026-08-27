@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Box, Tags, Settings, ShoppingCart, ArrowLeft, Grid, Menu, X, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Box, Tags, Settings, ShoppingCart, ArrowLeft, Grid, Menu, X, LogOut, Calendar } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 
 export default function AdminLayout() {
@@ -90,6 +90,10 @@ export default function AdminLayout() {
           <NavLink onClick={closeMenu} to="/admin/orders" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
             <ShoppingCart size={20} />
             Orders
+          </NavLink>
+          <NavLink onClick={closeMenu} to="/admin/bookings" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Calendar size={20} />
+            Bookings
           </NavLink>
           
           <div className="mt-auto pt-4 border-t border-white/30">

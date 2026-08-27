@@ -15,6 +15,7 @@ import GenderSelectionScreen from './screens/GenderSelectionScreen';
 import SizeSelectionScreen from './screens/SizeSelectionScreen';
 import AboutScreen from './screens/AboutScreen';
 import CorporateScreen from './screens/CorporateScreen';
+import CorporateAboutScreen from './screens/CorporateAboutScreen';
 import AdminLayout from './screens/admin/AdminLayout';
 import AdminDashboard from './screens/admin/AdminDashboard';
 import AdminUsers from './screens/admin/AdminUsers';
@@ -22,12 +23,16 @@ import AdminInventory from './screens/admin/AdminInventory';
 import AdminCategories from './screens/admin/AdminCategories';
 import AdminPreferences from './screens/admin/AdminPreferences';
 import AdminOrders from './screens/admin/AdminOrders';
+import AdminBookings from './screens/admin/AdminBookings';
 import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import ScrollToTop from './components/ScrollToTop';
 import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Badge } from 'antd';
+import ConsultantPopup from './components/ConsultantPopup';
+import BookConsultantModal from './components/BookConsultantModal';
 import { Toaster } from 'react-hot-toast';
 import { useAppContext } from './context/AppContext';
 
@@ -95,6 +100,7 @@ function App() {
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showBookConsultantModal, setShowBookConsultantModal] = useState(false);
 
   const handleNavGenderSelect = async (gender) => {
     try {
@@ -112,8 +118,15 @@ function App() {
 
   useEffect(() => {
     const handleOpenLogin = () => setShowSignupModal(true);
+    const handleOpenBookModal = () => setShowBookConsultantModal(true);
+    
     window.addEventListener('openLoginModal', handleOpenLogin);
-    return () => window.removeEventListener('openLoginModal', handleOpenLogin);
+    window.addEventListener('openBookConsultantModal', handleOpenBookModal);
+    
+    return () => {
+      window.removeEventListener('openLoginModal', handleOpenLogin);
+      window.removeEventListener('openBookConsultantModal', handleOpenBookModal);
+    };
   }, []);
 
   // Subdomain Routing Logic
@@ -215,8 +228,8 @@ function App() {
 
               {/* CTA Button */}
               <button 
-                onClick={() => navigate('/consultation')} 
-                className="ml-2 px-5 py-2 border border-[#111111]/30 hover:border-[#A87B45] hover:bg-[#A87B45] text-[#111111] hover:text-white transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm"
+                onClick={() => setShowBookConsultantModal(true)} 
+                className="ml-2 px-5 py-2 border border-[#111111]/30 hover:border-[#A87B45] hover:bg-[#A87B45] text-[#111111] hover:text-white transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm relative"
               >
                 <Sparkles size={14} className="text-[#A87B45] group-hover:text-white transition-colors" />
                 <span className="font-bold">Book Consultant</span>
@@ -390,6 +403,7 @@ function App() {
           <Route path="/select-gender" element={<GenderSelectionScreen />} />
           <Route path="/about" element={<AboutScreen />} />
           <Route path="/corporate" element={<CorporateScreen />} />
+          <Route path="/corporate/about" element={<CorporateAboutScreen />} />
           <Route path="/cart" element={<ProtectedRoute><CartScreen /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutScreen /></ProtectedRoute>} />
           <Route path="/order-success" element={<ProtectedRoute><OrderSuccessScreen /></ProtectedRoute>} />
@@ -406,6 +420,7 @@ function App() {
             <Route path="categories" element={<AdminCategories />} />
             <Route path="preferences" element={<AdminPreferences />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="bookings" element={<AdminBookings />} />
           </Route>
           
           {/* Fallback & Redirects */}
@@ -438,6 +453,13 @@ function App() {
           setShowSignupModal(false);
           setShowLoginModal(true);
         }} 
+      />
+
+      {/* Booking Modals */}
+      <ConsultantPopup />
+      <BookConsultantModal 
+        isOpen={showBookConsultantModal} 
+        onClose={() => setShowBookConsultantModal(false)} 
       />
     </div>
   );
