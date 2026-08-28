@@ -66,27 +66,27 @@ const ProductStackingSection = ({ product, index }) => {
 
   return (
     <section ref={sectionRef} className="relative w-full border-b border-[#E8E1D7] bg-[#FDFBF7]" style={{ height: sectionHeight }}>
-      <div className={`sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-160px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
+      <div className={`sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-60px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
         
         {/* Product Info */}
-        <div className={`w-full lg:w-5/12 h-auto lg:h-full relative z-20 flex flex-col justify-center px-6 pt-10 pb-4 lg:py-0 ${isReversed ? 'lg:pl-12 lg:pr-24' : 'lg:pl-24 lg:pr-12'} bg-[#FDFBF7]`}>
-          <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-[#A87B45] mb-4">
+        <div className={`w-full lg:w-5/12 h-auto lg:h-full relative z-20 flex flex-col justify-center px-6 pt-6 pb-2 lg:py-0 ${isReversed ? 'lg:pl-12 lg:pr-24' : 'lg:pl-24 lg:pr-12'} bg-[#FDFBF7]`}>
+          <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-[#A87B45] mb-2 md:mb-4">
             {product.category?.name || 'VION Collection'}
           </h3>
           <h2 
             onClick={() => navigate(`/product/${product.id}`)}
-            className="text-4xl md:text-5xl lg:text-[3.25rem] font-medium mb-8 leading-[1.1] text-[#1A0A08] cursor-pointer hover:text-[#986427] transition-colors" 
+            className="text-3xl md:text-5xl lg:text-[3.25rem] font-medium mb-6 leading-[1.1] text-[#1A0A08] cursor-pointer hover:text-[#986427] transition-colors" 
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             {product.title}
           </h2>
           
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3 md:gap-4">
             <Link 
               to={`/product/${product.id}`}
-              className="group inline-flex items-center justify-center bg-[#1A1A1A] text-white px-8 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+              className="group inline-flex items-center justify-center bg-[#1A1A1A] text-white px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
             >
-              <span className="relative z-10 flex items-center gap-4">
+              <span className="relative z-10 flex items-center gap-2 md:gap-4">
                 Discover
                 <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
               </span>
@@ -94,9 +94,9 @@ const ProductStackingSection = ({ product, index }) => {
 
             <button 
               onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
-              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] text-[#1A1A1A] px-8 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] text-[#1A1A1A] px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 w-max overflow-hidden relative shadow-lg"
             >
-              <span className="relative z-10 flex items-center gap-4">
+              <span className="relative z-10 flex items-center gap-2 md:gap-4">
                 Book Consultant
               </span>
             </button>
@@ -104,10 +104,10 @@ const ProductStackingSection = ({ product, index }) => {
         </div>
 
         {/* Images */}
-        <div className={`w-full lg:w-7/12 relative z-10 p-2 pb-4 md:pb-12 lg:p-6 flex items-center ${isReversed ? 'lg:justify-start' : 'lg:justify-end'} bg-[#FDFBF7]`}>
-          {/* 1:1 Aspect Ratio Container */}
+        <div className={`w-full flex-1 lg:w-7/12 relative z-10 p-4 pb-24 md:pb-12 lg:p-6 flex items-center justify-center bg-[#FDFBF7]`}>
+          {/* Dynamic Aspect Container */}
           <div 
-            className="relative w-full max-w-[min(100%,78vh)] aspect-square overflow-hidden rounded-xl shadow-2xl bg-white"
+            className="relative w-full h-full lg:h-auto lg:aspect-square max-w-[min(100%,78vh)] overflow-hidden rounded-xl shadow-2xl bg-white"
             onClick={() => navigate(`/product/${product.id}`)}
           >
             {mediaUrls.map((mediaUrl, i) => {
