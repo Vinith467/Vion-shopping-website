@@ -56,6 +56,12 @@ BEGIN
         ALTER TABLE public.orders ADD COLUMN address_id UUID REFERENCES public.addresses(id) ON DELETE SET NULL;
     EXCEPTION WHEN duplicate_column THEN NULL;
     END;
+
+    -- Add spotlight images array to products
+    BEGIN
+        ALTER TABLE public.products ADD COLUMN spotlight_images TEXT[];
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END;
 END $$;
 
 -- Enable RLS
@@ -106,3 +112,9 @@ CREATE POLICY "Users can insert their own order items"
             AND orders.user_id = auth.uid()
         )
     );
+
+-- Add video_url to products for cinematic experience
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS video_url TEXT;
+
+-- Add spotlight_images to products for Explore Page Stacking Animation
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS spotlight_images TEXT[] DEFAULT '{}';

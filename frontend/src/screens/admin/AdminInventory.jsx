@@ -57,6 +57,7 @@ export default function AdminInventory() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [productImages, setProductImages] = useState([]);
+  const [spotlightImages, setSpotlightImages] = useState([]);
   const [variationImages, setVariationImages] = useState({});
   const [shadeImages, setShadeImages] = useState({});
   const [availableStyleTags, setAvailableStyleTags] = useState([]);
@@ -72,6 +73,7 @@ export default function AdminInventory() {
     category_id: '',
     status: 'draft',
     image_url: '',
+    video_url: '',
     is_featured: false,
     is_new_arrival: false,
     size: 'all',
@@ -85,6 +87,7 @@ export default function AdminInventory() {
   };
 
   const [formData, setFormData] = useState(initialForm);
+  const [productVideo, setProductVideo] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -139,9 +142,12 @@ export default function AdminInventory() {
 
   const handleCloseModal = () => {
     productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    spotlightImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    if (productVideo && productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
     Object.values(variationImages).forEach(vArr => {
       vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
     });
+    setProductVideo(null);
     setShowModal(false);
   };
 
@@ -163,7 +169,15 @@ export default function AdminInventory() {
       const sourceIdx = data.idx;
       if (sourceIdx === targetIdx) return;
 
-      if (isVariationTarget) {
+      if (data.isSpotlight) {
+        setSpotlightImages(prev => {
+          const newArr = [...prev];
+          const temp = newArr[sourceIdx];
+          newArr[sourceIdx] = newArr[targetIdx];
+          newArr[targetIdx] = temp;
+          return newArr;
+        });
+      } else if (isVariationTarget) {
         setVariationImages(prev => {
           const newArr = [...(prev[varIdxTarget] || [])];
           const temp = newArr[sourceIdx];
@@ -225,12 +239,17 @@ export default function AdminInventory() {
   const handleOpenModal = (prod = null) => {
     // Also clean up any lingering URLs if reopening without properly closing
     productImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    spotlightImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
+    if (productVideo && productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
     Object.values(variationImages).forEach(vArr => {
       vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
     });
 
     setProductImages([]);
+    setSpotlightImages([]);
     setVariationImages({});
+    setProductVideo(prod?.video_url ? { type: 'existing', url: prod.video_url } : null);
+    
     if (prod) {
       setEditingId(prod.id);
       setFormData({
@@ -243,6 +262,7 @@ export default function AdminInventory() {
         category_id: prod.category_id || '',
         status: prod.status || 'draft',
         image_url: prod.image_url || '',
+        video_url: prod.video_url || '',
         is_featured: prod.is_featured || false,
         is_new_arrival: prod.is_new_arrival || false,
         size: prod.size || prod.body_shape || 'all',
@@ -284,6 +304,21 @@ export default function AdminInventory() {
       setShadeImages(sImages);
     }
 
+    // Initialize spotlightImages
+    let sUrls = [];
+    if (prod && prod.spotlight_images) {
+      sUrls = Array.isArray(prod.spotlight_images) ? prod.spotlight_images : [];
+    }
+    const initSpotlight = [];
+    for (let i = 0; i < 5; i++) {
+      if (sUrls[i]) {
+        initSpotlight.push({ type: 'existing', url: sUrls[i], label: `Spotlight ${i+1}` });
+      } else {
+        initSpotlight.push({ type: 'empty', label: `Spotlight ${i+1}` });
+      }
+    }
+    setSpotlightImages(initSpotlight);
+
     setShowModal(true);
   };
 
@@ -309,6 +344,7 @@ export default function AdminInventory() {
       category_id: prod.category_id || '',
       status: 'draft',
       image_url: prod.image_url || '',
+      video_url: prod.video_url || '',
       is_featured: prod.is_featured || false,
       is_new_arrival: prod.is_new_arrival || false,
       size: prod.size || prod.body_shape || 'all',
@@ -404,6 +440,41 @@ export default function AdminInventory() {
       }
     }
 
+    // Spotlight Images
+    const finalSpotlightArray = [];
+    for (const img of spotlightImages) {
+      if (!img || img.type === 'empty') {
+        // Only push if there are remaining actual images to avoid trailing empty strings, or just store empty string
+        // Actually, it's better to just filter them out for spotlight, or store the exact array length.
+        // We will store actual URLs only.
+      } else if (img.type === 'existing') {
+        finalSpotlightArray.push(img.url);
+      } else if (img.type === 'new') {
+        try {
+          const uploadedUrl = await uploadImage(img.file, 'products/spotlight', 'public-images');
+          finalSpotlightArray.push(uploadedUrl);
+        } catch (err) {
+          toast.error('Failed to upload spotlight image');
+          console.error(err);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+    }
+
+    // Product Video
+    let finalVideoUrl = formData.video_url || null;
+    if (productVideo && productVideo.type === 'new') {
+      try {
+        finalVideoUrl = await uploadImage(productVideo.file, 'products/videos', 'public-images');
+      } catch (err) {
+        toast.error('Failed to upload product video');
+        console.error(err);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     // Variations Images
     const updatedVariations = [...formData.variations];
     for (let i = 0; i < updatedVariations.length; i++) {
@@ -488,12 +559,13 @@ export default function AdminInventory() {
       description: formData.description,
       price: parseFloat(formData.price),
       compare_at_price: formData.compare_at_price ? parseFloat(formData.compare_at_price) : null,
-      quantity: parseInt(formData.quantity) || 0,
       sku: formData.sku,
+      quantity: parseInt(formData.quantity, 10),
+      category_id: formData.category_id,
       status: formData.status,
+      video_url: finalVideoUrl,
       is_featured: formData.is_featured,
       is_new_arrival: formData.is_new_arrival,
-      category_id: formData.category_id,
       size: derivedSizes.length > 0 ? derivedSizes.join(',') : 'all',
       body_shape: derivedHeights.length > 0 ? derivedHeights.join(',') : 'all', // backward compatibility
       target_genders: formData.target_genders,
@@ -503,7 +575,8 @@ export default function AdminInventory() {
       style_tags: formData.style_tags,
       suitability_points: formData.suitability_points,
       variations: updatedVariations,
-      images: finalImagesArray
+      images: finalImagesArray,
+      spotlight_images: finalSpotlightArray
     };
 
     if (editingId) {
@@ -894,7 +967,54 @@ export default function AdminInventory() {
 
                   {/* Media */}
                   <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Product Images (11 Slots)</h3>
+                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Product Media (Video & Images)</h3>
+                    
+                    {/* Video Upload Section */}
+                    <div className="mb-6">
+                      <label className="block text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-2">Cinematic Video (Optional MP4)</label>
+                      <div className="flex items-center gap-4">
+                        {productVideo ? (
+                          <div className="relative w-32 h-32 rounded-xl bg-gray-100 overflow-hidden border border-gray-200">
+                            {productVideo.type === 'new' ? (
+                              <video src={productVideo.preview} className="w-full h-full object-cover" autoPlay muted loop playsInline />
+                            ) : (
+                              <video src={productVideo.url} className="w-full h-full object-cover" autoPlay muted loop playsInline />
+                            )}
+                            <div className="absolute top-1.5 right-1.5">
+                              <button type="button" onClick={() => {
+                                if (productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
+                                setProductVideo(null);
+                                setFormData({ ...formData, video_url: null });
+                              }} className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 shadow-md">
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative">
+                            <Plus size={20} className="text-gray-400 mb-1" />
+                            <span className="text-[9px] font-bold text-gray-500 uppercase">Upload MP4</span>
+                            <input
+                              type="file"
+                              accept="video/mp4,video/quicktime"
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const file = e.target.files[0];
+                                  setProductVideo({ type: 'new', file, preview: URL.createObjectURL(file) });
+                                  e.target.value = '';
+                                }
+                              }}
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="text-[10px] text-gray-500">Upload a short looping video of the product to show on the new cinematic details page. Format: MP4.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label className="block text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-2 pt-4 border-t border-gray-100">Product Images (11 Slots)</label>
                     
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                       {productImages.map((img, idx) => {
@@ -946,6 +1066,73 @@ export default function AdminInventory() {
                                       const newImages = [...productImages];
                                       newImages[idx] = { type: 'new', file, preview: URL.createObjectURL(file), label: slotName };
                                       setProductImages(newImages);
+                                      e.target.value = '';
+                                    }
+                                  }}
+                                />
+                              </label>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Spotlight Stacking Images */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Spotlight Stacking Images (5 Slots)</h3>
+                    <p className="text-[10px] text-gray-500 mb-2">Upload up to 5 images here for the animated stacked lookbook effect on the Explore page.</p>
+                    
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                      {spotlightImages.map((img, idx) => {
+                        if (!img) return null;
+                        const slotName = img.label || `Spotlight ${idx + 1}`;
+                        const hasImage = img.type !== 'empty';
+                        
+                        return (
+                          <div 
+                            key={`spotlight-${idx}`} 
+                            className="flex flex-col gap-1.5 group"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, idx, false, null, true)}
+                            onDrop={(e) => handleDrop(e, idx, false, null, true)}
+                            onDragOver={handleDragOver}
+                          >
+                            <label className="text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider h-6 line-clamp-2 cursor-grab active:cursor-grabbing flex items-center justify-between">
+                              {slotName}
+                              <div className="text-gray-300 group-hover:text-[#986427]" title="Drag to reorder">
+                                <span className="text-[8px] leading-none">⣿</span>
+                              </div>
+                            </label>
+                            
+                            {hasImage ? (
+                              <div className="relative w-full aspect-[3/4] rounded-xl bg-gray-50 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#986427] transition-colors cursor-grab active:cursor-grabbing">
+                                <img src={img.type === 'new' ? img.preview : img.url} alt={slotName} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                                <div className="absolute top-2 right-2">
+                                  <button type="button" onClick={() => {
+                                      const newImages = [...spotlightImages];
+                                      if (newImages[idx].type === 'new') URL.revokeObjectURL(newImages[idx].preview);
+                                      newImages[idx] = { type: 'empty', label: slotName };
+                                      setSpotlightImages(newImages);
+                                    }} className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10" title="Remove image">
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <label className="w-full aspect-[3/4] rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 hover:border-[#986427] hover:bg-[#986427]/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
+                                <Plus size={24} className="mb-2" />
+                                <span className="text-[10px] font-bold text-center px-2">Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      const file = e.target.files[0];
+                                      const newImages = [...spotlightImages];
+                                      newImages[idx] = { type: 'new', file, preview: URL.createObjectURL(file), label: slotName };
+                                      setSpotlightImages(newImages);
                                       e.target.value = '';
                                     }
                                   }}

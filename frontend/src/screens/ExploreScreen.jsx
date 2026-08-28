@@ -4,6 +4,7 @@ import { ArrowLeft, Filter, Heart, Search } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
 import { matchesSizeGroup, findBestMatchingVariation } from '../utils/sizeGroups';
+import SpotlightCollections from '../components/SpotlightCollections';
 
 export default function ExploreScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,10 +20,11 @@ export default function ExploreScreen() {
   const [categoryName, setCategoryName] = useState('All Products');
   const [categories, setCategories] = useState([]);
   
-  // Get active profile gender
+  // Get active profile info
   const activeProfile = members?.find(m => m.id === selectedConsumerId);
   const tempGender = sessionStorage.getItem('temp_gender');
   const userGender = activeProfile?.gender || tempGender;
+  const activeProfileHeight = activeProfile?.height;
 
   useEffect(() => {
     if (!userGender && !isLoading) {
@@ -81,34 +83,28 @@ export default function ExploreScreen() {
         });
       }
       
+      
       setProducts(finalProducts);
       setIsLoading(false);
     }
     
     loadData();
-  }, [categoryParam, sizeParam, classParam, members, selectedConsumerId]);
+  }, [categoryParam, sizeParam, classParam, activeProfileHeight]);
 
   return (
-    <div className="bg-white min-h-screen w-full pb-20">
-      {/* Header */}
-      <div className="sticky top-0 bg-white/95 backdrop-blur-sm z-40 border-b border-gray-100">
-        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="p-2 -ml-2 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
-              <ArrowLeft size={20} className="text-gray-900" />
-            </button>
-            <h1 className="text-xl font-serif font-bold text-gray-900">{categoryName}</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="p-2 text-gray-600 hover:text-gray-900"><Search size={20} /></button>
-            <button className="p-2 text-gray-600 hover:text-gray-900"><Filter size={20} /></button>
-          </div>
+    <div className="bg-white min-h-screen w-full pb-20 relative">
+      {/* Floating Action Header */}
+      <div className="fixed top-20 md:top-24 left-0 w-full z-40 pointer-events-none p-4 md:p-6">
+        <div className="flex items-center justify-between max-w-7xl mx-auto pointer-events-auto">
+          <button onClick={() => navigate(-1)} className="p-2.5 bg-black/20 text-white backdrop-blur-md rounded-full hover:bg-black/40 transition-colors border border-white/10 shadow-lg">
+            <ArrowLeft size={20} />
+          </button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-6">
+      <div className="w-full">
         {userGender === 'Male' ? (
-          <div className="flex flex-col items-center justify-center py-32 text-center">
+          <div className="max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center justify-center py-32 text-center">
             <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
               <span className="text-4xl text-[#A87B45]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>V</span>
             </div>
@@ -120,7 +116,7 @@ export default function ExploreScreen() {
             </p>
           </div>
         ) : !categoryParam && categories.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="max-w-7xl mx-auto px-6 pt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {categories.map((cat, i) => (
               <div 
                 onClick={() => navigate(`/explore?${classParam ? `class=${classParam}&` : ''}category=${cat.id}`)} 
@@ -143,21 +139,11 @@ export default function ExploreScreen() {
           </div>
         ) : (
           <>
-            {/* Results Info */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm font-bold text-gray-500">
-                {products.length} {products.length === 1 ? 'result' : 'results'} found
-              </p>
-              {sizeParam && sizeParam !== 'all' && (
-                <div className="bg-white/80 backdrop-blur-md rounded-full px-4 py-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),_0_2px_4px_rgba(0,0,0,0.05)] border border-[#1A0A08]/10 text-xs font-bold text-[#1A0A08] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#8B6544]"></span>Matched for size {sizeParam}
-                </div>
-              )}
-            </div>
+            {/* Results Info (Hidden in cinematic view for cleaner UI) */}
 
         {/* Product Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-pulse">
+          <div className="max-w-7xl mx-auto px-6 pt-6 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-pulse">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
               <div key={i} className="flex flex-col gap-3">
                 <div className="aspect-[3/4] bg-gray-200 rounded-2xl"></div>
@@ -167,7 +153,7 @@ export default function ExploreScreen() {
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center justify-center py-20 text-center">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
               <Search size={32} className="text-gray-400" />
             </div>
@@ -178,49 +164,8 @@ export default function ExploreScreen() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {products.map((product) => {
-              const activeProfile = members?.find(m => m.id === selectedConsumerId);
-              const matchingVar = findBestMatchingVariation(product.variations, activeProfile);
-              const displayImage = matchingVar?.image_urls?.[0] || (product.images && product.images[0]) || '/images/placeholder.jpg';
-
-              return (
-              <Link to={`/product/${product.id}`} key={product.id} className="flex flex-col gap-3 group cursor-pointer">
-                <div className="relative aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-shadow group-hover:shadow-md">
-                  <img 
-                    src={displayImage} 
-                    alt={product.title} 
-                    loading="lazy"
-                    className="w-full h-full object-cover shrink-0 mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
-                  />
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleWishlist(product.id);
-                    }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"
-                  >
-                    <Heart size={16} className={`transition-colors ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`} />
-                  </button>
-                  {product.is_new_arrival && (
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-wider text-gray-900 shadow-sm">
-                      New
-                    </div>
-                  )}
-                </div>
-                <div className="px-1">
-                  <h4 className="text-sm font-semibold text-gray-900 line-clamp-1">{product.title}</h4>
-                  <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-sm font-bold text-gray-900">₹{parseFloat(product.price).toLocaleString()}</span>
-                    {product.compare_at_price && (
-                      <span className="text-xs text-gray-400 line-through">₹{parseFloat(product.compare_at_price).toLocaleString()}</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-              );
-            })}
+          <div className="w-full">
+            <SpotlightCollections products={products} categoryName={categoryName} />
           </div>
         )}
         </>

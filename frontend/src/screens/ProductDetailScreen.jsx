@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Heart, ShoppingBag, Sparkles, Check, ArrowRight, X, Calendar, Clock, MapPin, User } from "lucide-react";
+import { ArrowLeft, Heart, ShoppingBag, Sparkles, Check, X, Calendar, Clock, User } from "lucide-react";
 import { supabase } from "../services/supabaseClient";
 import { useAppContext } from "../context/AppContext";
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ProductDetailScreen() {
   const { id } = useParams();
@@ -12,13 +16,19 @@ export default function ProductDetailScreen() {
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedFitMode, setSelectedFitMode] = useState("size");
   const [showStandardSizeModal, setShowStandardSizeModal] = useState(false);
   const [showBespokeFitModal, setShowBespokeFitModal] = useState(false);
   const [activeVariationIndex, setActiveVariationIndex] = useState(0);
 
-  // We map the primary member to profile to reuse the design logic easily
+  const containerRef = useRef(null);
+  const cardsRef = useRef([]);
+  const heroWrapperRef = useRef(null);
+  const heroMediaContainerRef = useRef(null);
+  const heroMediaElementRef = useRef(null);
+  const heroOverlayRef = useRef(null);
+  const heroContentRef = useRef(null);
+
   const primaryMember = members?.find(m => m.isPrimary) || null;
   const [profile, setProfile] = useState({
     gender: primaryMember?.gender || 'Female',
@@ -72,19 +82,14 @@ export default function ProductDetailScreen() {
     }
   }, [product, primaryMember]);
 
-  if (isLoading || !product) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#F5F0E8]">Loading...</div>;
-  }
-
-  const activeVariation = product.variations && product.variations[activeVariationIndex];
-  
-  // Combine image_urls array with fallback image_url
+  // Determine images based on active variation
+  const activeVariation = product?.variations && product.variations[activeVariationIndex];
   let variationImages = [];
   if (activeVariation?.image_urls && activeVariation.image_urls.length > 0) {
     variationImages.push(...activeVariation.image_urls);
   } else if (activeVariation?.image_url) {
     variationImages.push(activeVariation.image_url);
-  } else {
+  } else if (product) {
     if (product.images && product.images.length > 0) {
       variationImages.push(...product.images);
     } else if (product.image_url) {
@@ -95,433 +100,165 @@ export default function ProductDetailScreen() {
   }
   variationImages = variationImages.filter(Boolean);
 
-  const currentImage = variationImages[activeImageIndex] || variationImages[0];
+  // Re-run GSAP pinning when variationImages change
+  useEffect(() => {
+    if (!product || variationImages.length === 0) return;
+    
+    // Clear the ref array to match the new image count
+    cardsRef.current = cardsRef.current.slice(0, variationImages.length);
+
+    let ctx = gsap.context(() => {
+      cardsRef.current.forEach((card, i) => {
+        if (!card) return;
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top " + (120 + i * 40) + "px",
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
+        });
+      });
+    }, containerRef);
+    
+    return () => ctx.revert();
+  }, [product, activeVariationIndex, variationImages.length]);
+
+  // Hero Scroll Animation
+  useEffect(() => {
+    if (isLoading || !product) return;
+    
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroWrapperRef.current,
+          start: "top top",
+          end: "+=150%", // Pin for 1.5x screen height
+          pin: true,
+          scrub: 1, 
+        }
+      });
+
+      // 1. Initial State
+      gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0 });
+      gsap.set(heroContentRef.current, { opacity: 0, x: -50 });
+
+      // 2. Animation sequence
+      tl.to(heroMediaContainerRef.current, {
+        width: "45vw",
+        height: "25.3vw", // approx 16:9 ratio for 45vw width
+        borderRadius: "16px",
+        x: "50vw", // Move to right half of screen
+        ease: "power2.inOut",
+        duration: 1
+      }, 0)
+      .to(heroMediaElementRef.current, {
+        scale: 1.05,
+        duration: 1,
+        ease: "power2.inOut"
+      }, 0)
+      .to(heroOverlayRef.current, {
+        opacity: 0,
+        y: -100,
+        duration: 0.5,
+        ease: "power2.in"
+      }, 0)
+      .to(heroContentRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, 0.4);
+    });
+
+    return () => ctx.revert();
+  }, [isLoading, product]);
+
+  if (isLoading || !product) {
+    return <div className="min-h-screen flex items-center justify-center bg-[#111] text-[#E8DFD8]">Loading...</div>;
+  }
+
+  const currentImage = variationImages[0] || '/images/placeholder.jpg';
   const price = parseFloat(product.price);
   const compareAtPrice = product.compare_at_price ? parseFloat(product.compare_at_price) : null;
   const isWishlisted = isInWishlist && isInWishlist(product.id);
 
+  const heroMedia = product.video_url || currentImage;
+  const isVideo = heroMedia && (heroMedia.includes('.mp4') || heroMedia.includes('video'));
+
   return (
-    <div className="bg-[#F5F0E8] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+    <div className="bg-[#FDFBF7] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0">
+      
+      {/* Cinematic Hero Header with Scroll Animation */}
+      <div ref={heroWrapperRef} className="relative w-full h-screen bg-[#FDFBF7] overflow-hidden flex items-center">
         
-        <div className="animate-in fade-in slide-in-from-right-8 duration-500">
-          <div className="sticky top-0 z-40 bg-[#F5F0E8]/95 backdrop-blur-md pt-4 lg:pt-6 pb-4 mb-4 flex items-center gap-4 -mx-4 px-4 md:-mx-8 md:px-8">
-            <button onClick={() => navigate(-1)} className="p-2 bg-white/40 hover:bg-white/60 backdrop-blur-md border border-white/50 text-[#1A0A08] rounded-full transition-colors shadow-sm">
-              <ArrowLeft size={20} />
-            </button>
-            <h1 className="text-4xl font-serif text-[#1A0A08]">Product Details</h1>
+        {/* Floating Action Buttons (Fixed on top of hero during pin) */}
+        <div className="absolute top-0 left-0 right-0 z-50 p-6 md:p-10 flex justify-between items-start pointer-events-none">
+          <button onClick={() => navigate(-1)} className="p-3 bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full transition-colors shadow-sm pointer-events-auto">
+            <ArrowLeft size={20} />
+          </button>
+          <button 
+            onClick={() => toggleWishlist && toggleWishlist(product)}
+            className={`p-3 rounded-full transition-colors backdrop-blur-md border border-white/20 shadow-sm pointer-events-auto ${isWishlisted ? 'bg-red-500/20 text-red-500' : 'bg-black/20 hover:bg-black/40 text-white'}`}
+          >
+            <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
+          </button>
+        </div>
+
+        {/* The Media Container (Starts Fullscreen, Shrinks to Right) */}
+        <div 
+          ref={heroMediaContainerRef} 
+          className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-full z-10 overflow-hidden shadow-2xl"
+        >
+          {isVideo ? (
+             <video ref={heroMediaElementRef} src={heroMedia} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+          ) : (
+             <img ref={heroMediaElementRef} src={heroMedia} alt={product.name} className="w-full h-full object-cover" />
+          )}
+          {/* Dark gradient to make initial text readable */}
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+
+        {/* Fullscreen Overlay Text (Fades out on scroll) */}
+        <div 
+          ref={heroOverlayRef} 
+          className="absolute inset-0 flex flex-col items-center justify-end z-20 text-white text-center px-6 pb-20 pointer-events-none"
+        >
+          <span className="text-[#A87B45] text-xs font-bold uppercase tracking-[0.4em] mb-4">
+            {product.category?.name || 'VION Collection'}
+          </span>
+          <h1 className="text-4xl md:text-7xl mb-6 drop-shadow-2xl max-w-4xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+            {product.name}
+          </h1>
+          <div className="w-16 h-[2px] bg-white/30 mx-auto mb-10"></div>
+          <div className="animate-bounce flex flex-col items-center">
+             <span className="text-xs uppercase tracking-widest text-white/70 mb-2">Scroll to explore</span>
+             <div className="w-[1px] h-10 bg-[#A87B45]"></div>
           </div>
+        </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-12 lg:mb-16 lg:items-start">
-            {/* LEFT COLUMN: Gallery */}
-            <div className="flex flex-col gap-4 w-full lg:w-[42%] xl:w-[45%] lg:sticky lg:top-24 lg:h-max">
-              <div className="flex gap-4">
-                <div className="flex flex-col gap-3 w-16 xl:w-20 shrink-0 hidden sm:flex">
-                  {variationImages.slice(0, 5).map((img, idx) => (
-                    <div key={idx} onClick={() => setActiveImageIndex(idx)} className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === idx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
-                      <img src={img} alt="" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-                <div className="flex-1 bg-white/50 rounded-2xl overflow-hidden relative h-auto flex items-start justify-center group shadow-sm border border-gray-100">
-                  <img src={currentImage} alt={product.name} className="w-full h-auto mix-blend-multiply" />
-                  <button 
-                    onClick={() => toggleWishlist && toggleWishlist(product)}
-                    className={`absolute top-4 right-4 p-2.5 rounded-full transition-colors shadow-sm backdrop-blur-md ${isWishlisted ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-white/60 hover:bg-white text-[#1A0A08] hover:text-red-500'}`}
-                  >
-                    <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
-                  </button>
-                </div>
-              </div>
-              {variationImages.length > 5 && (
-                <div className="flex gap-4 hidden sm:flex">
-                  {variationImages.slice(5, 11).map((img, idx) => {
-                    const actualIdx = idx + 5;
-                    return (
-                      <div key={actualIdx} onClick={() => setActiveImageIndex(actualIdx)} className={`w-16 xl:w-20 aspect-square shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${activeImageIndex === actualIdx ? 'border-[#986427]' : 'border-transparent hover:border-[#986427]/50'}`}>
-                        <img src={img} alt="" className="w-full h-full object-cover" />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* RIGHT COLUMN: Details & Actions */}
-            <div className="flex-1 flex flex-col pt-2 lg:pr-4">
-              
-              <div className="mb-6">
-                <div className="mb-3">
-                  <span className="bg-[#f0e6dd] text-[#986427] text-[9px] font-extrabold px-2.5 py-1 rounded-sm tracking-widest uppercase shadow-sm">Bestseller</span>
-                </div>
-                <h2 className="text-3xl lg:text-4xl font-bold text-[#1A0A08] leading-tight mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h2>
-                
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="flex text-[#986427] gap-0.5">
-                    {'★★★★☆'.split('').map((star, i) => <span key={i} className="text-[14px]">{star}</span>)}
-                  </div>
-                  <span className="text-[11px] text-gray-500 font-bold underline cursor-pointer hover:text-[#1A0A08] transition-colors">128 Reviews</span>
-                </div>
-                
-                <div className="flex items-baseline gap-2.5 mb-1.5">
-                  <span className="text-2xl text-[#1A0A08] font-bold font-sans tracking-tight">
-                    ₹ {price.toLocaleString()}
-                  </span>
-                  {compareAtPrice > price && (
-                    <>
-                      <span className="text-sm text-gray-400 font-medium line-through font-sans">
-                        ₹ {compareAtPrice.toLocaleString()}
-                      </span>
-                      <span className="text-[11px] font-bold text-[#986427] bg-[#f0e6dd] px-2 py-0.5 rounded-sm tracking-wide ml-1 font-sans">
-                        {Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}% OFF
-                      </span>
-                    </>
-                  )}
-                </div>
-                <div className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">
-                  Inclusive of all taxes
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                {/* Colors */}
-                {(() => {
-                  const uniqueColors = Array.from(new Set(
-                    (product.variations || [])
-                      .map(v => v.color)
-                      .filter(c => c && c.trim() !== '')
-                  ));
-                  
-                  if (uniqueColors.length > 0) {
-                    return (
-                      <div className="mb-2">
-                        <span className="text-[11px] font-bold text-[#1A0A08] block mb-3 uppercase tracking-wide">Color</span>
-                        <div className="flex gap-2 flex-wrap">
-                          {uniqueColors.map((color, idx) => {
-                             const isSelected = activeVariation?.color === color || (!activeVariation?.color && idx===0);
-                             return (
-                                <button key={idx} onClick={() => {
-                                   const newIndex = product.variations.findIndex(v => v.color === color);
-                                   if (newIndex !== -1) setActiveVariationIndex(newIndex);
-                                }} title={color} className={`px-5 py-2 rounded-md border-2 text-[11px] font-bold transition-all shadow-sm ${isSelected ? 'border-[#986427] text-[#986427] bg-[#986427]/10' : 'border-white/60 text-gray-600 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:border-[#986427]/30'}`}>
-                                  {color}
-                                </button>
-                             );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
-
-                {/* Fit Options */}
-                <div className="pt-6 border-t border-gray-100">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Select Fit & Size</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <button 
-                      onClick={() => setShowStandardSizeModal(true)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${selectedFitMode === 'size' ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 backdrop-blur-sm text-[#1A0A08] hover:bg-white/60 hover:border-[#986427]/30'}`}
-                    >
-                      <span className="text-[12px] font-bold">Standard Size</span>
-                      <span className="text-[9px] opacity-70 font-medium mt-0.5">Pick from S, M, L, XL</span>
-                    </button>
-                    
-                    <button 
-                      onClick={() => setShowBespokeFitModal(true)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${selectedFitMode === 'expert' ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 backdrop-blur-sm text-[#1A0A08] hover:bg-white/60 hover:border-[#986427]/30'}`}
-                    >
-                      <span className="text-[12px] font-bold">Book Our Expert</span>
-                      <span className="text-[9px] opacity-70 font-medium mt-0.5">We measure you</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F5F0E8]/90 backdrop-blur-md border-t border-gray-200/50 p-4 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] lg:static lg:p-0 lg:border-none lg:shadow-none lg:bg-transparent lg:pt-2 -mx-4 md:-mx-8 px-4 md:px-8 lg:mx-0">
-                  <button 
-                    onClick={() => {
-                      addToCart({
-                        id: product.id,
-                        title: product.name,
-                        price: price.toString(),
-                        images: [currentImage],
-                        fitMode: selectedFitMode,
-                        size_top: profile.size,
-                        size_bottom: profile.size
-                      }, profile.size);
-                      navigate('/cart');
-                    }}
-                    className="flex-1 bg-[#1A0A08] hover:bg-black text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-black/20 flex items-center justify-center gap-2.5 text-[13px] tracking-wide"
-                  >
-                    <ShoppingBag size={16} /> Add to Bag
-                  </button>
-                  <button onClick={() => toggleWishlist && toggleWishlist(product)} className="flex-1 bg-white/40 backdrop-blur-md hover:bg-white/60 border border-white/60 text-[#1A0A08] py-4 rounded-xl font-bold transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.08)] flex items-center justify-center gap-2.5 text-[13px] tracking-wide">
-                    <Heart size={16} fill={isWishlisted ? "currentColor" : "none"} className={isWishlisted ? "text-red-500" : ""} /> Wishlist
-                  </button>
-                </div>
-
-                <div className="pt-8 space-y-6 lg:pb-8">
-                  {/* Why it suits you */}
-                  <div className="bg-white/40 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)]">
-                    <h4 className="font-bold text-[13px] text-[#1A0A08] mb-4 uppercase tracking-wide">Why it suits you</h4>
-                    {product.suitability_points && product.suitability_points.filter(p => p.trim()).length > 0 ? (
-                      <ul className="space-y-3 text-xs text-gray-700 font-medium">
-                        {product.suitability_points.filter(p => p.trim()).map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5">
-                            <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : primaryMember ? (
-                      <ul className="space-y-3 text-xs text-gray-700 font-medium">
-                        <li className="flex items-start gap-2.5">
-                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
-                          <span>Flattering for your <strong className="text-[#1A0A08]">{profile.bodyShape || 'Hourglass'}</strong> body shape</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
-                          <span>Perfect for your <strong className="text-[#1A0A08]">{profile.height}</strong> height</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <Check size={14} className="text-[#986427] shrink-0 mt-0.5" />
-                          <span>Colors that complement your <strong className="text-[#1A0A08]">{profile.skinTone || 'complexion'}</strong></span>
-                        </li>
-                      </ul>
-                    ) : (
-                      <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                        Log in and set up your Bespoke Profile to see personalized fit and styling recommendations just for you.
-                      </p>
-                    )}
-                    <button className="text-[10px] font-bold text-gray-500 underline mt-4 hover:text-[#1A0A08] transition-colors">View Details</button>
-                  </div>
-
-                  {/* Our Services */}
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="font-bold text-[13px] text-[#1A0A08] uppercase tracking-wide">Our Services</h3>
-                      <span className="text-[10px] font-bold text-gray-500 cursor-pointer flex items-center hover:text-[#1A0A08] transition-colors">Explore all services <ArrowRight size={10} className="ml-0.5"/></span>
-                    </div>
-                    <div className="bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 divide-y divide-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.05)]">
-                      <div className="p-3.5 flex gap-3.5 items-start group">
-                        <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/></div>
-                        <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Standard Fit</h4>
-                          <p className="text-[11px] text-gray-500 leading-relaxed">Affordable styles for everyday you.<br/>Give size or measurements.</p>
-                        </div>
-                      </div>
-                      <div className="p-3.5 flex gap-3.5 items-start group">
-                        <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><User size={14}/><User size={14} className="-ml-1.5"/></div>
-                        <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Tailored Fit</h4>
-                          <p className="text-[11px] text-gray-500 leading-relaxed">Perfect fit guaranteed.<br/>We send an expert for measurements.</p>
-                        </div>
-                      </div>
-                      <div className="p-3.5 flex gap-3.5 items-start group">
-                        <div className="w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm text-[#986427] flex items-center justify-center shrink-0 border border-white/80 shadow-sm group-hover:scale-105 transition-transform"><Sparkles size={14}/></div>
-                        <div>
-                          <h4 className="text-[13px] font-bold text-[#1A0A08] mb-1">Book A Stylist</h4>
-                          <p className="text-[11px] text-gray-500 leading-relaxed">Personal shopper. Curated just for you.<br/>Style, fit & delivery - we handle it all.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Product Description */}
-                  <div className="pt-4 mt-6">
-                    <h3 className="font-bold text-[13px] text-[#1A0A08] uppercase tracking-wide mb-3">Product Details</h3>
-                    <p className="text-[13px] text-gray-600 leading-relaxed font-medium">{product.description}</p>
-                  </div>
-                </div>
-              </div>
+        {/* The Text Content (Hidden initially, slides in on left) */}
+        <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 relative z-30 flex h-full items-center pointer-events-none">
+          <div ref={heroContentRef} className="w-full md:w-[45%] pointer-events-auto">
+            <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
+              The Design Story
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              {product.name}
+            </h2>
+            <div className="space-y-4 text-sm lg:text-base text-gray-600 font-sans font-light leading-relaxed">
+              <p>
+                [Placeholder Text: This section will contain the narrative description of the garment, detailing its inspiration, the cut, and the craftsmanship that brings it to life. The user will provide the exact copy later.]
+              </p>
+              <p>
+                [Placeholder Text: Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.]
+              </p>
             </div>
           </div>
         </div>
 
       </div>
 
-      {/* Standard Size Modal */}
-      {showStandardSizeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowStandardSizeModal(false)}></div>
-          <div className="relative w-full max-w-sm bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl p-8 animate-in zoom-in-95 duration-300">
-            <button onClick={() => setShowStandardSizeModal(false)} className="absolute top-4 right-4 text-[#1A0A08] hover:opacity-70"><X size={20} /></button>
-            <h3 className="text-2xl font-bold text-[#1A0A08] mb-6 text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Select Standard Size
-            </h3>
-            
-            <div className="space-y-6">
-              {(() => {
-                const SIZES_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
-                const sortSizes = (sizes) => sizes.sort((a, b) => SIZES_ORDER.indexOf(a) - SIZES_ORDER.indexOf(b));
-                
-                const uniqueTopSizes = Array.from(new Set(
-                  (product?.variations || [])
-                    .flatMap(v => {
-                       let sizes = [];
-                       if (Array.isArray(v.size_top)) sizes.push(...v.size_top);
-                       else if (v.size_top) sizes.push(v.size_top);
-                       if (Array.isArray(v.size)) sizes.push(...v.size);
-                       else if (v.size) sizes.push(v.size);
-                       return sizes;
-                    })
-                    .filter(s => s && s !== 'all')
-                ));
-                const displayTopSizes = uniqueTopSizes.length > 0 ? sortSizes(uniqueTopSizes) : ['S', 'M', 'L', 'XL', 'XXL'];
-
-                const uniqueBottomSizes = Array.from(new Set(
-                  (product?.variations || [])
-                    .flatMap(v => {
-                       let sizes = [];
-                       if (Array.isArray(v.size_bottom)) sizes.push(...v.size_bottom);
-                       else if (v.size_bottom) sizes.push(v.size_bottom);
-                       if (Array.isArray(v.size)) sizes.push(...v.size);
-                       else if (v.size) sizes.push(v.size);
-                       return sizes;
-                    })
-                    .filter(s => s && s !== 'all')
-                ));
-                const displayBottomSizes = uniqueBottomSizes.length > 0 ? sortSizes(uniqueBottomSizes) : displayTopSizes;
-
-                // Handle size group pre-selection
-                import('../utils/sizeGroups').then(({ getSizeGroupArray }) => {
-                  const groupSizes = getSizeGroupArray(primaryMember?.size || '');
-                  if (!displayTopSizes.includes(profile.size)) {
-                    const match = displayTopSizes.find(s => groupSizes.includes(s));
-                    if (match && profile.size !== match) {
-                      setProfile(prev => ({ ...prev, size: match }));
-                    } else if (displayTopSizes.length > 0 && profile.size !== displayTopSizes[0] && !match) {
-                      setProfile(prev => ({ ...prev, size: displayTopSizes[0] }));
-                    }
-                  }
-                });
-
-                return (
-                  <>
-                    <div>
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Top)</span>
-                        <span className="text-[9px] font-bold text-gray-500 hover:text-[#986427] cursor-pointer transition-colors underline">Guide</span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        {displayTopSizes.map(s => (
-                          <button 
-                            key={s} 
-                            onClick={() => setProfile({...profile, size: s})}
-                            className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-[11px] font-bold text-[#1A0A08] uppercase tracking-wide">Size (Bottom)</span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        {displayBottomSizes.map(s => (
-                          <button 
-                            key={s}
-                            onClick={() => setProfile({...profile, size: s})} 
-                            className={`min-w-[48px] h-[40px] flex items-center justify-center border-2 font-bold text-[13px] rounded-md shadow-sm transition-all ${profile.size === s ? 'border-[#986427] bg-[#986427]/10 text-[#986427]' : 'border-white/60 bg-white/40 text-gray-700 hover:bg-white/60 hover:border-[#986427]/30'}`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-
-              <button 
-                onClick={() => {
-                  setSelectedFitMode('size');
-                  setShowStandardSizeModal(false);
-                }}
-                className="w-full mt-2 bg-gradient-to-b from-[#3A2419] to-[#1A0A08] text-white py-3.5 rounded-xl font-bold transition-all shadow-[0_4px_12px_rgba(26,10,8,0.3)] hover:from-[#4A3022] hover:to-[#240E0C]"
-              >
-                Confirm Sizes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Book Our Expert Modal */}
-      {showBespokeFitModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-md" onClick={() => setShowBespokeFitModal(false)}></div>
-          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-[#E8DFD8] border border-white/40 shadow-2xl rounded-3xl flex flex-col md:flex-row animate-in zoom-in-95 duration-300">
-            <button onClick={() => setShowBespokeFitModal(false)} className="absolute top-4 right-4 z-10 p-2 bg-white/50 rounded-full text-[#1A0A08] hover:bg-white transition-colors"><X size={20} /></button>
-            
-            {/* Left Column: Image */}
-            <div className="w-full md:w-1/2 bg-[#F9F7F5] flex items-center justify-center p-8 border-b md:border-b-0 md:border-r border-gray-200">
-              <img 
-                src={profile.gender === 'Male' ? '/images/mens_measurement_guide.png' : '/images/womens_measurement_guide.png'} 
-                alt="Measurement Guide" 
-                className="w-full h-auto max-h-[500px] object-contain mix-blend-multiply"
-              />
-            </div>
-            
-            {/* Right Column: Form */}
-            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-              <div className="mb-2">
-                <span className="bg-[#f0e6dd] text-[#986427] text-[10px] font-extrabold px-2.5 py-1 rounded-sm tracking-widest uppercase shadow-sm">Premium Service</span>
-              </div>
-              <h3 className="text-3xl font-bold text-[#1A0A08] mb-3 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Book Our Expert
-              </h3>
-              <p className="text-sm text-gray-600 mb-8 leading-relaxed">
-                Our tailoring expert will visit you to take exact measurements for a flawless bespoke fit. Please select a convenient time and location.
-              </p>
-              
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Date</label>
-                    <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
-                      <Calendar size={16} className="text-[#986427]" />
-                      <input type="date" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Time</label>
-                    <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
-                      <Clock size={16} className="text-[#986427]" />
-                      <input type="time" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-[11px] font-bold tracking-wider uppercase text-[#1A0A08]/70 mb-2">Address</label>
-                  <div className="flex items-center gap-2 bg-white/50 border border-white/60 rounded-xl px-4 py-3 hover:border-gray-300 transition-colors shadow-inner">
-                    <MapPin size={16} className="text-[#986427] shrink-0" />
-                    <input type="text" placeholder="Enter full address for the visit" className="text-[13px] w-full focus:outline-none text-[#1A0A08] font-bold bg-transparent" />
-                  </div>
-                </div>
-                
-                <button 
-                  onClick={() => {
-                    setSelectedFitMode('expert');
-                    setShowBespokeFitModal(false);
-                  }}
-                  className="w-full mt-4 bg-[#986427] text-white py-4 rounded-xl font-bold transition-all shadow-lg hover:bg-[#7D5220] flex items-center justify-center gap-2 text-[14px]"
-                >
-                   Confirm Appointment <ArrowRight size={16}/>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );
