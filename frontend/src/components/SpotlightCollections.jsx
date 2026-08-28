@@ -81,15 +81,26 @@ const ProductStackingSection = ({ product, index }) => {
             {product.title}
           </h2>
           
-          <Link 
-            to={`/product/${product.id}`}
-            className="group inline-flex items-center justify-center bg-[#1A1A1A] text-white px-8 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
-          >
-            <span className="relative z-10 flex items-center gap-4">
-              Discover
-              <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
-            </span>
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link 
+              to={`/product/${product.id}`}
+              className="group inline-flex items-center justify-center bg-[#1A1A1A] text-white px-8 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+            >
+              <span className="relative z-10 flex items-center gap-4">
+                Discover
+                <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+              </span>
+            </Link>
+
+            <button 
+              onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
+              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] text-[#1A1A1A] px-8 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+            >
+              <span className="relative z-10 flex items-center gap-4">
+                Book Consultant
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Images */}
