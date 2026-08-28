@@ -66,7 +66,7 @@ const ProductStackingSection = ({ product, index }) => {
 
   return (
     <section ref={sectionRef} className="relative w-full border-b border-[#E8E1D7] bg-[#FDFBF7]" style={{ height: sectionHeight }}>
-      <div className={`sticky top-[90px] w-full h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
+      <div className={`sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-160px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
         
         {/* Product Info */}
         <div className={`w-full lg:w-5/12 h-auto lg:h-full relative z-20 flex flex-col justify-center px-6 pt-10 pb-4 lg:py-0 ${isReversed ? 'lg:pl-12 lg:pr-24' : 'lg:pl-24 lg:pr-12'} bg-[#FDFBF7]`}>
@@ -93,7 +93,7 @@ const ProductStackingSection = ({ product, index }) => {
         </div>
 
         {/* Images */}
-        <div className={`w-full lg:w-7/12 relative z-10 p-2 pb-12 lg:p-6 flex items-center ${isReversed ? 'lg:justify-start' : 'lg:justify-end'} bg-[#FDFBF7]`}>
+        <div className={`w-full lg:w-7/12 relative z-10 p-2 pb-4 md:pb-12 lg:p-6 flex items-center ${isReversed ? 'lg:justify-start' : 'lg:justify-end'} bg-[#FDFBF7]`}>
           {/* 1:1 Aspect Ratio Container */}
           <div 
             className="relative w-full max-w-[min(100%,78vh)] aspect-square overflow-hidden rounded-xl shadow-2xl bg-white"
