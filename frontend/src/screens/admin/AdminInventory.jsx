@@ -587,7 +587,6 @@ export default function AdminInventory() {
       quantity: parseInt(formData.quantity, 10),
       category_id: formData.category_id,
       status: formData.status,
-      video_url: finalVideoUrl,
       is_featured: formData.is_featured,
       is_new_arrival: formData.is_new_arrival,
       size: derivedSizes.length > 0 ? derivedSizes.join(',') : 'all',
@@ -599,9 +598,11 @@ export default function AdminInventory() {
       style_tags: formData.style_tags,
       suitability_points: formData.suitability_points,
       variations: updatedVariations,
-      images: finalImagesArray,
-      spotlight_images: finalSpotlightArray,
-      craftsmanship_features: finalCraftsmanshipFeatures
+      images: finalImagesArray
+      // Removed new columns temporarily until they are added to DB:
+      // video_url: finalVideoUrl,
+      // spotlight_images: finalSpotlightArray,
+      // craftsmanship_features: finalCraftsmanshipFeatures
     };
 
     if (editingId) {
@@ -970,54 +971,7 @@ export default function AdminInventory() {
 
                   {/* Media */}
                   <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Product Media (Video & Images)</h3>
-                    
-                    {/* Video Upload Section */}
-                    <div className="mb-6">
-                      <label className="block text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-2">Cinematic Video (Optional MP4)</label>
-                      <div className="flex items-center gap-4">
-                        {productVideo ? (
-                          <div className="relative w-32 h-32 rounded-xl bg-gray-100 overflow-hidden border border-gray-200">
-                            {productVideo.type === 'new' ? (
-                              <video src={productVideo.preview} className="w-full h-full object-cover" autoPlay muted loop playsInline />
-                            ) : (
-                              <video src={productVideo.url} className="w-full h-full object-cover" autoPlay muted loop playsInline />
-                            )}
-                            <div className="absolute top-1.5 right-1.5">
-                              <button type="button" onClick={() => {
-                                if (productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
-                                setProductVideo(null);
-                                setFormData({ ...formData, video_url: null });
-                              }} className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 shadow-md">
-                                <X size={14} />
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative">
-                            <Plus size={20} className="text-gray-400 mb-1" />
-                            <span className="text-[9px] font-bold text-gray-500 uppercase">Upload MP4</span>
-                            <input
-                              type="file"
-                              accept="video/mp4,video/quicktime"
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  const file = e.target.files[0];
-                                  setProductVideo({ type: 'new', file, preview: URL.createObjectURL(file) });
-                                  e.target.value = '';
-                                }
-                              }}
-                            />
-                          </div>
-                        )}
-                        <div className="flex-1">
-                          <p className="text-[10px] text-gray-500">Upload a short looping video of the product to show on the new cinematic details page. Format: MP4.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <label className="block text-[11px] font-bold text-gray-800 uppercase tracking-wider mb-2 pt-4 border-t border-gray-100">Product Images (11 Slots)</label>
+                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Product Images (11 Slots)</h3>
                     
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                       {productImages.map((img, idx) => {
@@ -1080,195 +1034,7 @@ export default function AdminInventory() {
                       })}
                     </div>
                   </div>
-
-                  {/* Spotlight Stacking Images */}
-                  <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-                    <h3 className="text-sm font-bold text-[#1A0A08] border-b border-gray-100 pb-2 mb-4">Spotlight Stacking Images (5 Slots)</h3>
-                    <p className="text-[10px] text-gray-500 mb-2">Upload up to 5 images here for the animated stacked lookbook effect on the Explore page.</p>
-                    
-                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-                      {spotlightImages.map((img, idx) => {
-                        if (!img) return null;
-                        const slotName = img.label || `Spotlight ${idx + 1}`;
-                        const hasImage = img.type !== 'empty';
-                        
-                        return (
-                          <div 
-                            key={`spotlight-${idx}`} 
-                            className="flex flex-col gap-1.5 group"
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, idx, false, null, true)}
-                            onDrop={(e) => handleDrop(e, idx, false, null, true)}
-                            onDragOver={handleDragOver}
-                          >
-                            <label className="text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider h-6 line-clamp-2 cursor-grab active:cursor-grabbing flex items-center justify-between">
-                              {slotName}
-                              <div className="text-gray-300 group-hover:text-[#986427]" title="Drag to reorder">
-                                <span className="text-[8px] leading-none">⣿</span>
-                              </div>
-                            </label>
-                            
-                            {hasImage ? (
-                              <div className="relative w-full aspect-[3/4] rounded-xl bg-gray-50 overflow-hidden border border-gray-200 shadow-sm group-hover:border-[#986427] transition-colors cursor-grab active:cursor-grabbing">
-                                <img src={img.type === 'new' ? img.preview : img.url} alt={slotName} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
-                                <div className="absolute top-2 right-2">
-                                  <button type="button" onClick={() => {
-                                      const newImages = [...spotlightImages];
-                                      if (newImages[idx].type === 'new') URL.revokeObjectURL(newImages[idx].preview);
-                                      newImages[idx] = { type: 'empty', label: slotName };
-                                      setSpotlightImages(newImages);
-                                    }} className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10" title="Remove image">
-                                    <X size={14} />
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <label className="w-full aspect-[3/4] rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 hover:border-[#986427] hover:bg-[#986427]/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
-                                <Plus size={24} className="mb-2" />
-                                <span className="text-[10px] font-bold text-center px-2">Upload</span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                      const file = e.target.files[0];
-                                      const newImages = [...spotlightImages];
-                                      newImages[idx] = { type: 'new', file, preview: URL.createObjectURL(file), label: slotName };
-                                      setSpotlightImages(newImages);
-                                      e.target.value = '';
-                                    }
-                                  }}
-                                />
-                              </label>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
                 </div>
-
-                {/* Craftsmanship Features Manager */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-                    <div>
-                      <h3 className="text-sm font-bold text-[#1A0A08]">Craftsmanship Features</h3>
-                      <p className="text-[10px] text-gray-500 mt-1">Add features for the scrolling "Art of Craftsmanship" section. Leave empty to use defaults.</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData(prev => ({
-                          ...prev,
-                          craftsmanship_features: [...(prev.craftsmanship_features || []), { title: '', desc: '', img: '' }]
-                        }));
-                      }}
-                      className="text-xs font-bold bg-[#986427]/10 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#986427]/20 text-[#986427] transition-colors"
-                    >
-                      <Plus size={14} /> Add Feature
-                    </button>
-                  </div>
-
-                  {(!formData.craftsmanship_features || formData.craftsmanship_features.length === 0) ? (
-                    <div className="text-sm text-gray-500 text-center py-4 italic">No custom features added. Default ones will be shown.</div>
-                  ) : (
-                    <div className="space-y-4">
-                      {formData.craftsmanship_features.map((feature, index) => (
-                        <div key={index} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col lg:flex-row gap-4 relative group">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newFeatures = [...formData.craftsmanship_features];
-                              const removed = newFeatures.splice(index, 1)[0];
-                              if (removed.file) URL.revokeObjectURL(removed.preview);
-                              setFormData({ ...formData, craftsmanship_features: newFeatures });
-                            }}
-                            className="absolute top-2 right-2 w-6 h-6 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
-                          >
-                            <Trash2 size={12} />
-                          </button>
-                          
-                          <div className="flex-1 space-y-3">
-                            <div>
-                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Title</label>
-                              <input
-                                type="text"
-                                placeholder="e.g. The Fabric"
-                                value={feature.title}
-                                onChange={(e) => {
-                                  const newFeatures = [...formData.craftsmanship_features];
-                                  newFeatures[index].title = e.target.value;
-                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
-                                }}
-                                className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Description</label>
-                              <textarea
-                                placeholder="Details about this feature..."
-                                value={feature.desc}
-                                onChange={(e) => {
-                                  const newFeatures = [...formData.craftsmanship_features];
-                                  newFeatures[index].desc = e.target.value;
-                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
-                                }}
-                                rows={3}
-                                className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs"
-                              />
-                            </div>
-                          </div>
-                          
-                          <div className="w-full lg:w-32 flex flex-col gap-2 shrink-0">
-                            <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Image</label>
-                            {(feature.preview || feature.img) ? (
-                              <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-gray-200 group-hover:border-[#986427] transition-colors">
-                                <img src={feature.preview || feature.img} alt={feature.title} className="w-full h-full object-cover" />
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const newFeatures = [...formData.craftsmanship_features];
-                                    if (newFeatures[index].file) URL.revokeObjectURL(newFeatures[index].preview);
-                                    newFeatures[index].file = null;
-                                    newFeatures[index].preview = null;
-                                    newFeatures[index].img = '';
-                                    setFormData({ ...formData, craftsmanship_features: newFeatures });
-                                  }}
-                                  className="absolute top-1 right-1 w-5 h-5 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors"
-                                >
-                                  <X size={10} />
-                                </button>
-                              </div>
-                            ) : (
-                              <label className="w-full aspect-[3/4] rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 hover:border-[#986427] flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
-                                <Plus size={20} className="mb-1" />
-                                <span className="text-[10px] font-bold text-center px-1">Upload</span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                      const file = e.target.files[0];
-                                      const newFeatures = [...formData.craftsmanship_features];
-                                      newFeatures[index].file = file;
-                                      newFeatures[index].preview = URL.createObjectURL(file);
-                                      setFormData({ ...formData, craftsmanship_features: newFeatures });
-                                      e.target.value = '';
-                                    }
-                                  }}
-                                />
-                              </label>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-              </div>
 
               {/* Variations Manager */}
               <div className="mt-6 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
@@ -1697,6 +1463,7 @@ export default function AdminInventory() {
                   )}
                 </div>
               </div>
+            </div>
               
               <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 mt-6 shrink-0">
                 <button
