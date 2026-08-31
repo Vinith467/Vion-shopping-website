@@ -111,7 +111,7 @@ export default function MyOrdersTab() {
   return (
     <div className="w-full flex flex-col gap-6 -mt-4">
       <div>
-        <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">My Orders</h2>
+        <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 font-serif">My Orders</h2>
         <p className="text-sm text-gray-500 font-medium">Track, manage and view all your orders in one place.</p>
       </div>
 
@@ -122,7 +122,7 @@ export default function MyOrdersTab() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`text-sm font-bold whitespace-nowrap transition-colors relative ${
-                activeTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900'
+                activeTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900 dark:text-[#F5F0E8]'
               }`}
             >
               {tab}
@@ -153,11 +153,11 @@ export default function MyOrdersTab() {
       <div className="flex flex-col xl:flex-row gap-8 items-start">
         <div className="w-full xl:w-[70%] flex flex-col gap-4">
           {isLoading ? (
-            <div className="flex justify-center items-center h-48 bg-white rounded-2xl border border-gray-100">
+            <div className="flex justify-center items-center h-48 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-[#3A10E5] rounded-full animate-spin"></div>
             </div>
           ) : filteredOrders.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 p-10 flex flex-col items-center justify-center text-center h-48">
+            <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-10 flex flex-col items-center justify-center text-center h-48">
               <ShoppingBag size={32} className="text-gray-300 mb-3" />
               <p className="text-sm font-bold text-gray-500">No orders found.</p>
             </div>
@@ -165,7 +165,7 @@ export default function MyOrdersTab() {
             filteredOrders.map((order) => {
               const StatusIcon = order.statusIcon;
             return (
-              <div key={order.fullId} onClick={() => navigate(`/order/${order.fullId}`)} className="bg-white rounded-2xl border border-gray-100 p-5 lg:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col lg:flex-row gap-6 cursor-pointer">
+              <div key={order.fullId} onClick={() => navigate(`/order/${order.fullId}`)} className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-5 lg:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col lg:flex-row gap-6 cursor-pointer">
                 <div className="flex items-center shrink-0">
                   <div className="relative w-[100px] h-[120px] rounded-xl overflow-hidden bg-gray-100 border border-gray-100 shrink-0 z-20">
                     <img src={order.images[0]} alt="Item" className="w-full h-full object-cover mix-blend-multiply" />
@@ -178,21 +178,21 @@ export default function MyOrdersTab() {
                   {order.images.length > 2 && (
                     <div className="relative w-[50px] h-[60px] rounded-lg overflow-hidden bg-gray-100 border border-gray-100 shrink-0 -ml-4 mt-8 z-0 flex items-center justify-center bg-gray-50">
                       <img src={order.images[2]} alt="Item" className="absolute w-full h-full object-cover mix-blend-multiply opacity-50" />
-                      <span className="relative z-10 text-xs font-bold text-gray-700 bg-white/80 px-1.5 py-0.5 rounded">+{order.images.length - 2}</span>
+                      <span className="relative z-10 text-xs font-bold text-gray-700 bg-white/80 dark:bg-[#151515]/80 transition-colors duration-500 px-1.5 py-0.5 rounded">+{order.images.length - 2}</span>
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 flex flex-col lg:flex-row justify-between gap-4">
                   <div className="flex flex-col justify-center">
-                    <h3 className="text-base font-bold text-gray-900 mb-1">Order #{order.id}</h3>
+                    <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Order #{order.id}</h3>
                     <div className="flex items-center gap-2 text-xs font-medium text-gray-500 mb-4">
                       <span>{order.date}</span>
                       <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                       <span>{order.itemsCount} Items</span>
                     </div>
                     <p className="text-xs text-gray-500 font-medium mb-1">Total Amount</p>
-                    <p className="text-base font-bold text-gray-900">{order.total}</p>
+                    <p className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">{order.total}</p>
                   </div>
 
                   <div className="flex flex-col justify-between items-start lg:items-end">
@@ -220,7 +220,7 @@ export default function MyOrdersTab() {
           
           {/* Order Summary Widget */}
           <div className="bg-[#F8F9FA] rounded-2xl p-6 border border-gray-100">
-            <h3 className="text-base font-bold text-gray-900 mb-5">Order Summary</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] mb-5">Order Summary</h3>
             <div className="flex flex-col gap-4">
               {summaryStats.map((stat, i) => {
                 const StatIcon = stat.icon;
@@ -232,7 +232,7 @@ export default function MyOrdersTab() {
                       </div>
                       <span className="text-xs font-semibold text-gray-700">{stat.label}</span>
                     </div>
-                    <span className="text-xs font-bold text-gray-900">{stat.count}</span>
+                    <span className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8]">{stat.count}</span>
                   </div>
                 );
               })}
@@ -240,8 +240,8 @@ export default function MyOrdersTab() {
           </div>
 
           {/* Need Help Widget */}
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <h3 className="text-base font-bold text-gray-900 mb-5">Need Help?</h3>
+          <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] mb-5">Need Help?</h3>
             <div className="flex flex-col gap-5 mb-6">
               
               <div className="flex items-start gap-3 cursor-pointer group">
@@ -249,7 +249,7 @@ export default function MyOrdersTab() {
                   <Truck size={14} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-gray-900 mb-0.5 group-hover:text-[#3A10E5] transition-colors">Track your order</h4>
+                  <h4 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-0.5 group-hover:text-[#3A10E5] transition-colors">Track your order</h4>
                   <p className="text-[10px] font-medium text-gray-500">Get real-time updates</p>
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function MyOrdersTab() {
                   <RotateCcw size={14} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-gray-900 mb-0.5 group-hover:text-[#3A10E5] transition-colors">Returns & Refunds</h4>
+                  <h4 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-0.5 group-hover:text-[#3A10E5] transition-colors">Returns & Refunds</h4>
                   <p className="text-[10px] font-medium text-gray-500">Easy returns within 7 days</p>
                 </div>
               </div>
@@ -269,7 +269,7 @@ export default function MyOrdersTab() {
                   <PhoneCall size={14} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-gray-900 mb-0.5 group-hover:text-[#3A10E5] transition-colors">Contact Support</h4>
+                  <h4 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-0.5 group-hover:text-[#3A10E5] transition-colors">Contact Support</h4>
                   <p className="text-[10px] font-medium text-gray-500">We're here to help</p>
                 </div>
               </div>

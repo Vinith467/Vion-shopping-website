@@ -67,7 +67,7 @@ export default function StyleFeedTab() {
       {/* Header & Member Selection */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">Style Feed</h2>
+          <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 font-serif">Style Feed</h2>
           <p className="text-sm text-gray-500 font-medium">Curated outfit inspirations based on {currentMember.name}'s preferences.</p>
         </div>
         
@@ -80,8 +80,8 @@ export default function StyleFeedTab() {
                 onClick={() => setSelectedConsumerId(member.id)}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
                   selectedConsumerId === member.id 
-                    ? 'bg-white text-[#3A10E5] shadow-sm' 
-                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] shadow-sm' 
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-[#F5F0E8]'
                 }`}
               >
                 <div className="w-5 h-5 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-gray-100">
@@ -130,7 +130,7 @@ export default function StyleFeedTab() {
                 <div className="flex justify-end gap-2">
                   <button 
                     onClick={(e) => { e.stopPropagation(); toast('Link copied!'); }}
-                    className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-colors"
+                    className="w-8 h-8 rounded-full bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 transition-colors"
                   >
                     <Share2 size={14} />
                   </button>
@@ -139,7 +139,7 @@ export default function StyleFeedTab() {
                     className={`w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-colors ${
                       savedItems.includes(item.id) 
                         ? 'bg-pink-500 text-white' 
-                        : 'bg-white/20 text-white hover:bg-white/40'
+                        : 'bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 text-white hover:bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 '
                     }`}
                   >
                     <Heart size={14} className={savedItems.includes(item.id) ? 'fill-current' : ''} />

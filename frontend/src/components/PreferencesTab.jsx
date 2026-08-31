@@ -170,7 +170,7 @@ export default function PreferencesTab() {
         {/* Top Navigation */}
         <button 
           onClick={() => setView('form')}
-          className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors w-fit"
+          className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-[#F5F0E8] transition-colors w-fit"
         >
           <ChevronLeft size={16} /> Back to Preferences
         </button>
@@ -179,7 +179,7 @@ export default function PreferencesTab() {
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h2 className="text-[28px] font-bold text-gray-900 font-serif flex items-center gap-2">
+              <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] font-serif flex items-center gap-2">
                 <Sparkles size={24} className="text-[#3A10E5]" /> Recommended Outfits
               </h2>
               <div className="flex items-center gap-1.5 bg-purple-50 text-[#3A10E5] px-2.5 py-1 rounded-full border border-purple-100">
@@ -213,7 +213,7 @@ export default function PreferencesTab() {
           <div className="flex items-center gap-4 shrink-0">
             <span className="text-sm font-semibold text-gray-600">24 Results</span>
             <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
-              <button className="p-1.5 rounded bg-white text-[#3A10E5] shadow-sm"><LayoutGrid size={18} /></button>
+              <button className="p-1.5 rounded bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] shadow-sm"><LayoutGrid size={18} /></button>
               <button className="p-1.5 rounded text-gray-400 hover:text-gray-600"><List size={18} /></button>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function PreferencesTab() {
         {/* Applied Preferences Banner */}
         <div className="bg-[#F8F6FF] rounded-2xl p-4 border border-purple-100 flex items-start sm:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <div className="flex items-center gap-2 text-sm font-bold text-gray-900 shrink-0">
+            <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-[#F5F0E8] shrink-0">
               <Sparkles size={16} className="text-[#3A10E5]" /> Your Preferences
             </div>
             <div className="text-xs text-gray-600 font-medium leading-relaxed">
@@ -249,16 +249,16 @@ export default function PreferencesTab() {
                   </div>
                 )}
                 
-                <button className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-white transition-colors">
+                <button className="absolute top-3 right-3 w-8 h-8 bg-white/80 dark:bg-[#151515]/80 transition-colors duration-500 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors">
                   <Heart size={16} />
                 </button>
               </div>
 
               {/* Product Info */}
               <div className="flex flex-col gap-1.5">
-                <h3 className="text-sm font-semibold text-gray-900 line-clamp-1 group-hover:text-[#3A10E5] transition-colors">{product.title}</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] line-clamp-1 group-hover:text-[#3A10E5] transition-colors">{product.title}</h3>
                 <div className="flex justify-between items-end">
-                  <p className="text-sm font-bold text-gray-900">₹{parseFloat(product.price).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8]">₹{parseFloat(product.price).toLocaleString()}</p>
                 </div>
                 
                 {/* Style/Color Tags preview */}
@@ -274,9 +274,9 @@ export default function PreferencesTab() {
             </div>
           ))}
           {recommendedOutfits.length === 0 && (
-            <div className="col-span-full py-12 text-center bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div className="col-span-full py-12 text-center bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 shadow-sm">
               <Sparkles size={32} className="mx-auto text-gray-300 mb-3" />
-              <h3 className="text-lg font-bold text-gray-900">No matches found</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8]">No matches found</h3>
               <p className="text-sm text-gray-500 mt-1">Try expanding your preferences or check back later for new arrivals.</p>
             </div>
           )}
@@ -285,17 +285,17 @@ export default function PreferencesTab() {
         {/* Bottom Banner */}
         <div className="bg-[#F8F6FF] rounded-2xl p-6 border border-purple-100 mt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 text-[#3A10E5]">
+            <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shadow-sm shrink-0 text-[#3A10E5]">
               <Sparkles size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">Not finding what you're looking for?</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Not finding what you're looking for?</h3>
               <p className="text-sm text-gray-600 font-medium">Try adjusting a few preferences or explore more styles.</p>
             </div>
           </div>
           <button 
             onClick={() => setView('form')}
-            className="bg-white border-2 border-[#3A10E5] text-[#3A10E5] px-8 py-3 rounded-xl text-sm font-bold hover:bg-purple-50 transition-colors shadow-sm flex items-center justify-center gap-2 w-full md:w-auto whitespace-nowrap"
+            className="bg-white dark:bg-[#151515] transition-colors duration-500 border-2 border-[#3A10E5] text-[#3A10E5] px-8 py-3 rounded-xl text-sm font-bold hover:bg-purple-50 transition-colors shadow-sm flex items-center justify-center gap-2 w-full md:w-auto whitespace-nowrap"
           >
             Refine Preferences
           </button>
@@ -312,10 +312,10 @@ export default function PreferencesTab() {
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-4 mb-3">
-            <h2 className="text-[28px] font-bold text-gray-900 font-serif">Preferences</h2>
+            <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] font-serif">Preferences</h2>
             
             {/* Profile Selector */}
-            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm">
+            <div className="flex items-center gap-2 bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 rounded-xl p-1.5 shadow-sm">
               <div className="w-8 h-8 rounded-full overflow-hidden bg-purple-50 shrink-0">
                 <img src={targetMember?.image || "/images/body_hourglass_1785826886362.jpg"} alt={targetMember?.name} className="w-full h-full object-cover" />
               </div>
@@ -323,7 +323,7 @@ export default function PreferencesTab() {
                 <select 
                   value={selectedMemberId || ''} 
                   onChange={(e) => setSelectedMemberId(e.target.value)}
-                  className="appearance-none bg-transparent text-gray-900 py-1 pl-1 pr-6 rounded text-sm font-bold focus:outline-none cursor-pointer"
+                  className="appearance-none bg-transparent text-gray-900 dark:text-[#F5F0E8] py-1 pl-1 pr-6 rounded text-sm font-bold focus:outline-none cursor-pointer"
                 >
                   {members?.map(member => (
                     <option key={member.id} value={member.id}>
@@ -349,9 +349,9 @@ export default function PreferencesTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         
         {/* Style Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-gray-900">Style Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Style Preference</h3>
             <p className="text-xs text-gray-500 mt-1">Choose the styles you love</p>
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -371,7 +371,7 @@ export default function PreferencesTab() {
                         <Check size={12} strokeWidth={3} />
                       </div>
                     ) : (
-                      <div className="w-5 h-5 bg-white/80 rounded-full border border-gray-300"></div>
+                      <div className="w-5 h-5 bg-white/80 dark:bg-[#151515]/80 transition-colors duration-500 rounded-full border border-gray-300"></div>
                     )}
                   </div>
                 </div>
@@ -387,9 +387,9 @@ export default function PreferencesTab() {
         </div>
 
         {/* Color Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-gray-900">Color Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Color Preference</h3>
             <p className="text-xs text-gray-500 mt-1">Choose the colors you're drawn to</p>
           </div>
           <div className="grid grid-cols-4 gap-y-4 gap-x-2 flex-1">
@@ -420,9 +420,9 @@ export default function PreferencesTab() {
         </div>
 
         {/* Fit Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-gray-900">Fit Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Fit Preference</h3>
             <p className="text-xs text-gray-500 mt-1">How do you prefer your outfits to fit?</p>
           </div>
           <div className="grid grid-cols-3 gap-3 mb-6">
@@ -459,9 +459,9 @@ export default function PreferencesTab() {
         </div>
 
         {/* Occasion Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-gray-900">Occasion Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Occasion Preference</h3>
             <p className="text-xs text-gray-500 mt-1">Select occasions you shop for</p>
           </div>
           <div className="grid grid-cols-4 gap-3">
@@ -498,9 +498,9 @@ export default function PreferencesTab() {
         </div>
 
         {/* Fabric Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-gray-900">Fabric Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Fabric Preference</h3>
             <p className="text-xs text-gray-500 mt-1">Choose the fabrics you like most</p>
           </div>
           <div className="grid grid-cols-4 gap-3">
@@ -534,7 +534,7 @@ export default function PreferencesTab() {
                         <Check size={10} strokeWidth={3} />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 bg-white/80 rounded-full border border-gray-300"></div>
+                      <div className="w-4 h-4 bg-white/80 dark:bg-[#151515]/80 transition-colors duration-500 rounded-full border border-gray-300"></div>
                     )}
                   </div>
                 </div>
@@ -547,9 +547,9 @@ export default function PreferencesTab() {
         </div>
 
         {/* Content Preference */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col h-full">
           <div className="mb-5">
-            <h3 className="text-base font-bold text-gray-900">Content Preference</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Content Preference</h3>
             <p className="text-xs text-gray-500 mt-1">What would you like to see more of?</p>
           </div>
           <div className="flex flex-col gap-4 flex-1">
@@ -569,7 +569,7 @@ export default function PreferencesTab() {
                         <Sparkles size={12} />
                       )}
                     </div>
-                    <span className="text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">{content.name}</span>
+                    <span className="text-xs font-semibold text-gray-700 group-hover:text-gray-900 dark:text-[#F5F0E8] transition-colors">{content.name}</span>
                   </div>
                   <div className="text-[#3A10E5]">
                     {isSelected ? <CheckSquare size={18} className="fill-[#3A10E5] text-white" /> : <Square size={18} className="text-gray-300" />}
@@ -589,11 +589,11 @@ export default function PreferencesTab() {
       {/* Bottom CTA */}
       <div className="bg-[#F8F6FF] rounded-2xl p-6 border border-purple-100 mt-2 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 text-[#3A10E5]">
+          <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shadow-sm shrink-0 text-[#3A10E5]">
             <Sparkles size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">Ready to see outfits you'll love?</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Ready to see outfits you'll love?</h3>
             <p className="text-sm text-gray-600 font-medium">We'll show you the best picks based on your preferences.</p>
           </div>
         </div>

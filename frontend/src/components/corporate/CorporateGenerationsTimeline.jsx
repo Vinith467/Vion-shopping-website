@@ -87,7 +87,7 @@ export default function CorporateGenerationsTimeline() {
           
           <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/90 font-sans font-light leading-relaxed">
             <p ref={addToRefs}>
-              VION Corporate is built on three generations of experience in the clothing and tailoring business. For decades, our family has worked with fabrics, tailoring, fit and craftsmanship, developing an understanding of what makes clothing not only look exceptional, but feel exceptional.
+              VION Fashion is built on three generations of experience in the clothing and tailoring business. For decades, our family has worked with fabrics, tailoring, fit and craftsmanship, developing an understanding of what makes clothing not only look exceptional, but feel exceptional.
             </p>
             <p ref={addToRefs} className="font-medium text-[#F5F0E8]">
               Today, the youngest generation is carrying that heritage forward.
@@ -96,7 +96,7 @@ export default function CorporateGenerationsTimeline() {
               We are combining the knowledge and craftsmanship passed down through generations with modern technology, contemporary design and a customer-first approach to create a completely different experience for professional attire and institutional clothing.
             </p>
             <p ref={addToRefs}>
-              Our ambition is to take this experience across India and build VION into a trusted Pan-India partner for corporates, universities, colleges, institutes and organizations.
+              Our ambition is to take this experience across India and build VION into a trusted brand for individuals who appreciate premium quality and timeless style.
             </p>
           </div>
         </div>

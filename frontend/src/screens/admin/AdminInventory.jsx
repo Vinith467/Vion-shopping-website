@@ -83,7 +83,8 @@ export default function AdminInventory() {
     style_tags: [],
     target_body_shapes: ['Standard Fit'],
     suitability_points: ['', '', ''],
-    variations: []
+    variations: [],
+    craftsmanship_features: []
   };
 
   const [formData, setFormData] = useState(initialForm);
@@ -272,7 +273,8 @@ export default function AdminInventory() {
         style_tags: prod.style_tags || [],
         target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
         suitability_points: prod.suitability_points || ['', '', ''],
-        variations: prod.variations || []
+        variations: prod.variations || [],
+        craftsmanship_features: prod.craftsmanship_features || []
       });
     } else {
       setEditingId(null);
@@ -354,7 +356,8 @@ export default function AdminInventory() {
       style_tags: prod.style_tags || [],
       target_body_shapes: prod.target_body_shapes?.length ? prod.target_body_shapes : ['Standard Fit'],
       suitability_points: prod.suitability_points || ['', '', ''],
-      variations: prod.variations || []
+      variations: prod.variations || [],
+      craftsmanship_features: prod.craftsmanship_features || []
     });
 
     // Initialize productImages from existing urls
@@ -554,6 +557,27 @@ export default function AdminInventory() {
     const derivedSkinTones = Array.from(allSkinTones);
     const derivedHeights = Array.from(allHeights);
 
+    // Craftsmanship Features Uploads
+    const finalCraftsmanshipFeatures = [];
+    for (const feature of (formData.craftsmanship_features || [])) {
+      let featureImgUrl = feature.img; // keep existing if it's a string
+      if (feature.file) {
+        try {
+          featureImgUrl = await uploadImage(feature.file, 'products/craftsmanship', 'public-images');
+        } catch (err) {
+          toast.error('Failed to upload craftsmanship image');
+          console.error(err);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      finalCraftsmanshipFeatures.push({
+        title: feature.title,
+        desc: feature.desc,
+        img: featureImgUrl
+      });
+    }
+
     const payload = {
       title: formData.title,
       description: formData.description,
@@ -576,7 +600,8 @@ export default function AdminInventory() {
       suitability_points: formData.suitability_points,
       variations: updatedVariations,
       images: finalImagesArray,
-      spotlight_images: finalSpotlightArray
+      spotlight_images: finalSpotlightArray,
+      craftsmanship_features: finalCraftsmanshipFeatures
     };
 
     if (editingId) {
@@ -873,18 +898,7 @@ export default function AdminInventory() {
                       </select>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection Class</label>
-                      <select
-                        value={formData.target_body_shapes?.[0] || 'Standard Fit'}
-                        onChange={(e) => setFormData({ ...formData, target_body_shapes: [e.target.value] })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#3A10E5] outline-none font-medium text-gray-900"
-                      >
-                        <option value="Standard Fit">Standard Fit</option>
-                        <option value="Tailored Fit">Tailored Fit</option>
-                        <option value="Book A Stylist">Book A Stylist</option>
-                      </select>
-                    </div>
+                    
 
                     <div>
                       <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">Target Genders</label>
@@ -923,20 +937,9 @@ export default function AdminInventory() {
                         required
                       >
                         <option value="">Select Category</option>
-                        {categories.map(c => {
-                          const shapeMatch = c.slug ? c.slug.match(/___BODYSHAPE_([a-zA-Z0-9\-]+)/) : null;
-                          const catShape = shapeMatch ? shapeMatch[1] : 'all';
-                          let displayName = c.name;
-                          
-                          if (catShape !== 'all') {
-                            const capitalizedShape = catShape.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                            displayName = `${c.name} - ${capitalizedShape}`;
-                          }
-
-                          return (
-                            <option key={c.id} value={c.id}>{displayName}</option>
-                          );
-                        })}
+                        {categories.map(c => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                          ))}
                       </select>
                     </div>
 
@@ -1144,6 +1147,125 @@ export default function AdminInventory() {
                       })}
                     </div>
                   </div>
+                </div>
+
+                {/* Craftsmanship Features Manager */}
+                <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#1A0A08]">Craftsmanship Features</h3>
+                      <p className="text-[10px] text-gray-500 mt-1">Add features for the scrolling "Art of Craftsmanship" section. Leave empty to use defaults.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          craftsmanship_features: [...(prev.craftsmanship_features || []), { title: '', desc: '', img: '' }]
+                        }));
+                      }}
+                      className="text-xs font-bold bg-[#986427]/10 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#986427]/20 text-[#986427] transition-colors"
+                    >
+                      <Plus size={14} /> Add Feature
+                    </button>
+                  </div>
+
+                  {(!formData.craftsmanship_features || formData.craftsmanship_features.length === 0) ? (
+                    <div className="text-sm text-gray-500 text-center py-4 italic">No custom features added. Default ones will be shown.</div>
+                  ) : (
+                    <div className="space-y-4">
+                      {formData.craftsmanship_features.map((feature, index) => (
+                        <div key={index} className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col lg:flex-row gap-4 relative group">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newFeatures = [...formData.craftsmanship_features];
+                              const removed = newFeatures.splice(index, 1)[0];
+                              if (removed.file) URL.revokeObjectURL(removed.preview);
+                              setFormData({ ...formData, craftsmanship_features: newFeatures });
+                            }}
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                          
+                          <div className="flex-1 space-y-3">
+                            <div>
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Title</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. The Fabric"
+                                value={feature.title}
+                                onChange={(e) => {
+                                  const newFeatures = [...formData.craftsmanship_features];
+                                  newFeatures[index].title = e.target.value;
+                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                }}
+                                className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Description</label>
+                              <textarea
+                                placeholder="Details about this feature..."
+                                value={feature.desc}
+                                onChange={(e) => {
+                                  const newFeatures = [...formData.craftsmanship_features];
+                                  newFeatures[index].desc = e.target.value;
+                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                }}
+                                rows={3}
+                                className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-xs"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="w-full lg:w-32 flex flex-col gap-2 shrink-0">
+                            <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-wider mb-1">Image</label>
+                            {(feature.preview || feature.img) ? (
+                              <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-gray-200 group-hover:border-[#986427] transition-colors">
+                                <img src={feature.preview || feature.img} alt={feature.title} className="w-full h-full object-cover" />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newFeatures = [...formData.craftsmanship_features];
+                                    if (newFeatures[index].file) URL.revokeObjectURL(newFeatures[index].preview);
+                                    newFeatures[index].file = null;
+                                    newFeatures[index].preview = null;
+                                    newFeatures[index].img = '';
+                                    setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                  }}
+                                  className="absolute top-1 right-1 w-5 h-5 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors"
+                                >
+                                  <X size={10} />
+                                </button>
+                              </div>
+                            ) : (
+                              <label className="w-full aspect-[3/4] rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 hover:border-[#986427] flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
+                                <Plus size={20} className="mb-1" />
+                                <span className="text-[10px] font-bold text-center px-1">Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      const file = e.target.files[0];
+                                      const newFeatures = [...formData.craftsmanship_features];
+                                      newFeatures[index].file = file;
+                                      newFeatures[index].preview = URL.createObjectURL(file);
+                                      setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                      e.target.value = '';
+                                    }
+                                  }}
+                                />
+                              </label>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
               </div>
@@ -1453,6 +1575,129 @@ export default function AdminInventory() {
                   </div>
                 )}
               </div>
+              
+              {/* Craftsmanship Features */}
+              <div className="mt-8 pt-6 border-t border-[#F5F0E8]/10">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Art of Craftsmanship Features</h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        craftsmanship_features: [...(formData.craftsmanship_features || []), { title: '', desc: '', img: '' }]
+                      });
+                    }}
+                    className="px-3 py-1.5 bg-[#986427] text-white rounded-lg text-xs font-bold hover:bg-[#86561f] transition-colors flex items-center gap-1"
+                  >
+                    <Plus size={14} /> Add Feature
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  {(formData.craftsmanship_features || []).map((feature, index) => (
+                    <div key={index} className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex gap-4">
+                      {/* Image Upload Column */}
+                      <div className="w-32 shrink-0">
+                        <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Background Image</label>
+                        {feature.file || feature.img ? (
+                          <div className="relative w-full aspect-[4/5] rounded-lg bg-white overflow-hidden border border-gray-200 shadow-sm">
+                            <img 
+                              src={feature.file ? URL.createObjectURL(feature.file) : feature.img} 
+                              alt="Feature preview" 
+                              className="w-full h-full object-cover" 
+                            />
+                            <div className="absolute top-1 right-1">
+                              <button 
+                                type="button" 
+                                onClick={() => {
+                                  const newFeatures = [...formData.craftsmanship_features];
+                                  newFeatures[index].file = null;
+                                  newFeatures[index].img = '';
+                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                }} 
+                                className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10"
+                              >
+                                <X size={12} />
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <label className="w-full aspect-[4/5] rounded-lg bg-white border border-dashed border-gray-300 hover:border-[#986427] hover:bg-[#986427]/5 flex flex-col items-center justify-center cursor-pointer transition-colors text-gray-400 hover:text-[#986427]">
+                            <Plus size={16} className="mb-1" />
+                            <span className="text-[9px] font-bold text-center px-1">Upload</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const file = e.target.files[0];
+                                  const newFeatures = [...formData.craftsmanship_features];
+                                  newFeatures[index].file = file;
+                                  setFormData({ ...formData, craftsmanship_features: newFeatures });
+                                  e.target.value = '';
+                                }
+                              }}
+                            />
+                          </label>
+                        )}
+                      </div>
+                      
+                      {/* Text Fields Column */}
+                      <div className="flex-1 flex flex-col gap-3">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Title</label>
+                            <input
+                              type="text"
+                              value={feature.title}
+                              onChange={(e) => {
+                                const newFeatures = [...formData.craftsmanship_features];
+                                newFeatures[index].title = e.target.value;
+                                setFormData({ ...formData, craftsmanship_features: newFeatures });
+                              }}
+                              className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm focus:border-[#986427] focus:ring-1 focus:ring-[#986427] outline-none"
+                              placeholder="e.g. The Fabric"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newFeatures = formData.craftsmanship_features.filter((_, i) => i !== index);
+                              setFormData({ ...formData, craftsmanship_features: newFeatures });
+                            }}
+                            className="ml-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors mt-6"
+                            title="Remove feature"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-[10px] font-bold text-[#1A0A08]/80 uppercase tracking-wider mb-2">Description</label>
+                          <textarea
+                            value={feature.desc}
+                            onChange={(e) => {
+                              const newFeatures = [...formData.craftsmanship_features];
+                              newFeatures[index].desc = e.target.value;
+                              setFormData({ ...formData, craftsmanship_features: newFeatures });
+                            }}
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm focus:border-[#986427] focus:ring-1 focus:ring-[#986427] outline-none h-24 resize-none"
+                            placeholder="Enter detailed description of this feature..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {(!formData.craftsmanship_features || formData.craftsmanship_features.length === 0) && (
+                    <div className="text-center py-8 border border-dashed border-gray-300 rounded-xl text-gray-500 text-sm">
+                      No craftsmanship features added. Click "Add Feature" to create one.
+                    </div>
+                  )}
+                </div>
+              </div>
+              
               <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 mt-6 shrink-0">
                 <button
                   type="button"

@@ -31,7 +31,7 @@ export default function WhyChooseVion() {
   ];
 
   return (
-    <section className="py-20 bg-[#FDFBF7] text-[#111111] border-t border-[#111111]/5">
+    <section className="py-20 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 text-[#111111] dark:text-[#F5F0E8] border-t border-[#111111]/5">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         <div className="text-center mb-16">
@@ -47,7 +47,7 @@ export default function WhyChooseVion() {
                 {feature.icon}
               </div>
               <h5 className="font-bold text-sm mb-3">{feature.title}</h5>
-              <p className="text-[#111111]/70 font-light text-xs leading-relaxed max-w-[200px]">
+              <p className="text-[#111111]/70 dark:text-[#F5F0E8]/70 font-light text-xs leading-relaxed max-w-[200px]">
                 {feature.desc}
               </p>
               

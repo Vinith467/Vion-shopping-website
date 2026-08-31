@@ -47,12 +47,12 @@ export default function ConsultantPopup() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-[#FDFBF7] w-full max-w-3xl flex flex-col md:flex-row rounded-lg overflow-hidden relative shadow-2xl animate-fade-in-up">
+      <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 w-full max-w-3xl flex flex-col md:flex-row rounded-lg overflow-hidden relative shadow-2xl animate-fade-in-up">
         
         {/* Close Button */}
         <button 
           onClick={handleClose}
-          className="absolute top-4 right-4 z-10 text-gray-400 hover:text-black bg-white/50 backdrop-blur-md rounded-full p-1 transition-colors"
+          className="absolute top-4 right-4 z-10 text-gray-400 hover:text-black bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 0 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-md rounded-full p-1 transition-colors"
         >
           <X size={20} />
         </button>
@@ -70,8 +70,8 @@ export default function ConsultantPopup() {
         </div>
 
         {/* Content Section */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center text-center items-center bg-[#FDFBF7]">
-          <h2 className="text-3xl font-serif font-bold text-[#1A0A08] mb-4">Elevate Your Wardrobe</h2>
+        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center text-center items-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
+          <h2 className="text-3xl font-serif font-bold text-[#1A0A08] dark:text-[#F5F0E8] mb-4">Elevate Your Wardrobe</h2>
           <div className="w-12 h-px bg-[#8B6544] mb-6"></div>
           
           <p className="text-[#3E2312] mb-8 leading-relaxed font-serif text-lg">
@@ -87,7 +87,7 @@ export default function ConsultantPopup() {
           
           <button 
             onClick={handleClose}
-            className="mt-4 text-xs font-bold text-gray-400 hover:text-gray-800 uppercase tracking-wider"
+            className="mt-4 text-xs font-bold text-gray-400 hover:text-gray-800 dark:text-[#F5F0E8] uppercase tracking-wider"
           >
             No, thanks
           </button>

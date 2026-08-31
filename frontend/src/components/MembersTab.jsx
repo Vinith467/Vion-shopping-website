@@ -33,11 +33,11 @@ export default function MembersTab() {
     <div className="w-full flex flex-col gap-6 -mt-4">
       
       {/* 1. Header Card */}
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col xl:flex-row items-center justify-between gap-8">
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col xl:flex-row items-center justify-between gap-8">
         
         {/* Left: Welcome */}
         <div className="flex-1 text-center xl:text-left">
-          <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">Welcome back, {firstName}! 👋</h2>
+          <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 font-serif">Welcome back, {firstName}! 👋</h2>
           <p className="text-sm text-gray-500 font-medium">We're ready to help you look and feel your best.</p>
         </div>
 
@@ -54,7 +54,7 @@ export default function MembersTab() {
 
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-bold text-gray-900">{primaryConsumer.name}</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8]">{primaryConsumer.name}</h3>
               <span className="bg-[#3A10E5] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Primary</span>
             </div>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-500 font-medium mb-1.5">
@@ -88,7 +88,7 @@ export default function MembersTab() {
 
         {/* Right: Completion */}
         <div className="xl:pl-8 xl:border-l border-gray-100 flex flex-col h-full justify-center w-full xl:w-auto">
-          <p className="text-xs font-bold text-gray-900 mb-4 text-center xl:text-left">Profile Completion</p>
+          <p className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-4 text-center xl:text-left">Profile Completion</p>
           <div className="flex items-center justify-center xl:justify-start gap-4 mb-4">
             <div className="relative w-16 h-16 shrink-0">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
@@ -110,7 +110,7 @@ export default function MembersTab() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-gray-900">100%</span>
+                <span className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8]">100%</span>
               </div>
             </div>
             <p className="text-[11px] text-gray-500 font-medium max-w-[120px] leading-relaxed">
@@ -127,7 +127,7 @@ export default function MembersTab() {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Members</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8]">Members</h3>
             <p className="text-sm text-gray-500 font-medium mt-1">Manage your profiles and get personalized recommendations for everyone.</p>
           </div>
           <button 
@@ -144,7 +144,7 @@ export default function MembersTab() {
               key={member.id}
               onClick={() => handleSelectConsumer(member.id)}
               className={`flex flex-col lg:flex-row items-center justify-between p-5 rounded-2xl border transition-all cursor-pointer hover:shadow-md ${
-                index === 0 ? 'bg-purple-50/30 border-purple-200' : 'bg-white border-gray-100 hover:border-gray-200'
+                index === 0 ? 'bg-purple-50/30 border-purple-200' : 'bg-white dark:bg-[#151515] transition-colors duration-500 border-gray-100 hover:border-gray-200'
               }`}
             >
               
@@ -163,7 +163,7 @@ export default function MembersTab() {
 
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <h4 className="text-sm font-bold text-gray-900">{member.name}</h4>
+                    <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8]">{member.name}</h4>
                     {member.isPrimary && (
                       <span className="bg-[#3A10E5] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Primary</span>
                     )}
@@ -258,42 +258,42 @@ export default function MembersTab() {
       <div className="bg-[#F8F9FA] rounded-2xl p-6 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
         
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#3A10E5]">
+          <div className="w-10 h-10 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#3A10E5]">
             <Sparkles size={18} />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-gray-900 mb-1">Better Fit</h5>
+            <h5 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Better Fit</h5>
             <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Accurate size and fit recommendations</p>
           </div>
         </div>
 
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#f472b6]">
+          <div className="w-10 h-10 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#f472b6]">
             {/* T-Shirt Icon Approximation */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
           </div>
           <div>
-            <h5 className="text-xs font-bold text-gray-900 mb-1">Personalized Style</h5>
+            <h5 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Personalized Style</h5>
             <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Outfits curated for your body and preferences</p>
           </div>
         </div>
 
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#ec4899]">
+          <div className="w-10 h-10 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#ec4899]">
             <Heart size={18} />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-gray-900 mb-1">Saves Time</h5>
+            <h5 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Saves Time</h5>
             <p className="text-[11px] text-gray-500 font-medium leading-relaxed">No more guessing sizes or returns</p>
           </div>
         </div>
 
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#6366f1]">
+          <div className="w-10 h-10 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 flex items-center justify-center shrink-0 shadow-sm border border-gray-50 text-[#6366f1]">
             <ShieldCheck size={18} />
           </div>
           <div>
-            <h5 className="text-xs font-bold text-gray-900 mb-1">Secure & Private</h5>
+            <h5 className="text-xs font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Secure & Private</h5>
             <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Your data is safe and never shared</p>
           </div>
         </div>

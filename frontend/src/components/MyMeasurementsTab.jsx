@@ -170,9 +170,9 @@ export default function MyMeasurementsTab() {
     <div className="w-full flex flex-col gap-6">
       
       {/* 1. Header & Summary */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1 font-serif">My Measurements</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-[#F5F0E8] mb-1 font-serif">My Measurements</h2>
           <p className="text-sm text-gray-500">Keep your measurements up to date for perfect fit recommendations.</p>
         </div>
         
@@ -188,8 +188,8 @@ export default function MyMeasurementsTab() {
       </div>
 
       {/* 2. Measurements Content Area */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Detailed Measurements</h3>
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] mb-6">Detailed Measurements</h3>
         
         <div className="flex flex-col xl:flex-row gap-8 mb-8 items-start">
           
@@ -210,7 +210,7 @@ export default function MyMeasurementsTab() {
                 <button 
                   onClick={() => setActiveUnit('inches')}
                   className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${
-                    activeUnit === 'inches' ? 'bg-white text-[#3A10E5] shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    activeUnit === 'inches' ? 'bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] shadow-sm' : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
                   Inches
@@ -218,7 +218,7 @@ export default function MyMeasurementsTab() {
                 <button 
                   onClick={() => setActiveUnit('cm')}
                   className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${
-                    activeUnit === 'cm' ? 'bg-white text-[#3A10E5] shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    activeUnit === 'cm' ? 'bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] shadow-sm' : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
                   CM
@@ -239,7 +239,7 @@ export default function MyMeasurementsTab() {
                         type="text" 
                         value={localMeasurements[item.valKey] || ''}
                         onChange={(e) => handleMeasurementChange(item.valKey, e.target.value)}
-                        className="w-full bg-white border border-gray-200 rounded-lg py-2 px-3 text-sm font-semibold text-gray-900 focus:outline-none focus:border-[#3A10E5] focus:ring-1 focus:ring-[#3A10E5]"
+                        className="w-full bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 rounded-lg py-2 px-3 text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none focus:border-[#3A10E5] focus:ring-1 focus:ring-[#3A10E5]"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">
                         {activeUnit === 'inches' ? 'in' : 'cm'}
@@ -271,8 +271,8 @@ export default function MyMeasurementsTab() {
       </div>
 
       {/* 3. Personal Information Card */}
-      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col">
-        <h3 className="text-lg font-bold text-gray-900 mb-6">Personal Information</h3>
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] mb-6">Personal Information</h3>
         
         {/* Profile Basic Info Row */}
         <div className="flex flex-col sm:flex-row gap-6 mb-8">
@@ -284,7 +284,7 @@ export default function MyMeasurementsTab() {
                 <Loader2 className="w-6 h-6 text-purple-600 animate-spin" />
               </div>
             ) : (
-              <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full border border-gray-200 flex items-center justify-center text-[#3A10E5] shadow-sm hover:bg-gray-50 transition-colors pointer-events-none group-hover:scale-110">
+              <button className="absolute bottom-0 right-0 w-8 h-8 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full border border-gray-200 flex items-center justify-center text-[#3A10E5] shadow-sm hover:bg-gray-50 transition-colors pointer-events-none group-hover:scale-110">
                 <Camera size={14} />
               </button>
             )}
@@ -299,20 +299,20 @@ export default function MyMeasurementsTab() {
           
           {/* Form Fields */}
           <div className="flex-1 flex flex-col gap-4">
-            <div className="border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white relative">
+            <div className="border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white dark:bg-[#151515] transition-colors duration-500 relative">
               <label className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider absolute top-2 left-3">Name</label>
               <div className="flex items-center gap-2 mt-3">
                 <div className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-gray-400">
                   <span className="text-xs">👤</span>
                 </div>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-transparent text-sm font-semibold text-gray-900 outline-none" />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] outline-none" />
               </div>
             </div>
             
             <div className="flex gap-4">
-              <div className="flex-1 border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white relative">
+              <div className="flex-1 border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white dark:bg-[#151515] transition-colors duration-500 relative">
                 <label className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider absolute top-2 left-3">Gender</label>
-                <select value={gender} onChange={(e) => setGender(e.target.value)} className="mt-3 w-full bg-transparent text-sm font-semibold text-gray-900 outline-none appearance-none">
+                <select value={gender} onChange={(e) => setGender(e.target.value)} className="mt-3 w-full bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] outline-none appearance-none">
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
                   <option value="Other">Other</option>
@@ -322,11 +322,11 @@ export default function MyMeasurementsTab() {
                 </div>
               </div>
               
-              <div className="flex-1 border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white relative">
+              <div className="flex-1 border border-gray-200 rounded-xl p-3 flex flex-col justify-center bg-white dark:bg-[#151515] transition-colors duration-500 relative">
                 <label className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider absolute top-2 left-3">Age</label>
                 <div className="flex items-center gap-2 mt-3">
                   <span className="text-gray-400 text-xs">📅</span>
-                  <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full bg-transparent text-sm font-semibold text-gray-900 outline-none" />
+                  <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] outline-none" />
                 </div>
               </div>
             </div>
@@ -335,18 +335,18 @@ export default function MyMeasurementsTab() {
 
         {/* Size */}
         <div className="mb-8">
-          <h4 className="text-sm font-bold text-gray-900 mb-1">Size</h4>
+          <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Size</h4>
           <p className="text-xs text-gray-500 mb-4">Select the option that best represents you</p>
           <div className="grid grid-cols-5 gap-3">
             {sizes.map((sizeObj) => (
               <div 
                 key={sizeObj.id}
                 onClick={() => setSelectedSize(sizeObj.id)}
-                className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-12 w-12 mx-auto ${selectedSize === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 shadow-sm'}`}
+                className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-12 w-12 mx-auto ${selectedSize === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white dark:bg-[#151515] transition-colors duration-500 text-gray-700 hover:border-gray-300 shadow-sm'}`}
               >
                 <span className="text-[12px] font-bold uppercase tracking-wider">{sizeObj.name}</span>
                 {selectedSize === sizeObj.id && (
-                  <div className="absolute -top-1 -right-1 bg-white text-[#3A10E5] rounded-full shadow-sm">
+                  <div className="absolute -top-1 -right-1 bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] rounded-full shadow-sm">
                     <Check size={12} strokeWidth={4} />
                   </div>
                 )}
@@ -358,8 +358,8 @@ export default function MyMeasurementsTab() {
         {/* Height & Skin Tone Row */}
         <div className="flex flex-col sm:flex-row gap-8 mb-8">
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-gray-900 mb-3">Height</h4>
-            <div className="flex items-center border border-gray-200 rounded-xl p-2 bg-white">
+            <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-3">Height</h4>
+            <div className="flex items-center border border-gray-200 rounded-xl p-2 bg-white dark:bg-[#151515] transition-colors duration-500 ">
               <span className="text-gray-400 pl-2">📏</span>
               <input 
                 type="text" 
@@ -375,7 +375,7 @@ export default function MyMeasurementsTab() {
           </div>
 
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-gray-900 mb-1">Skin Tone</h4>
+            <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Skin Tone</h4>
             <p className="text-xs text-gray-500 mb-3">Select your skin tone</p>
             <div className="flex gap-2.5">
               {skinTones.map((tone) => (
@@ -419,7 +419,7 @@ export default function MyMeasurementsTab() {
               <>Save & Continue <ArrowRight size={16} /></>
             )}
           </button>
-          <button className="flex-1 bg-white hover:bg-gray-50 text-[#3A10E5] border border-[#3A10E5]/20 text-sm font-bold py-3.5 rounded-xl transition-all">
+          <button className="flex-1 bg-white dark:bg-[#151515] transition-colors duration-500 hover:bg-gray-50 text-[#3A10E5] border border-[#3A10E5]/20 text-sm font-bold py-3.5 rounded-xl transition-all">
             Skip for now
           </button>
         </div>

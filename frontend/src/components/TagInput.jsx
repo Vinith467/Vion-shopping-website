@@ -44,9 +44,9 @@ export default function TagInput({ label, tags, onChange, placeholder, suggestio
 
   return (
     <div className="relative" ref={wrapperRef}>
-      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">{label}</label>
+      <label className="block text-xs font-bold text-gray-800 dark:text-[#F5F0E8] uppercase tracking-wider mb-1.5">{label}</label>
       <div 
-        className={`w-full p-1.5 rounded-xl bg-gray-50 border ${isFocused ? 'bg-white border-[#3A10E5]' : 'border-gray-200'} transition-all min-h-[46px] flex flex-wrap gap-1.5 items-center cursor-text`}
+        className={`w-full p-1.5 rounded-xl bg-gray-50 border ${isFocused ? 'bg-white dark:bg-[#151515] transition-colors duration-500 border-[#3A10E5]' : 'border-gray-200'} transition-all min-h-[46px] flex flex-wrap gap-1.5 items-center cursor-text`}
         onClick={() => setIsFocused(true)}
       >
         {tags.map((tag, index) => (
@@ -68,12 +68,12 @@ export default function TagInput({ label, tags, onChange, placeholder, suggestio
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] bg-transparent outline-none px-2 text-sm text-gray-900 placeholder:text-gray-400 font-medium h-8"
+          className="flex-1 min-w-[120px] bg-transparent outline-none px-2 text-sm text-gray-900 dark:text-[#F5F0E8] placeholder:text-gray-400 font-medium h-8"
         />
       </div>
 
       {isFocused && (inputValue.length > 0 || filteredSuggestions.length > 0) && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1">
+        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1">
           {inputValue.length > 0 && !tags.includes(inputValue.trim()) && !filteredSuggestions.includes(inputValue.trim()) && (
             <div 
               className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm flex items-center text-[#3A10E5] font-medium border-b border-gray-100 last:border-0"

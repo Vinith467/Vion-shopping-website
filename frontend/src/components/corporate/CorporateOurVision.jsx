@@ -106,7 +106,7 @@ export default function CorporateOurVision() {
         {/* The Two Pillars */}
         <div ref={pillarsRef} className="flex flex-col md:flex-row gap-12 md:gap-24 text-left mb-32">
           <div className="flex-1 space-y-6">
-            <h4 className="text-xl md:text-2xl font-serif uppercase tracking-widest text-[#C49A5C]">For Corporates</h4>
+            <h4 className="text-xl md:text-2xl font-serif uppercase tracking-widest text-[#C49A5C]">For Individuals</h4>
             <div className="w-12 h-[1px] bg-[#C49A5C]/50"></div>
             <p className="text-base md:text-lg font-sans font-light text-[#F5F0E8]/80 leading-relaxed">
               We create professional attire and formalwear that gives people the freedom to choose what works for them while maintaining a strong organizational identity.
@@ -157,7 +157,7 @@ export default function CorporateOurVision() {
                 className="w-32 md:w-48 lg:w-56 object-contain"
               />
               <p className="text-[#C49A5C] font-mono tracking-[0.3em] uppercase text-sm md:text-base mt-4">
-                VION Corporate
+                VION Fashion
               </p>
             </div>
           </div>

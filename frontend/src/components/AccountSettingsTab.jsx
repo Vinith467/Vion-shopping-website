@@ -145,7 +145,7 @@ export default function AccountSettingsTab() {
       onClick={onToggle}
       className={`w-10 h-5 rounded-full transition-colors relative flex items-center shrink-0 ${isOn ? 'bg-[#3A10E5]' : 'bg-gray-200'}`}
     >
-      <span className={`w-3.5 h-3.5 rounded-full bg-white absolute transition-transform ${isOn ? 'translate-x-5' : 'translate-x-1'}`} />
+      <span className={`w-3.5 h-3.5 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 absolute transition-transform ${isOn ? 'translate-x-5' : 'translate-x-1'}`} />
     </button>
   );
 
@@ -154,17 +154,17 @@ export default function AccountSettingsTab() {
       
       {/* Header */}
       <div>
-        <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">Account Settings</h2>
+        <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 font-serif">Account Settings</h2>
         <p className="text-sm text-gray-500 font-medium">Manage your account information, security and preferences.</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-2">
         
         {/* 1. Profile Information */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Profile Information</h3>
+              <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Profile Information</h3>
               <p className="text-xs text-gray-500 mt-1">Update your personal details and profile photo.</p>
             </div>
             {isPrimary && (
@@ -184,7 +184,7 @@ export default function AccountSettingsTab() {
                   <Loader2 className="w-6 h-6 text-[#3A10E5] animate-spin" />
                 </div>
               ) : (
-                <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow border border-gray-100 flex items-center justify-center text-gray-600 group-hover:text-[#3A10E5] transition-colors group-hover:scale-110 pointer-events-none">
+                <button className="absolute bottom-0 right-0 w-8 h-8 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full shadow border border-gray-100 flex items-center justify-center text-gray-600 group-hover:text-[#3A10E5] transition-colors group-hover:scale-110 pointer-events-none">
                   <Camera size={14} />
                 </button>
               )}
@@ -194,15 +194,15 @@ export default function AccountSettingsTab() {
             <div className="flex-1 w-full flex flex-col gap-4 min-w-0">
               <div className="flex items-center gap-3 sm:gap-4">
                 <label className="text-xs font-semibold text-gray-500 w-20 sm:w-24 shrink-0">Full Name</label>
-                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 truncate" title={fullName}>{fullName}</div>
+                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 dark:text-[#F5F0E8] truncate" title={fullName}>{fullName}</div>
               </div>
               <div className="flex items-center gap-3 sm:gap-4">
                 <label className="text-xs font-semibold text-gray-500 w-20 sm:w-24 shrink-0">Email Address</label>
-                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 truncate" title={isPrimary ? email : 'N/A'}>{isPrimary ? email : 'N/A'}</div>
+                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 dark:text-[#F5F0E8] truncate" title={isPrimary ? email : 'N/A'}>{isPrimary ? email : 'N/A'}</div>
               </div>
               <div className="flex items-center gap-3 sm:gap-4">
                 <label className="text-xs font-semibold text-gray-500 w-20 sm:w-24 shrink-0">Phone Number</label>
-                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 truncate" title={isPrimary ? phone : 'N/A'}>{isPrimary ? phone : 'N/A'}</div>
+                <div className="flex-1 px-3 sm:px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-900 dark:text-[#F5F0E8] truncate" title={isPrimary ? phone : 'N/A'}>{isPrimary ? phone : 'N/A'}</div>
               </div>
             </div>
           </div>
@@ -211,10 +211,10 @@ export default function AccountSettingsTab() {
         {/* 2. Account Security - Only for Primary User */}
         {isPrimary && (
           <>
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Account Security</h3>
+              <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Account Security</h3>
               <p className="text-xs text-gray-500 mt-1">Keep your account safe and secure.</p>
             </div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#3A10E5] flex items-center justify-center">
@@ -226,7 +226,7 @@ export default function AccountSettingsTab() {
             <div className="flex items-center justify-between border-b border-gray-50 pb-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1">Password</p>
-                <p className="text-sm font-medium text-gray-900 tracking-widest">••••••••</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-[#F5F0E8] tracking-widest">••••••••</p>
               </div>
               <button onClick={() => setIsPasswordModalOpen(true)} className="text-xs font-bold text-[#3A10E5] hover:underline flex items-center gap-1">Change Password <ChevronRight size={14}/></button>
             </div>
@@ -242,7 +242,7 @@ export default function AccountSettingsTab() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1">Login Activity</p>
-                <p className="text-sm font-medium text-gray-900">View recent logins</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-[#F5F0E8]">View recent logins</p>
               </div>
               <button onClick={() => setIsLoginActivityModalOpen(true)} className="text-xs font-bold text-[#3A10E5] hover:underline flex items-center gap-1">View Activity <ChevronRight size={14}/></button>
             </div>
@@ -250,9 +250,9 @@ export default function AccountSettingsTab() {
         </div>
 
         {/* 3. Notification Preferences */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="mb-6">
-            <h3 className="text-base font-bold text-gray-900">Notification Preferences</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Notification Preferences</h3>
             <p className="text-xs text-gray-500 mt-1">Choose how and when you want to be notified.</p>
           </div>
           
@@ -261,7 +261,7 @@ export default function AccountSettingsTab() {
               <div className="flex items-center gap-3">
                 <Mail size={16} className="text-gray-400" />
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Email Notifications</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Email Notifications</h4>
                   <p className="text-[11px] font-medium text-gray-500">Order updates, style recommendations & more</p>
                 </div>
               </div>
@@ -272,7 +272,7 @@ export default function AccountSettingsTab() {
               <div className="flex items-center gap-3">
                 <Smartphone size={16} className="text-gray-400" />
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">SMS Notifications</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">SMS Notifications</h4>
                   <p className="text-[11px] font-medium text-gray-500">Important alerts and order updates</p>
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default function AccountSettingsTab() {
               <div className="flex items-center gap-3">
                 <Bell size={16} className="text-gray-400" />
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Push Notifications</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Push Notifications</h4>
                   <p className="text-[11px] font-medium text-gray-500">Get notified on your device</p>
                 </div>
               </div>
@@ -294,7 +294,7 @@ export default function AccountSettingsTab() {
               <div className="flex items-center gap-3">
                 <Megaphone size={16} className="text-gray-400" />
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Marketing & Promotions</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Marketing & Promotions</h4>
                   <p className="text-[11px] font-medium text-gray-500">Offers, new arrivals and discounts</p>
                 </div>
               </div>
@@ -304,10 +304,10 @@ export default function AccountSettingsTab() {
         </div>
 
         {/* 4. Privacy Settings */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Privacy Settings</h3>
+              <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Privacy Settings</h3>
               <p className="text-xs text-gray-500 mt-1">Manage what information we collect and how it's used.</p>
             </div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#3A10E5] flex items-center justify-center">
@@ -317,21 +317,21 @@ export default function AccountSettingsTab() {
 
           <div className="flex flex-col gap-6 flex-1">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-gray-900">Profile Visibility</p>
-              <button className="flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-gray-900">
+              <p className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Profile Visibility</p>
+              <button className="flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-gray-900 dark:text-[#F5F0E8]">
                 Only you <ChevronDown size={14} />
               </button>
             </div>
             
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-gray-900">Measurement Visibility</p>
-              <button className="flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-gray-900">
+              <p className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Measurement Visibility</p>
+              <button className="flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-gray-900 dark:text-[#F5F0E8]">
                 Only you <ChevronDown size={14} />
               </button>
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-gray-900">Personalized Recommendations</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Personalized Recommendations</p>
               <button className="flex items-center gap-2 text-xs font-bold text-green-600">
                 Enabled <ChevronDown size={14} />
               </button>
@@ -339,7 +339,7 @@ export default function AccountSettingsTab() {
 
             <div className="flex items-center justify-between pt-2">
               <div>
-                <p className="text-sm font-semibold text-gray-900">Share Analytics</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Share Analytics</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">Help us improve your experience</p>
               </div>
               <ToggleSwitch isOn={shareAnalytics} onToggle={() => handleToggle(setShareAnalytics, !shareAnalytics, 'Share Analytics', 'shareAnalytics')} />
@@ -348,10 +348,10 @@ export default function AccountSettingsTab() {
         </div>
 
         {/* 5. Account Management */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Account Management</h3>
+              <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Account Management</h3>
               <p className="text-xs text-gray-500 mt-1">Manage your account or take necessary actions.</p>
             </div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#3A10E5] flex items-center justify-center">
@@ -362,7 +362,7 @@ export default function AccountSettingsTab() {
           <div className="flex flex-col gap-2">
             <button onClick={() => setIsDeactivateModalOpen(true)} className="flex items-center justify-between w-full p-3 hover:bg-gray-50 rounded-xl transition-colors group">
               <div className="text-left">
-                <p className="text-sm font-semibold text-gray-900">Deactivate Account</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Deactivate Account</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">Temporarily disable your account</p>
               </div>
               <ChevronRight size={16} className="text-gray-400 group-hover:text-[#3A10E5]" />
@@ -379,10 +379,10 @@ export default function AccountSettingsTab() {
         </div>
 
         {/* 6. Connected Accounts */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
+        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Connected Accounts</h3>
+              <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Connected Accounts</h3>
               <p className="text-xs text-gray-500 mt-1">Manage your social media and third-party accounts.</p>
             </div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#3A10E5] flex items-center justify-center">
@@ -403,7 +403,7 @@ export default function AccountSettingsTab() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Google</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Google</h4>
                   <p className="text-[11px] text-gray-500 hidden sm:block">{googleConnected ? email : 'Not connected'}</p>
                 </div>
               </div>
@@ -426,7 +426,7 @@ export default function AccountSettingsTab() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Facebook</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Facebook</h4>
                   <p className="text-[11px] text-gray-500 hidden sm:block">{facebookConnected ? fullName : 'Not connected'}</p>
                 </div>
               </div>
@@ -443,14 +443,14 @@ export default function AccountSettingsTab() {
 
             <div className="flex items-center justify-between border-t border-gray-50 pt-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-900">
+                <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 text-gray-900 dark:text-[#F5F0E8]">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" className="hidden"/>
                     <path d="M15.193 11.233c.017-1.921 1.63-2.868 1.704-2.914-1.122-1.621-2.905-1.782-3.486-1.802-1.464-.146-2.883.856-3.633.856-.732 0-1.884-.836-3.085-.815-1.57.02-3.018.9-3.832 2.302-1.65 2.831-.421 7.028 1.187 9.324.786 1.12 1.72 2.378 2.923 2.333 1.162-.045 1.602-.741 3.016-.741 1.413 0 1.815.741 3.036.721 1.241-.02 2.055-1.144 2.836-2.268.905-1.306 1.282-2.571 1.302-2.636-.027-.01-2.484-.943-2.5-3.36zM13.682 6.78c.636-.761 1.066-1.818.948-2.875-.916.037-2.02.603-2.678 1.353-.526.59-.997 1.67-.858 2.71 1.026.078 2.062-.511 2.588-1.188z"/>
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-900">Apple</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">Apple</h4>
                   <p className="text-[11px] text-gray-500 hidden sm:block">{appleConnected ? email : 'Not connected'}</p>
                 </div>
               </div>

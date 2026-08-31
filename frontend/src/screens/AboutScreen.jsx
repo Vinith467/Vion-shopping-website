@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -57,8 +57,10 @@ export default function AboutScreen() {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[#151515] text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-x-clip relative">
+    <div ref={containerRef} className="bg-[#FDFBF7] dark:bg-[#0A0A0A] text-[#111] dark:text-[#F5F0E8] min-h-screen font-sans selection:bg-[#722F37] selection:text-white overflow-x-clip relative transition-colors duration-500">
       
+
+
       {/* Floating Back Button */}
       <button 
         onClick={() => navigate(-1)}

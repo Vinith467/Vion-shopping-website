@@ -26,9 +26,9 @@ export default function Manage2FAModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
-          <div className="flex items-center gap-2 text-gray-900">
+          <div className="flex items-center gap-2 text-gray-900 dark:text-[#F5F0E8]">
             <ShieldCheck size={20} className="text-green-600" />
             <h2 className="text-xl font-bold font-serif">Setup 2FA</h2>
           </div>
@@ -43,7 +43,7 @@ export default function Manage2FAModal({ isOpen, onClose }) {
               <p className="text-sm text-gray-600 font-medium">
                 Scan this QR code with your authenticator app (like Google Authenticator or Authy).
               </p>
-              <div className="p-4 bg-white border-2 border-gray-100 rounded-2xl shadow-sm">
+              <div className="p-4 bg-white dark:bg-[#151515] transition-colors duration-500 border-2 border-gray-100 rounded-2xl shadow-sm">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=otpauth://totp/VionFashion:User?secret=JBSWY3DPEHPK3PXP&issuer=VionFashion" alt="QR Code" className="w-40 h-40" />
               </div>
               <p className="text-xs text-gray-400 font-medium">Secret Key: JBSWY3DPEHPK3PXP</p>
@@ -65,7 +65,7 @@ export default function Manage2FAModal({ isOpen, onClose }) {
                   maxLength={6}
                   value={code} 
                   onChange={e => setCode(e.target.value.replace(/\D/g, ''))} 
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-center text-2xl tracking-widest font-bold focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors" 
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-center text-2xl tracking-widest font-bold focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors" 
                   placeholder="000000"
                 />
               </div>

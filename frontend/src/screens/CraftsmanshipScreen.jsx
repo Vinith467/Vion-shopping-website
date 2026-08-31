@@ -90,13 +90,13 @@ export default function CraftsmanshipScreen() {
   const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   return (
-    <div className="bg-[#F5F0E8] min-h-screen text-[#1A1A1A] font-sans selection:bg-[#BFA679] selection:text-white pb-0">
+    <div className="bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 min-h-screen text-[#1A1A1A] dark:text-[#F5F0E8] font-sans selection:bg-[#BFA679] selection:text-white pb-0">
       
       {/* Sticky Header Actions (if any specific ones needed besides global nav) */}
       <div className="fixed top-24 left-6 z-40 hidden md:block">
         <button 
           onClick={() => navigate(-1)} 
-          className="w-10 h-10 rounded-full bg-white/50 backdrop-blur-md border border-white/80 shadow-sm flex items-center justify-center hover:bg-white transition-all text-[#1A1A1A]"
+          className="w-10 h-10 rounded-full bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-md border border-white/80 shadow-sm flex items-center justify-center hover:bg-white dark:bg-[#151515] transition-colors duration-500 transition-all text-[#1A1A1A] dark:text-[#F5F0E8]"
         >
           <ArrowLeft size={18} />
         </button>
@@ -110,7 +110,7 @@ export default function CraftsmanshipScreen() {
              alt="Vion Craftsmanship" 
              className="w-full h-full object-cover object-center opacity-40 grayscale-[20%]" 
            />
-           <div className="absolute inset-0 bg-gradient-to-b from-[#F5F0E8] via-transparent to-[#F5F0E8]"></div>
+           <div className="absolute inset-0 bg-gradient-to-b from-[#F5F0E8] dark:from-[#151515] transition-colors duration-500 via-transparent to-[#F5F0E8] dark:to-[#151515] transition-colors duration-500 "></div>
         </motion.div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-20">
@@ -153,7 +153,7 @@ export default function CraftsmanshipScreen() {
                   <span className="text-[#A87B45] text-5xl md:text-6xl mb-4 block" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{section.number}</span>
                   <h2 className="text-3xl md:text-4xl uppercase tracking-wide mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{section.title}</h2>
                   <h3 className="text-lg md:text-xl text-[#8B6544] mb-6 italic" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{section.subtitle}</h3>
-                  <p className="text-base text-[#333] leading-[1.8]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
+                  <p className="text-base text-[#333] dark:text-gray-300 leading-[1.8]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
                     {section.description}
                   </p>
                 </motion.div>
@@ -176,7 +176,7 @@ export default function CraftsmanshipScreen() {
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                     />
                     {/* Optional subtle overlay for luxury feel */}
-                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500 "></div>
                   </motion.div>
                 ))}
               </div>

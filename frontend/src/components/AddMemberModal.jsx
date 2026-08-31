@@ -170,11 +170,11 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/40 backdrop-blur-md transition-all">
       <div className="min-h-full flex items-center justify-center p-4">
         <div 
-          className="bg-white rounded-[2rem] w-full max-w-[800px] shadow-2xl overflow-hidden border border-white/50 relative my-8"
+          className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-[2rem] w-full max-w-[800px] shadow-2xl overflow-hidden border border-white/50 relative my-8"
           onClick={e => e.stopPropagation()}
         >
           {/* Header Background Gradient */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-purple-50 via-white to-white opacity-80" />
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-purple-50 via-white dark:via-[#0A0A0A] transition-colors duration-500 to-white dark:to-[#0A0A0A] transition-colors duration-500 opacity-80" />
         
         <div className="relative flex justify-between items-center p-6 pb-2">
           <div className="flex items-center gap-3">
@@ -182,13 +182,13 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
               {memberToEdit ? <Edit2 size={22} /> : <UserPlus size={22} />}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 font-serif tracking-tight">{memberToEdit ? 'Edit Member' : 'Add Member'}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-[#F5F0E8] font-serif tracking-tight">{memberToEdit ? 'Edit Member' : 'Add Member'}</h2>
               <p className="text-xs text-gray-500 font-medium">{memberToEdit ? 'Update profile details' : 'Create a new profile for someone else'}</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 bg-white hover:bg-gray-50 rounded-full p-2.5 transition-all shadow-sm border border-gray-100"
+            className="text-gray-400 hover:text-gray-700 bg-white dark:bg-[#151515] transition-colors duration-500 hover:bg-gray-50 rounded-full p-2.5 transition-all shadow-sm border border-gray-100"
           >
             <X size={18} strokeWidth={2.5} />
           </button>
@@ -205,7 +205,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#3A10E5] to-[#7B5CF6] rounded-full blur-sm opacity-20 scale-110" />
                   <div 
-                    className="w-28 h-28 rounded-full bg-white border-[3px] border-white shadow-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-[#3A10E5]/30 transition-all relative overflow-hidden group z-10"
+                    className="w-28 h-28 rounded-full bg-white dark:bg-[#151515] transition-colors duration-500 border-[3px] border-white shadow-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-[#3A10E5]/30 transition-all relative overflow-hidden group z-10"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {avatarPreview ? (
@@ -227,7 +227,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                   
                   {/* Add small floating icon */}
                   {!avatarPreview && (
-                    <div className="absolute bottom-1 right-1 w-8 h-8 bg-white rounded-full shadow-md border border-gray-100 flex items-center justify-center z-20 text-[#3A10E5]">
+                    <div className="absolute bottom-1 right-1 w-8 h-8 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full shadow-md border border-gray-100 flex items-center justify-center z-20 text-[#3A10E5]">
                       <Camera size={14} />
                     </div>
                   )}
@@ -243,7 +243,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
               </div>
 
               <div className="space-y-4 flex-1">
-                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
+                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white dark:bg-[#151515] transition-colors duration-500 focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 pt-2">Full Name</label>
                   <input 
                     required
@@ -252,12 +252,12 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="e.g. Vinith S Shetty" 
-                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 focus:outline-none placeholder-gray-300"
+                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none placeholder-gray-300"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
+                  <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white dark:bg-[#151515] transition-colors duration-500 focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 pt-2">Date of Birth</label>
                     <input 
                       required
@@ -265,16 +265,16 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                       name="dob"
                       value={formData.dob}
                       onChange={handleChange}
-                      className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 focus:outline-none placeholder-gray-300"
+                      className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none placeholder-gray-300"
                     />
                   </div>
-                  <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10 relative">
+                  <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white dark:bg-[#151515] transition-colors duration-500 focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10 relative">
                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 pt-2">Gender</label>
                     <select 
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 focus:outline-none appearance-none cursor-pointer"
+                      className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none appearance-none cursor-pointer"
                     >
                       <option value="Female">Female</option>
                       <option value="Male">Male</option>
@@ -288,7 +288,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
             {/* Right Column: Measurements & Body Shape */}
             <div className="flex flex-col space-y-4 mt-2">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
+                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white dark:bg-[#151515] transition-colors duration-500 focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 pt-2">Height (cm)</label>
                   <input 
                     required
@@ -297,10 +297,10 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                     value={formData.height}
                     onChange={handleChange}
                     placeholder="e.g. 175" 
-                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 focus:outline-none placeholder-gray-300"
+                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none placeholder-gray-300"
                   />
                 </div>
-                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
+                <div className="bg-gray-50/50 p-1.5 rounded-2xl border border-gray-100/80 hover:border-[#3A10E5]/30 transition-colors focus-within:bg-white dark:bg-[#151515] transition-colors duration-500 focus-within:border-[#3A10E5] focus-within:ring-4 focus-within:ring-[#3A10E5]/10">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 pt-2">Weight (kg)</label>
                   <input 
                     type="number" 
@@ -308,7 +308,7 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                     value={formData.weight}
                     onChange={handleChange}
                     placeholder="Optional" 
-                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 focus:outline-none placeholder-gray-300"
+                    className="w-full px-3 pb-2 pt-1 bg-transparent text-sm font-semibold text-gray-900 dark:text-[#F5F0E8] focus:outline-none placeholder-gray-300"
                   />
                 </div>
               </div>
@@ -319,11 +319,11 @@ export default function AddMemberModal({ isOpen, onClose, memberToEdit = null })
                     <div 
                       key={sizeObj.id}
                       onClick={() => handleChange({ target: { name: 'size', value: sizeObj.id } })}
-                      className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-10 w-10 mx-auto ${formData.size === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 shadow-sm'}`}
+                      className={`relative flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer h-10 w-10 mx-auto ${formData.size === sizeObj.id ? 'border-[#3A10E5] bg-[#3A10E5] text-white shadow-md' : 'border-gray-200 bg-white dark:bg-[#151515] transition-colors duration-500 text-gray-700 hover:border-gray-300 shadow-sm'}`}
                     >
                       <span className="text-[12px] font-bold uppercase tracking-wider">{sizeObj.name}</span>
                       {formData.size === sizeObj.id && (
-                        <div className="absolute -top-1 -right-1 bg-white text-[#3A10E5] rounded-full shadow-sm">
+                        <div className="absolute -top-1 -right-1 bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] rounded-full shadow-sm">
                           <Check size={12} strokeWidth={4} />
                         </div>
                       )}

@@ -25,6 +25,29 @@ export function AppProvider({ children }) {
   const [session, setSession] = useState(null);
   const [selectedConsumerId, setSelectedConsumerId] = useState(null);
 
+  // Global Theme State
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vion_theme');
+      return saved || 'light';
+    } catch (e) {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vion_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
   // Global Profile State
   const [profile, setProfile] = useState(null);
 
@@ -576,6 +599,8 @@ export function AppProvider({ children }) {
       setSelectedConsumerId,
       login,
       logout,
+      theme,
+      toggleTheme,
       profile,
       measurements,
       members,

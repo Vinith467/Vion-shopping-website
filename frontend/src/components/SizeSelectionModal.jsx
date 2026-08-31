@@ -74,10 +74,10 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
       />
       
       {/* Modal / Bottom Sheet */}
-      <div className={`fixed bottom-0 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-md bg-white rounded-t-3xl md:rounded-3xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-[101] overflow-hidden flex flex-col transition-transform duration-300 ease-out shadow-2xl ${isOpen ? 'translate-y-0 md:scale-100' : 'translate-y-full md:scale-95'}`} style={{ maxHeight: '90vh' }}>
+      <div className={`fixed bottom-0 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-md bg-white dark:bg-[#151515] transition-colors duration-500 rounded-t-3xl md:rounded-3xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-[101] overflow-hidden flex flex-col transition-transform duration-300 ease-out shadow-2xl ${isOpen ? 'translate-y-0 md:scale-100' : 'translate-y-full md:scale-95'}`} style={{ maxHeight: '90vh' }}>
         
         {/* Header */}
-        <div className="flex items-start justify-between px-6 pt-6 pb-4 shrink-0 bg-white z-10 border-b border-gray-100">
+        <div className="flex items-start justify-between px-6 pt-6 pb-4 shrink-0 bg-white dark:bg-[#151515] transition-colors duration-500 z-10 border-b border-gray-100">
           <div className="flex items-center gap-3">
             {isManualMode && (
               <button onClick={() => setIsManualMode(false)} className="p-1.5 -ml-1.5 bg-gray-50 rounded-full text-gray-600 hover:bg-gray-100">
@@ -85,7 +85,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
               </button>
             )}
             <div>
-              <h2 className="text-xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-[#F5F0E8] leading-tight">
                 {isManualMode ? "Enter Measurements" : "Select Fit"}
               </h2>
               <p className="text-sm text-gray-500 mt-1">Get the perfect fit, your way.</p>
@@ -140,7 +140,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
             <>
               {/* Primary: Best Stitching / Measurements */}
               <div className="px-6 mt-6 mb-6">
-                <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-3 flex items-center gap-2">
                   <Sparkles size={16} className="text-[#6344D4]" />
                   {hasMeasurements ? "Best Stitching - Edit Saved Measurements" : "Best Stitching - Give Measurement"}
                 </h3>
@@ -150,14 +150,14 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
                       setSelectedSize("Custom");
                       setIsManualMode(true);
                     }}
-                    className={`w-full flex items-center justify-between p-4 h-auto rounded-2xl transition-all border-2 group ${selectedSize === "Custom" ? "bg-gradient-to-r from-[#F8F6FF] to-white border-[#6344D4] shadow-md shadow-[#6344D4]/10" : "bg-white border-gray-100 hover:border-[#6344D4]/50 hover:shadow-sm"}`}
+                    className={`w-full flex items-center justify-between p-4 h-auto rounded-2xl transition-all border-2 group ${selectedSize === "Custom" ? "bg-gradient-to-r from-[#F8F6FF] to-white dark:to-[#0A0A0A] transition-colors duration-500 border-[#6344D4] shadow-md shadow-[#6344D4]/10" : "bg-white dark:bg-[#151515] transition-colors duration-500 border-gray-100 hover:border-[#6344D4]/50 hover:shadow-sm"}`}
                   >
                     <div className="flex items-center gap-4 text-left">
                       <div className={`w-12 h-12 flex items-center justify-center rounded-full transition-colors ${selectedSize === "Custom" ? "bg-[#6344D4] text-white" : "bg-gray-50 text-gray-400 group-hover:bg-[#F8F6FF] group-hover:text-[#6344D4]"}`}>
                         <Ruler size={22} />
                       </div>
                       <div>
-                        <span className={`block text-sm font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-900 group-hover:text-[#6344D4]"}`}>{hasMeasurements ? "Edit Custom Measurements" : "Add Custom Measurements"}</span>
+                        <span className={`block text-sm font-bold ${selectedSize === "Custom" ? "text-[#6344D4]" : "text-gray-900 dark:text-[#F5F0E8] group-hover:text-[#6344D4]"}`}>{hasMeasurements ? "Edit Custom Measurements" : "Add Custom Measurements"}</span>
                         <span className="block text-xs font-medium text-gray-500 mt-0.5">{hasMeasurements ? "Review or update your saved fit for this order" : "We will stitch this garment exactly to your size"}</span>
                       </div>
                     </div>
@@ -177,7 +177,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
 
               {/* Secondary: Standard Sizes */}
               <div className="px-6 mt-6 mb-8">
-                <h3 className="text-sm font-bold text-gray-900 mb-3 text-center">Select a standard size</h3>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-3 text-center">Select a standard size</h3>
                 <div className="grid grid-cols-5 gap-3">
                   {["XS", "S", "M", "L", "XL"].map(size => (
                     <button 
@@ -185,13 +185,13 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
                       onClick={() => setSelectedSize(size)}
                       className={`relative flex flex-col items-center justify-center h-16 rounded-xl border-2 transition-all ${
                         selectedSize === size 
-                          ? "bg-white border-gray-900 text-gray-900 shadow-md" 
+                          ? "bg-white dark:bg-[#151515] transition-colors duration-500 border-gray-900 text-gray-900 dark:text-[#F5F0E8] shadow-md" 
                           : "bg-gray-50 border-gray-50 text-gray-600 hover:border-gray-200"
                       }`}
                     >
                       {selectedSize === size && (
-                        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white rounded-full flex items-center justify-center border-2 border-gray-900">
-                          <Check size={10} className="text-gray-900" strokeWidth={4} />
+                        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full flex items-center justify-center border-2 border-gray-900">
+                          <Check size={10} className="text-gray-900 dark:text-[#F5F0E8]" strokeWidth={4} />
                         </div>
                       )}
                       <span className="font-bold text-lg">{size}</span>
@@ -202,7 +202,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
                   ))}
                 </div>
                 <div className="flex justify-end mt-3">
-                  <button className="text-xs font-bold text-gray-400 hover:text-gray-900 underline underline-offset-2">Size Guide</button>
+                  <button className="text-xs font-bold text-gray-400 hover:text-gray-900 dark:text-[#F5F0E8] underline underline-offset-2">Size Guide</button>
                 </div>
               </div>
             </>
@@ -211,7 +211,7 @@ export default function SizeSelectionModal({ isOpen, onClose, product, activeVar
         </div>
 
         {/* Sticky Action Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 bg-white shrink-0">
+        <div className="px-6 py-4 border-t border-gray-100 bg-white dark:bg-[#151515] transition-colors duration-500 shrink-0">
           <button 
             onClick={isManualMode ? () => setIsManualMode(false) : handleAddToCart}
             className="w-full bg-[#6344D4] text-white h-14 rounded-2xl font-bold text-lg flex items-center justify-center shadow-lg shadow-[#6344D4]/30 hover:bg-[#5235B8] transition-colors"

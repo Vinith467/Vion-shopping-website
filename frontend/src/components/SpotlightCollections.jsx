@@ -14,14 +14,18 @@ const ProductStackingSection = ({ product, index }) => {
   const imagesRef = useRef([]);
   const navigate = useNavigate();
 
-  // Prefer spotlight_images (the 5 slots uploaded in Admin), fallback to first 5 main images
-  let mediaUrls = (product.spotlight_images && product.spotlight_images.length > 0)
-    ? product.spotlight_images.slice(0, 5)
-    : (product.images || [product.image_url]).filter(Boolean).slice(0, 5);
-
+  // Show only 1 item per product: the video if it exists, otherwise the primary image.
+  let mediaUrls = [];
   if (product.video_url) {
-    mediaUrls = [product.video_url, ...mediaUrls.slice(0, 4)];
+    mediaUrls = [product.video_url];
+  } else {
+    mediaUrls = (product.spotlight_images && product.spotlight_images.length > 0)
+      ? [product.spotlight_images[0]]
+      : [(product.images || [product.image_url]).filter(Boolean)[0]];
   }
+  
+  // Filter out any undefined values just in case
+  mediaUrls = mediaUrls.filter(Boolean);
 
   useEffect(() => {
     if (!mediaUrls || mediaUrls.length < 2) return;
@@ -65,17 +69,17 @@ const ProductStackingSection = ({ product, index }) => {
   const isReversed = index % 2 !== 0;
 
   return (
-    <section ref={sectionRef} className="relative w-full border-b border-[#E8E1D7] bg-[#FDFBF7]" style={{ height: sectionHeight }}>
-      <div className={`sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-60px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
+    <section ref={sectionRef} className="relative w-full border-b border-[#E8E1D7] dark:border-white/10 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 " style={{ height: sectionHeight }}>
+      <div className={`sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-60px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] dark:bg-[#0A0A0A] flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} transition-colors duration-500 `}>
         
         {/* Product Info */}
-        <div className={`w-full lg:w-5/12 h-auto lg:h-full relative z-20 flex flex-col justify-center px-6 pt-6 pb-2 lg:py-0 ${isReversed ? 'lg:pl-12 lg:pr-24' : 'lg:pl-24 lg:pr-12'} bg-[#FDFBF7]`}>
-          <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-[#A87B45] mb-2 md:mb-4">
+        <div className={`w-full lg:w-5/12 h-auto lg:h-full relative z-20 flex flex-col justify-center px-6 pt-6 pb-2 lg:py-0 ${isReversed ? 'lg:pl-12 lg:pr-24' : 'lg:pl-24 lg:pr-12'} bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 `}>
+          <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-[#A87B45] dark:text-[#C49A5C] mb-2 md:mb-4">
             {product.category?.name || 'VION Collection'}
           </h3>
           <h2 
             onClick={() => navigate(`/product/${product.id}`)}
-            className="text-3xl md:text-5xl lg:text-[3.25rem] font-medium mb-6 leading-[1.1] text-[#1A0A08] cursor-pointer hover:text-[#986427] transition-colors" 
+            className="text-3xl md:text-5xl lg:text-[3.25rem] font-medium mb-6 leading-[1.1] text-[#1A0A08] dark:text-[#F5F0E8] cursor-pointer hover:text-[#986427] dark:hover:text-[#C49A5C] transition-colors" 
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             {product.title}
@@ -84,7 +88,7 @@ const ProductStackingSection = ({ product, index }) => {
           <div className="flex flex-wrap items-center gap-3 md:gap-4">
             <Link 
               to={`/product/${product.id}`}
-              className="group inline-flex items-center justify-center bg-[#1A1A1A] text-white px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+              className="group inline-flex items-center justify-center bg-[#1A1A1A] dark:bg-[#C49A5C] text-white px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] dark:hover:bg-[#E5CDA7] dark:hover:text-[#1A1A1A] dark:text-[#F5F0E8] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
             >
               <span className="relative z-10 flex items-center gap-2 md:gap-4">
                 Discover
@@ -94,7 +98,7 @@ const ProductStackingSection = ({ product, index }) => {
 
             <button 
               onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
-              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] text-[#1A1A1A] px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] dark:border-[#C49A5C] text-[#1A1A1A] dark:text-[#C49A5C] px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] dark:hover:bg-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
             >
               <span className="relative z-10 flex items-center gap-2 md:gap-4">
                 Book Consultant
@@ -104,10 +108,10 @@ const ProductStackingSection = ({ product, index }) => {
         </div>
 
         {/* Images */}
-        <div className={`w-full flex-1 lg:w-7/12 relative z-10 p-4 pb-24 md:pb-12 lg:p-6 flex items-center justify-center bg-[#FDFBF7]`}>
+        <div className={`w-full flex-1 lg:w-7/12 relative z-10 p-4 pb-24 md:pb-12 lg:p-6 flex items-center justify-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 `}>
           {/* Dynamic Aspect Container */}
           <div 
-            className="relative w-full h-full lg:h-auto lg:aspect-square max-w-[min(100%,78vh)] overflow-hidden rounded-xl shadow-2xl bg-white"
+            className="relative w-full h-full lg:h-auto lg:aspect-square max-w-[min(100%,78vh)] overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-[#151515]"
             onClick={() => navigate(`/product/${product.id}`)}
           >
             {mediaUrls.map((mediaUrl, i) => {
@@ -132,7 +136,7 @@ const ProductStackingSection = ({ product, index }) => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out" 
                     />
                   )}
-                  <div className="absolute inset-0 bg-black/5 hover:bg-transparent transition-colors duration-500"></div>
+                  <div className="absolute inset-0 bg-black/5 hover:bg-transparent transition-colors duration-500 "></div>
                 </div>
               );
             })}
@@ -188,7 +192,7 @@ export default function SpotlightCollections({ products, categoryName }) {
   if (!products || products.length === 0) return null;
 
   return (
-    <div ref={containerRef} className="w-full bg-[#FAFAFA]">
+    <div ref={containerRef} className="w-full bg-[#FAFAFA] dark:bg-[#050505] transition-colors duration-500 ">
       
       {/* Cinematic Hero Image Section */}
       <div className="hero-container relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
@@ -216,8 +220,8 @@ export default function SpotlightCollections({ products, categoryName }) {
       </div>
 
       {/* Intro Header */}
-      <div className="w-full py-24 text-center bg-[#FDFBF7]">
-        <h2 className="text-3xl md:text-4xl text-[#1A0A08] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+      <div className="w-full py-24 text-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
+        <h2 className="text-3xl md:text-4xl text-[#1A0A08] dark:text-[#F5F0E8] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
           The Editorial Lookbook
         </h2>
         <p className="text-gray-500 uppercase tracking-widest text-[11px] font-bold max-w-lg mx-auto leading-relaxed">
@@ -226,7 +230,7 @@ export default function SpotlightCollections({ products, categoryName }) {
       </div>
 
       {/* Map through products, rendering a Stacking Section for each */}
-      <div className="products-container bg-[#FDFBF7]">
+      <div className="products-container bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
         {products.map((product, productIndex) => (
           <ProductStackingSection key={product.id} product={product} index={productIndex} />
         ))}

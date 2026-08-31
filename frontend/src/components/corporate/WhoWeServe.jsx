@@ -3,7 +3,7 @@ import { Briefcase, GraduationCap } from 'lucide-react';
 
 export default function WhoWeServe() {
   return (
-    <section className="py-24 bg-[#FDFBF7] text-[#111111]">
+    <section className="py-24 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 text-[#111111] dark:text-[#F5F0E8]">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Section Header */}
@@ -14,7 +14,7 @@ export default function WhoWeServe() {
           <h2 className="text-3xl md:text-4xl font-serif font-bold leading-tight mb-4">
             Professional Attire & Formalwear Solutions for Every Organization
           </h2>
-          <p className="text-[#111111]/70 font-light text-sm md:text-base">
+          <p className="text-[#111111]/70 dark:text-[#F5F0E8]/70 font-light text-sm md:text-base">
             Thoughtful design. Quality craftsmanship. Made for your people.
           </p>
         </div>

@@ -28,7 +28,7 @@ import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import ScrollToTop from './components/ScrollToTop';
-import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award } from "lucide-react";
+import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Badge } from 'antd';
 import ConsultantPopup from './components/ConsultantPopup';
@@ -53,7 +53,7 @@ const ProtectedRoute = ({ children }) => {
   }, [isLoggedIn, isInitialized]);
 
   if (!isInitialized) {
-    return <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
+    return <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
   }
 
   if (!isLoggedIn) {
@@ -73,7 +73,7 @@ const AdminRoute = ({ children }) => {
   }, [isLoggedIn, isInitialized]);
 
   if (!isInitialized) {
-    return <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
+    return <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-gray-400">Loading...</div>;
   }
 
   if (!isLoggedIn) {
@@ -91,7 +91,7 @@ const AdminRoute = ({ children }) => {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, logout, profile, members, selectedConsumerId, cart, updateMember } = useAppContext();
+  const { isLoggedIn, logout, profile, members, selectedConsumerId, cart, updateMember, theme, toggleTheme } = useAppContext();
   // The header should always show the primary account owner, not the active shopping consumer
   const primaryMember = members?.find(m => m.isPrimary) || members?.[0];
   const isMainTab = ['/home', '/explore', '/wardrobe', '/account', '/onboarding'].includes(location.pathname);
@@ -139,19 +139,19 @@ function App() {
   }, [location.pathname, navigate]);
 
   return (
-    <div className="bg-white min-h-[100dvh] w-full flex flex-col">
+    <div className="bg-white dark:bg-[#0A0A0A] min-h-[100dvh] w-full flex flex-col transition-colors duration-500">
       <ScrollToTop />
       <Toaster position="top-center" />
       {/* Desktop Top Navigation */}
       {isMainTab && (
-        <nav className="hidden md:flex items-center justify-between px-8 lg:px-14 py-2 sticky top-0 bg-[#F5F0E8]/80 backdrop-blur-md text-[#111111] z-50 border-b border-[#111111]/5 shadow-sm">
+        <nav className="hidden md:flex items-center justify-between px-8 lg:px-14 py-2 sticky top-0 bg-[#F5F0E8]/80 dark:bg-[#0A0A0A]/80 backdrop-blur-md text-[#111111] dark:text-[#F5F0E8] z-50 border-b border-[#111111]/5 dark:border-white/10 shadow-sm transition-colors duration-500">
           
           {/* Brand & Tagline */}
           <Link to="/home" className="flex flex-col cursor-pointer group whitespace-nowrap">
-            <span className="text-3xl lg:text-4xl font-serif font-bold tracking-widest text-[#1A0A08] leading-none">
+            <span className="text-3xl lg:text-4xl font-serif font-bold tracking-widest text-[#1A0A08] dark:text-white leading-none">
               VION
             </span>
-            <span className="text-[10px] lg:text-[11px] font-serif font-semibold text-[#5A4232] tracking-wide mt-1" style={{ letterSpacing: '0.04em' }}>
+            <span className="text-[10px] lg:text-[11px] font-serif font-semibold text-[#5A4232] dark:text-[#C49A5C] tracking-wide mt-1" style={{ letterSpacing: '0.04em' }}>
               The Finest Italian Fabrics. Crafted to Perfection
             </span>
           </Link>
@@ -200,67 +200,67 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-5 lg:gap-8 text-[16px] lg:text-[18px] font-semibold text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+            <div className="flex items-center gap-5 lg:gap-8 text-[16px] lg:text-[18px] font-semibold text-[#111111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
               {/* Gender Links */}
               <div className="flex items-center gap-4">
-                <button onClick={() => handleNavGenderSelect('Female')} className="hover:text-[#A87B45] transition-colors relative group">
+                <button onClick={() => handleNavGenderSelect('Female')} className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative group">
                   Women
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] dark:bg-[#C49A5C] transition-all duration-300 group-hover:w-full"></span>
                 </button>
-                <span className="text-[#111111]/20 font-light text-sm">|</span>
-                <button onClick={() => handleNavGenderSelect('Male')} className="hover:text-[#A87B45] transition-colors relative group">
+                <span className="text-[#111111]/20 dark:text-[#F5F0E8]/20 font-light text-sm">|</span>
+                <button onClick={() => handleNavGenderSelect('Male')} className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative group">
                   Men
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] dark:bg-[#C49A5C] transition-all duration-300 group-hover:w-full"></span>
                 </button>
               </div>
               
               {/* Secondary Links */}
               <div className="flex items-center gap-5">
-                <button onClick={() => navigate('/about')} className="hover:text-[#A87B45] transition-colors relative group">
+                <button onClick={() => navigate('/about')} className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative group">
                   About Us
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#A87B45] dark:bg-[#C49A5C] transition-all duration-300 group-hover:w-full"></span>
                 </button>
-                <button onClick={() => navigate('/corporate')} className="hover:text-[#A87B45] transition-colors relative group flex items-center gap-1.5">
+                <button onClick={() => navigate('/corporate')} className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative group flex items-center gap-1.5">
                   VION Corporate
-                  <span className="bg-gradient-to-r from-[#111] to-[#333] text-white text-[8px] font-sans font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-widest shadow-sm">B2B</span>
+                  <span className="bg-gradient-to-r from-[#111] to-[#333] dark:from-[#333] dark:to-[#555] text-white text-[8px] font-sans font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-widest shadow-sm">B2B</span>
                 </button>
               </div>
 
               {/* CTA Button */}
               <button 
                 onClick={() => setShowBookConsultantModal(true)} 
-                className="ml-2 px-5 py-2 border border-[#111111]/30 hover:border-[#A87B45] hover:bg-[#A87B45] text-[#111111] hover:text-white transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm relative"
+                className="ml-2 px-5 py-2 border border-[#111111]/30 dark:border-white/30 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:bg-[#A87B45] dark:hover:bg-[#C49A5C] text-[#111111] dark:text-[#F5F0E8] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm relative"
               >
-                <Sparkles size={14} className="text-[#A87B45] group-hover:text-white transition-colors" />
+                <Sparkles size={14} className="text-[#A87B45] dark:text-[#C49A5C] group-hover:text-white dark:group-hover:text-[#0A0A0A] transition-colors" />
                 <span className="font-bold">Book Consultant</span>
               </button>
             </div>
           )}
 
           {/* Right Actions */}
-          <div className="flex items-center gap-6 text-[#111111]">
+          <div className="flex items-center gap-6 text-[#111111] dark:text-[#F5F0E8]">
             <div className="flex items-center gap-5">
               <button 
                 onClick={() => navigate('/explore')} 
-                className="hover:text-[#A87B45] transition-colors"
+                className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors"
                 title="Search"
               >
                 <Search size={21} strokeWidth={1.8} />
               </button>
               <button 
                 onClick={() => isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true)} 
-                className="hover:text-[#A87B45] transition-colors"
+                className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors"
                 title="Wishlist"
               >
                 <Heart size={21} strokeWidth={1.8} />
               </button>
               <button 
                 onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
-                className="hover:text-[#A87B45] transition-colors relative"
+                className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative"
                 title="Cart"
               >
                 <ShoppingBag size={21} strokeWidth={1.8} />
-                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">
+                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] dark:bg-[#C49A5C] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">
                   {cart?.length || 0}
                 </span>
               </button>
@@ -281,35 +281,35 @@ function App() {
                     setShowSignupModal(true);
                   }
                 }}
-                className="hover:text-[#A87B45] transition-colors flex items-center gap-1.5"
+                className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors flex items-center gap-1.5"
               >
                 {isLoggedIn ? (
                   profile?.email === 'admin@gmail.com' ? (
-                    <span className="text-[12px] font-bold uppercase tracking-wider bg-[#3E1210] text-[#E5CDA7] px-3 py-1 rounded-full">Admin</span>
+                    <span className="text-[12px] font-bold uppercase tracking-wider bg-[#3E1210] dark:bg-[#5C1A17] text-[#E5CDA7] px-3 py-1 rounded-full">Admin</span>
                   ) : (
                     <div className="flex items-center gap-1.5">
                       {primaryMember?.image ? (
-                        <img src={primaryMember.image} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-[#BFA679]" />
+                        <img src={primaryMember.image} alt="Profile" className="w-7 h-7 rounded-full object-cover border border-[#BFA679] dark:border-[#C49A5C]" />
                       ) : (
-                        <div className="w-7 h-7 rounded-full border border-[#BFA679] flex items-center justify-center bg-[#f5ece3] text-[#986427]">
+                        <div className="w-7 h-7 rounded-full border border-[#BFA679] dark:border-[#C49A5C] flex items-center justify-center bg-[#f5ece3] dark:bg-[#2A241F] text-[#986427] dark:text-[#C49A5C]">
                           <User size={16} />
                         </div>
                       )}
-                      <span className="text-[14px] lg:text-[15px] font-bold tracking-wide hidden xl:block text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Hi, {primaryMember?.name || profile?.firstName || 'User'}</span>
-                      <ChevronDown size={14} className="text-[#111111]" />
+                      <span className="text-[14px] lg:text-[15px] font-bold tracking-wide hidden xl:block text-[#111111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Hi, {primaryMember?.name || profile?.firstName || 'User'}</span>
+                      <ChevronDown size={14} className="text-[#111111] dark:text-white/80" />
                     </div>
                   )
                 ) : (
                   <div className="flex items-center gap-1.5 cursor-pointer">
                     <User size={21} strokeWidth={1.8} />
-                    <span className="text-[14px] lg:text-[15px] font-bold text-[#111111] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Login / Sign Up</span>
-                    <ChevronDown size={14} className="text-[#111111]" />
+                    <span className="text-[14px] lg:text-[15px] font-bold text-[#111111] dark:text-[#F5F0E8] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Login / Sign Up</span>
+                    <ChevronDown size={14} className="text-[#111111] dark:text-white/80" />
                   </div>
                 )}
               </button>
 
               {/* Hover Dropdown */}
-              <div className={`absolute top-full right-0 mt-4 w-40 bg-white border border-gray-100 rounded-xl shadow-xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+              <div className={`absolute top-full right-0 mt-4 w-40 bg-white dark:bg-[#1A1A1A] border border-gray-100 dark:border-white/10 rounded-xl shadow-xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 
                 {/* Invisible hover bridge to prevent mouseleave when moving from button to popover */}
                 <div className="absolute -top-4 left-0 right-0 h-4 bg-transparent"></div>
@@ -319,7 +319,7 @@ function App() {
                     <>
                       <button 
                         onClick={() => { setIsLoginHovered(false); logout(); navigate('/home'); }}
-                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all"
+                        className="w-full text-left px-3 py-2 text-[12px] font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center justify-between group"
                       >
                         Logout
                       </button>
@@ -327,16 +327,16 @@ function App() {
                   ) : (
                     <>
                       <button 
-                        onClick={() => { setIsLoginHovered(false); setShowLoginModal(true); }}
-                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
-                      >
-                        Login
-                      </button>
-                      <button 
                         onClick={() => { setIsLoginHovered(false); setShowSignupModal(true); }}
-                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
+                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-[#111111] dark:text-[#F5F0E8] hover:bg-[#F5F0E8] dark:hover:bg-white/5 rounded-lg transition-all"
                       >
                         Sign Up
+                      </button>
+                      <button 
+                        onClick={() => { setIsLoginHovered(false); window.dispatchEvent(new CustomEvent('openLoginModal')); }}
+                        className="w-full text-left px-3 py-2.5 text-sm font-bold text-[#111111] dark:text-[#F5F0E8] hover:bg-[#F5F0E8] dark:hover:bg-white/5 rounded-lg transition-all"
+                      >
+                        Login
                       </button>
                     </>
                   )}
@@ -401,9 +401,9 @@ function App() {
 
           <Route path="/select-size" element={<SizeSelectionScreen />} />
           <Route path="/select-gender" element={<GenderSelectionScreen />} />
-          <Route path="/about" element={<AboutScreen />} />
+          <Route path="/about" element={<CorporateAboutScreen />} />
           <Route path="/corporate" element={<CorporateScreen />} />
-          <Route path="/corporate/about" element={<CorporateAboutScreen />} />
+          <Route path="/corporate/about" element={<AboutScreen />} />
           <Route path="/cart" element={<ProtectedRoute><CartScreen /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutScreen /></ProtectedRoute>} />
           <Route path="/order-success" element={<ProtectedRoute><OrderSuccessScreen /></ProtectedRoute>} />
@@ -454,6 +454,19 @@ function App() {
           setShowLoginModal(true);
         }} 
       />
+
+      {/* Floating Theme Toggle */}
+      <button 
+        onClick={toggleTheme} 
+        className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-[#1A1A1A] border border-[#111111]/10 dark:border-white/10 shadow-lg flex items-center justify-center text-[#111111] dark:text-[#F5F0E8] hover:scale-105 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-all duration-300 group"
+        title="Toggle Theme"
+      >
+        {theme === 'dark' ? (
+          <Sun size={20} strokeWidth={1.8} className="group-hover:rotate-45 transition-transform duration-500" />
+        ) : (
+          <Moon size={20} strokeWidth={1.8} className="group-hover:-rotate-12 transition-transform duration-500" />
+        )}
+      </button>
 
       {/* Booking Modals */}
       <ConsultantPopup />

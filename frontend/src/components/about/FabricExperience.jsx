@@ -54,7 +54,7 @@ export default function FabricExperience() {
   };
 
   return (
-    <section ref={containerRef} className="min-h-screen w-full bg-[#F5F0E8] py-24 px-4 md:px-12 flex flex-col justify-center">
+    <section ref={containerRef} className="min-h-screen w-full bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 py-24 px-4 md:px-12 flex flex-col justify-center">
       
       <div className="text-center mb-16 text-[#151515]">
         <h2 className="text-sm tracking-[0.3em] uppercase font-bold text-[#C49A5C] mb-4">The Materials</h2>

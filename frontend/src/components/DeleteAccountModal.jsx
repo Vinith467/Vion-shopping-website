@@ -31,13 +31,13 @@ export default function DeleteAccountModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0 bg-red-50">
           <div className="flex items-center gap-2 text-red-600">
             <AlertTriangle size={20} />
             <h2 className="text-xl font-bold font-serif">Delete Account</h2>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-red-700 bg-white hover:bg-red-100 rounded-full p-2 transition-colors">
+          <button onClick={onClose} className="text-gray-400 hover:text-red-700 bg-white dark:bg-[#151515] transition-colors duration-500 hover:bg-red-100 rounded-full p-2 transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -55,7 +55,7 @@ export default function DeleteAccountModal({ isOpen, onClose }) {
               type="text" 
               value={confirmation} 
               onChange={e => setConfirmation(e.target.value)} 
-              className="w-full px-4 py-2.5 bg-gray-50 border border-red-200 rounded-xl text-sm focus:outline-none focus:border-red-600 focus:bg-white transition-colors text-red-600 font-bold" 
+              className="w-full px-4 py-2.5 bg-gray-50 border border-red-200 rounded-xl text-sm focus:outline-none focus:border-red-600 focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors text-red-600 font-bold" 
               placeholder="DELETE"
             />
           </div>

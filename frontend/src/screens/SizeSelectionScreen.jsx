@@ -68,18 +68,18 @@ export default function SizeSelectionScreen() {
   };
 
   return (
-    <div className="flex w-full min-h-[100dvh] font-sans bg-[#F5F0E8] overflow-hidden">
+    <div className="flex w-full min-h-[100dvh] font-sans bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 overflow-hidden">
       
       {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#E8DFD3] to-transparent pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#E8DFD3] dark:from-[#151515] transition-colors duration-500 to-transparent pointer-events-none"></div>
       
       {/* Header */}
       <div className="absolute top-0 w-full p-6 lg:p-10 z-20 flex justify-between items-center">
         <button 
           onClick={() => navigate(-1)} 
-          className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md flex items-center justify-center border border-white/60 hover:bg-white/60 transition-colors shadow-sm"
+          className="w-10 h-10 rounded-full bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-md flex items-center justify-center border border-white/60 hover:bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 transition-colors shadow-sm"
         >
-          <ArrowLeft size={18} className="text-[#1A0A08]" />
+          <ArrowLeft size={18} className="text-[#1A0A08] dark:text-[#F5F0E8]" />
         </button>
         
         <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ export default function SizeSelectionScreen() {
         
         <div className="text-center mb-8 md:mb-14 max-w-2xl mx-auto mt-4 md:mt-0">
           <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-2 md:mb-3">Perfect Fit</h4>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl text-[#1A0A08] mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, lineHeight: 1.1 }}>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl text-[#1A0A08] dark:text-[#F5F0E8] mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, lineHeight: 1.1 }}>
             What is your size?
           </h1>
           <p className="text-[13px] md:text-[16px] text-[#555] font-medium px-4 md:px-0" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -108,7 +108,7 @@ export default function SizeSelectionScreen() {
               <div 
                 key={idx}
                 onClick={() => handleSizeSelect(s.id)}
-                className="group cursor-pointer relative overflow-hidden rounded-full border border-white/40 shadow-sm hover:shadow-xl hover:border-[#C49A5C]/60 transition-all duration-500 flex-1 max-w-[75px] sm:max-w-[120px] md:max-w-[160px] bg-white/30 backdrop-blur-sm"
+                className="group cursor-pointer relative overflow-hidden rounded-full border border-white/40 shadow-sm hover:shadow-xl hover:border-[#C49A5C]/60 transition-all duration-500 flex-1 max-w-[75px] sm:max-w-[120px] md:max-w-[160px] bg-white/30 dark:bg-[#151515]/30 transition-colors duration-500 backdrop-blur-sm"
               >
                 <img 
                   src={imgUrl} 

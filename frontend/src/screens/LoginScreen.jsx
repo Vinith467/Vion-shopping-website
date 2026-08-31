@@ -7,7 +7,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="w-full min-h-screen flex bg-white">
+    <div className="w-full min-h-screen flex bg-white dark:bg-[#151515] transition-colors duration-500 ">
       
       {/* Left Side - Image (Hidden on Mobile) */}
       <div className="hidden md:block w-1/2 relative bg-black">
@@ -35,25 +35,25 @@ export default function LoginScreen() {
           onClick={() => navigate('/home')} 
           className="md:hidden absolute top-6 left-6 p-2 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors"
         >
-          <ArrowLeft size={20} className="text-gray-900" />
+          <ArrowLeft size={20} className="text-gray-900 dark:text-[#F5F0E8]" />
         </button>
 
         {/* Desktop Close/Back Button */}
         <button 
           onClick={() => navigate('/home')} 
-          className="hidden md:flex absolute top-8 right-8 text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors items-center gap-2"
+          className="hidden md:flex absolute top-8 right-8 text-sm font-bold text-gray-500 hover:text-gray-900 dark:text-[#F5F0E8] transition-colors items-center gap-2"
         >
           Close <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
 
         {/* Logo (Mobile only, Desktop relies on back button/image) */}
         <div className="md:hidden flex flex-col items-center mb-10 mt-6">
-          <h1 className="text-3xl font-serif tracking-widest text-gray-900">VION<span className="text-[#a14088]">FASHION</span></h1>
+          <h1 className="text-3xl font-serif tracking-widest text-gray-900 dark:text-[#F5F0E8]">VION<span className="text-[#a14088]">FASHION</span></h1>
         </div>
 
         <div className="max-w-md w-full mx-auto">
           <div className="mb-10 text-center md:text-left">
-            <h2 className="text-3xl font-serif font-bold text-gray-900">Welcome Back</h2>
+            <h2 className="text-3xl font-serif font-bold text-gray-900 dark:text-[#F5F0E8]">Welcome Back</h2>
             <p className="text-sm text-gray-500 mt-2">Login to continue your style journey</p>
           </div>
           
@@ -64,7 +64,7 @@ export default function LoginScreen() {
                 <input 
                   type="text" 
                   placeholder="Email or Phone Number" 
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#a14088] focus:bg-white transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-sm text-gray-900 dark:text-[#F5F0E8] placeholder-gray-400 focus:outline-none focus:border-[#a14088] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 />
               </div>
               <div className="relative">
@@ -72,7 +72,7 @@ export default function LoginScreen() {
                 <input 
                   type={showPassword ? "text" : "password"} 
                   placeholder="Password" 
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-12 py-3.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#a14088] focus:bg-white transition-colors"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-12 py-3.5 text-sm text-gray-900 dark:text-[#F5F0E8] placeholder-gray-400 focus:outline-none focus:border-[#a14088] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 />
                 <button 
                   type="button"
@@ -109,13 +109,13 @@ export default function LoginScreen() {
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <button className="bg-white border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
+            <button className="bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
               <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
             </button>
-            <button className="bg-white border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
+            <button className="bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
               <img src="https://www.svgrepo.com/show/511330/apple-173.svg" className="w-5 h-5" alt="Apple" />
             </button>
-            <button className="bg-white border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
+            <button className="bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-200 h-12 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
               <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="w-5 h-5" alt="Facebook" />
             </button>
           </div>

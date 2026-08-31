@@ -16,7 +16,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex items-center justify-between px-6 pb-6 pt-3 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#121212] border-t border-gray-100 dark:border-white/10 flex items-center justify-between px-6 pb-6 pt-3 z-50 transition-colors duration-500">
       {navItems.map((item) => {
         const Icon = item.icon;
         
@@ -27,10 +27,10 @@ export default function BottomNav() {
               to={item.to}
               className="flex flex-col items-center gap-1 -mt-5"
             >
-              <div className="w-14 h-14 bg-[#986427] rounded-full flex items-center justify-center text-white shadow-lg shadow-[#986427]/30">
+              <div className="w-14 h-14 bg-[#986427] dark:bg-[#C49A5C] rounded-full flex items-center justify-center text-white shadow-lg shadow-[#986427]/30 dark:shadow-[#C49A5C]/20">
                 <Icon size={24} strokeWidth={1.5} />
               </div>
-              <span className="text-[10px] font-medium text-gray-500">{item.label}</span>
+              <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">{item.label}</span>
             </NavLink>
           );
         }
@@ -40,7 +40,7 @@ export default function BottomNav() {
             key={item.label}
             to={item.to}
             className={({ isActive }) => 
-              `flex flex-col items-center gap-1 ${isActive ? "text-[#986427]" : "text-gray-400 hover:text-gray-600"}`
+              `flex flex-col items-center gap-1 ${isActive ? "text-[#986427] dark:text-[#C49A5C]" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"}`
             }
           >
             {({ isActive }) => (

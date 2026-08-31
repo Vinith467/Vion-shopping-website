@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { Save, Image as ImageIcon } from 'lucide-react';
+import { Save, Image as ImageIcon, Upload } from 'lucide-react';
+import { uploadImage } from '../../services/storageService';
 
 // Default data representing the initial state
 const DEFAULT_DATA = [
@@ -186,12 +187,35 @@ export default function AdminPreferences() {
                                 <div className="flex-1 space-y-3">
                                     <div>
                                         <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Image URL ({img.type})</label>
-                                        <input 
-                                            type="text" 
-                                            value={img.src} 
-                                            onChange={(e) => handleImageChange(idx, imgIdx, 'src', e.target.value)}
-                                            className="w-full p-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 focus:ring-2 focus:ring-[#6344D4]/30 outline-none"
-                                        />
+                                        <div className="flex gap-2">
+                                            <input 
+                                                type="text" 
+                                                value={img.src} 
+                                                onChange={(e) => handleImageChange(idx, imgIdx, 'src', e.target.value)}
+                                                className="flex-1 p-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 focus:ring-2 focus:ring-[#6344D4]/30 outline-none"
+                                            />
+                                            <label className="cursor-pointer flex items-center justify-center bg-gray-100 hover:bg-gray-200 px-3 rounded-lg border border-gray-200 transition-colors" title="Upload from folder">
+                                                <Upload size={14} className="text-gray-600" />
+                                                <input 
+                                                    type="file" 
+                                                    accept="image/*" 
+                                                    className="hidden" 
+                                                    onChange={async (e) => {
+                                                        if (e.target.files && e.target.files[0]) {
+                                                            try {
+                                                                toast.loading('Uploading image...', { id: 'upload' });
+                                                                const url = await uploadImage(e.target.files[0], 'page-content', 'public-images');
+                                                                handleImageChange(idx, imgIdx, 'src', url);
+                                                                toast.success('Image uploaded!', { id: 'upload' });
+                                                            } catch (err) {
+                                                                toast.error('Failed to upload image', { id: 'upload' });
+                                                                console.error(err);
+                                                            }
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Alt Text</label>

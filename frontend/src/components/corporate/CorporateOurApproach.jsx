@@ -3,10 +3,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const steps = [
-  { num: '01', title: 'Book a Consultation', desc: 'The organization schedules an appointment with VION.', img: '/images/about/corporate_gallery_editorial_1787745065973.jpg' },
-  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet the customer at their location to understand their requirements, culture, preferences and expectations.', img: '/images/about/craft_02_man_1787726381257.jpg' },
-  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to the customer.', img: '/images/about/craft_01_selection_1787726319333.jpg' },
-  { num: '04', title: 'You Select', desc: 'The customer selects the designs, fabrics, colors and details that best represent their requirements.', img: '/images/about/corporate_fabric_wool_1787744950103.jpg' },
+  { num: '01', title: 'Book a Consultation', desc: 'You schedule an appointment with us.', img: '/images/about/corporate_gallery_editorial_1787745065973.jpg' },
+  { num: '02', title: 'We Visit You', desc: 'Our stylist and experts meet you at your location to understand your requirements, culture, preferences and expectations.', img: '/images/about/craft_02_man_1787726381257.jpg' },
+  { num: '03', title: 'Design & Present', desc: 'Our team develops concepts, styles, fabrics and design options and presents them to you.', img: '/images/about/craft_01_selection_1787726319333.jpg' },
+  { num: '04', title: 'You Select', desc: 'You select the designs, fabrics, colors and details that best represent your personal style.', img: '/images/about/corporate_fabric_wool_1787744950103.jpg' },
   { num: '05', title: 'Individual Measurements', desc: 'We take precise measurements of each individual who will wear the garment, allowing us to create a better and more personalized fit.', img: '/images/about/craft_04_measuring_1787726583981.jpg' },
   { num: '06', title: 'Manufacture', desc: 'Our manufacturing partners and craftsmen transform the selected materials and designs into finished garments with strict quality control.', img: '/images/about/craft_03_cutting_1787726412577.jpg' },
   { num: '07', title: 'Deliver', desc: 'The finished garments are quality checked and delivered according to the agreed schedule.', img: '/images/about/craft_02_woman_1787726369150.jpg' },

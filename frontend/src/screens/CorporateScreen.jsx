@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function CorporateScreen() {
   return (
-    <div className="w-full min-h-screen bg-[#FDFBF7] text-[#111111] overflow-x-hidden font-sans">
+    <div className="w-full min-h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] text-[#111111] dark:text-[#F5F0E8] overflow-x-hidden font-sans transition-colors duration-500 ">
 
       {/* 
         The Corporate Navigation Header 
@@ -54,7 +54,7 @@ export default function CorporateScreen() {
       {/* 
         Placeholder for the rest of the sections that will be built next 
       */}
-      <div className="h-screen flex items-center justify-center bg-[#FDFBF7]">
+      <div className="h-screen flex items-center justify-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
         <p className="text-2xl text-gray-400 font-serif italic">More corporate sections coming...</p>
       </div>
 

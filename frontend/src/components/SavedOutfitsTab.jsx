@@ -55,9 +55,9 @@ export default function SavedOutfitsTab() {
 
   if (selectedMember) {
     return (
-      <div className="w-full flex flex-col gap-6 -mt-4 bg-white min-h-[800px]">
+      <div className="w-full flex flex-col gap-6 -mt-4 bg-white dark:bg-[#151515] transition-colors duration-500 min-h-[800px]">
         {/* Back Button */}
-        <button onClick={goBack} className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors w-fit">
+        <button onClick={goBack} className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-900 dark:text-[#F5F0E8] transition-colors w-fit">
           <ArrowLeft size={16} /> Back to Members
         </button>
 
@@ -69,7 +69,7 @@ export default function SavedOutfitsTab() {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-2">
-                <h2 className="text-2xl font-bold text-gray-900">{selectedMember.name}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-[#F5F0E8]">{selectedMember.name}</h2>
                 {selectedMember.isPrimary ? (
                   <span className="bg-[#3A10E5] text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
                     You
@@ -111,11 +111,11 @@ export default function SavedOutfitsTab() {
           </div>
 
           <div className="bg-[#F8F6FF] rounded-2xl p-6 flex items-center gap-6 min-w-[200px] border border-purple-100">
-            <div className="w-12 h-12 rounded-xl bg-white text-[#3A10E5] flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] flex items-center justify-center shadow-sm">
               <Heart size={20} className="fill-current" />
             </div>
             <div>
-              <h3 className="text-3xl font-black text-gray-900 mb-1">{savedProducts.length}</h3>
+              <h3 className="text-3xl font-black text-gray-900 dark:text-[#F5F0E8] mb-1">{savedProducts.length}</h3>
               <p className="text-xs font-semibold text-gray-500">Saved Outfits</p>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function SavedOutfitsTab() {
                 key={tab}
                 onClick={() => setCollectionTab(tab)}
                 className={`text-sm font-bold whitespace-nowrap transition-colors relative pb-4 ${
-                  collectionTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900'
+                  collectionTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900 dark:text-[#F5F0E8]'
                 }`}
               >
                 {tab}
@@ -154,19 +154,19 @@ export default function SavedOutfitsTab() {
           {savedProducts
             .filter(product => collectionTab === 'All Outfits' || product.category?.name === collectionTab)
             .map(product => (
-            <div key={product.id} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group relative">
+            <div key={product.id} className="flex flex-col bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group relative">
               <Link to={`/product/${product.id}`} className="relative aspect-[3/4] bg-gray-100 block">
                 <img src={product.images?.[0] || '/images/placeholder.jpg'} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
               </Link>
               
               <div className="p-4 flex flex-col gap-1 border-b border-gray-50">
                 <Link to={`/product/${product.id}`}>
-                  <h4 className="text-sm font-bold text-gray-900 line-clamp-1 hover:text-[#3A10E5]">{product.title}</h4>
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] line-clamp-1 hover:text-[#3A10E5]">{product.title}</h4>
                 </Link>
                 <p className="text-[12px] font-bold text-gray-500">₹{parseFloat(product.price).toLocaleString()}</p>
               </div>
 
-              <div className="p-3 flex justify-between items-center bg-white">
+              <div className="p-3 flex justify-between items-center bg-white dark:bg-[#151515] transition-colors duration-500 ">
                 <Link to={`/product/${product.id}`} className="w-8 h-8 rounded-full flex items-center justify-center text-[#3A10E5] bg-[#3A10E5]/5 hover:bg-[#3A10E5]/10 transition-colors">
                   <ShoppingBag size={14} />
                 </Link>
@@ -206,7 +206,7 @@ export default function SavedOutfitsTab() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h2 className="text-[28px] font-bold text-gray-900 font-serif">Saved Outfits</h2>
+            <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] font-serif">Saved Outfits</h2>
             <Heart size={24} className="text-[#3A10E5]" />
           </div>
           <p className="text-sm text-gray-500 font-medium">Your favorite outfits, saved for every member.</p>
@@ -229,7 +229,7 @@ export default function SavedOutfitsTab() {
               key={tab}
               onClick={() => handleTabClick(tab)}
               className={`text-sm font-bold whitespace-nowrap transition-colors relative ${
-                activeTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900'
+                activeTab === tab ? 'text-[#3A10E5]' : 'text-gray-500 hover:text-gray-900 dark:text-[#F5F0E8]'
               }`}
             >
               {tab}
@@ -256,14 +256,14 @@ export default function SavedOutfitsTab() {
 
       {/* 3. Main Content (Member Cards) */}
       <div className="mt-2">
-        <h3 className="text-base font-bold text-gray-900 mb-6">Your Members ({members.length})</h3>
+        <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] mb-6">Your Members ({members.length})</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {members.filter(m => m.name.toLowerCase().includes(searchMemberQuery.toLowerCase())).map((member) => (
             <div 
               key={member.id} 
               onClick={() => setSelectedMember(member)}
-              className={`flex flex-col bg-white rounded-3xl overflow-hidden transition-all shadow-sm hover:shadow-md cursor-pointer ${
+              className={`flex flex-col bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl overflow-hidden transition-all shadow-sm hover:shadow-md cursor-pointer ${
                 member.isPrimary ? 'border-2 border-[#3A10E5] bg-[#3A10E5]/[0.02]' : 'border border-gray-100 hover:border-gray-200'
               }`}
             >
@@ -283,7 +283,7 @@ export default function SavedOutfitsTab() {
                   ) : (
                     <button 
                       onClick={(e) => { e.stopPropagation(); setPrimaryMember(member.id); }}
-                      className="absolute top-0 right-0 bg-white text-[#3A10E5] border border-gray-200 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm hover:bg-gray-50 transition-colors"
+                      className="absolute top-0 right-0 bg-white dark:bg-[#151515] transition-colors duration-500 text-[#3A10E5] border border-gray-200 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm hover:bg-gray-50 transition-colors"
                     >
                       Set Primary
                     </button>
@@ -291,7 +291,7 @@ export default function SavedOutfitsTab() {
                 </div>
 
                 {/* Info */}
-                <h4 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h4>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-[#F5F0E8] mb-2">{member.name}</h4>
                 <div className="flex items-center justify-center gap-2 text-xs font-medium text-gray-500 mb-1">
                   <span>{member.age} yrs</span>
                   <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
@@ -310,7 +310,7 @@ export default function SavedOutfitsTab() {
 
               {/* Bottom Section */}
               <div className={`mt-auto border-t p-6 flex items-center justify-between group ${
-                member.isPrimary ? 'border-[#3A10E5]/10 bg-white' : 'border-gray-100'
+                member.isPrimary ? 'border-[#3A10E5]/10 bg-white dark:bg-[#151515] transition-colors duration-500 ' : 'border-gray-100'
               }`}>
                 <div>
                   <h5 className={`text-3xl font-black mb-1 ${member.isPrimary ? 'text-[#3A10E5]' : 'text-[#3A10E5]'}`}>

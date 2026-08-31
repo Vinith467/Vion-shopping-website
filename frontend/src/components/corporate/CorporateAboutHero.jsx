@@ -90,7 +90,7 @@ export default function CorporateAboutHero() {
         ref={overlayTextRef} 
         className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center pointer-events-none px-4"
       >
-        <h3 className="text-[#C49A5C] text-sm tracking-[0.3em] uppercase font-bold mb-6">About VION Corporate</h3>
+        <h3 className="text-[#C49A5C] text-sm tracking-[0.3em] uppercase font-bold mb-6">About VION Fashion</h3>
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase text-[#F5F0E8] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Three Generations.<br/>One Craft.<br/>A New Vision.
         </h1>
@@ -104,32 +104,26 @@ export default function CorporateAboutHero() {
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-30 flex h-full items-center pointer-events-none">
         <div ref={contentRef} className="w-full md:w-[45%] pointer-events-auto">
           
-          <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold uppercase mb-4 lg:mb-6 leading-tight text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Three Generations.<br/>One Craft.<br/>A New Vision.
           </h2>
           
-          <div className="space-y-5 text-sm lg:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
+          <div className="space-y-4 lg:space-y-6 text-sm lg:text-base text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
             <p>
-              VION Corporate is built on three generations of experience in the clothing and tailoring business. What began as a family-led craft has grown through decades of understanding fabrics, fit, craftsmanship, and what it takes to create clothing that people are proud to wear.
-            </p>
-            <p>
-              Today, the youngest generation is carrying that experience forward with a new approach—bringing technology, modern design thinking, and a more convenient customer experience into the business.
-            </p>
-            <p>
-              We are combining the craftsmanship passed down through generations with modern technology to create a better way for organizations to source professional attire and institutional uniforms.
+              VION Fashion is built on three generations of experience in the clothing and tailoring business. What began as a family-led craft has evolved into a modern brand—combining decades of understanding fabrics, fit, and craftsmanship with contemporary design thinking.
             </p>
             <p className="text-[#C49A5C] font-medium text-base">
-              Our ambition is simple.<br/>To build VION into a Pan-India clothing and uniform partner for corporates, universities, colleges, institutes, and organizations.
+              Our ambition is simple.<br/>To build VION into a trusted brand for individuals who appreciate premium quality, perfect fit, and timeless elegance.
             </p>
             <p>
-              From understanding your requirements and creating designs to taking individual measurements, manufacturing, quality checking, and delivering—we want to make the entire experience personalized, reliable, and effortless.
+              From understanding your personal style to taking individual measurements, tailoring, and delivering—we make the entire experience personalized and effortless.
             </p>
             
-            <div className="relative pl-6 mt-8 pt-2 pb-2">
+            <div className="relative pl-6 mt-4 lg:mt-6 pt-2 pb-2">
               <div ref={lineRef} className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#C49A5C]"></div>
-              <p className="tracking-widest uppercase text-xs mb-3 text-[#F5F0E8]">Generations of craftsmanship.</p>
-              <p className="tracking-widest uppercase text-xs mb-3 text-[#F5F0E8]">Technology for tomorrow.</p>
-              <p className="tracking-widest uppercase text-xs text-[#F5F0E8]">A vision to serve India.</p>
+              <p className="tracking-widest uppercase text-[10px] md:text-xs mb-2 text-[#F5F0E8]">Generations of craftsmanship.</p>
+              <p className="tracking-widest uppercase text-[10px] md:text-xs mb-2 text-[#F5F0E8]">Technology for tomorrow.</p>
+              <p className="tracking-widest uppercase text-[10px] md:text-xs text-[#F5F0E8]">A vision to serve India.</p>
             </div>
           </div>
 

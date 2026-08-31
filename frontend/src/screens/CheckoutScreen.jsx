@@ -125,16 +125,16 @@ export default function CheckoutScreen() {
     }
   };
 
-  if (isLoading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center font-medium text-gray-500">Loading Checkout...</div>;
+  if (isLoading) return <div className="min-h-screen bg-gray-50 dark:bg-[#0A0A0A] flex items-center justify-center font-medium text-gray-500 dark:text-gray-400 transition-colors duration-500 ">Loading Checkout...</div>;
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col bg-gray-50 min-h-screen pb-32">
+    <div className="w-full max-w-7xl mx-auto flex flex-col bg-gray-50 dark:bg-[#0A0A0A] min-h-screen pb-32 transition-colors duration-500 ">
       {/* App Bar */}
-      <div className="flex items-center px-6 pt-12 pb-4 sticky top-0 bg-white z-40 shadow-sm">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 bg-gray-50 rounded-full">
-          <ArrowLeft size={20} className="text-gray-900" />
+      <div className="flex items-center px-6 pt-12 pb-4 sticky top-0 bg-white dark:bg-[#111] z-40 shadow-sm transition-colors duration-500 ">
+        <button onClick={() => navigate(-1)} className="p-2 -ml-2 bg-gray-50 dark:bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 rounded-full hover:bg-gray-100 dark:hover:bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 transition-colors">
+          <ArrowLeft size={20} className="text-gray-900 dark:text-white" />
         </button>
-        <h1 className="text-xl font-bold text-gray-900 ml-4">Checkout</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-[#F5F0E8] ml-4">Checkout</h1>
       </div>
 
       <div className="px-6 md:px-0 md:max-w-3xl mx-auto w-full mt-6 flex flex-col gap-8">
@@ -142,19 +142,19 @@ export default function CheckoutScreen() {
         {/* Section 1: Address */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-              <MapPin size={20} className="text-[#6344D4]" /> Delivery Address
+            <h2 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] flex items-center gap-2">
+              <MapPin size={20} className="text-[#6344D4] dark:text-[#A882FF]" /> Delivery Address
             </h2>
-            <button onClick={() => setShowAddModal(true)} className="text-xs font-bold text-[#6344D4] bg-[#F8F6FF] px-3 py-1.5 rounded-full flex items-center gap-1">
+            <button onClick={() => setShowAddModal(true)} className="text-xs font-bold text-[#6344D4] dark:text-[#A882FF] bg-[#F8F6FF] dark:bg-[#6344D4]/20 px-3 py-1.5 rounded-full flex items-center gap-1 transition-colors">
               <Plus size={14} /> Add New
             </button>
           </div>
           
           <div className="flex flex-col gap-3">
             {addresses.length === 0 ? (
-              <div className="p-6 bg-white rounded-2xl border border-dashed border-gray-300 text-center">
-                <p className="text-gray-500 text-sm mb-3">No addresses found</p>
-                <button onClick={() => setShowAddModal(true)} className="px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-xl">Add Address</button>
+              <div className="p-6 bg-white dark:bg-[#151515] rounded-2xl border border-dashed border-gray-300 dark:border-white/20 text-center transition-colors">
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No addresses found</p>
+                <button onClick={() => setShowAddModal(true)} className="px-4 py-2 bg-gray-900 dark:bg-white dark:bg-[#151515] transition-colors duration-500 text-white dark:text-black text-sm font-bold rounded-xl transition-colors">Add Address</button>
               </div>
             ) : (
               addresses.map(addr => (
@@ -162,21 +162,21 @@ export default function CheckoutScreen() {
                   key={addr.id}
                   onClick={() => setSelectedAddressId(addr.id)}
                   className={`relative p-4 rounded-2xl border-2 transition-all cursor-pointer ${
-                    selectedAddressId === addr.id ? 'border-[#6344D4] bg-[#F8F6FF]' : 'border-gray-100 bg-white hover:border-gray-200'
+                    selectedAddressId === addr.id ? 'border-[#6344D4] dark:border-[#A882FF] bg-[#F8F6FF] dark:bg-[#6344D4]/10' : 'border-gray-100 dark:border-white/10 bg-white dark:bg-[#151515] hover:border-gray-200 dark:hover:border-white/20'
                   }`}
                 >
                   <div className="flex gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${selectedAddressId === addr.id ? 'bg-[#6344D4] text-white' : 'bg-gray-100 text-gray-500'}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${selectedAddressId === addr.id ? 'bg-[#6344D4] dark:bg-[#A882FF] text-white dark:text-[#111] dark:text-[#F5F0E8]' : 'bg-gray-100 dark:bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 text-gray-500 dark:text-gray-400'}`}>
                       {addr.type === 'Work' ? <Briefcase size={18} /> : <Home size={18} />}
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-900">{addr.name || 'Anonymous User'}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-200 text-gray-700 px-2 py-0.5 rounded">{addr.type || 'Home'}</span>
+                        <span className="font-bold text-gray-900 dark:text-[#F5F0E8]">{addr.name || 'Anonymous User'}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-200 dark:bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded">{addr.type || 'Home'}</span>
                       </div>
-                      <p className="text-sm text-gray-600 leading-relaxed">{addr.address || addr.addressLine1}</p>
-                      <p className="text-sm text-gray-600">{addr.city || addr.cityField}</p>
-                      <p className="text-sm font-medium text-gray-900 mt-2">{addr.phone}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{addr.address || addr.addressLine1}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{addr.city || addr.cityField}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-300 mt-2">{addr.phone}</p>
                     </div>
                   </div>
                   {selectedAddressId === addr.id && (
@@ -192,8 +192,8 @@ export default function CheckoutScreen() {
 
         {/* Section 2: Payment Method */}
         <section>
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
-            <Wallet size={20} className="text-[#6344D4]" /> Payment Method
+          <h2 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] flex items-center gap-2 mb-4">
+            <Wallet size={20} className="text-[#6344D4] dark:text-[#A882FF]" /> Payment Method
           </h2>
           
           <div className="flex flex-col gap-3">
@@ -206,20 +206,20 @@ export default function CheckoutScreen() {
                 key={method.id}
                 onClick={() => setSelectedPayment(method.id)}
                 className={`relative p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
-                  selectedPayment === method.id ? 'border-[#6344D4] bg-[#F8F6FF]' : 'border-gray-100 bg-white hover:border-gray-200'
+                  selectedPayment === method.id ? 'border-[#6344D4] dark:border-[#A882FF] bg-[#F8F6FF] dark:bg-[#6344D4]/10' : 'border-gray-100 dark:border-white/10 bg-white dark:bg-[#151515] hover:border-gray-200 dark:hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${selectedPayment === method.id ? 'bg-[#6344D4] text-white' : 'bg-gray-100 text-gray-500'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${selectedPayment === method.id ? 'bg-[#6344D4] dark:bg-[#A882FF] text-white dark:text-[#111] dark:text-[#F5F0E8]' : 'bg-gray-100 dark:bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 text-gray-500 dark:text-gray-400'}`}>
                     <method.icon size={18} />
                   </div>
                   <div>
-                    <h3 className={`font-bold ${selectedPayment === method.id ? 'text-[#6344D4]' : 'text-gray-900'}`}>{method.label}</h3>
-                    <p className="text-xs text-gray-500">{method.desc}</p>
+                    <h3 className={`font-bold ${selectedPayment === method.id ? 'text-[#6344D4] dark:text-[#A882FF]' : 'text-gray-900 dark:text-[#F5F0E8]'}`}>{method.label}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{method.desc}</p>
                   </div>
                 </div>
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === method.id ? 'border-[#6344D4]' : 'border-gray-300'}`}>
-                  {selectedPayment === method.id && <div className="w-2.5 h-2.5 rounded-full bg-[#6344D4]" />}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === method.id ? 'border-[#6344D4] dark:border-[#A882FF]' : 'border-gray-300 dark:border-white/20'}`}>
+                  {selectedPayment === method.id && <div className="w-2.5 h-2.5 rounded-full bg-[#6344D4] dark:bg-[#A882FF]" />}
                 </div>
               </div>
             ))}
@@ -227,20 +227,20 @@ export default function CheckoutScreen() {
         </section>
 
         {/* Order Summary */}
-        <section className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm mb-10">
-          <h3 className="font-bold text-gray-900 mb-4">Order Summary</h3>
+        <section className="bg-white dark:bg-[#151515] p-5 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm mb-10 transition-colors">
+          <h3 className="font-bold text-gray-900 dark:text-[#F5F0E8] mb-4">Order Summary</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-gray-600 dark:text-gray-400">
               <span>Subtotal ({cart.length} items)</span>
               <span>₹{subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-gray-600 dark:text-gray-400">
               <span>Shipping</span>
-              <span className={shipping === 0 ? "text-green-600 font-bold" : ""}>
+              <span className={shipping === 0 ? "text-green-600 dark:text-green-400 font-bold" : ""}>
                 {shipping === 0 ? 'FREE' : `₹${shipping}`}
               </span>
             </div>
-            <div className="pt-3 border-t border-gray-100 flex justify-between font-bold text-lg text-gray-900">
+            <div className="pt-3 border-t border-gray-100 dark:border-white/10 flex justify-between font-bold text-lg text-gray-900 dark:text-[#F5F0E8]">
               <span>Total to Pay</span>
               <span>₹{toPay.toLocaleString()}</span>
             </div>
@@ -249,16 +249,16 @@ export default function CheckoutScreen() {
       </div>
 
       {/* Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#111] border-t border-gray-100 dark:border-white/10 p-4 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] transition-colors duration-500 ">
         <div className="max-w-3xl mx-auto flex gap-4 items-center">
           <div className="flex-1">
-            <p className="text-xs text-gray-500 font-medium">Total Amount</p>
-            <p className="text-xl font-bold text-gray-900">₹{toPay.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Total Amount</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-[#F5F0E8]">₹{toPay.toLocaleString()}</p>
           </div>
           <button 
             onClick={handlePlaceOrder}
             disabled={isProcessing}
-            className="flex-[2] bg-[#6344D4] text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-[#5235B8] transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+            className="flex-[2] bg-[#6344D4] dark:bg-[#A882FF] text-white dark:text-[#111] dark:text-[#F5F0E8] py-3.5 rounded-xl font-bold shadow-md hover:bg-[#5235B8] dark:hover:bg-[#976DF3] transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
           >
             {isProcessing ? 'Processing...' : `Place Order • ${selectedPayment}`}
           </button>
@@ -268,9 +268,9 @@ export default function CheckoutScreen() {
       {/* Add Address Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-end md:items-center justify-center md:p-4">
-          <div className="bg-white w-full md:max-w-md rounded-t-3xl md:rounded-3xl p-6 animate-slide-up md:animate-scale-in">
+          <div className="bg-white dark:bg-[#151515] transition-colors duration-500 w-full md:max-w-md rounded-t-3xl md:rounded-3xl p-6 animate-slide-up md:animate-scale-in">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900">Add New Address</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8]">Add New Address</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 bg-gray-50 rounded-full hover:bg-gray-100"><X size={20} /></button>
             </div>
             
@@ -281,7 +281,7 @@ export default function CheckoutScreen() {
                     key={type}
                     type="button"
                     onClick={() => setFormData({...formData, type})}
-                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${formData.type === type ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${formData.type === type ? 'bg-white dark:bg-[#151515] transition-colors duration-500 shadow-sm text-gray-900 dark:text-[#F5F0E8]' : 'text-gray-500 hover:text-gray-700'}`}
                   >
                     {type}
                   </button>

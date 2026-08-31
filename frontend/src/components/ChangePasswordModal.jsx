@@ -39,9 +39,9 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
-          <div className="flex items-center gap-2 text-gray-900">
+          <div className="flex items-center gap-2 text-gray-900 dark:text-[#F5F0E8]">
             <Lock size={20} className="text-[#3A10E5]" />
             <h2 className="text-xl font-bold font-serif">Change Password</h2>
           </div>
@@ -57,7 +57,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
               type="password" 
               value={currentPassword} 
               onChange={e => setCurrentPassword(e.target.value)} 
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors" 
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors" 
               placeholder="Enter current password"
             />
           </div>
@@ -69,7 +69,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
               type="password" 
               value={newPassword} 
               onChange={e => setNewPassword(e.target.value)} 
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors" 
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors" 
               placeholder="Must be at least 6 characters"
               minLength={6}
             />
@@ -82,7 +82,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
               type="password" 
               value={confirmPassword} 
               onChange={e => setConfirmPassword(e.target.value)} 
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors" 
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors" 
               placeholder="Re-enter new password"
               minLength={6}
             />

@@ -49,7 +49,7 @@ export default function HeritageTechnology() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#FDFBF7] overflow-hidden flex items-center justify-center border-t border-black/5">
+    <section ref={containerRef} className="relative h-screen w-full bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 overflow-hidden flex items-center justify-center border-t border-black/5">
       
       {/* Center Text (Revealed when doors open) */}
       <div 
@@ -57,7 +57,7 @@ export default function HeritageTechnology() {
         className="absolute z-0 w-full md:w-[75%] lg:w-[55%] text-center px-6 max-h-[90vh] overflow-y-auto no-scrollbar py-8 flex flex-col justify-center"
       >
         <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-3">Where Heritage Meets Technology</h3>
-        <h2 className="text-2xl md:text-4xl font-bold mb-5 md:mb-6 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+        <h2 className="text-2xl md:text-4xl font-bold mb-5 md:mb-6 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           VION is not trying to replace traditional craftsmanship with technology.
         </h2>
         
@@ -68,7 +68,7 @@ export default function HeritageTechnology() {
           <p>
             From discovering collections and selecting sizes to customization, digital communication, order management and delivery, technology helps us create a smoother shopping experience.
           </p>
-          <p className="font-semibold text-[#111]">
+          <p className="font-semibold text-[#111] dark:text-[#F5F0E8]">
             But behind every garment remains something technology cannot replace:<br/>
             Human craftsmanship.
           </p>

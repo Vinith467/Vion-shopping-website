@@ -4,13 +4,13 @@ import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
 import { 
   User, MapPin, ShoppingBag, Heart, LogOut, ChevronRight, 
-  Phone, Plus, Edit2, Trash2, CheckCircle2, Save, X
+  Phone, Plus, Edit2, Trash2, CheckCircle2, Save, X, Moon, Sun
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AccountScreen() {
   const navigate = useNavigate();
-  const { selectedConsumerId } = useAppContext();
+  const { selectedConsumerId, theme, toggleTheme } = useAppContext();
   const [activeTab, setActiveTab] = useState('details');
   const [profile, setProfile] = useState(null);
   const [userEmail, setUserEmail] = useState('');
@@ -217,32 +217,32 @@ export default function AccountScreen() {
   }
 
   return (
-    <div className="min-h-[100dvh] relative overflow-clip bg-[#e8d5c4] pt-12 pb-24">
+    <div className="min-h-[100dvh] relative overflow-clip bg-[#e8d5c4] dark:bg-[#0A0A0A] pt-12 pb-24 transition-colors duration-500 ">
       {/* Background Glossy Elements (similar to Onboarding) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-white/20 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-[#986427]/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-white/2 dark:bg-[#151515]/2 transition-colors duration-500 0 dark:bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-[#986427]/10 dark:bg-[#C49A5C]/10 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10 flex flex-col md:flex-row gap-8">
         
         {/* Sidebar */}
         <div className="w-full md:w-72 flex-shrink-0">
-          <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 sticky top-24">
+          <div className="bg-white/4 dark:bg-[#151515]/4 transition-colors duration-500 0 dark:bg-[#151515]/80 backdrop-blur-xl rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 dark:border-white/10 sticky top-24 transition-colors duration-500 ">
             
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/80 shadow-sm bg-white/50">
+              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/80 dark:border-[#C49A5C]/30 shadow-sm bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 0 dark:bg-black/50">
                 {profile?.avatar_url || profile?.image ? (
                   <img src={profile?.avatar_url || profile?.image} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ece3] to-[#e8d5c4] text-[#986427]">
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ece3] to-[#e8d5c4] dark:from-[#1A1A1A] dark:to-[#0A0A0A] text-[#986427] dark:text-[#C49A5C]">
                     <User size={24} strokeWidth={2} />
                   </div>
                 )}
               </div>
               <div>
-                <h3 className="font-serif font-bold text-xl text-[#1A0A08]">{profile?.name || 'My Profile'}</h3>
-                <p className="text-sm text-gray-500">Manage your details</p>
+                <h3 className="font-serif font-bold text-xl text-[#1A0A08] dark:text-[#F5F0E8]">{profile?.name || 'My Profile'}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Manage your details</p>
               </div>
             </div>
 
@@ -256,7 +256,7 @@ export default function AccountScreen() {
                     className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 group ${
                       active 
                         ? 'bg-[#986427] text-white shadow-lg' 
-                        : 'hover:bg-white/60 text-gray-600 hover:text-[#986427]'
+                        : 'hover:bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 dark:hover:bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 text-gray-600 dark:text-gray-400 hover:text-[#986427] dark:hover:text-[#C49A5C]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -268,10 +268,10 @@ export default function AccountScreen() {
                 );
               })}
               
-              <div className="pt-4 mt-4 border-t border-white/40">
+              <div className="pt-4 mt-4 border-t border-white/40 dark:border-white/10">
                 <button 
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all font-medium"
                 >
                   <LogOut size={18} />
                   <span>Log Out</span>
@@ -283,31 +283,40 @@ export default function AccountScreen() {
 
         {/* Main Content Area */}
         <div className="flex-1">
-          <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 min-h-[500px]">
+          <div className="bg-white/4 dark:bg-[#151515]/4 transition-colors duration-500 0 dark:bg-[#151515]/80 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/60 dark:border-white/10 min-h-[500px] transition-colors duration-500 ">
             
             {activeTab === 'details' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <h2 className="font-serif text-3xl font-bold text-[#1A0A08] mb-6">My Details</h2>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08] dark:text-[#F5F0E8]">My Details</h2>
+                  <button 
+                    onClick={toggleTheme}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 0 dark:bg-black/50 border border-white/60 dark:border-white/10 text-[#1A0A08] dark:text-[#F5F0E8] hover:bg-white/80 dark:bg-[#151515]/80 transition-colors duration-500 dark:hover:bg-black/80 transition-all"
+                  >
+                    {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    <span className="text-sm font-medium">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                  </button>
+                </div>
                 
-                <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/60 relative shadow-sm">
+                <div className="bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 0 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-white/60 dark:border-white/5 relative shadow-sm">
                   {/* Global Edit Button removed since onboarding is deprecated */}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Full Name</label>
-                      <p className="text-gray-900 font-medium text-lg">{profile?.name || 'Not set'}</p>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Full Name</label>
+                      <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.name || 'Not set'}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Email</label>
-                      <p className="text-gray-900 font-medium text-lg">{userEmail || 'Not set'}</p>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Email</label>
+                      <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{userEmail || 'Not set'}</p>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Phone Number</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Phone Number</label>
                       {isEditingPhone ? (
                         <div className="flex items-center gap-2 mt-1">
                           <input 
                             type="text" 
-                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            className="bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-black/30 border border-white/80 dark:border-white/10 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] dark:focus:border-[#C49A5C] text-gray-900 dark:text-white w-full"
                             value={phoneInput}
                             onChange={(e) => setPhoneInput(e.target.value)}
                             placeholder="Enter phone number"
@@ -329,7 +338,7 @@ export default function AccountScreen() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between">
-                          <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.phone || 'Not provided'}</p>
+                          <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.measurements?.phone || 'Not provided'}</p>
                           <button 
                             onClick={() => {
                               setPhoneInput(profile?.measurements?.phone || '');
@@ -343,12 +352,12 @@ export default function AccountScreen() {
                       )}
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Skin Tone</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Skin Tone</label>
                       {isEditingSkinTone ? (
                         <div className="flex items-center gap-2 mt-1">
                           <input 
                             type="text" 
-                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            className="bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-black/30 border border-white/80 dark:border-white/10 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] dark:focus:border-[#C49A5C] text-gray-900 dark:text-white w-full"
                             value={skinToneInput}
                             onChange={(e) => setSkinToneInput(e.target.value)}
                             placeholder="e.g. Medium, Fair, Deep"
@@ -359,7 +368,7 @@ export default function AccountScreen() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between">
-                          <p className="text-gray-900 font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
+                          <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.skin_tone || 'Not set'}</p>
                           <button 
                             onClick={() => {
                               setSkinToneInput(profile?.skin_tone || '');
@@ -373,9 +382,9 @@ export default function AccountScreen() {
                       )}
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Gender</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Gender</label>
                       <div className="flex items-center justify-between">
-                        <p className="text-gray-900 font-medium text-lg capitalize">{profile?.gender || 'Not set'}</p>
+                        <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg capitalize">{profile?.gender || 'Not set'}</p>
                         <button 
                           onClick={() => navigate('/select-gender?redirect=/account')} 
                           className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
@@ -385,9 +394,9 @@ export default function AccountScreen() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Size</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Size</label>
                       <div className="flex items-center justify-between">
-                        <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
+                        <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
                         <button 
                           onClick={() => navigate('/select-size?redirect=/account')} 
                           className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
@@ -397,12 +406,12 @@ export default function AccountScreen() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Height</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Height</label>
                       {isEditingHeight ? (
                         <div className="flex items-center gap-2 mt-1">
                           <input 
                             type="text" 
-                            className="bg-white/60 border border-white/80 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] text-gray-900 w-full"
+                            className="bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-black/30 border border-white/80 dark:border-white/10 rounded-lg px-3 py-1.5 outline-none focus:border-[#986427] dark:focus:border-[#C49A5C] text-gray-900 dark:text-white w-full"
                             value={heightInput}
                             onChange={(e) => setHeightInput(e.target.value)}
                             placeholder="e.g. 5'6 or 168cm"
@@ -413,7 +422,7 @@ export default function AccountScreen() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between">
-                          <p className="text-gray-900 font-medium text-lg">{profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : 'Not set')}</p>
+                          <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : 'Not set')}</p>
                           <button 
                             onClick={() => {
                               setHeightInput(profile?.measurements?.height_string || (profile?.height_cm ? `${profile.height_cm} cm` : ''));
@@ -434,21 +443,21 @@ export default function AccountScreen() {
             {activeTab === 'addresses' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08]">Saved Addresses</h2>
-                  <button onClick={() => setShowAddAddress(!showAddAddress)} className="flex items-center gap-2 text-[#986427] font-bold text-sm bg-[#986427]/10 px-4 py-2 rounded-full hover:bg-[#986427]/20 transition-colors">
+                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08] dark:text-[#F5F0E8]">Saved Addresses</h2>
+                  <button onClick={() => setShowAddAddress(!showAddAddress)} className="flex items-center gap-2 text-[#986427] dark:text-[#C49A5C] font-bold text-sm bg-[#986427]/10 dark:bg-[#C49A5C]/10 px-4 py-2 rounded-full hover:bg-[#986427]/20 dark:hover:bg-[#C49A5C]/20 transition-colors">
                     {showAddAddress ? <><X size={16} /> Cancel</> : <><Plus size={16} /> Add New</>}
                   </button>
                 </div>
                 
                 {showAddAddress && (
-                  <form onSubmit={handleSaveAddress} className="bg-white/50 backdrop-blur-md rounded-2xl p-6 border-2 border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.05)] mb-6 animate-in fade-in zoom-in-95">
-                    <h3 className="font-bold text-lg mb-4 text-[#1A0A08]">Add a new address</h3>
+                  <form onSubmit={handleSaveAddress} className="bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-md rounded-2xl p-6 border-2 border-white/60 shadow-[0_4px_16px_rgba(0,0,0,0.05)] mb-6 animate-in fade-in zoom-in-95">
+                    <h3 className="font-bold text-lg mb-4 text-[#1A0A08] dark:text-[#F5F0E8]">Add a new address</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input required type="text" placeholder="Full Name" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.full_name} onChange={e => setAddressForm({...addressForm, full_name: e.target.value})} />
-                      <input required type="text" placeholder="Phone Number" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} />
-                      <input required type="text" placeholder="Street Address (Flat, House no., Building, Company, Apartment)" className="w-full md:col-span-2 bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.street_address} onChange={e => setAddressForm({...addressForm, street_address: e.target.value})} />
-                      <input required type="text" placeholder="City / Town" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} />
-                      <input required type="text" placeholder="State" className="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} />
+                      <input required type="text" placeholder="Full Name" className="w-full bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.full_name} onChange={e => setAddressForm({...addressForm, full_name: e.target.value})} />
+                      <input required type="text" placeholder="Phone Number" className="w-full bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} />
+                      <input required type="text" placeholder="Street Address (Flat, House no., Building, Company, Apartment)" className="w-full md:col-span-2 bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.street_address} onChange={e => setAddressForm({...addressForm, street_address: e.target.value})} />
+                      <input required type="text" placeholder="City / Town" className="w-full bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} />
+                      <input required type="text" placeholder="State" className="w-full bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 border border-white/80 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} />
                       <input required type="text" placeholder="PIN Code / Zip Code" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#986427] transition-colors" value={addressForm.zip_code} onChange={e => setAddressForm({...addressForm, zip_code: e.target.value})} />
                     </div>
                     <label className="flex items-center gap-2 mt-4 cursor-pointer">
@@ -462,7 +471,7 @@ export default function AccountScreen() {
                 )}
                 
                 {addresses.length === 0 && !showAddAddress && (
-                  <div className="text-center py-12 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
+                  <div className="text-center py-12 bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-sm rounded-2xl border border-white/60">
                     <MapPin size={48} className="mx-auto text-gray-300 mb-4" />
                     <p className="text-gray-500 font-medium">No saved addresses found</p>
                   </div>
@@ -473,18 +482,18 @@ export default function AccountScreen() {
                     <div key={addr.id} className={`p-6 rounded-2xl border-2 transition-all relative ${
                       addr.is_default 
                         ? 'border-[#986427] bg-[#986427]/5 shadow-sm' 
-                        : 'border-white/60 bg-white/50 backdrop-blur-sm hover:border-[#986427]/30'
+                        : 'border-white/60 bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-sm hover:border-[#986427]/30'
                     }`}>
                       <div className="flex justify-between items-start">
                         <div>
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-bold text-lg text-gray-900">{addr.full_name}</h3>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-[#F5F0E8]">{addr.full_name}</h3>
                             {addr.is_default && <span className="bg-[#986427] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Default</span>}
                           </div>
                           <p className="text-gray-600 text-sm leading-relaxed max-w-md">
                             {addr.street_address}, {addr.city}, {addr.state} {addr.zip_code}, {addr.country}
                           </p>
-                          <p className="text-gray-900 font-medium text-sm mt-2 flex items-center gap-1"><Phone size={14} className="text-gray-400" /> {addr.phone}</p>
+                          <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-sm mt-2 flex items-center gap-1"><Phone size={14} className="text-gray-400" /> {addr.phone}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           {!addr.is_default && (
@@ -505,25 +514,25 @@ export default function AccountScreen() {
 
             {activeTab === 'orders' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <h2 className="font-serif text-3xl font-bold text-[#1A0A08] mb-6">Order History</h2>
+                <h2 className="font-serif text-3xl font-bold text-[#1A0A08] dark:text-[#F5F0E8] mb-6">Order History</h2>
                 {orders.length === 0 ? (
-                  <div className="text-center py-12 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
+                  <div className="text-center py-12 bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-sm rounded-2xl border border-white/60">
                     <ShoppingBag size={48} className="mx-auto text-gray-300 mb-4" />
                     <p className="text-gray-500 font-medium">No orders found</p>
                   </div>
                 ) : (
                   <div className="space-y-6">
                     {orders.map(order => (
-                      <div key={order.id} className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                      <div key={order.id} className="bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-sm rounded-2xl p-6 border border-white/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-bold text-lg text-gray-900">Order #{order.id.slice(0, 8)}</h3>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-[#F5F0E8]">Order #{order.id.slice(0, 8)}</h3>
                             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-[#986427]/10 text-[#986427]'}`}>
                               {order.status || 'Pending'}
                             </span>
                           </div>
                           <p className="text-gray-500 text-sm">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
-                          <p className="text-gray-900 font-bold mt-2">₹{(order.total_amount || 0).toLocaleString()}</p>
+                          <p className="text-gray-900 dark:text-[#F5F0E8] font-bold mt-2">₹{(order.total_amount || 0).toLocaleString()}</p>
                         </div>
                         <button className="flex items-center gap-1 text-[#986427] font-bold text-sm hover:underline">
                           View Details <ChevronRight size={16} />
@@ -538,7 +547,7 @@ export default function AccountScreen() {
             {activeTab === 'wishlist' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08]">My Wishlist & Bag</h2>
+                  <h2 className="font-serif text-3xl font-bold text-[#1A0A08] dark:text-[#F5F0E8]">My Wishlist & Bag</h2>
                 </div>
                 <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-2xl">
                   <Heart size={48} className="mx-auto text-[#986427]/40 mb-4" />

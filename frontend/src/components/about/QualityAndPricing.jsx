@@ -66,7 +66,7 @@ export default function QualityAndPricing() {
   ];
 
   return (
-    <section ref={containerRef} className="py-24 md:py-32 bg-[#FDFBF7] text-[#111] overflow-hidden relative">
+    <section ref={containerRef} className="py-24 md:py-32 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 text-[#111] dark:text-[#F5F0E8] overflow-hidden relative">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
         
         {/* Top Section: Intro & Image 20 */}
@@ -74,11 +74,11 @@ export default function QualityAndPricing() {
           
           <div className="order-2 lg:order-1 flex flex-col justify-center">
             <h3 className="text-[11px] md:text-[13px] font-bold uppercase tracking-[0.25em] text-[#A87B45] mb-6">Quality & Value</h3>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Quality without the unnecessary price.
             </h2>
             <div className="space-y-6 text-[15px] md:text-[16px] text-[#555] font-light leading-relaxed">
-              <p className="font-medium text-[#111]">
+              <p className="font-medium text-[#111] dark:text-[#F5F0E8]">
                 Premium clothing should not always mean an unnecessarily high price.
               </p>
               <p>
@@ -123,7 +123,7 @@ export default function QualityAndPricing() {
                   className="flex items-center gap-4 md:gap-6"
                 >
                   <div className="w-8 md:w-12 h-[1px] bg-[#A87B45] shrink-0"></div>
-                  <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#111] leading-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#111] dark:text-[#F5F0E8] leading-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {promise}
                   </span>
                 </li>

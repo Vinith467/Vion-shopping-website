@@ -118,3 +118,6 @@ ALTER TABLE public.products ADD COLUMN IF NOT EXISTS video_url TEXT;
 
 -- Add spotlight_images to products for Explore Page Stacking Animation
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS spotlight_images TEXT[] DEFAULT '{}';
+
+-- Add craftsmanship_features to products for the Art of Craftsmanship section
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS craftsmanship_features JSONB DEFAULT '[]'::jsonb;

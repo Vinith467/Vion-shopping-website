@@ -52,9 +52,9 @@ export default function OurApproach() {
         
         {/* Intro Text */}
         <div className="max-w-4xl mx-auto text-center mb-20 md:mb-32">
-          <h3 className="text-[11px] md:text-[13px] font-bold uppercase tracking-[0.25em] text-[#E5CDA7] mb-6">Fashion Designed Around You</h3>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            We don't believe great fashion should simply be about following trends.
+          <h3 className="text-[11px] md:text-[13px] font-bold uppercase tracking-[0.25em] text-[#E5CDA7] mb-6">Attire Designed Around Your Team</h3>
+          <h2 className="text-3xl md:text-5xl font-bold uppercase mb-8 leading-tight text-white" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            We don't believe corporate attire should simply be about following standard templates.
           </h2>
           <div className="space-y-6 text-[16px] md:text-[18px] text-white/80 font-light leading-relaxed max-w-3xl mx-auto">
             <p>

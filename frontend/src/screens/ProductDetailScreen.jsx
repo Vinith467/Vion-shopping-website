@@ -5,8 +5,147 @@ import { supabase } from "../services/supabaseClient";
 import { useAppContext } from "../context/AppContext";
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const ProductStackingSection = ({ product }) => {
+  const sectionRef = useRef(null);
+  const imagesRef = useRef([]);
+  const navigate = useNavigate();
+  const { addToCart, toggleWishlist, isInWishlist } = useAppContext();
+  
+  const isWishlisted = isInWishlist && isInWishlist(product.id);
+
+  // Use product images
+  const mediaUrls = (product.images || [product.image_url]).filter(Boolean);
+
+  useEffect(() => {
+    if (!mediaUrls || mediaUrls.length < 2) return;
+    
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.5,
+        }
+      });
+
+      imagesRef.current.forEach((img, i) => {
+        if (i === 0) return; 
+        
+        gsap.set(img, { yPercent: 100 });
+        
+        tl.to(img, {
+          yPercent: 0,
+          ease: "none"
+        });
+      });
+      
+      tl.to({}, { duration: 0.25 });
+      
+    }, sectionRef);
+    return () => ctx.revert();
+  }, [product.id, mediaUrls.length]);
+
+  if (!mediaUrls || mediaUrls.length === 0) return null;
+
+  const sectionHeight = mediaUrls.length > 1 ? `${mediaUrls.length * 80}vh` : '100vh';
+
+  return (
+    <section ref={sectionRef} className="relative w-full border-b border-[#E8E1D7] dark:border-white/10 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 " style={{ height: sectionHeight }}>
+      <div className="sticky top-[60px] md:top-[90px] w-full h-[calc(100dvh-60px)] md:h-[calc(100dvh-90px)] overflow-hidden bg-[#FDFBF7] dark:bg-[#0A0A0A] flex flex-col lg:flex-row transition-colors duration-500 ">
+        
+        {/* Images (Top on mobile, Right on desktop) */}
+        <div className="w-full h-[55vh] lg:h-full lg:flex-1 lg:w-7/12 relative z-10 p-4 pt-6 lg:p-6 flex items-center justify-center bg-[#FDFBF7] dark:bg-[#0A0A0A] order-1 lg:order-2 transition-colors duration-500 ">
+          <div 
+            className="relative w-full h-full lg:aspect-[4/5] max-w-[min(100%,70vh)] overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-[#151515]"
+            style={{ 
+              transform: 'translateZ(0)', 
+              backfaceVisibility: 'hidden', 
+              WebkitMaskImage: '-webkit-radial-gradient(white, black)' 
+            }}
+          >
+            {mediaUrls.map((mediaUrl, i) => (
+              <div 
+                key={i}
+                ref={el => { if (el) imagesRef.current[i] = el; }}
+                className="absolute inset-0 w-full h-full will-change-transform origin-bottom bg-white dark:bg-[#151515]"
+                style={{ zIndex: 10 + i }}
+              >
+                <img 
+                  src={mediaUrl} 
+                  alt={`${product.title || product.name} view ${i+1}`} 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Product Info (Bottom on mobile, Left on desktop) */}
+        <div className="w-full lg:w-5/12 flex-1 lg:h-full relative z-20 flex flex-col justify-start lg:justify-center px-6 pt-4 pb-24 lg:py-0 lg:pl-24 lg:pr-12 bg-[#FDFBF7] dark:bg-[#0A0A0A] order-2 lg:order-1 overflow-hidden transition-colors duration-500 ">
+          
+          <div className="flex-none">
+            <h2 className="text-2xl md:text-5xl lg:text-[3.25rem] font-medium mb-2 lg:mb-4 leading-[1.1] text-[#1A0A08] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              {product.title || product.name}
+            </h2>
+            
+            <div className="flex items-center gap-4 mb-3 lg:mb-6">
+              <span className="text-lg md:text-2xl font-sans font-light text-[#1A0A08] dark:text-[#C49A5C]">
+                ${parseFloat(product.price).toFixed(2)}
+              </span>
+              {product.compare_at_price && (
+                <span className="text-sm lg:text-base font-sans text-gray-400 line-through">
+                  ${parseFloat(product.compare_at_price).toFixed(2)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto min-h-[50px] mb-4 pr-2">
+            <p className="text-xs lg:text-base text-gray-600 dark:text-gray-400 font-sans font-light leading-relaxed whitespace-pre-wrap">
+              {product.description ? product.description.replace(/###/g, '\n').replace(/[*]{2}/g, '') : "Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance."}
+            </p>
+          </div>
+          
+          <div className="flex-none flex flex-col gap-3 lg:gap-4">
+            <div className="flex items-center gap-3 lg:gap-4">
+              <button 
+                onClick={() => {
+                  addToCart(product);
+                  navigate('/checkout');
+                }}
+                className="flex-1 bg-[#1A1A1A] dark:bg-[#C49A5C] text-white py-3 lg:py-4 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] dark:hover:bg-[#E5CDA7] dark:hover:text-[#1A0A08] dark:text-[#F5F0E8] transition-all shadow-lg flex items-center justify-center gap-2"
+              >
+                Buy Now
+              </button>
+
+              <button 
+                onClick={() => addToCart(product)}
+                className="flex-1 bg-transparent border border-[#1A1A1A] dark:border-[#C49A5C] text-[#1A1A1A] dark:text-[#C49A5C] py-3 lg:py-4 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] dark:hover:bg-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] transition-all flex items-center justify-center gap-2"
+              >
+                <ShoppingBag size={14} className="lg:w-4 lg:h-4" /> Add
+              </button>
+            </div>
+            
+            <button 
+              onClick={() => toggleWishlist && toggleWishlist(product)}
+              className="w-full bg-transparent border border-[#E8E1D7] dark:border-white/10 text-gray-600 dark:text-gray-400 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-50 dark:hover:bg-white/5 dark:bg-[#151515]/5 transition-colors duration-500 transition-all flex items-center justify-center gap-2"
+            >
+              <Heart size={14} fill={isWishlisted ? "currentColor" : "none"} className={isWishlisted ? "text-red-500" : ""} />
+              {isWishlisted ? "Saved" : "Wishlist"}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
 
 export default function ProductDetailScreen() {
   const { id } = useParams();
@@ -15,6 +154,11 @@ export default function ProductDetailScreen() {
   
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const cleanDescription = (text) => {
+    if (!text) return "Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.";
+    return text.replace(/###|[*]{2,}/g, '').trim();
+  };
   
   const [selectedFitMode, setSelectedFitMode] = useState("size");
   const [showStandardSizeModal, setShowStandardSizeModal] = useState(false);
@@ -59,6 +203,39 @@ export default function ProductDetailScreen() {
     }
     loadProduct();
   }, [id]);
+
+  // Initialize Lenis Smooth Scroll
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      lenis.destroy();
+      gsap.ticker.remove(lenis.raf);
+    };
+  }, []);
 
   useEffect(() => {
     if (product?.variations && product.variations.length > 0 && primaryMember) {
@@ -129,46 +306,66 @@ export default function ProductDetailScreen() {
     if (isLoading || !product) return;
     
     let ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroWrapperRef.current,
-          start: "top top",
-          end: "+=150%", // Pin for 1.5x screen height
-          pin: true,
-          scrub: 1, 
-        }
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px)", () => {
+        // Desktop Animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroWrapperRef.current,
+            start: "top top",
+            end: "+=150%",
+            pin: true,
+            scrub: 1, 
+          }
+        });
+
+        gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
+        gsap.set(heroContentRef.current, { opacity: 0, x: -50, y: 0 });
+
+        tl.to(heroMediaContainerRef.current, {
+          width: "45vw",
+          height: "25.3vw",
+          borderRadius: "16px",
+          x: "50vw",
+          y: 0,
+          ease: "power2.inOut",
+          duration: 1
+        }, 0)
+        .to(heroMediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
+        .to(heroOverlayRef.current, { opacity: 0, y: -100, duration: 0.5, ease: "power2.in" }, 0)
+        .to(heroContentRef.current, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 0.4);
       });
 
-      // 1. Initial State
-      gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0 });
-      gsap.set(heroContentRef.current, { opacity: 0, x: -50 });
+      mm.add("(max-width: 767px)", () => {
+        // Mobile Animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroWrapperRef.current,
+            start: "top top",
+            end: "+=150%",
+            pin: true,
+            scrub: 1, 
+          }
+        });
 
-      // 2. Animation sequence
-      tl.to(heroMediaContainerRef.current, {
-        width: "45vw",
-        height: "25.3vw", // approx 16:9 ratio for 45vw width
-        borderRadius: "16px",
-        x: "50vw", // Move to right half of screen
-        ease: "power2.inOut",
-        duration: 1
-      }, 0)
-      .to(heroMediaElementRef.current, {
-        scale: 1.05,
-        duration: 1,
-        ease: "power2.inOut"
-      }, 0)
-      .to(heroOverlayRef.current, {
-        opacity: 0,
-        y: -100,
-        duration: 0.5,
-        ease: "power2.in"
-      }, 0)
-      .to(heroContentRef.current, {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: "power2.out"
-      }, 0.4);
+        gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
+        gsap.set(heroContentRef.current, { opacity: 0, x: 0, y: 50 });
+
+        tl.to(heroMediaContainerRef.current, {
+          width: "100vw", // Full width
+          height: "45vh",
+          borderRadius: "0px",
+          x: 0,
+          y: "-27.5vh", // Slide up securely into the top half
+          ease: "power2.inOut",
+          duration: 1
+        }, 0)
+        .to(heroMediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
+        .to(heroOverlayRef.current, { opacity: 0, y: -50, duration: 0.5, ease: "power2.in" }, 0)
+        .to(heroContentRef.current, { opacity: 1, y: "22vh", duration: 0.8, ease: "power2.out" }, 0.4); // Slide down into bottom half
+      });
+
     });
 
     return () => ctx.revert();
@@ -187,10 +384,10 @@ export default function ProductDetailScreen() {
   const isVideo = heroMedia && (heroMedia.includes('.mp4') || heroMedia.includes('video'));
 
   return (
-    <div className="bg-[#FDFBF7] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0">
+    <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 ">
       
       {/* Cinematic Hero Header with Scroll Animation */}
-      <div ref={heroWrapperRef} className="relative w-full h-screen bg-[#FDFBF7] overflow-hidden flex items-center">
+      <div ref={heroWrapperRef} className="relative w-full h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] overflow-hidden flex items-center transition-colors duration-500 ">
         
         {/* Floating Action Buttons (Fixed on top of hero during pin) */}
         <div className="absolute top-0 left-0 right-0 z-50 p-6 md:p-10 flex justify-between items-start pointer-events-none">
@@ -215,8 +412,8 @@ export default function ProductDetailScreen() {
           ) : (
              <img ref={heroMediaElementRef} src={heroMedia} alt={product.name} className="w-full h-full object-cover" />
           )}
-          {/* Dark gradient to make initial text readable */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          {/* Subtle gradient at the bottom to make initial text readable without graying out the whole video */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
         </div>
 
         {/* Fullscreen Overlay Text (Fades out on scroll) */}
@@ -230,7 +427,7 @@ export default function ProductDetailScreen() {
           <h1 className="text-4xl md:text-7xl mb-6 drop-shadow-2xl max-w-4xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
             {product.name}
           </h1>
-          <div className="w-16 h-[2px] bg-white/30 mx-auto mb-10"></div>
+          <div className="w-16 h-[2px] bg-white/30 dark:bg-[#151515]/30 transition-colors duration-500 mx-auto mb-10"></div>
           <div className="animate-bounce flex flex-col items-center">
              <span className="text-xs uppercase tracking-widest text-white/70 mb-2">Scroll to explore</span>
              <div className="w-[1px] h-10 bg-[#A87B45]"></div>
@@ -243,10 +440,10 @@ export default function ProductDetailScreen() {
             <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
               The Design Story
             </span>
-            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {product.name}
             </h2>
-            <div className="space-y-4 text-sm lg:text-base text-gray-600 font-sans font-light leading-relaxed">
+            <div className="space-y-4 text-sm lg:text-base text-gray-600 dark:text-gray-400 font-sans font-light leading-relaxed">
               <p>
                 [Placeholder Text: This section will contain the narrative description of the garment, detailing its inspiration, the cut, and the craftsmanship that brings it to life. The user will provide the exact copy later.]
               </p>
@@ -258,7 +455,6 @@ export default function ProductDetailScreen() {
         </div>
 
       </div>
-
 
     </div>
   );

@@ -65,35 +65,41 @@ export default function AdminLayout() {
           </button>
         </div>
         
-        <nav className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto">
-          <NavLink onClick={closeMenu} to="/admin" end className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <LayoutDashboard size={20} />
+        <nav className="flex-1 p-4 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 mt-2 px-4">Overview</div>
+          <NavLink onClick={closeMenu} to="/admin" end className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <LayoutDashboard size={18} />
             Dashboard
           </NavLink>
-          <NavLink onClick={closeMenu} to="/admin/inventory" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <Box size={20} />
+
+          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 mt-4 px-4">Catalog</div>
+          <NavLink onClick={closeMenu} to="/admin/inventory" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Box size={18} />
             Inventory
           </NavLink>
-          <NavLink onClick={closeMenu} to="/admin/categories" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <Grid size={20} className={location.pathname === '/admin/categories' ? "text-[#6344D4]" : "text-gray-500"} />
+          <NavLink onClick={closeMenu} to="/admin/categories" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Grid size={18} className={location.pathname === '/admin/categories' ? "text-[#6344D4]" : "text-gray-500"} />
             Categories
           </NavLink>
-          <NavLink onClick={closeMenu} to="/admin/preferences" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <Tags size={20} />
-            Page Content
-          </NavLink>
 
-          <NavLink onClick={closeMenu} to="/admin/users" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <Users size={20} />
-            Users
-          </NavLink>
-          <NavLink onClick={closeMenu} to="/admin/orders" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <ShoppingCart size={20} />
+          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 mt-4 px-4">Management</div>
+          <NavLink onClick={closeMenu} to="/admin/orders" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <ShoppingCart size={18} />
             Orders
           </NavLink>
-          <NavLink onClick={closeMenu} to="/admin/bookings" className={({isActive}) => `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <Calendar size={20} />
+          <NavLink onClick={closeMenu} to="/admin/bookings" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Calendar size={18} />
             Bookings
+          </NavLink>
+          <NavLink onClick={closeMenu} to="/admin/users" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Users size={18} />
+            Users
+          </NavLink>
+
+          <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 mt-4 px-4">Storefront</div>
+          <NavLink onClick={closeMenu} to="/admin/preferences" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
+            <Tags size={18} />
+            Page Content
           </NavLink>
           
           <div className="mt-auto pt-4 border-t border-white/30">

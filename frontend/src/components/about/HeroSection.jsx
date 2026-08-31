@@ -75,7 +75,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full bg-[#FDFBF7] text-[#1A1A1A] overflow-hidden">
+    <section ref={containerRef} className="relative w-full bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 text-[#1A1A1A] dark:text-[#F5F0E8] overflow-hidden">
       
       {/* 1. Immersive Hero Screen */}
       <div className="relative h-screen w-full overflow-hidden">
@@ -95,7 +95,7 @@ export default function HeroSection() {
           ref={introTextRef}
           className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4"
         >
-          <h3 className="text-[#E5CDA7] text-[11px] md:text-sm tracking-[0.3em] uppercase font-bold mb-6">About VION Fashion</h3>
+          <h3 className="text-[#E5CDA7] text-[11px] md:text-sm tracking-[0.3em] uppercase font-bold mb-6">About VION Corporate</h3>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold uppercase text-white leading-tight max-w-4xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Three Generations.<br/>One Craft.<br/>A New Vision.
           </h1>
@@ -114,8 +114,8 @@ export default function HeroSection() {
           ref={el => textBlocksRef.current[0] = el}
           className="max-w-3xl mx-auto text-center mb-24 md:mb-32"
         >
-          <p className="text-xl md:text-3xl leading-relaxed text-[#333]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            VION Fashion is built on three generations of experience in the clothing and tailoring business. What began as a family-led craft has grown through decades of understanding fabrics, fit, tailoring and craftsmanship — developing an appreciation for what makes clothing not only look exceptional, but feel exceptional.
+          <p className="text-xl md:text-3xl leading-relaxed text-[#333] dark:text-gray-300" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            VION Corporate is built on three generations of experience in the clothing and tailoring business. What began as a family-led craft has grown through decades of understanding fabrics, fit, tailoring and craftsmanship — developing an appreciation for what makes clothing not only look exceptional, but feel exceptional.
           </p>
         </div>
 
@@ -127,7 +127,7 @@ export default function HeroSection() {
             className="order-2 lg:order-1"
           >
             <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-6">A New Approach</h3>
-            <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Combining tradition with technology.
             </h2>
             <div className="space-y-6 text-[15px] leading-relaxed text-[#555] font-light">
@@ -138,7 +138,7 @@ export default function HeroSection() {
                 We are combining generations of craftsmanship with modern technology, contemporary design and a more convenient shopping experience to create clothing made for the way people live, work and express themselves today.
               </p>
               <p>
-                VION Fashion brings the world of premium tailoring and thoughtful design directly to you — allowing you to discover, choose and shop clothing designed around you.
+                VION Corporate brings the world of premium tailoring and thoughtful design directly to organizations — allowing you to source, customize, and deliver premium uniforms and professional attire for your teams.
               </p>
             </div>
           </div>
@@ -160,8 +160,8 @@ export default function HeroSection() {
             ref={el => textBlocksRef.current[2] = el}
           >
             <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-6">Our Ambition</h3>
-            <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-[#111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              A modern Indian fashion brand with a global perspective.
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              A modern Indian corporate clothing partner with a global perspective.
             </h2>
             <div className="space-y-6 text-[15px] leading-relaxed text-[#555] font-light">
               <p>
@@ -175,15 +175,15 @@ export default function HeroSection() {
                 <ul className="space-y-4">
                   <li className="flex items-center gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#A87B45]"></div>
-                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111]">Generations of craftsmanship.</span>
+                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111] dark:text-[#F5F0E8]">Generations of craftsmanship.</span>
                   </li>
                   <li className="flex items-center gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#A87B45]"></div>
-                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111]">Technology for tomorrow.</span>
+                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111] dark:text-[#F5F0E8]">Technology for tomorrow.</span>
                   </li>
                   <li className="flex items-center gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#A87B45]"></div>
-                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111]">Fashion made for you.</span>
+                    <span className="text-[13px] tracking-widest uppercase font-semibold text-[#111] dark:text-[#F5F0E8]">Attire made for your team.</span>
                   </li>
                 </ul>
               </div>

@@ -46,7 +46,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div 
-        className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden"
+        className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
@@ -54,7 +54,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
             <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-[#3A10E5]">
               <User size={20} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 font-serif">Edit Profile</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-[#F5F0E8] font-serif">Edit Profile</h2>
           </div>
           <button 
             onClick={onClose}
@@ -75,7 +75,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 />
               </div>
               <div>
@@ -86,7 +86,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 />
               </div>
             </div>
@@ -99,7 +99,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
               />
             </div>
 
@@ -111,7 +111,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
               />
             </div>
 
@@ -124,7 +124,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                   name="dob"
                   value={formData.dob}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 />
               </div>
               <div>
@@ -133,7 +133,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#3A10E5] focus:bg-white dark:bg-[#151515] transition-colors duration-500 transition-colors"
                 >
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>

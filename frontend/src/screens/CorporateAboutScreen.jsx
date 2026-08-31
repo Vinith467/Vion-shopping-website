@@ -55,36 +55,19 @@ export default function CorporateAboutScreen() {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full min-h-screen bg-[#111111] text-[#F5F0E8] overflow-x-clip font-sans selection:bg-[#722F37] selection:text-white">
+    <div ref={containerRef} className="w-full min-h-screen bg-[#111111] text-[#F5F0E8] overflow-x-clip font-sans selection:bg-[#722F37] selection:text-white relative">
       
-      {/* 
-        The Navigation Header 
-        (Hardcoded for now based on the mockup)
-      */}
-      <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex items-center justify-between text-[#F5F0E8]">
-        <div className="flex flex-col cursor-pointer group">
-          <span className="text-2xl md:text-3xl font-serif font-bold tracking-widest leading-none">
-            VION
-          </span>
-          <span className="text-[9px] md:text-[10px] font-sans font-bold tracking-[0.3em] uppercase mt-1 opacity-80">
-            Corporate
-          </span>
-        </div>
+      {/* Floating Back Button */}
+      <button 
+        onClick={() => navigate(-1)}
+        className="fixed top-8 left-6 md:left-12 z-50 flex items-center gap-2 text-[#F5F0E8]/70 hover:text-[#C49A5C] transition-colors bg-[#111111]/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 shadow-lg group"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
+          <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+        </svg>
+        <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Back</span>
+      </button>
 
-        <div className="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
-          <Link to="/" className="text-[#F5F0E8] opacity-70 hover:opacity-100 transition-opacity">Home</Link>
-          <a href="#" className="text-[#C49A5C]">About Us</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">Solutions</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">Our Process</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">Our Work</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">Resources</a>
-          <a href="#" className="hover:text-[#C49A5C] transition-colors">Contact Us</a>
-        </div>
-
-        <button className="hidden md:block bg-[#C49A5C] hover:bg-[#a8824b] text-white text-sm font-bold px-6 py-2.5 rounded-sm transition-colors">
-          Book Consultation &rarr;
-        </button>
-      </nav>
 
       {/* Assembly of the Corporate About Story */}
       <CorporateAboutHero />

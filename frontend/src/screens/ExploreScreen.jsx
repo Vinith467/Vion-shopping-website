@@ -92,7 +92,7 @@ export default function ExploreScreen() {
   }, [categoryParam, sizeParam, classParam, activeProfileHeight]);
 
   return (
-    <div className="bg-white min-h-screen w-full pb-20 relative">
+    <div className="bg-white dark:bg-[#0A0A0A] min-h-screen w-full pb-20 relative transition-colors duration-500 ">
       {/* Floating Action Header */}
       <div className="fixed top-20 md:top-24 left-0 w-full z-40 pointer-events-none p-4 md:p-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto pointer-events-auto">
@@ -105,13 +105,13 @@ export default function ExploreScreen() {
       <div className="w-full">
         {userGender === 'Male' ? (
           <div className="max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center justify-center py-32 text-center">
-            <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl text-[#A87B45]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>V</span>
+            <div className="w-24 h-24 bg-gray-50 dark:bg-black/30 rounded-full flex items-center justify-center mb-6">
+              <span className="text-4xl text-[#A87B45] dark:text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>V</span>
             </div>
-            <h2 className="text-3xl md:text-4xl text-[#1A0A08] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+            <h2 className="text-3xl md:text-4xl text-[#1A0A08] dark:text-[#F5F0E8] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
               Men's Collection
             </h2>
-            <p className="text-[15px] text-[#555] max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+            <p className="text-[15px] text-[#555] dark:text-gray-400 max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
               Our exclusive men's collection is currently being crafted by our master artisans. <br/><br/>Coming soon.
             </p>
           </div>
@@ -146,20 +146,20 @@ export default function ExploreScreen() {
           <div className="max-w-7xl mx-auto px-6 pt-6 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-pulse">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
               <div key={i} className="flex flex-col gap-3">
-                <div className="aspect-[3/4] bg-gray-200 rounded-2xl"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                <div className="aspect-[3/4] bg-gray-200 dark:bg-[#151515] rounded-2xl"></div>
+                <div className="h-4 bg-gray-200 dark:bg-[#151515] rounded w-2/3"></div>
+                <div className="h-4 bg-gray-200 dark:bg-[#151515] rounded w-1/3"></div>
               </div>
             ))}
           </div>
         ) : products.length === 0 ? (
           <div className="max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-              <Search size={32} className="text-gray-400" />
+            <div className="w-20 h-20 bg-gray-50 dark:bg-black/30 rounded-full flex items-center justify-center mb-4">
+              <Search size={32} className="text-gray-400 dark:text-gray-600" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">No products found</h3>
-            <p className="text-sm text-gray-500 max-w-xs">We couldn't find any items in this collection matching your criteria.</p>
-            <button onClick={() => navigate('/home')} className="mt-6 px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-black transition-colors">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">No products found</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">We couldn't find any items in this collection matching your criteria.</p>
+            <button onClick={() => navigate('/home')} className="mt-6 px-6 py-2.5 bg-gray-900 dark:bg-white dark:bg-[#151515] transition-colors duration-500 text-white dark:text-black text-sm font-bold rounded-xl shadow-lg hover:bg-black transition-colors">
               Back to Home
             </button>
           </div>

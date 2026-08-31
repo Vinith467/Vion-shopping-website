@@ -73,12 +73,12 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
       ></div>
 
       {/* Modal Content */}
-      <div className="relative z-10 w-full max-w-5xl h-[90vh] bg-white/70 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_2px_rgba(255,255,255,0.8)] border border-white/60 flex overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative z-10 w-full max-w-5xl h-[90vh] bg-white/70 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_2px_rgba(255,255,255,0.8)] border border-white/60 flex overflow-hidden animate-in fade-in zoom-in duration-300">
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 p-2 bg-white/50 backdrop-blur-md rounded-full text-gray-600 hover:bg-white hover:text-black shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/60 transition-all"
+          className="absolute top-4 right-4 z-50 p-2 bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 backdrop-blur-md rounded-full text-gray-600 hover:bg-white dark:bg-[#151515] transition-colors duration-500 hover:text-black shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-white/60 transition-all"
         >
           <X size={20} />
         </button>
@@ -99,7 +99,7 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           <div className="w-full md:w-[50%] h-auto md:h-full bg-gradient-to-br from-white/60 to-white/20 relative flex flex-col px-8 py-10 md:px-12 justify-center shrink-0">
             
             <div className="mb-8 shrink-0">
-              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2 relative inline-block drop-shadow-sm">
+              <h2 className="text-3xl font-serif font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 relative inline-block drop-shadow-sm">
                 Sign Up
                 <Sparkles className="absolute -top-3 -right-6 text-[#C49A5C] w-5 h-5 drop-shadow-md" />
               </h2>
@@ -109,29 +109,29 @@ const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           <form className="space-y-6 flex-1 flex flex-col justify-center" onSubmit={(e) => e.preventDefault()}>
             
             <div className="space-y-4">
-              <div className="relative bg-white/40 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 focus-within:bg-white/60 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
+              <div className="relative bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 focus-within:bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
                   <Mail size={18} />
                 </div>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address or Phone Number" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-4 focus:outline-none placeholder-gray-500 font-medium text-gray-800" />
+                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address or Phone Number" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-4 focus:outline-none placeholder-gray-500 font-medium text-gray-800 dark:text-[#F5F0E8]" />
               </div>
               
-              <div className="relative bg-white/40 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 focus-within:bg-white/60 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
+              <div className="relative bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 focus-within:bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
                   <Lock size={18} />
                 </div>
-                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-12 focus:outline-none placeholder-gray-500 font-medium text-gray-800" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 transition-colors">
+                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-12 focus:outline-none placeholder-gray-500 font-medium text-gray-800 dark:text-[#F5F0E8]" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 dark:text-[#F5F0E8] transition-colors">
                   {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               
-              <div className="relative bg-white/40 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 focus-within:bg-white/60 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
+              <div className="relative bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 backdrop-blur-md rounded-xl border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 focus-within:bg-white/60 dark:bg-[#151515]/60 transition-colors duration-500 focus-within:shadow-[0_4px_15px_rgba(184,135,70,0.15)]">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
                   <Lock size={18} />
                 </div>
-                <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-12 focus:outline-none placeholder-gray-500 font-medium text-gray-800" />
-                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 transition-colors">
+                <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" className="w-full border-none bg-transparent text-sm py-4 pl-12 pr-12 focus:outline-none placeholder-gray-500 font-medium text-gray-800 dark:text-[#F5F0E8]" />
+                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-800 dark:text-[#F5F0E8] transition-colors">
                   {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>

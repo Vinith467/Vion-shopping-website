@@ -77,7 +77,7 @@ const LocateControl = () => {
     <div className="absolute bottom-6 right-4 z-[400]">
       <button 
         onClick={(e) => { e.preventDefault(); locateMe(); }}
-        className="bg-white p-3 rounded-full shadow-[0_4px_12px_rgba(139,90,43,0.3)] border border-[#A87B45]/30 hover:bg-[#F5F0E8] transition-colors text-[#8B5A2B] group flex items-center justify-center cursor-pointer"
+        className="bg-white dark:bg-[#151515] transition-colors duration-500 p-3 rounded-full shadow-[0_4px_12px_rgba(139,90,43,0.3)] border border-[#A87B45]/30 hover:bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 transition-colors text-[#8B5A2B] group flex items-center justify-center cursor-pointer"
         title="Locate Me"
       >
         <MapPin size={22} className="group-hover:scale-110 transition-transform" />
@@ -132,15 +132,15 @@ const MapSearchBox = () => {
 
   return (
     <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] w-[90%] max-w-sm">
-      <form onSubmit={handleSearch} className="flex items-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg border border-[#A87B45]/30 overflow-hidden">
+      <form onSubmit={handleSearch} className="flex items-center bg-white/9 dark:bg-[#151515]/9 transition-colors duration-500 5 dark:bg-[#151515]/95 transition-colors duration-500 backdrop-blur-sm rounded-full shadow-lg border border-[#A87B45]/30 overflow-hidden">
         <input 
           type="text" 
           placeholder="Search street, area..." 
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className="w-full py-3 px-5 outline-none text-sm text-[#1A0F0A] bg-transparent font-serif"
+          className="w-full py-3 px-5 outline-none text-sm text-[#1A0F0A] dark:text-[#F5F0E8] bg-transparent font-serif"
         />
-        <button type="submit" className="p-3 text-[#8B5A2B] hover:bg-[#F5F0E8] transition-colors h-full flex items-center justify-center pr-4">
+        <button type="submit" className="p-3 text-[#8B5A2B] hover:bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 transition-colors h-full flex items-center justify-center pr-4">
           {searching ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />}
         </button>
       </form>
@@ -253,13 +253,13 @@ export default function BookConsultantModal({ isOpen, onClose }) {
       >
         
         {/* Header */}
-        <div className="sticky top-0 z-20 px-8 py-6 border-b border-[#A87B45]/20 flex items-center justify-between bg-white/60 backdrop-blur-md rounded-t-xl">
+        <div className="sticky top-0 z-20 px-8 py-6 border-b border-[#A87B45]/20 flex items-center justify-between bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-[#151515]/60 transition-colors duration-500 backdrop-blur-md rounded-t-xl">
           <div className="flex items-center gap-3">
             <div className="h-[1px] w-6 bg-[#A87B45]"></div>
-            <h2 className="text-xl md:text-2xl font-serif text-[#1A0F0A] font-bold tracking-wide">Book a Consultation</h2>
+            <h2 className="text-xl md:text-2xl font-serif text-[#1A0F0A] dark:text-[#F5F0E8] font-bold tracking-wide">Book a Consultation</h2>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-[#A87B45]/10 rounded-full transition-colors group">
-            <X size={20} className="text-[#8B5A2B] group-hover:text-[#1A0F0A] transition-colors" />
+            <X size={20} className="text-[#8B5A2B] group-hover:text-[#1A0F0A] dark:text-[#F5F0E8] transition-colors" />
           </button>
         </div>
 
@@ -273,9 +273,9 @@ export default function BookConsultantModal({ isOpen, onClose }) {
               >
                 <Check size={40} className="text-white" />
               </div>
-              <h3 className="text-3xl font-serif font-bold mb-3 text-[#1A0F0A]">Booking Confirmed</h3>
+              <h3 className="text-3xl font-serif font-bold mb-3 text-[#1A0F0A] dark:text-[#F5F0E8]">Booking Confirmed</h3>
               <div className="w-12 h-[1px] bg-[#A87B45] mb-6"></div>
-              <p className="text-[#4A3320] mb-10 max-w-md text-[15px] leading-relaxed">
+              <p className="text-[#4A3320] dark:text-gray-400 mb-10 max-w-md text-[15px] leading-relaxed">
                 Thank you, <span className="font-serif font-bold text-lg">{formData.name}</span>. Your personal stylist appointment is secured for <span className="font-bold">{formData.date}</span> at <span className="font-bold">{formData.time}</span>. A confirmation has been sent to your email.
               </p>
               <button 
@@ -293,23 +293,23 @@ export default function BookConsultantModal({ isOpen, onClose }) {
               <div className="transition-all duration-500">
                 <div className="flex items-center gap-4 border-b border-[#A87B45]/20 pb-4 mb-6">
                   <div className="w-7 h-7 rounded-full text-white flex items-center justify-center text-xs font-bold shadow-sm" style={{ background: 'linear-gradient(135deg, #C49A5C 0%, #8B5A2B 100%)' }}>1</div>
-                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] uppercase">Appointment Details</h3>
+                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] dark:text-[#F5F0E8] uppercase">Appointment Details</h3>
                 </div>
                 
-                <p className="text-[15px] text-[#4A3320] mb-2 font-serif">Curate your exclusive experience</p>
+                <p className="text-[15px] text-[#4A3320] dark:text-gray-400 mb-2 font-serif">Curate your exclusive experience</p>
                 <p className="text-[11px] text-[#8B5A2B]/80 mb-8 uppercase tracking-wider font-bold">Fields marked with an asterisk (*) are required</p>
 
                 <div className="space-y-7">
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-2">Service Region*</label>
-                    <div className="w-full border border-[#A87B45]/30 p-3.5 bg-[#A87B45]/5 rounded-md shadow-sm text-[#1A0F0A] flex items-center justify-between cursor-not-allowed">
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-2">Service Region*</label>
+                    <div className="w-full border border-[#A87B45]/30 p-3.5 bg-[#A87B45]/5 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] flex items-center justify-between cursor-not-allowed">
                       <span className="font-bold">Bengaluru, India</span>
                       <span className="text-[9px] uppercase tracking-widest text-[#8B5A2B] font-bold">Exclusive</span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-3">Collection Interest*</label>
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-3">Collection Interest*</label>
                     <div className="flex flex-wrap gap-6">
                       {['WOMEN', 'MEN', 'WOMEN AND MEN'].map((col) => (
                         <label key={col} className="flex items-center gap-3 cursor-pointer group relative">
@@ -322,24 +322,24 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                             className="absolute opacity-0 w-0 h-0"
                           />
                           <div 
-                            className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-all duration-300 ${formData.collection === col ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 group-hover:border-[#8B5A2B]'}`}
+                            className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-all duration-300 ${formData.collection === col ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}
                           >
                             {formData.collection === col && <Check size={14} className="text-white" />}
                           </div>
-                          <span className={`text-xs font-bold tracking-[0.15em] uppercase transition-colors ${formData.collection === col ? 'text-[#1A0F0A]' : 'text-[#4A3320] group-hover:text-[#1A0F0A]'}`}>{col}</span>
+                          <span className={`text-xs font-bold tracking-[0.15em] uppercase transition-colors ${formData.collection === col ? 'text-[#1A0F0A] dark:text-[#F5F0E8]' : 'text-[#4A3320] dark:text-gray-400 group-hover:text-[#1A0F0A] dark:text-[#F5F0E8]'}`}>{col}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-2">Preferred Date*</label>
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-2">Preferred Date*</label>
                     <input 
                       type="date" 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
                     />
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
               {/* SECTION 2: TIME SLOTS (Revealed automatically) */}
               <div className={`transition-all duration-700 ease-in-out ${hasDate ? 'opacity-100 max-h-screen translate-y-0' : 'opacity-0 max-h-0 -translate-y-4 overflow-hidden pointer-events-none'}`}>
                 <div className="mb-4">
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-[#1A0F0A] mb-4">Available Time Slots*</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-[#1A0F0A] dark:text-[#F5F0E8] mb-4">Available Time Slots*</h4>
                   <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2.5">
                     {TIME_SLOTS.map((t) => (
                       <button
@@ -360,7 +360,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         className={`py-2.5 text-xs font-bold transition-all duration-300 rounded-md border shadow-sm ${
                           formData.time === t 
                             ? 'border-[#8B5A2B] bg-[#8B5A2B] text-white shadow-[0_2px_8px_rgba(139,90,43,0.3)]' 
-                            : 'border-[#A87B45]/30 text-[#4A3320] bg-white/70 hover:border-[#8B5A2B] hover:text-[#8B5A2B] hover:bg-white'
+                            : 'border-[#A87B45]/30 text-[#4A3320] dark:text-gray-400 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 hover:border-[#8B5A2B] hover:text-[#8B5A2B] hover:bg-white dark:bg-[#151515] transition-colors duration-500 '
                         }`}
                       >
                         {t}
@@ -374,7 +374,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
               <div className={`transition-all duration-700 ease-in-out ${hasTime ? 'opacity-100 max-h-[1000px] translate-y-0 mt-4' : 'opacity-0 max-h-0 -translate-y-4 overflow-hidden pointer-events-none'}`}>
                 <div className="flex items-center gap-4 border-b border-[#A87B45]/20 pb-4 mb-6">
                   <div className="w-7 h-7 rounded-full text-white flex items-center justify-center text-xs font-bold shadow-sm" style={{ background: 'linear-gradient(135deg, #C49A5C 0%, #8B5A2B 100%)' }}>2</div>
-                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] uppercase">Location</h3>
+                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] dark:text-[#F5F0E8] uppercase">Location</h3>
                 </div>
 
                 <div className="bg-[#4A1A18] text-[#F5F0E8] p-5 rounded-lg mb-8 text-sm flex items-start gap-4 shadow-inner border border-[#2A0C0A]">
@@ -392,10 +392,10 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         onChange={() => setFormData({...formData, locationType: 'map'})} 
                         className="absolute opacity-0 w-0 h-0"
                       />
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'map' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 group-hover:border-[#8B5A2B]'}`}>
-                         {formData.locationType === 'map' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'map' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}>
+                         {formData.locationType === 'map' && <div className="w-2 h-2 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full"></div>}
                       </div>
-                      <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'map' ? 'text-[#1A0F0A]' : 'text-[#4A3320] group-hover:text-[#1A0F0A]'}`}>Pick on Map</span>
+                      <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'map' ? 'text-[#1A0F0A] dark:text-[#F5F0E8]' : 'text-[#4A3320] dark:text-gray-400 group-hover:text-[#1A0F0A] dark:text-[#F5F0E8]'}`}>Pick on Map</span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer group relative">
                       <input 
@@ -405,16 +405,16 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         onChange={() => setFormData({...formData, locationType: 'manual'})} 
                         className="absolute opacity-0 w-0 h-0"
                       />
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'manual' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 group-hover:border-[#8B5A2B]'}`}>
-                         {formData.locationType === 'manual' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'manual' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}>
+                         {formData.locationType === 'manual' && <div className="w-2 h-2 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full"></div>}
                       </div>
-                      <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'manual' ? 'text-[#1A0F0A]' : 'text-[#4A3320] group-hover:text-[#1A0F0A]'}`}>Enter Manually</span>
+                      <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'manual' ? 'text-[#1A0F0A] dark:text-[#F5F0E8]' : 'text-[#4A3320] dark:text-gray-400 group-hover:text-[#1A0F0A] dark:text-[#F5F0E8]'}`}>Enter Manually</span>
                     </label>
                   </div>
 
                   {formData.locationType === 'map' ? (
                     !mapConfirmed ? (
-                      <div className="w-full border border-[#A87B45]/40 rounded-lg overflow-hidden relative z-0 shadow-sm bg-[#F5F0E8] flex flex-col">
+                      <div className="w-full border border-[#A87B45]/40 rounded-lg overflow-hidden relative z-0 shadow-sm bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 flex flex-col">
                         <div className="h-[320px] relative w-full">
                           <MapContainer 
                             center={formData.locationCoords || BANGALORE_CENTER} 
@@ -442,21 +442,21 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                               Move map to adjust
                             </div>
                             <div className="relative flex justify-center">
-                              <MapPin size={40} className="text-[#1A0F0A] fill-[#8B5A2B]" />
+                              <MapPin size={40} className="text-[#1A0F0A] dark:text-[#F5F0E8] fill-[#8B5A2B]" />
                               <div className="absolute bottom-1 w-2 h-2 bg-black/30 rounded-full blur-[2px] -z-10"></div>
                             </div>
                           </div>
                         </div>
 
                         {/* Address Banner */}
-                        <div className="bg-white p-4 border-t border-[#A87B45]/20 flex items-start gap-3 relative z-[500]">
+                        <div className="bg-white dark:bg-[#151515] transition-colors duration-500 p-4 border-t border-[#A87B45]/20 flex items-start gap-3 relative z-[500]">
                           <MapPin className="text-[#8B5A2B] shrink-0 mt-0.5" size={18} />
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-[10px] font-bold text-[#1A0F0A] uppercase tracking-widest mb-1">Location at Pin</h4>
+                            <h4 className="text-[10px] font-bold text-[#1A0F0A] dark:text-[#F5F0E8] uppercase tracking-widest mb-1">Location at Pin</h4>
                             {fetchingAddress ? (
                               <div className="h-4 bg-gray-200 rounded animate-pulse w-full mt-1"></div>
                             ) : (
-                              <p className="text-xs text-[#4A3320] truncate">{mapFetchedAddress || "Fetching location..."}</p>
+                              <p className="text-xs text-[#4A3320] dark:text-gray-400 truncate">{mapFetchedAddress || "Fetching location..."}</p>
                             )}
                           </div>
                         </div>
@@ -466,43 +466,43 @@ export default function BookConsultantModal({ isOpen, onClose }) {
 
                   {/* Swiggy/Zepto style Address Form */}
                   {(formData.locationType === 'manual' || mapConfirmed) && (
-                    <div className="bg-white border border-[#A87B45]/30 p-5 rounded-lg shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-500 mt-4">
+                    <div className="bg-white dark:bg-[#151515] transition-colors duration-500 border border-[#A87B45]/30 p-5 rounded-lg shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-500 mt-4">
                       {formData.locationType === 'map' && (
                         <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-xs font-bold text-[#1A0F0A] uppercase tracking-wider">Complete Your Address</h4>
+                          <h4 className="text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] uppercase tracking-wider">Complete Your Address</h4>
                           <button onClick={() => setMapConfirmed(false)} className="text-[10px] text-[#8B5A2B] font-bold uppercase hover:underline">Change Map Pin</button>
                         </div>
                       )}
 
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-[#1A0F0A] tracking-wider uppercase mb-1.5">House / Flat / Block No.*</label>
+                          <label className="block text-[10px] font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-1.5">House / Flat / Block No.*</label>
                           <input 
                             type="text" 
                             value={formData.houseNo}
                             onChange={(e) => setFormData({...formData, houseNo: e.target.value})}
-                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] text-sm transition-all"
+                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] text-sm transition-all"
                             placeholder="e.g. Flat 4B, Iconest3"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-[#1A0F0A] tracking-wider uppercase mb-1.5">Apartment / Road / Area*</label>
+                          <label className="block text-[10px] font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-1.5">Apartment / Road / Area*</label>
                           <textarea 
                             value={formData.area}
                             onChange={(e) => setFormData({...formData, area: e.target.value})}
-                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] h-20 resize-none transition-all text-sm"
+                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] h-20 resize-none transition-all text-sm"
                             placeholder="Enter your complete area details..."
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-[#1A0F0A] tracking-wider uppercase mb-1.5">Landmark (Optional)</label>
+                          <label className="block text-[10px] font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-1.5">Landmark (Optional)</label>
                           <input 
                             type="text" 
                             value={formData.landmark}
                             onChange={(e) => setFormData({...formData, landmark: e.target.value})}
-                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] text-sm transition-all"
+                            className="w-full border border-[#A87B45]/30 p-3 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] text-sm transition-all"
                             placeholder="e.g. Near Apollo Hospital"
                           />
                         </div>
@@ -534,37 +534,37 @@ export default function BookConsultantModal({ isOpen, onClose }) {
               <div className={`transition-all duration-700 ease-in-out ${isLocationConfirmed ? 'opacity-100 max-h-[1000px] translate-y-0 mt-4' : 'opacity-0 max-h-0 -translate-y-4 overflow-hidden pointer-events-none'}`}>
                 <div className="flex items-center gap-4 border-b border-[#A87B45]/20 pb-4 mb-6">
                   <div className="w-7 h-7 rounded-full text-white flex items-center justify-center text-xs font-bold shadow-sm" style={{ background: 'linear-gradient(135deg, #C49A5C 0%, #8B5A2B 100%)' }}>3</div>
-                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] uppercase">Contact Details</h3>
+                  <h3 className="text-lg font-serif font-bold tracking-widest text-[#1A0F0A] dark:text-[#F5F0E8] uppercase">Contact Details</h3>
                 </div>
                 
-                <p className="text-[15px] text-[#4A3320] mb-8 font-serif">How may we address you?</p>
+                <p className="text-[15px] text-[#4A3320] dark:text-gray-400 mb-8 font-serif">How may we address you?</p>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-2">Full Name*</label>
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-2">Full Name*</label>
                     <input 
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-2">Email Address*</label>
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-2">Email Address*</label>
                     <input 
                       type="email" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#1A0F0A] tracking-wider uppercase mb-2">Phone Number*</label>
+                    <label className="block text-xs font-bold text-[#1A0F0A] dark:text-[#F5F0E8] tracking-wider uppercase mb-2">Phone Number*</label>
                     <input 
                       type="tel" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white rounded-md shadow-sm text-[#1A0F0A] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
                     />
                   </div>
                 </div>

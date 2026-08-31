@@ -36,7 +36,7 @@ export default function OurOfferings() {
   ];
 
   return (
-    <section className="py-24 bg-[#FDFBF7] text-[#111111] border-t border-[#111111]/5 overflow-hidden">
+    <section className="py-24 bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 text-[#111111] dark:text-[#F5F0E8] border-t border-[#111111]/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         <div className="text-center mb-16">
@@ -66,9 +66,9 @@ export default function OurOfferings() {
               </div>
 
               {/* Text Box */}
-              <div className="bg-white border border-t-0 border-[#111111]/5 p-5 pt-8 rounded-b-sm flex flex-col flex-1 relative transition-colors group-hover:bg-[#faf9f6]">
+              <div className="bg-white dark:bg-[#151515] transition-colors duration-500 border border-t-0 border-[#111111]/5 p-5 pt-8 rounded-b-sm flex flex-col flex-1 relative transition-colors group-hover:bg-[#faf9f6]">
                 <h5 className="font-bold text-sm mb-2">{offer.title}</h5>
-                <p className="text-[#111111]/60 font-light text-[11px] leading-relaxed mb-4">
+                <p className="text-[#111111]/60 dark:text-[#F5F0E8]/60 font-light text-[11px] leading-relaxed mb-4">
                   {offer.desc}
                 </p>
                 

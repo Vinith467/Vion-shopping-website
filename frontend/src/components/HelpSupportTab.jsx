@@ -58,7 +58,7 @@ export default function HelpSupportTab() {
       {/* Top Section: Header & Search */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="flex-1 w-full">
-          <h2 className="text-[28px] font-bold text-gray-900 mb-2 font-serif">Help & Support</h2>
+          <h2 className="text-[28px] font-bold text-gray-900 dark:text-[#F5F0E8] mb-2 font-serif">Help & Support</h2>
           <p className="text-sm text-gray-500 font-medium mb-6">Find answers, get support and resolve issues.</p>
           
           <form onSubmit={handleSearch} className="relative max-w-2xl">
@@ -72,7 +72,7 @@ export default function HelpSupportTab() {
             />
             <button 
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-purple-100 text-[#3A10E5] hover:bg-purple-50 px-5 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white dark:bg-[#151515] transition-colors duration-500 border border-purple-100 text-[#3A10E5] hover:bg-purple-50 px-5 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
             >
               Search
             </button>
@@ -81,7 +81,7 @@ export default function HelpSupportTab() {
         
         {/* Decorative Illustration (Headset) */}
         <div className="hidden lg:flex w-32 h-32 bg-purple-50 rounded-full shrink-0 items-center justify-center relative">
-          <div className="absolute w-24 h-24 bg-white/50 rounded-full animate-ping opacity-20"></div>
+          <div className="absolute w-24 h-24 bg-white/50 dark:bg-[#151515]/50 transition-colors duration-500 rounded-full animate-ping opacity-20"></div>
           <Headphones size={48} className="text-[#3A10E5]" />
           <MessageSquare size={20} className="absolute top-4 right-4 text-purple-300" />
           <MessageSquare size={16} className="absolute bottom-6 left-6 text-purple-300" />
@@ -91,7 +91,7 @@ export default function HelpSupportTab() {
       {/* Popular Help Topics (Horizontal Scroll) */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-bold text-gray-900">Popular Help Topics</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Popular Help Topics</h3>
           <button className="text-xs font-bold text-[#3A10E5] hover:underline flex items-center gap-1">
             View all articles <ChevronRight size={14} />
           </button>
@@ -103,13 +103,13 @@ export default function HelpSupportTab() {
               <div 
                 key={i}
                 onClick={() => handleAction(topic.title)}
-                className="min-w-[240px] md:min-w-[260px] bg-white border border-gray-100 hover:border-purple-200 rounded-2xl p-5 flex flex-col gap-3 cursor-pointer transition-all hover:shadow-sm snap-start group"
+                className="min-w-[240px] md:min-w-[260px] bg-white dark:bg-[#151515] transition-colors duration-500 border border-gray-100 hover:border-purple-200 rounded-2xl p-5 flex flex-col gap-3 cursor-pointer transition-all hover:shadow-sm snap-start group"
               >
                 <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#3A10E5] flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Icon size={18} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-gray-900 mb-1">{topic.title}</h4>
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">{topic.title}</h4>
                   <p className="text-[11px] text-gray-500 leading-relaxed min-h-[32px]">{topic.desc}</p>
                 </div>
                 <div className="flex justify-end mt-auto">
@@ -126,15 +126,15 @@ export default function HelpSupportTab() {
         
         {/* FAQs */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-base font-bold text-gray-900">Frequently Asked Questions</h3>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col">
+          <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8]">Frequently Asked Questions</h3>
+          <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
             {faqs.map((faq, i) => (
               <div key={i} className="border-b border-gray-50 last:border-b-0">
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full text-left px-6 py-4.5 flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-none"
                 >
-                  <span className={`text-sm font-semibold pr-4 ${openFaq === i ? 'text-[#3A10E5]' : 'text-gray-900'}`}>
+                  <span className={`text-sm font-semibold pr-4 ${openFaq === i ? 'text-[#3A10E5]' : 'text-gray-900 dark:text-[#F5F0E8]'}`}>
                     {faq.question}
                   </span>
                   {openFaq === i ? (
@@ -158,9 +158,9 @@ export default function HelpSupportTab() {
 
         {/* Need More Help? */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-base font-bold text-gray-900 invisible hidden lg:block">Need More Help?</h3>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col h-full">
-            <h3 className="text-lg font-bold text-gray-900 mb-1 lg:-mt-2">Need More Help?</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] invisible hidden lg:block">Need More Help?</h3>
+          <div className="bg-white dark:bg-[#151515] transition-colors duration-500 rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col h-full">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-[#F5F0E8] mb-1 lg:-mt-2">Need More Help?</h3>
             <p className="text-xs text-gray-500 mb-6">Can't find what you're looking for? Our support team is ready to assist you.</p>
             
             <div className="flex flex-col gap-2 flex-1">
@@ -182,7 +182,7 @@ export default function HelpSupportTab() {
                         <Icon size={18} />
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-900">{item.title}</h4>
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-[#F5F0E8]">{item.title}</h4>
                         <p className="text-[11px] text-gray-500 mt-0.5">{item.desc}</p>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ export default function HelpSupportTab() {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h3 className="text-base font-bold text-gray-900 mb-1">Your satisfaction is our priority</h3>
+            <h3 className="text-base font-bold text-gray-900 dark:text-[#F5F0E8] mb-1">Your satisfaction is our priority</h3>
             <p className="text-xs text-gray-600 font-medium">We're committed to providing you with the best shopping experience.<br/>Let us know how we can help!</p>
           </div>
         </div>

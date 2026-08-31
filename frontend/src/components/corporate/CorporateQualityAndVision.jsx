@@ -73,7 +73,7 @@ export default function CorporateQualityAndVision() {
   };
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
+    <section ref={containerRef} className="py-24 bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 text-[#151515] dark:text-[#F5F0E8] relative">
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
         {/* Massive Image Banner */}
@@ -92,7 +92,7 @@ export default function CorporateQualityAndVision() {
         </div>
 
         {/* Intro Paragraphs */}
-        <div className="max-w-3xl mx-auto text-center space-y-6 text-lg md:text-xl text-[#151515]/80 font-sans font-light leading-relaxed">
+        <div className="max-w-3xl mx-auto text-center space-y-6 text-lg md:text-xl text-[#151515]/80 dark:text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
           <p>
             We want people and organizations to experience high-quality fabrics, excellent craftsmanship and thoughtful design without paying an unnecessarily high price.
           </p>
@@ -138,12 +138,12 @@ export default function CorporateQualityAndVision() {
                   <span className="text-xl md:text-2xl font-serif text-[#C49A5C]/80 font-light italic">
                     0{index + 1}
                   </span>
-                  <h3 className="text-3xl md:text-5xl font-serif uppercase tracking-widest text-[#151515]">
+                  <h3 className="text-3xl md:text-5xl font-serif uppercase tracking-widest text-[#151515] dark:text-[#F5F0E8]">
                     {promise.title}
                   </h3>
                 </div>
                 <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
-                <p className="text-base md:text-xl font-sans font-light text-[#151515]/70 leading-relaxed max-w-md">
+                <p className="text-base md:text-xl font-sans font-light text-[#151515]/70 dark:text-[#F5F0E8]/70 leading-relaxed max-w-md">
                   {promise.desc}
                 </p>
 

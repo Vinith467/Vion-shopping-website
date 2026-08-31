@@ -64,20 +64,20 @@ export default function CorporateGlobalCraftsmanship() {
   };
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
+    <section ref={containerRef} className="py-24 bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 text-[#151515] dark:text-[#F5F0E8] relative">
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Side: Sticky Intro Text */}
         <div className="w-full lg:w-1/3 relative z-10">
           <div className="lg:sticky lg:top-32">
-            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#151515] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
-            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 font-sans font-light leading-relaxed">
+            <div className="space-y-6 text-sm md:text-base text-[#151515]/80 dark:text-[#F5F0E8]/80 font-sans font-light leading-relaxed">
               <p>
                 We believe exceptional clothing begins with exceptional materials. Our fabrics and materials are sourced from across the world, including Italy, the United Kingdom, Japan, Portugal, China and other renowned textile markets.
               </p>
-              <p className="font-medium text-[#151515]">
+              <p className="font-medium text-[#151515] dark:text-[#F5F0E8]">
                 But fabric is only the beginning.
               </p>
               <p>

@@ -12,7 +12,7 @@ import 'lenis/dist/lenis.css';
 gsap.registerPlugin(ScrollTrigger);
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, theme } = useAppContext();
   const [categories, setCategories] = useState([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,11 +66,18 @@ export default function HomeScreen() {
 
 
   // Shared crystal 3D glass card style
-  const glassCard = "bg-white/10 backdrop-blur-xl border border-white/45 rounded-2xl shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)]";
-  const glassCardHover = "hover:bg-white/20 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] transition-all duration-300";
+  const glassCard = "bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-xl border border-white/45 rounded-2xl shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)]";
+  const glassCardHover = "hover:bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 hover:border-white/60 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_14px_36px_rgba(0,0,0,0.12)] transition-all duration-300";
 
   return (
-    <div className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900" style={{ background: 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' }}>
+    <div 
+      className="flex w-full flex-col min-h-[100dvh] font-sans overflow-x-hidden text-gray-900 dark:text-[#F5F0E8] transition-colors duration-500 " 
+      style={{ 
+        background: theme === 'dark' 
+          ? 'linear-gradient(180deg, #0A0A0A 0%, #0F0F0F 30%, #151515 60%, #1A1A1A 100%)'
+          : 'linear-gradient(180deg, #F5F0E8 0%, #EDE6DC 30%, #E8DFD3 60%, #DDD4C6 100%)' 
+      }}
+    >
       
       {/* 1. Hero Section */}
       <section className="relative w-full max-w-[1983px] mx-auto flex flex-col md:justify-center overflow-hidden">
@@ -86,7 +93,7 @@ export default function HomeScreen() {
                 e.target.style.display = 'none'; 
              }} 
            />
-           <div className="absolute inset-0 bg-gradient-to-r from-[#EDE6DC]/60 via-transparent to-transparent"></div>
+           <div className={`absolute inset-0 bg-gradient-to-r ${theme === 'dark' ? 'from-[#0A0A0A]/80' : 'from-[#EDE6DC]/60'} via-transparent to-transparent`}></div>
         </div>
 
         {/* Mobile Background Image (Stacked naturally at the top) */}
@@ -112,11 +119,11 @@ export default function HomeScreen() {
            {/* Left Content */}
            <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-0 relative z-20">
             <div className="flex items-center gap-3 mb-4">
-               <div className="h-[1px] w-8 md:w-12 bg-[#A87B45]"></div>
-               <span className="text-[#A87B45] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">Sartoria Di Lusso</span>
+               <div className="h-[1px] w-8 md:w-12 bg-[#A87B45] dark:bg-[#C49A5C]"></div>
+               <span className="text-[#A87B45] dark:text-[#C49A5C] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">Sartoria Di Lusso</span>
             </div>
             
-            <h1 className="mb-4 uppercase text-[2.75rem] leading-none md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '0.02em', color: '#1A0F0A' }}>
+            <h1 className="mb-4 uppercase text-[2.75rem] leading-none md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '0.02em', color: theme === 'dark' ? '#F5F0E8' : '#1A0F0A' }}>
               Italian<br/>
               <span 
                 className="inline-block mt-2"
@@ -125,10 +132,10 @@ export default function HomeScreen() {
                   fontWeight: 600,
                   fontSize: '1.4em',
                   lineHeight: 0.85,
-                  color: '#8B5A2B',
+                  color: theme === 'dark' ? '#C49A5C' : '#8B5A2B',
                   textTransform: 'none',
                   paddingRight: '0.2em',
-                  textShadow: '0 2px 8px rgba(139, 90, 43, 0.2)'
+                  textShadow: theme === 'dark' ? '0 2px 8px rgba(196, 154, 92, 0.2)' : '0 2px 8px rgba(139, 90, 43, 0.2)'
                 }}>
                 Elegance
               </span>
@@ -136,9 +143,9 @@ export default function HomeScreen() {
             
             <div className="relative mb-6 md:mb-8 max-w-[26rem]">
               {/* Elegant soft glow behind text for legibility - hidden on mobile to avoid washing out the image */}
-              <div className="hidden md:block absolute -inset-y-4 -inset-x-6 bg-[#F5F0E8]/60 blur-xl rounded-full z-0"></div>
+              <div className={`hidden md:block absolute -inset-y-4 -inset-x-6 ${theme === 'dark' ? 'bg-[#0A0A0A]/80' : 'bg-[#F5F0E8]/60 dark:bg-[#151515]/60 transition-colors duration-500 '} blur-xl rounded-full z-0`}></div>
               
-              <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: '#1A0F0A', lineHeight: 1.5, letterSpacing: '0.02em' }}>
+              <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: theme === 'dark' ? '#E5CDA7' : '#1A0F0A', lineHeight: 1.5, letterSpacing: '0.02em' }}>
                 Timeless style. Unmatched grace. Experience the pinnacle of trusted Italian craftsmanship, tailored flawlessly to elevate your legacy.
               </p>
             </div>
@@ -171,14 +178,14 @@ export default function HomeScreen() {
 
             <div className="flex items-center gap-3">
                <div className="flex -space-x-2">
-                  <img src="https://i.pravatar.cc/100?img=1" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 object-cover grayscale" alt="User" />
-                  <img src="https://i.pravatar.cc/100?img=5" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 object-cover grayscale" alt="User" />
-                  <img src="https://i.pravatar.cc/100?img=9" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 object-cover grayscale" alt="User" />
-                  <img src="https://i.pravatar.cc/100?img=12" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 object-cover grayscale" alt="User" />
+                  <img src="https://i.pravatar.cc/100?img=1" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 dark:border-[#C49A5C]/30 object-cover grayscale" alt="User" />
+                  <img src="https://i.pravatar.cc/100?img=5" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 dark:border-[#C49A5C]/30 object-cover grayscale" alt="User" />
+                  <img src="https://i.pravatar.cc/100?img=9" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 dark:border-[#C49A5C]/30 object-cover grayscale" alt="User" />
+                  <img src="https://i.pravatar.cc/100?img=12" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 dark:border-[#C49A5C]/30 object-cover grayscale" alt="User" />
                </div>
                <div>
-                  <h4 className="text-base 2xl:text-lg leading-none mb-0.5 text-[#1A0F0A] md:text-[#F5F0E8] md:drop-shadow-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>10,000+</h4>
-                  <p className="text-[10px] 2xl:text-[11px] font-medium tracking-wide text-[#555] md:text-[#F5F0E8]/90 md:drop-shadow-md">Clients trust VION</p>
+                  <h4 className={`text-base 2xl:text-lg leading-none mb-0.5 md:drop-shadow-md ${theme === 'dark' ? 'text-[#F5F0E8]' : 'text-[#1A0F0A] dark:text-[#F5F0E8] md:text-[#F5F0E8]'}`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>10,000+</h4>
+                  <p className={`text-[10px] 2xl:text-[11px] font-medium tracking-wide md:drop-shadow-md ${theme === 'dark' ? 'text-[#C49A5C] md:text-[#C49A5C]' : 'text-[#555] md:text-[#F5F0E8]/90'}`}>Clients trust VION</p>
                </div>
             </div>
           </div>
@@ -204,7 +211,7 @@ export default function HomeScreen() {
                 <p className="text-[11px] md:text-[14px] text-white/90 leading-relaxed font-medium max-w-[90%] md:max-w-[60%] mb-3 md:mb-4">
                   Explore our curated fashion selections tailored to your unique profile and style.
                 </p>
-                <button className="cursor-pointer border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 hover:border-white/80 transition-all">
+                <button className="cursor-pointer border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 hover:border-white/80 transition-all">
                    Buy Now <ArrowRight size={10} />
                 </button>
              </div>
@@ -221,7 +228,7 @@ export default function HomeScreen() {
                 <p className="text-[11px] md:text-[12px] text-white/85 leading-relaxed font-medium max-w-[95%] mb-4">
                   Schedule a one-on-one session with our experts.
                 </p>
-                <button className="cursor-pointer border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 hover:border-white/80 transition-all">
+                <button className="cursor-pointer border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 hover:border-white/80 transition-all">
                    Book Now <ArrowRight size={9} />
                 </button>
              </div>
@@ -241,7 +248,7 @@ export default function HomeScreen() {
                   <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[90%] mb-3">
                     {cat.desc}
                   </p>
-                  <button className="border border-white/40 text-white bg-white/10 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 transition-colors">
+                  <button className="border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 transition-colors">
                      {cat.buttonText} <ArrowRight size={9} />
                   </button>
                </div>
@@ -255,12 +262,12 @@ export default function HomeScreen() {
         <div className="flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12">
           
           <div className="w-full lg:w-[24%] shrink-0 text-center lg:text-left">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#A87B45] mb-2">The Vion Experience</h4>
-            <h2 className="mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', lineHeight: 1.08, color: '#1A1A1A' }}>
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-2">The Vion Experience</h4>
+            <h2 className="mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', lineHeight: 1.08, color: theme === 'dark' ? '#F5F0E8' : '#1A1A1A' }}>
               Your Personalised<br/>Journey
             </h2>
-            <div className="w-[80%] max-w-[200px] h-[2px] bg-gradient-to-r from-[#A87B45] to-[#D5A76B] mb-3 mx-auto lg:mx-0"></div>
-            <p className="text-[13px] text-[#555] leading-[1.6] max-w-[230px] mx-auto lg:mx-0" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
+            <div className="w-[80%] max-w-[200px] h-[2px] bg-gradient-to-r from-[#A87B45] to-[#D5A76B] dark:from-[#C49A5C] dark:to-[#8B5A2B] mb-3 mx-auto lg:mx-0"></div>
+            <p className="text-[13px] text-[#555] dark:text-[#E5CDA7] leading-[1.6] max-w-[230px] mx-auto lg:mx-0" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
               A seamless journey from consultation to creation. Thoughtfully designed around you.
             </p>
           </div>
@@ -281,11 +288,11 @@ export default function HomeScreen() {
                    <ArrowRight size={12} className="-ml-1 shrink-0" />
                 </div>}
                 
-                <div className="w-[80px] h-[80px] md:w-[88px] md:h-[88px] rounded-full bg-white/20 border border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_10px_28px_rgba(0,0,0,0.1)] flex items-center justify-center mb-3 relative z-10">
-                  <span className="text-[#8B5A2B] text-[32px] md:text-[38px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{step.num}</span>
+                <div className={`w-[80px] h-[80px] md:w-[88px] md:h-[88px] rounded-full ${theme === 'dark' ? 'bg-black/40 border-[#C49A5C]/30 shadow-none' : 'bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 border-white/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),_inset_0_-2px_4px_rgba(0,0,0,0.15),_0_10px_28px_rgba(0,0,0,0.1)]'} border flex items-center justify-center mb-3 relative z-10 transition-colors duration-500 `}>
+                  <span className={`${theme === 'dark' ? 'text-[#C49A5C]' : 'text-[#8B5A2B]'} text-[32px] md:text-[38px]`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{step.num}</span>
                 </div>
-                <h4 className="text-[14px] md:text-[16px] 2xl:text-[18px] uppercase tracking-[0.04em] text-[#000000] mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{step.title}</h4>
-                <p className="text-[12px] md:text-[14px] 2xl:text-[15px] text-[#1A1A1A] max-w-[170px] leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{step.desc}</p>
+                <h4 className={`text-[14px] md:text-[16px] 2xl:text-[18px] uppercase tracking-[0.04em] ${theme === 'dark' ? 'text-[#F5F0E8]' : 'text-[#000000]'} mb-1`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{step.title}</h4>
+                <p className={`text-[12px] md:text-[14px] 2xl:text-[15px] ${theme === 'dark' ? 'text-gray-300' : 'text-[#1A1A1A] dark:text-[#F5F0E8]'} max-w-[170px] leading-snug`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -295,18 +302,18 @@ export default function HomeScreen() {
 
       {/* 4. The Art of Italian Tailoring & Trust Bar */}
       <section className="relative z-20 w-full px-6 lg:px-16 mt-8 lg:-mt-4 mb-8 pb-32 lg:pb-8">
-        <div className="max-w-[1350px] mx-auto bg-white/20 border border-white/50 rounded-2xl shadow-[inset_0_1.5px_2.5px_rgba(255,255,255,0.85),_inset_0_-1.5px_3px_rgba(0,0,0,0.1),_0_16px_40px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
+        <div className={`max-w-[1350px] mx-auto ${theme === 'dark' ? 'bg-[#121212]/60 border-[#C49A5C]/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : 'bg-white/20 dark:bg-[#151515]/20 transition-colors duration-500 border-white/50 shadow-[inset_0_1.5px_2.5px_rgba(255,255,255,0.85),_inset_0_-1.5px_3px_rgba(0,0,0,0.1),_0_16px_40px_rgba(0,0,0,0.08)]'} border rounded-2xl overflow-hidden flex flex-col transition-colors duration-500 `}>
           
           {/* Top Section: Art of Tailoring */}
           <div className="flex flex-col xl:flex-row p-8 lg:p-10 gap-8 xl:gap-12">
             
             {/* Left Content */}
             <div className="w-full xl:w-[28%] shrink-0">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A87B45] mb-3">THE ART OF ITALIAN TAILORING</h4>
-              <h2 className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3vw, 2.6rem)', lineHeight: 1.05, color: '#1A1A1A' }}>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-3">THE ART OF ITALIAN TAILORING</h4>
+              <h2 className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3vw, 2.6rem)', lineHeight: 1.05, color: theme === 'dark' ? '#F5F0E8' : '#1A1A1A' }}>
                 The Finest Italian Fabrics.<br/>Crafted to Perfection.
               </h2>
-              <p className="text-[15px] text-[#222] leading-[1.6]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+              <p className={`text-[15px] ${theme === 'dark' ? 'text-gray-300' : 'text-[#222]'} leading-[1.6]`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
                 Every piece begins with a story. Yours.<br/>
                 From fabric to final stitch, crafted in Italy, exclusively for you.
               </p>
@@ -328,14 +335,14 @@ export default function HomeScreen() {
                     navigate('/craftsmanship', { state: { activeSection: idx } });
                   }}
                 >
-                  <div className="w-full aspect-square mb-4 overflow-hidden rounded-lg shadow-sm border border-white/40 group-hover:shadow-md group-hover:border-[#C49A5C]/60 transition-all duration-300">
+                  <div className={`w-full aspect-square mb-4 overflow-hidden rounded-lg shadow-sm border ${theme === 'dark' ? 'border-white/10 group-hover:border-[#C49A5C]/80' : 'border-white/40 group-hover:border-[#C49A5C]/60'} group-hover:shadow-md transition-all duration-300`}>
                     <img src={step.img} alt={step.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                          onError={(e) => { e.target.src = `https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=400&h=300`; }} />
                   </div>
-                  <h4 className="text-[12px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A] mb-1.5 flex items-center gap-1.5 group-hover:text-[#A87B45] transition-colors duration-300">
-                    <span className="text-[#A87B45] font-serif text-[14px]">{step.num}</span> {step.title}
+                  <h4 className={`text-[12px] font-bold uppercase tracking-[0.08em] ${theme === 'dark' ? 'text-[#F5F0E8]' : 'text-[#1A1A1A] dark:text-[#F5F0E8]'} mb-1.5 flex items-center gap-1.5 group-hover:text-[#A87B45] dark:group-hover:text-[#C49A5C] transition-colors duration-300`}>
+                    <span className="text-[#A87B45] dark:text-[#C49A5C] font-serif text-[14px]">{step.num}</span> {step.title}
                   </h4>
-                  <p className="text-[14px] text-[#222] font-semibold leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{step.desc}</p>
+                  <p className={`text-[14px] ${theme === 'dark' ? 'text-gray-400' : 'text-[#222]'} font-semibold leading-snug`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>{step.desc}</p>
                 </div>
               ))}
             </div>
@@ -357,7 +364,7 @@ export default function HomeScreen() {
                      <p className="text-[13px] text-white/70 leading-snug max-w-[170px]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.desc}</p>
                    </div>
                  </div>
-                 {idx < arr.length - 1 && <div className="hidden lg:block w-[1px] h-8 bg-white/10"></div>}
+                 {idx < arr.length - 1 && <div className="hidden lg:block w-[1px] h-8 bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 "></div>}
                </div>
              ))}
           </div>

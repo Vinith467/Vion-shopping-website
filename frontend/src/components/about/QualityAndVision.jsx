@@ -73,7 +73,7 @@ export default function QualityAndVision() {
   };
 
   return (
-    <section ref={containerRef} className="py-24 bg-[#F5F0E8] text-[#151515] relative">
+    <section ref={containerRef} className="py-24 bg-[#F5F0E8] dark:bg-[#151515] transition-colors duration-500 text-[#151515] relative">
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
         {/* Massive Image Banner */}

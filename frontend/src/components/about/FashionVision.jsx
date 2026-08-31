@@ -82,11 +82,11 @@ export default function FashionVision() {
           <div className="flex flex-col justify-center lg:pl-8">
             <h3 className="text-[11px] md:text-[13px] font-bold uppercase tracking-[0.25em] text-[#C49A5C] mb-6">Our Vision</h3>
             <p className="text-xl md:text-2xl font-light leading-relaxed text-white/90 mb-12">
-              Our vision is to build VION into a modern fashion brand that brings exceptional clothing to people across India and eventually around the world.
+              Our vision is to build VION into a modern corporate brand that brings exceptional clothing to organizations across India and eventually around the world.
             </p>
             
             <p className="text-[13px] md:text-[15px] font-bold uppercase tracking-wider text-white/50 mb-8">
-              We want to make quality fashion more accessible by bringing together:
+              We want to make quality uniforms more accessible by bringing together:
             </p>
 
             <ul className="space-y-4 md:space-y-6">
