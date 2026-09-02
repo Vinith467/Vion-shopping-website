@@ -253,9 +253,7 @@ export default function OnboardingScreen() {
       if (targetProfile.gender) {
         query = query.contains('target_genders', [targetProfile.gender]);
       }
-      if (targetProfile.category) {
-        query = query.contains('target_body_shapes', [targetProfile.category]);
-      }
+      // target_body_shapes is deprecated, so we don't filter by targetProfile.category anymore
       
       const { data } = await query.order('created_at', { ascending: false }).limit(100);
       

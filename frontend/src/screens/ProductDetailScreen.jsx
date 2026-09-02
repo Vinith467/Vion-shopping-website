@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, ShoppingBag, Sparkles, Check, X, Calendar, Clock, User } from "lucide-react";
 import { supabase } from "../services/supabaseClient";
@@ -147,6 +147,137 @@ const ProductStackingSection = ({ product }) => {
   );
 };
 
+const ProductShowcaseSection = ({ videoUrl, content }) => {
+  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const mediaContainerRef = useRef(null);
+  const mediaElementRef = useRef(null);
+  const overlayRef = useRef(null);
+  const contentRef = useRef(null);
+
+  // CHANGED to useLayoutEffect
+  useLayoutEffect(() => {
+    if (!videoUrl) return;
+    
+    // CHANGED: Pass the containerRef as the scope right here
+    let mm = gsap.matchMedia(containerRef);
+
+    mm.add("(min-width: 768px)", () => {
+        // Desktop Animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1, 
+          }
+        });
+
+        gsap.set(mediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
+        gsap.set(contentRef.current, { opacity: 0, x: 50, y: 0 }); // Coming from the right
+
+        tl.to(mediaContainerRef.current, {
+          width: "45vw",
+          height: "25.3vw", // Keeps cinematic width/height ratio roughly
+          borderRadius: "16px",
+          x: "5vw", // Move to the left (instead of x: "50vw" like hero)
+          y: 0,
+          ease: "power2.inOut",
+          duration: 1
+        }, 0)
+        .to(mediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
+        .to(overlayRef.current, { opacity: 0, y: -100, duration: 0.5, ease: "power2.in" }, 0)
+        .to(contentRef.current, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 0.4);
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        // Mobile Animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1, 
+          }
+        });
+
+        gsap.set(mediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
+        gsap.set(contentRef.current, { opacity: 0, x: 0, y: 50 });
+
+        tl.to(mediaContainerRef.current, {
+          width: "90vw", // Boxed width
+          height: "45vh",
+          borderRadius: "16px",
+          x: "5vw",
+          y: "-25vh", // Slide up securely into the top half
+          ease: "power2.inOut",
+          duration: 1
+        }, 0)
+        .to(mediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
+        .to(overlayRef.current, { opacity: 0, y: -50, duration: 0.5, ease: "power2.in" }, 0)
+        .to(contentRef.current, { opacity: 1, y: "25vh", duration: 0.8, ease: "power2.out" }, 0.4); // Slide down into bottom half
+      });
+
+    return () => mm.revert();
+  }, [videoUrl]);
+
+  if (!videoUrl) return null;
+
+  return (
+    <div ref={containerRef} className="w-full h-[250vh] relative">
+      <div ref={sectionRef} className="sticky top-0 w-full h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] overflow-hidden flex items-center transition-colors duration-500">
+        
+        {/* The Media Container (Starts Fullscreen, Shrinks to Left) */}
+      <div 
+        ref={mediaContainerRef} 
+        className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-full z-10 overflow-hidden shadow-2xl"
+      >
+        <video ref={mediaElementRef} src={videoUrl} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+      </div>
+
+      {/* Fullscreen Overlay Text (Fades out on scroll) */}
+      <div 
+        ref={overlayRef} 
+        className="absolute inset-0 flex flex-col items-center justify-end z-20 text-white text-center px-6 pb-20 pointer-events-none"
+      >
+        <span className="text-[#A87B45] text-xs font-bold uppercase tracking-[0.4em] mb-4">
+          {content?.overlay_subtitle || 'The Craftsmanship'}
+        </span>
+        <h1 className="text-4xl md:text-6xl mb-6 drop-shadow-2xl max-w-4xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+          {content?.overlay_title || 'Every Detail Tells a Story'}
+        </h1>
+        <div className="w-16 h-[2px] bg-white/30 dark:bg-[#151515]/30 transition-colors duration-500 mx-auto mb-10"></div>
+        <div className="animate-bounce flex flex-col items-center">
+           <span className="text-xs uppercase tracking-widest text-white/70 mb-2">Scroll for details</span>
+           <div className="w-[1px] h-10 bg-[#A87B45]"></div>
+        </div>
+      </div>
+
+      {/* The Text Content (Hidden initially, slides in on right) */}
+      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 relative z-30 flex h-full items-center justify-end pointer-events-none">
+        <div ref={contentRef} className="w-full md:w-[45%] pointer-events-auto">
+          <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
+            {content?.content_subtitle || 'Exclusive Luxury'}
+          </span>
+          <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            {content?.content_title || 'Uncompromising Details'}
+          </h2>
+          <div className="space-y-4 text-sm lg:text-base text-gray-600 dark:text-gray-400 font-sans font-light leading-relaxed">
+            <p>
+              {content?.desc1 || 'Experience the quiet luxury of our tailoring. From the structured shoulders to the precise check pattern, explore the intricate details that define our exclusive creations.'}
+            </p>
+            <p>
+              {content?.desc2 || 'Every element, down to the small round lapel pin and fitted waist, reflects our commitment to perfection and timeless elegance.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  );
+};
+
 export default function ProductDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -154,6 +285,7 @@ export default function ProductDetailScreen() {
   
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isWishlisted = isInWishlist && product ? isInWishlist(product.id) : false;
 
   const cleanDescription = (text) => {
     if (!text) return "Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.";
@@ -167,11 +299,12 @@ export default function ProductDetailScreen() {
 
   const containerRef = useRef(null);
   const cardsRef = useRef([]);
+  const heroContainerRef = useRef(null); // ADD THIS REF
   const heroWrapperRef = useRef(null);
   const heroMediaContainerRef = useRef(null);
   const heroMediaElementRef = useRef(null);
   const heroOverlayRef = useRef(null);
-  const heroContentRef = useRef(null);
+  const heroContentRefs = useRef([]);
 
   const primaryMember = members?.find(m => m.isPrimary) || null;
   const [profile, setProfile] = useState({
@@ -301,27 +434,28 @@ export default function ProductDetailScreen() {
     return () => ctx.revert();
   }, [product, activeVariationIndex, variationImages.length]);
 
-  // Hero Scroll Animation
-  useEffect(() => {
+  // CHANGED to useLayoutEffect
+  useLayoutEffect(() => {
     if (isLoading || !product) return;
     
-    let ctx = gsap.context(() => {
-      let mm = gsap.matchMedia();
+    // CHANGED: Pass heroContainerRef as scope
+    let mm = gsap.matchMedia(heroContainerRef);
 
-      mm.add("(min-width: 768px)", () => {
+    mm.add("(min-width: 768px)", () => {
         // Desktop Animation
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: heroWrapperRef.current,
+            trigger: heroContainerRef.current,
             start: "top top",
-            end: "+=150%",
-            pin: true,
+            end: "bottom bottom",
             scrub: 1, 
           }
         });
 
         gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
-        gsap.set(heroContentRef.current, { opacity: 0, x: -50, y: 0 });
+        heroContentRefs.current.forEach(el => {
+           if (el) gsap.set(el, { opacity: 0, x: -50, y: "-50%" });
+        });
 
         tl.to(heroMediaContainerRef.current, {
           width: "45vw",
@@ -333,61 +467,92 @@ export default function ProductDetailScreen() {
           duration: 1
         }, 0)
         .to(heroMediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
-        .to(heroOverlayRef.current, { opacity: 0, y: -100, duration: 0.5, ease: "power2.in" }, 0)
-        .to(heroContentRef.current, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 0.4);
+        .to(heroOverlayRef.current, { opacity: 0, y: -100, duration: 0.5, ease: "power2.in" }, 0);
+
+        heroContentRefs.current.forEach((el, index) => {
+          if (!el) return;
+          const startTime = index * 1.5;
+          
+          tl.to(el, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, startTime + 0.4);
+          
+          if (index < heroContentRefs.current.length - 1) {
+             tl.to(el, { opacity: 0, y: "calc(-50% - 50px)", duration: 0.6, ease: "power2.in" }, startTime + 1.8);
+          }
+        });
       });
 
       mm.add("(max-width: 767px)", () => {
         // Mobile Animation
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: heroWrapperRef.current,
+            trigger: heroContainerRef.current,
             start: "top top",
-            end: "+=150%",
-            pin: true,
+            end: "bottom bottom",
             scrub: 1, 
           }
         });
 
         gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
-        gsap.set(heroContentRef.current, { opacity: 0, x: 0, y: 50 });
+        heroContentRefs.current.forEach(el => {
+           if (el) gsap.set(el, { opacity: 0, x: 0, y: "35vh" }); // Start lower to slide up
+        });
 
         tl.to(heroMediaContainerRef.current, {
-          width: "100vw", // Full width
+          width: "90vw",
           height: "45vh",
-          borderRadius: "0px",
-          x: 0,
-          y: "-27.5vh", // Slide up securely into the top half
+          borderRadius: "16px",
+          x: "5vw",
+          y: "-25vh", // Slide UP to the top half of the screen
           ease: "power2.inOut",
           duration: 1
         }, 0)
         .to(heroMediaElementRef.current, { scale: 1.05, duration: 1, ease: "power2.inOut" }, 0)
-        .to(heroOverlayRef.current, { opacity: 0, y: -50, duration: 0.5, ease: "power2.in" }, 0)
-        .to(heroContentRef.current, { opacity: 1, y: "22vh", duration: 0.8, ease: "power2.out" }, 0.4); // Slide down into bottom half
+        .to(heroOverlayRef.current, { opacity: 0, y: -50, duration: 0.5, ease: "power2.in" }, 0);
+        
+        heroContentRefs.current.forEach((el, index) => {
+          if (!el) return;
+          const startTime = index * 1.5;
+          
+          // Move text to bottom half of the screen
+          tl.to(el, { opacity: 1, y: "25vh", duration: 0.8, ease: "power2.out" }, startTime + 0.5);
+          
+          if (index < heroContentRefs.current.length - 1) {
+             tl.to(el, { opacity: 0, y: "15vh", duration: 0.6, ease: "power2.in" }, startTime + 1.8);
+          }
+        });
       });
 
-    });
-
-    return () => ctx.revert();
+    return () => mm.revert();
   }, [isLoading, product]);
 
-  if (isLoading || !product) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#111] text-[#E8DFD8]">Loading...</div>;
-  }
+  const currentImage = product ? (product.images && product.images.length > 0 ? product.images[0] : (product.image_url ? product.image_url.split(',')[0] : '/images/placeholder.jpg')) : '/images/placeholder.jpg';
 
-  const currentImage = variationImages[0] || '/images/placeholder.jpg';
-  const price = parseFloat(product.price);
-  const compareAtPrice = product.compare_at_price ? parseFloat(product.compare_at_price) : null;
-  const isWishlisted = isInWishlist && isInWishlist(product.id);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#A87B45]"></div>
+      </div>
+    );
+  }
 
   const heroMedia = product.video_url || currentImage;
   const isVideo = heroMedia && (heroMedia.includes('.mp4') || heroMedia.includes('video'));
 
+  // Calculate dynamic height for Hero container based on number of text blocks
+  const heroBlocks = Array.isArray(product?.marketing_content?.hero) && product.marketing_content.hero.length > 0 
+    ? product.marketing_content.hero 
+    : [{ subtitle: 'The Design Story', title: product.name, desc1: '[Placeholder Text: This section will contain the narrative description of the garment, detailing its inspiration, the cut, and the craftsmanship that brings it to life. The user will provide the exact copy later.]', desc2: '[Placeholder Text: Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.]' }];
+  
+  const heroContainerHeight = `${150 + (heroBlocks.length - 1) * 150}vh`;
+
   return (
     <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 ">
       
-      {/* Cinematic Hero Header with Scroll Animation */}
-      <div ref={heroWrapperRef} className="relative w-full h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] overflow-hidden flex items-center transition-colors duration-500 ">
+      {/* ADDED WRAPPER HERE to protect React from GSAP's pin-spacer */}
+      <div ref={heroContainerRef} className="w-full relative" style={{ height: heroContainerHeight }}>
+
+        {/* Cinematic Hero Header with Scroll Animation */}
+        <div ref={heroWrapperRef} className="sticky top-0 w-full h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A] overflow-hidden flex items-center transition-colors duration-500 ">
         
         {/* Floating Action Buttons (Fixed on top of hero during pin) */}
         <div className="absolute top-0 left-0 right-0 z-50 p-6 md:p-10 flex justify-between items-start pointer-events-none">
@@ -434,27 +599,47 @@ export default function ProductDetailScreen() {
           </div>
         </div>
 
-        {/* The Text Content (Hidden initially, slides in on left) */}
+        {/* The Text Content Container (Hidden initially, slides in on left) */}
         <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-20 relative z-30 flex h-full items-center pointer-events-none">
-          <div ref={heroContentRef} className="w-full md:w-[45%] pointer-events-auto">
-            <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
-              The Design Story
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              {product.name}
-            </h2>
-            <div className="space-y-4 text-sm lg:text-base text-gray-600 dark:text-gray-400 font-sans font-light leading-relaxed">
-              <p>
-                [Placeholder Text: This section will contain the narrative description of the garment, detailing its inspiration, the cut, and the craftsmanship that brings it to life. The user will provide the exact copy later.]
-              </p>
-              <p>
-                [Placeholder Text: Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.]
-              </p>
-            </div>
+          <div className="w-full md:w-[45%] h-full relative pointer-events-auto">
+            {heroBlocks.map((block, index) => (
+              <div 
+                key={index} 
+                ref={el => heroContentRefs.current[index] = el} 
+                className="absolute top-1/2 -translate-y-1/2 w-full left-0 opacity-0"
+              >
+                <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
+                  {block.subtitle || 'The Design Story'}
+                </span>
+                <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 leading-tight text-[#1A0A08] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  {block.title || product.name}
+                </h2>
+                <div className="space-y-4 text-sm lg:text-base text-gray-600 dark:text-gray-400 font-sans font-light leading-relaxed">
+                  {block.desc1 && <p>{block.desc1}</p>}
+                  {block.desc2 && <p>{block.desc2}</p>}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-
       </div>
+    </div> {/* CLOSING WRAPPER DIV */}
+
+      {/* Secondary Video Showcases */}
+      {product.marketing_content?.showcases && product.marketing_content.showcases.length > 0 ? (
+        product.marketing_content.showcases.map((showcase, index) => (
+          <ProductShowcaseSection 
+            key={index}
+            videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+            content={showcase}
+          />
+        ))
+      ) : (
+        <ProductShowcaseSection 
+          videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+          content={null}
+        />
+      )}
 
     </div>
   );

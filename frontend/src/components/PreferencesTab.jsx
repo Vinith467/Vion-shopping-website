@@ -93,11 +93,9 @@ export default function PreferencesTab() {
         const scoredProducts = data.map(product => {
           let score = 0;
           const productTags = [
-            ...(product.style_tags || []),
             ...(product.color_tags || []),
             product.fit_tag,
-            ...(product.fabric_tags || []),
-            ...(product.occasion_tags || [])
+            ...(product.fabric_tags || [])
           ].filter(Boolean);
 
           productTags.forEach(tag => {
@@ -261,11 +259,8 @@ export default function PreferencesTab() {
                   <p className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8]">₹{parseFloat(product.price).toLocaleString()}</p>
                 </div>
                 
-                {/* Style/Color Tags preview */}
+                {/* Color Tags preview */}
                 <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                  {(product.style_tags || []).slice(0, 2).map((tag, i) => (
-                    <span key={i} className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">{tag}</span>
-                  ))}
                   {(product.color_tags || []).slice(0, 2).map((tag, i) => (
                     <span key={i} className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">{tag}</span>
                   ))}

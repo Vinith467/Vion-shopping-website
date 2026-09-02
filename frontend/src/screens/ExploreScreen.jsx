@@ -52,12 +52,10 @@ export default function ExploreScreen() {
         }
       }
       
-      // If class was passed (Casual, Exclusive, Exclusive Plus), filter by target_body_shapes
+      // Removed classParam filtering since target_body_shapes is deprecated
       if (classParam) {
-        query = query.contains('target_body_shapes', [classParam]);
         setCategoryName(`${classParam} Collection`);
-      }
-      
+      }      
       // Removed the buggy Supabase .in query for sizes since size is a comma-separated string
       // if (sizeParam && sizeParam !== 'all') {
       //   query = query.in('size', [sizeParam, 'all']);

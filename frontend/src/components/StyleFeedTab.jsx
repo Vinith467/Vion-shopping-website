@@ -29,14 +29,8 @@ export default function StyleFeedTab() {
       if (!error && data) {
         setFeedItems(data);
         
-        // Extract unique style/occasion tags for categories
-        const uniqueTags = new Set();
-        data.forEach(product => {
-          if (Array.isArray(product.style_tags)) product.style_tags.forEach(t => uniqueTags.add(t));
-          if (Array.isArray(product.occasion_tags)) product.occasion_tags.forEach(t => uniqueTags.add(t));
-        });
-        setCategories(['For You', ...Array.from(uniqueTags)]);
-      }
+        // Categories derived from style/occasion tags are removed as they are deprecated
+        setCategories(['For You']);      }
       setIsLoading(false);
     }
     
@@ -45,12 +39,7 @@ export default function StyleFeedTab() {
     }
   }, [currentMember.id, currentMember.gender]);
 
-  const displayFeedItems = activeCategory === 'For You' 
-    ? feedItems 
-    : feedItems.filter(item => 
-        (Array.isArray(item.style_tags) && item.style_tags.includes(activeCategory)) || 
-        (Array.isArray(item.occasion_tags) && item.occasion_tags.includes(activeCategory))
-      );
+  const displayFeedItems = feedItems;
 
   const toggleSave = (id) => {
     if (savedItems.includes(id)) {

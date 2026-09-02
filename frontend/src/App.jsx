@@ -20,6 +20,7 @@ import AdminLayout from './screens/admin/AdminLayout';
 import AdminDashboard from './screens/admin/AdminDashboard';
 import AdminUsers from './screens/admin/AdminUsers';
 import AdminInventory from './screens/admin/AdminInventory';
+import AdminEditProduct from './screens/admin/AdminEditProduct';
 import AdminCategories from './screens/admin/AdminCategories';
 import AdminPreferences from './screens/admin/AdminPreferences';
 import AdminOrders from './screens/admin/AdminOrders';
@@ -417,6 +418,8 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="inventory" element={<AdminInventory />} />
+            <Route path="inventory/new" element={<AdminEditProduct />} />
+            <Route path="inventory/edit/:id" element={<AdminEditProduct />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="preferences" element={<AdminPreferences />} />
             <Route path="orders" element={<AdminOrders />} />
@@ -458,7 +461,7 @@ function App() {
       {/* Floating Theme Toggle */}
       <button 
         onClick={toggleTheme} 
-        className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-[#1A1A1A] border border-[#111111]/10 dark:border-white/10 shadow-lg flex items-center justify-center text-[#111111] dark:text-[#F5F0E8] hover:scale-105 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-all duration-300 group"
+        className="fixed bottom-[90px] md:bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-[#1A1A1A] border border-[#111111]/10 dark:border-white/10 shadow-lg flex items-center justify-center text-[#111111] dark:text-[#F5F0E8] hover:scale-105 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-all duration-300 group"
         title="Toggle Theme"
       >
         {theme === 'dark' ? (
