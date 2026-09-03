@@ -607,23 +607,23 @@ export default function ProductDetailScreen() {
   const heroContainerHeight = `${250 + (heroBlocks.length - 1) * 250}vh`;
 
   return (
-    <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 ">
+    <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 relative">
       
+      {/* Floating Action Buttons (Fixed on top of screen) */}
+      <div className="fixed top-0 left-0 right-0 z-[100] p-6 md:p-10 flex justify-between items-start pointer-events-none">
+        <button onClick={() => navigate(-1)} className="p-3 bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full transition-colors shadow-sm pointer-events-auto">
+          <ArrowLeft size={20} />
+        </button>
+        <button 
+          onClick={() => toggleWishlist && toggleWishlist(product)}
+          className={`p-3 rounded-full transition-colors backdrop-blur-md border border-white/20 shadow-sm pointer-events-auto ${isWishlisted ? 'bg-red-500/20 text-red-500' : 'bg-black/20 hover:bg-black/40 text-white'}`}
+        >
+          <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
+        </button>
+      </div>
+
       {/* NEW TOP STATIC SECTION (Normal Fullscreen Video) */}
       <div className="w-full h-[100dvh] relative bg-black">
-        {/* Floating Action Buttons */}
-        <div className="absolute top-0 left-0 right-0 z-50 p-6 md:p-10 flex justify-between items-start pointer-events-none">
-          <button onClick={() => navigate(-1)} className="p-3 bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full transition-colors shadow-sm pointer-events-auto">
-            <ArrowLeft size={20} />
-          </button>
-          <button 
-            onClick={() => toggleWishlist && toggleWishlist(product)}
-            className={`p-3 rounded-full transition-colors backdrop-blur-md border border-white/20 shadow-sm pointer-events-auto ${isWishlisted ? 'bg-red-500/20 text-red-500' : 'bg-black/20 hover:bg-black/40 text-white'}`}
-          >
-            <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
-          </button>
-        </div>
-
         <video 
           ref={topVideoRef} 
           src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
