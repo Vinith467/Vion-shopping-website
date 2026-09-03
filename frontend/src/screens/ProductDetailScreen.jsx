@@ -165,7 +165,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
           height: "25.3vw", // Keeps cinematic width/height ratio roughly
           borderRadius: "16px",
           x: "5vw", // Move to the left (instead of x: "50vw" like hero)
-          y: 0,
+          y: "calc(50vh - 12.65vw)", // Center vertically
           ease: "power2.inOut",
           duration: 1
         }, 0)
@@ -193,7 +193,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
           height: "45vh",
           borderRadius: "16px",
           x: "5vw",
-          y: "-25vh", // Slide up securely into the top half
+          y: "2.5vh", // Center in top half
           ease: "power2.inOut",
           duration: 1
         }, 0)
@@ -214,7 +214,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
         {/* The Media Container (Starts Fullscreen, Shrinks to Left) */}
       <div 
         ref={mediaContainerRef} 
-        className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-full z-10 overflow-hidden shadow-2xl"
+        className="absolute top-0 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
       >
         <video ref={mediaElementRef} src={videoUrl} autoPlay muted loop playsInline className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
@@ -438,7 +438,7 @@ export default function ProductDetailScreen() {
 
         gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
         heroContentRefs.current.forEach(el => {
-           if (el) gsap.set(el, { opacity: 0, x: -50, y: 0 });
+           if (el) gsap.set(el, { opacity: 0, x: -50, yPercent: -50, y: 0 });
         });
 
         tl.to(heroMediaContainerRef.current, {
@@ -446,7 +446,7 @@ export default function ProductDetailScreen() {
           height: "25.3vw",
           borderRadius: "16px",
           x: "50vw",
-          y: 0,
+          y: "calc(50vh - 12.65vw)",
           ease: "power2.inOut",
           duration: 1
         }, 0)
@@ -457,10 +457,10 @@ export default function ProductDetailScreen() {
           if (!el) return;
           const startTime = index * 1.5;
           
-          tl.to(el, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, startTime + 0.4);
+          tl.to(el, { opacity: 1, x: 0, y: 0, duration: 0.8, ease: "power2.out" }, startTime + 0.4);
           
           if (index < heroContentRefs.current.length - 1) {
-             tl.to(el, { opacity: 0, y: "calc(-50% - 50px)", duration: 0.6, ease: "power2.in" }, startTime + 1.8);
+             tl.to(el, { opacity: 0, y: "-20vh", duration: 0.6, ease: "power2.in" }, startTime + 1.8);
           }
         });
       });
@@ -478,7 +478,7 @@ export default function ProductDetailScreen() {
 
         gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
         heroContentRefs.current.forEach(el => {
-           if (el) gsap.set(el, { opacity: 0, x: 0, y: "35vh" }); // Start lower to slide up
+           if (el) gsap.set(el, { opacity: 0, x: 0, yPercent: -50, y: "35vh" }); // Start lower to slide up
         });
 
         tl.to(heroMediaContainerRef.current, {
@@ -486,7 +486,7 @@ export default function ProductDetailScreen() {
           height: "45vh",
           borderRadius: "16px",
           x: "5vw",
-          y: "-25vh", // Slide UP to the top half of the screen
+          y: "2.5vh", // Center in top half
           ease: "power2.inOut",
           duration: 1
         }, 0)
@@ -554,7 +554,7 @@ export default function ProductDetailScreen() {
         {/* The Media Container (Starts Fullscreen, Shrinks to Right) */}
         <div 
           ref={heroMediaContainerRef} 
-          className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-full z-10 overflow-hidden shadow-2xl"
+          className="absolute top-0 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
         >
           {isVideo ? (
              <video ref={heroMediaElementRef} src={heroMedia} autoPlay muted loop playsInline className="w-full h-full object-cover" />
@@ -590,7 +590,7 @@ export default function ProductDetailScreen() {
               <div 
                 key={index} 
                 ref={el => heroContentRefs.current[index] = el} 
-                className="absolute top-1/2 -translate-y-1/2 w-full left-0 opacity-0"
+                className="absolute top-1/2 w-full left-0 opacity-0"
               >
                 <span className="text-[#A87B45] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block">
                   {block.subtitle || 'The Design Story'}
