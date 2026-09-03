@@ -10,10 +10,10 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     users: 0,
     products: 0,
-    orders: 0,
-    revenue: 0
+    bookings: 0,
+    upcoming: 0
   });
-  const [recentOrders, setRecentOrders] = useState([]);
+  const [recentBookings, setRecentBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,52 +33,37 @@ export default function AdminDashboard() {
       .from('products')
       .select('*', { count: 'exact', head: true });
 
-    // Fetch total orders & revenue
-    const { data: ordersData } = await supabase
-      .from('orders')
-      .select('total_amount, status, created_at, id, user_id');
+    // Fetch total bookings
+    const { data: bookingsData } = await supabase
+      .from('consultant_bookings')
+      .select('status');
       
-    let totalRevenue = 0;
-    let totalOrders = 0;
+    let totalBookings = 0;
+    let upcomingAppointments = 0;
     
-    if (ordersData) {
-      totalOrders = ordersData.length;
-      totalRevenue = ordersData.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
+    if (bookingsData) {
+      totalBookings = bookingsData.length;
+      upcomingAppointments = bookingsData.filter(b => b.status === 'Pending' || b.status === 'Scheduled').length;
     }
 
     setStats({
       users: usersCount || 0,
       products: productsCount || 0,
-      orders: totalOrders,
-      revenue: totalRevenue
+      bookings: totalBookings,
+      upcoming: upcomingAppointments
     });
 
-    // Fetch recent 5 orders with customer info
-    const { data: recentOrdersData } = await supabase
-      .from('orders')
+    // Fetch recent 5 bookings
+    const { data: recentBookingsData } = await supabase
+      .from('consultant_bookings')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(5);
 
-    if (recentOrdersData && recentOrdersData.length > 0) {
-      // Get the profiles for these orders
-      const userIds = [...new Set(recentOrdersData.map(o => o.user_id))];
-      const { data: profilesData } = await supabase
-        .from('profiles')
-        .select('id, full_name, email')
-        .in('id', userIds);
-
-      const mappedOrders = recentOrdersData.map(order => {
-        const profile = profilesData?.find(p => p.id === order.user_id);
-        return {
-          ...order,
-          customer_name: profile?.full_name || 'Anonymous User',
-          customer_email: profile?.email || 'Unknown'
-        };
-      });
-      setRecentOrders(mappedOrders);
+    if (recentBookingsData && recentBookingsData.length > 0) {
+      setRecentBookings(recentBookingsData);
     } else {
-      setRecentOrders([]);
+      setRecentBookings([]);
     }
 
     setIsLoading(false);
@@ -126,12 +111,11 @@ export default function AdminDashboard() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#3A10E5] to-[#9D44D4] text-white flex items-center justify-center mb-5 shadow-lg shadow-[#3A10E5]/30 border border-white/20">
               <DollarSign size={24} />
             </div>
-            <p className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-1">Total Revenue</p>
-            <h3 className="text-3xl font-black text-gray-900">₹{stats.revenue.toLocaleString()}</h3>
-            <div className="flex items-center gap-2 mt-4 text-emerald-700 text-xs font-bold bg-white/50 backdrop-blur-md w-fit px-2 py-1 rounded-lg border border-white/40 shadow-sm">
-              <TrendingUp size={14} />
-              <span>+12.5% this month</span>
-            </div>
+            <p className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-1">Total Bookings</p>
+            <h3 className="text-3xl font-black text-gray-900">{stats.bookings}</h3>
+            <Link to="/admin/bookings" className="flex items-center gap-1 mt-4 text-[#3A10E5] text-xs font-bold hover:underline w-fit">
+              View all bookings <ArrowUpRight size={14} />
+            </Link>
           </div>
         </div>
 
@@ -144,10 +128,10 @@ export default function AdminDashboard() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-white flex items-center justify-center mb-5 shadow-lg shadow-blue-500/30 border border-white/20">
               <ShoppingBag size={24} />
             </div>
-            <p className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-1">Total Orders</p>
-            <h3 className="text-3xl font-black text-gray-900">{stats.orders}</h3>
-            <Link to="/admin/orders" className="flex items-center gap-1 mt-4 text-[#3A10E5] text-xs font-bold hover:underline w-fit">
-              View all orders <ArrowUpRight size={14} />
+            <p className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-1">Upcoming Appointments</p>
+            <h3 className="text-3xl font-black text-gray-900">{stats.upcoming}</h3>
+            <Link to="/admin/bookings" className="flex items-center gap-1 mt-4 text-[#3A10E5] text-xs font-bold hover:underline w-fit">
+              Manage schedule <ArrowUpRight size={14} />
             </Link>
           </div>
         </div>
@@ -193,7 +177,7 @@ export default function AdminDashboard() {
         {/* Fake Chart / Analytics Summary */}
         <div className="lg:col-span-2 glass-panel rounded-3xl p-6 flex flex-col">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-gray-900 font-serif">Revenue Overview</h3>
+            <h3 className="text-xl font-bold text-gray-900 font-serif">Bookings Overview</h3>
             <select className="glass-input text-sm font-bold text-gray-700 rounded-xl px-4 py-2 cursor-pointer shadow-sm">
               <option>This Week</option>
               <option>This Month</option>
@@ -226,38 +210,37 @@ export default function AdminDashboard() {
         {/* Recent Orders List */}
         <div className="glass-panel rounded-3xl p-6 flex flex-col">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-gray-900 font-serif">Recent Orders</h3>
-            <Link to="/admin/orders" className="p-2 bg-white/50 text-gray-700 hover:text-[#3A10E5] hover:bg-white rounded-xl transition-colors shadow-sm">
+            <h3 className="text-xl font-bold text-gray-900 font-serif">Recent Bookings</h3>
+            <Link to="/admin/bookings" className="p-2 bg-white/50 text-gray-700 hover:text-[#3A10E5] hover:bg-white rounded-xl transition-colors shadow-sm">
               <ArrowUpRight size={18} />
             </Link>
           </div>
 
           <div className="flex-1 flex flex-col gap-4 overflow-y-auto pr-2">
-            {recentOrders.length === 0 ? (
+            {recentBookings.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-8">
                 <ShoppingBag size={32} className="text-gray-200 mb-3" />
-                <p className="text-sm font-medium text-gray-500">No orders yet.<br/>Your sales will appear here!</p>
+                <p className="text-sm font-medium text-gray-500">No bookings yet.<br/>Your scheduled consultations will appear here!</p>
               </div>
             ) : (
-              recentOrders.map(order => {
-                const items = Array.isArray(order.items) ? order.items.filter(i => i._type !== 'metadata') : [];
-                const itemsCount = items.length;
+              recentBookings.map(booking => {
                 return (
-                  <div key={order.id} className="flex items-center justify-between p-4 rounded-2xl border border-white/40 bg-white/40 hover:bg-white/60 hover:border-white transition-all group shadow-sm">
+                  <div key={booking.id} className="flex items-center justify-between p-4 rounded-2xl border border-white/40 bg-white/40 hover:bg-white/60 hover:border-white transition-all group shadow-sm">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3A10E5]/20 to-pink-500/20 border border-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <span className="font-bold text-[#3A10E5] text-sm">
-                          {order.customer_name.charAt(0).toUpperCase()}
+                          {booking.customer_name?.charAt(0).toUpperCase() || 'G'}
                         </span>
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-gray-900 truncate max-w-[120px]">{order.customer_name}</h4>
-                        <p className="text-xs text-gray-600 mt-0.5">{itemsCount} item{itemsCount !== 1 ? 's' : ''}</p>
+                        <p className="text-sm font-bold text-gray-900">{booking.customer_name || 'Guest'}</p>
+                        <p className="text-xs font-medium text-gray-500">
+                          {new Date(booking.created_at).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-1.5">
-                      <span className="text-sm font-bold text-gray-900">₹{parseFloat(order.total_amount).toLocaleString()}</span>
-                      {getStatusBadge(order.status)}
+                    <div className="flex flex-col items-end gap-1">
+                      {getStatusBadge(booking.status)}
                     </div>
                   </div>
                 );

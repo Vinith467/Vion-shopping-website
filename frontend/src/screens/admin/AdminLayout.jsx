@@ -83,10 +83,7 @@ export default function AdminLayout() {
           </NavLink>
 
           <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 mt-4 px-4">Management</div>
-          <NavLink onClick={closeMenu} to="/admin/orders" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
-            <ShoppingCart size={18} />
-            Orders
-          </NavLink>
+
           <NavLink onClick={closeMenu} to="/admin/bookings" className={({isActive}) => `flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all ${isActive ? 'bg-white/60 shadow-sm text-[#6344D4] border border-white/50 font-bold' : 'text-gray-700 hover:bg-white/40 hover:text-[#6344D4]'}`}>
             <Calendar size={18} />
             Bookings

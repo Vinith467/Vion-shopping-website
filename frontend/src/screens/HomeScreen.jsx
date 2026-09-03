@@ -212,7 +212,7 @@ export default function HomeScreen() {
                   Explore our curated fashion selections tailored to your unique profile and style.
                 </p>
                 <button className="cursor-pointer border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 hover:border-white/80 transition-all">
-                   Buy Now <ArrowRight size={10} />
+                   Book Stylist <ArrowRight size={10} />
                 </button>
              </div>
           </div>
@@ -236,8 +236,8 @@ export default function HomeScreen() {
 
           {/* Bottom 3 Cards */}
           {[
-            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png", buttonText: "Buy Now" },
-            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png", buttonText: "Buy Now" },
+            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png", buttonText: "Book Stylist" },
+            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png", buttonText: "Book Stylist" },
             { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png", buttonText: "Book Now" }
           ].map((cat, idx) => (
             <div key={idx} onClick={() => navigate(`/select-gender?class=${encodeURIComponent(cat.value)}`)} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">

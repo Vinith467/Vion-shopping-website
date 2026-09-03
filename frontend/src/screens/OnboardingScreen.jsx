@@ -753,29 +753,6 @@ export default function OnboardingScreen() {
 
               <div className="space-y-6">
                 
-                {/* Size */}
-                <div className="bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-xl border border-white/45 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.75),_inset_0_-1.5px_3px_rgba(0,0,0,0.12),_0_10px_30px_rgba(0,0,0,0.08)] rounded-3xl p-7">
-                  <h3 className="font-bold text-[#1A0A08] dark:text-[#F5F0E8] mb-5 text-[18px] flex items-center gap-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>1. Size</h3>
-                  <div className="grid grid-cols-5 gap-3">
-                    {sizes.map(sizeObj => {
-                      const sizeImg = (profile.gender === 'Male') ? sizeObj.maleImg : sizeObj.femaleImg;
-                      return (
-                        <button 
-                          key={sizeObj.id} 
-                          onClick={() => setProfile({...profile, size: sizeObj.id})}
-                          className={`relative flex flex-col items-center p-2 rounded-2xl border transition-all duration-300 ${profile.size === sizeObj.id ? 'border-white/80 bg-white/40 dark:bg-[#151515]/40 transition-colors duration-500 shadow-[inset_0_0_20px_rgba(255,255,255,0.8),_0_4px_12px_rgba(0,0,0,0.05)] -translate-y-1' : 'border-white/30 bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 hover:bg-white/30 dark:bg-[#151515]/30 transition-colors duration-500 hover:border-white/60 shadow-[inset_0_1px_4px_rgba(255,255,255,0.5)] hover:-translate-y-0.5'}`}
-                        >
-                          {profile.size === sizeObj.id && <div className="absolute -top-1 -right-1 bg-[#986427] text-white rounded-full p-0.5 z-10 shadow-md"><Check size={10} strokeWidth={3} /></div>}
-                          <div className="h-20 flex items-end justify-center mb-2">
-                            <img src={sizeImg} alt={sizeObj.name} className="h-full w-auto object-contain opacity-90 drop-shadow-sm mix-blend-multiply" />
-                          </div>
-                          <span className="text-[11px] font-bold tracking-widest text-[#1A0A08] dark:text-[#F5F0E8] text-center leading-tight uppercase">{sizeObj.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
                 {/* Height & Skin Tone */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Height */}

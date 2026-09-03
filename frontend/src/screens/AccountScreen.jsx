@@ -394,18 +394,6 @@ export default function AccountScreen() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Size</label>
-                      <div className="flex items-center justify-between">
-                        <p className="text-gray-900 dark:text-[#F5F0E8] font-medium text-lg">{profile?.measurements?.size || 'Not set'}</p>
-                        <button 
-                          onClick={() => navigate('/select-size?redirect=/account')} 
-                          className="text-[#986427] text-sm font-bold flex items-center gap-1 hover:underline"
-                        >
-                          <Edit2 size={14} /> Edit
-                        </button>
-                      </div>
-                    </div>
-                    <div>
                       <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Height</label>
                       {isEditingHeight ? (
                         <div className="flex items-center gap-2 mt-1">

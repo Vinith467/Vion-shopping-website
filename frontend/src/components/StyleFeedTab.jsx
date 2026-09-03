@@ -138,7 +138,7 @@ export default function StyleFeedTab() {
                 <div>
                   <h4 className="text-white font-bold text-sm mb-1">{item.title}</h4>
                   <div className="flex items-center justify-between">
-                    <p className="text-white/80 text-xs font-medium">₹{item.price}</p>
+                    <p className="text-white/80 text-xs font-medium"></p>
                     <button className="text-white/90 hover:text-white transition-colors">
                       <Maximize2 size={16} />
                     </button>

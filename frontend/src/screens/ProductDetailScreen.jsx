@@ -94,16 +94,7 @@ const ProductStackingSection = ({ product }) => {
               {product.title || product.name}
             </h2>
             
-            <div className="flex items-center gap-4 mb-3 lg:mb-6">
-              <span className="text-lg md:text-2xl font-sans font-light text-[#1A0A08] dark:text-[#C49A5C]">
-                ${parseFloat(product.price).toFixed(2)}
-              </span>
-              {product.compare_at_price && (
-                <span className="text-sm lg:text-base font-sans text-gray-400 line-through">
-                  ${parseFloat(product.compare_at_price).toFixed(2)}
-                </span>
-              )}
-            </div>
+            <div className="mb-3 lg:mb-6"></div>
           </div>
 
           <div className="flex-1 overflow-y-auto min-h-[50px] mb-4 pr-2">
@@ -113,23 +104,16 @@ const ProductStackingSection = ({ product }) => {
           </div>
           
           <div className="flex-none flex flex-col gap-3 lg:gap-4">
-            <div className="flex items-center gap-3 lg:gap-4">
+            <div className="flex flex-col gap-2">
               <button 
-                onClick={() => {
-                  addToCart(product);
-                  navigate('/checkout');
-                }}
-                className="flex-1 bg-[#1A1A1A] dark:bg-[#C49A5C] text-white py-3 lg:py-4 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] dark:hover:bg-[#E5CDA7] dark:hover:text-[#1A0A08] dark:text-[#F5F0E8] transition-all shadow-lg flex items-center justify-center gap-2"
+                onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
+                className="w-full bg-[#1A1A1A] dark:bg-[#C49A5C] text-white py-4 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] dark:hover:bg-[#E5CDA7] dark:hover:text-[#1A0A08] transition-all shadow-lg flex items-center justify-center gap-2"
               >
-                Buy Now
+                Book Your Stylist
               </button>
-
-              <button 
-                onClick={() => addToCart(product)}
-                className="flex-1 bg-transparent border border-[#1A1A1A] dark:border-[#C49A5C] text-[#1A1A1A] dark:text-[#C49A5C] py-3 lg:py-4 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] dark:hover:bg-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] transition-all flex items-center justify-center gap-2"
-              >
-                <ShoppingBag size={14} className="lg:w-4 lg:h-4" /> Add
-              </button>
+              <p className="text-center text-[10px] text-gray-500 uppercase tracking-widest mt-1">
+                (This includes no charges for the booking of stylist)
+              </p>
             </div>
             
             <button 
@@ -454,7 +438,7 @@ export default function ProductDetailScreen() {
 
         gsap.set(heroMediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
         heroContentRefs.current.forEach(el => {
-           if (el) gsap.set(el, { opacity: 0, x: -50, y: "-50%" });
+           if (el) gsap.set(el, { opacity: 0, x: -50, y: 0 });
         });
 
         tl.to(heroMediaContainerRef.current, {
@@ -543,7 +527,7 @@ export default function ProductDetailScreen() {
     ? product.marketing_content.hero 
     : [{ subtitle: 'The Design Story', title: product.name, desc1: '[Placeholder Text: This section will contain the narrative description of the garment, detailing its inspiration, the cut, and the craftsmanship that brings it to life. The user will provide the exact copy later.]', desc2: '[Placeholder Text: Discover how traditional tailoring techniques merge seamlessly with modern aesthetics to create a silhouette that defines effortless elegance.]' }];
   
-  const heroContainerHeight = `${150 + (heroBlocks.length - 1) * 150}vh`;
+  const heroContainerHeight = `${250 + (heroBlocks.length - 1) * 250}vh`;
 
   return (
     <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 ">

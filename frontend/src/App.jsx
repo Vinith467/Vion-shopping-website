@@ -12,7 +12,6 @@ import ExploreScreen from './screens/ExploreScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 import CraftsmanshipScreen from './screens/CraftsmanshipScreen';
 import GenderSelectionScreen from './screens/GenderSelectionScreen';
-import SizeSelectionScreen from './screens/SizeSelectionScreen';
 import AboutScreen from './screens/AboutScreen';
 import CorporateScreen from './screens/CorporateScreen';
 import CorporateAboutScreen from './screens/CorporateAboutScreen';
@@ -23,7 +22,6 @@ import AdminInventory from './screens/admin/AdminInventory';
 import AdminEditProduct from './screens/admin/AdminEditProduct';
 import AdminCategories from './screens/admin/AdminCategories';
 import AdminPreferences from './screens/admin/AdminPreferences';
-import AdminOrders from './screens/admin/AdminOrders';
 import AdminBookings from './screens/admin/AdminBookings';
 import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
@@ -111,7 +109,7 @@ function App() {
       } else {
         sessionStorage.setItem('temp_gender', gender);
       }
-      navigate('/select-size?redirect=/explore');
+      navigate('/explore');
     } catch (error) {
       console.error("Error saving gender from nav:", error);
     }
@@ -255,16 +253,7 @@ function App() {
               >
                 <Heart size={21} strokeWidth={1.8} />
               </button>
-              <button 
-                onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
-                className="hover:text-[#A87B45] dark:hover:text-[#C49A5C] transition-colors relative"
-                title="Cart"
-              >
-                <ShoppingBag size={21} strokeWidth={1.8} />
-                <span className="absolute -top-1.5 -right-2 w-4.5 h-4.5 bg-[#9C733F] dark:bg-[#C49A5C] text-white text-[10px] font-sans font-bold rounded-full flex items-center justify-center shadow-xs">
-                  {cart?.length || 0}
-                </span>
-              </button>
+
             </div>
             
             {/* Login Container with Hover Popover */}
@@ -370,15 +359,7 @@ function App() {
             >
               <Heart size={18} />
             </button>
-            <button 
-              onClick={() => isLoggedIn ? navigate('/cart') : setShowSignupModal(true)} 
-              className="text-white hover:text-[#E5B8D9] transition-colors relative"
-            >
-              <ShoppingBag size={18} />
-              <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-[#E5B8D9] text-black text-[8px] font-bold rounded-full flex items-center justify-center">
-                {cart?.length || 0}
-              </span>
-            </button>
+
           </div>
         </nav>
       )}
@@ -400,7 +381,6 @@ function App() {
           <Route path="/onboarding" element={<ProtectedRoute><OnboardingScreen /></ProtectedRoute>} />
           <Route path="/add-consumer" element={<ProtectedRoute><PlaceholderScreen title="Add Consumer" /></ProtectedRoute>} />
 
-          <Route path="/select-size" element={<SizeSelectionScreen />} />
           <Route path="/select-gender" element={<GenderSelectionScreen />} />
           <Route path="/about" element={<CorporateAboutScreen />} />
           <Route path="/corporate" element={<CorporateScreen />} />
@@ -422,7 +402,7 @@ function App() {
             <Route path="inventory/edit/:id" element={<AdminEditProduct />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="preferences" element={<AdminPreferences />} />
-            <Route path="orders" element={<AdminOrders />} />
+  
             <Route path="bookings" element={<AdminBookings />} />
           </Route>
           

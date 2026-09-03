@@ -97,8 +97,6 @@ export default function AdminInventory() {
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Product</th>
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stock</th>
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -124,14 +122,7 @@ export default function AdminInventory() {
                       <td className="px-6 py-4">
                         <span className="text-xs font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md">{product.categories?.name || 'Uncategorized'}</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm font-bold text-gray-800">${product.price.toFixed(2)}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`text-sm font-bold ${product.quantity > 10 ? 'text-green-600' : product.quantity > 0 ? 'text-amber-600' : 'text-red-600'}`}>
-                          {product.quantity}
-                        </span>
-                      </td>
+
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold ${
                           product.status === 'active' ? 'bg-green-100 text-green-800' : 

@@ -289,8 +289,8 @@ export default function AdminEditProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.price || !formData.category_id) {
-      toast.error('Title, Price, and Collection are required');
+    if (!formData.title || !formData.category_id) {
+      toast.error('Title and Collection are required');
       return;
     }
 
@@ -441,6 +441,7 @@ export default function AdminEditProduct() {
     });
 
     const derivedSizes = Array.from(allSizes);
+    const derivedHeights = Array.from(allHeights);
     for (const feature of (formData.craftsmanship_features || [])) {
       let featureImgUrl = feature.img; // keep existing if it's a string
       if (feature.file) {
@@ -463,7 +464,7 @@ export default function AdminEditProduct() {
     const payload = {
       title: formData.title,
       description: formData.description,
-      price: parseFloat(formData.price),
+      price: formData.price ? parseFloat(formData.price) : 0,
       compare_at_price: formData.compare_at_price ? parseFloat(formData.compare_at_price) : null,
       sku: formData.sku,
       quantity: parseInt(formData.quantity, 10),

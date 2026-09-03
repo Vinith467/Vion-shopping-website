@@ -163,7 +163,7 @@ export default function SavedOutfitsTab() {
                 <Link to={`/product/${product.id}`}>
                   <h4 className="text-sm font-bold text-gray-900 dark:text-[#F5F0E8] line-clamp-1 hover:text-[#3A10E5]">{product.title}</h4>
                 </Link>
-                <p className="text-[12px] font-bold text-gray-500">₹{parseFloat(product.price).toLocaleString()}</p>
+                <p className="text-[12px] font-bold text-gray-500"></p>
               </div>
 
               <div className="p-3 flex justify-between items-center bg-white dark:bg-[#151515] transition-colors duration-500 ">

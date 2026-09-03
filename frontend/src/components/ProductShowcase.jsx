@@ -112,14 +112,12 @@ export default function ProductShowcase({ activeProduct, activeIndex, direction,
         <h1 className="text-4xl md:text-6xl font-serif italic tracking-wide drop-shadow-lg">
           {activeProduct.title}
         </h1>
-        <p className="opacity-80 font-light tracking-widest text-sm md:text-base">
-          ₹{activeProduct.price}
-        </p>
         <button 
+          onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
           className="mt-4 px-8 py-3 text-xs md:text-sm tracking-[0.15em] uppercase hover:opacity-80 transition-all font-medium"
           style={{ backgroundColor: activeProduct.textColor, color: activeProduct.themeColor }}
         >
-          Add to Cart
+          Book Stylist
         </button>
       </div>
 
