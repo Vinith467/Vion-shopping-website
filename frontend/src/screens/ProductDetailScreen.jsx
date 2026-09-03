@@ -543,6 +543,10 @@ export default function ProductDetailScreen() {
     return () => mm.revert();
   }, [isLoading, product]);
 
+  const currentImage = product ? (product.images && product.images.length > 0 ? product.images[0] : (product.image_url ? product.image_url.split(',')[0] : '/images/placeholder.jpg')) : '/images/placeholder.jpg';
+  const heroMedia = product?.video_url || currentImage;
+  const isVideo = heroMedia && (heroMedia.includes('.mp4') || heroMedia.includes('video'));
+
   // Handle Hero Video Playback based on viewport visibility
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -573,8 +577,6 @@ export default function ProductDetailScreen() {
     return () => observer.disconnect();
   }, [heroMedia, isVideo]);
 
-  const currentImage = product ? (product.images && product.images.length > 0 ? product.images[0] : (product.image_url ? product.image_url.split(',')[0] : '/images/placeholder.jpg')) : '/images/placeholder.jpg';
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-[#FDFBF7] dark:bg-[#0A0A0A]">
@@ -582,9 +584,6 @@ export default function ProductDetailScreen() {
       </div>
     );
   }
-
-  const heroMedia = product.video_url || currentImage;
-  const isVideo = heroMedia && (heroMedia.includes('.mp4') || heroMedia.includes('video'));
 
   // Calculate dynamic height for Hero container based on number of text blocks
   const heroBlocks = Array.isArray(product?.marketing_content?.hero) && product.marketing_content.hero.length > 0 
