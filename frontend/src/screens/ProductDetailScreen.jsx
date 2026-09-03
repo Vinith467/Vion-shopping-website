@@ -336,6 +336,7 @@ export default function ProductDetailScreen() {
   const heroMediaElementRef = useRef(null);
   const heroOverlayRef = useRef(null);
   const heroContentRefs = useRef([]);
+  const topVideoRef = useRef(null);
 
   const primaryMember = members?.find(m => m.isPrimary) || null;
   const [profile, setProfile] = useState({
@@ -583,6 +584,9 @@ export default function ProductDetailScreen() {
     if (heroMediaElementRef.current && heroMediaElementRef.current.tagName === 'VIDEO') {
       observer.observe(heroMediaElementRef.current);
     }
+    if (topVideoRef.current && topVideoRef.current.tagName === 'VIDEO') {
+      observer.observe(topVideoRef.current);
+    }
 
     return () => observer.disconnect();
   }, [heroMedia, isVideo]);
@@ -605,30 +609,33 @@ export default function ProductDetailScreen() {
   return (
     <div className="bg-[#FDFBF7] dark:bg-[#0A0A0A] min-h-[100dvh] w-full font-sans pb-24 lg:pb-0 transition-colors duration-500 ">
       
-      {/* Secondary Video Showcases */}
-      {product.marketing_content?.showcases && product.marketing_content.showcases.length > 0 ? (
-        product.marketing_content.showcases.map((showcase, index) => (
-          <ProductShowcaseSection 
-            key={index}
-            videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
-            content={showcase}
-            showFloatingButtons={index === 0}
-            onBack={() => navigate(-1)}
-            onWishlist={() => toggleWishlist && toggleWishlist(product)}
-            isWishlisted={isWishlisted}
-          />
-        ))
-      ) : (
-        <ProductShowcaseSection 
-          videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
-          content={null}
-          showFloatingButtons={true}
-          onBack={() => navigate(-1)}
-          onWishlist={() => toggleWishlist && toggleWishlist(product)}
-          isWishlisted={isWishlisted}
-        />
-      )}
+      {/* NEW TOP STATIC SECTION (Normal Fullscreen Video) */}
+      <div className="w-full h-[100dvh] relative bg-black">
+        {/* Floating Action Buttons */}
+        <div className="absolute top-0 left-0 right-0 z-50 p-6 md:p-10 flex justify-between items-start pointer-events-none">
+          <button onClick={() => navigate(-1)} className="p-3 bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full transition-colors shadow-sm pointer-events-auto">
+            <ArrowLeft size={20} />
+          </button>
+          <button 
+            onClick={() => toggleWishlist && toggleWishlist(product)}
+            className={`p-3 rounded-full transition-colors backdrop-blur-md border border-white/20 shadow-sm pointer-events-auto ${isWishlisted ? 'bg-red-500/20 text-red-500' : 'bg-black/20 hover:bg-black/40 text-white'}`}
+          >
+            <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
+          </button>
+        </div>
 
+        <video 
+          ref={topVideoRef} 
+          src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+          loop 
+          playsInline 
+          className="w-full h-full object-cover" 
+        />
+        {/* Subtle gradient so buttons remain visible */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent pointer-events-none"></div>
+      </div>
+
+      {/* ORIGINAL HERO SECTION (Rotating one) */}
       {/* ADDED WRAPPER HERE to protect React from GSAP's pin-spacer */}
       <div ref={heroContainerRef} className="w-full relative" style={{ height: heroContainerHeight }}>
 
@@ -692,6 +699,30 @@ export default function ProductDetailScreen() {
         </div>
       </div>
     </div> {/* CLOSING WRAPPER DIV */}
+
+      {/* Secondary Video Showcases */}
+      {product.marketing_content?.showcases && product.marketing_content.showcases.length > 0 ? (
+        product.marketing_content.showcases.map((showcase, index) => (
+          <ProductShowcaseSection 
+            key={index}
+            videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+            content={showcase}
+            showFloatingButtons={false}
+            onBack={() => navigate(-1)}
+            onWishlist={() => toggleWishlist && toggleWishlist(product)}
+            isWishlisted={isWishlisted}
+          />
+        ))
+      ) : (
+        <ProductShowcaseSection 
+          videoUrl={product.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+          content={null}
+          showFloatingButtons={false}
+          onBack={() => navigate(-1)}
+          onWishlist={() => toggleWishlist && toggleWishlist(product)}
+          isWishlisted={isWishlisted}
+        />
+      )}
 
     </div>
   );
