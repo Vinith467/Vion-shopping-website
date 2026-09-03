@@ -12,6 +12,7 @@ ScrollTrigger.config({ ignoreMobileResize: true }); // Prevent blinking on mobil
 const ProductStackingSection = ({ product, index }) => {
   const sectionRef = useRef(null);
   const imagesRef = useRef([]);
+  const videoRefs = useRef([]);
   const navigate = useNavigate();
 
   // Show only 1 item per product: the video if it exists, otherwise the primary image.
@@ -60,6 +61,33 @@ const ProductStackingSection = ({ product, index }) => {
     }, sectionRef);
     return () => ctx.revert();
   }, [product.id, mediaUrls.length]);
+
+  // Handle Video Playback based on viewport visibility
+  useEffect(() => {
+    if (!mediaUrls || mediaUrls.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.play().catch(() => {
+              entry.target.muted = true;
+              entry.target.play().catch(e => console.log("Video play failed:", e));
+            });
+          } else {
+            entry.target.pause();
+          }
+        });
+      },
+      { threshold: 0.6 } // Play when at least 60% is visible
+    );
+
+    videoRefs.current.forEach((video) => {
+      if (video) observer.observe(video);
+    });
+
+    return () => observer.disconnect();
+  }, [mediaUrls]);
 
   if (!mediaUrls || mediaUrls.length === 0) return null;
 
@@ -125,8 +153,9 @@ const ProductStackingSection = ({ product, index }) => {
                 >
                   {isVideo ? (
                     <video 
+                      ref={el => { if (el) videoRefs.current[i] = el; }}
                       src={mediaUrl} 
-                      autoPlay loop playsInline 
+                      loop playsInline 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out" 
                     />
                   ) : (

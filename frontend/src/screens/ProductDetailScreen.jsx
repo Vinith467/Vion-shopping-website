@@ -207,6 +207,38 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
     return () => mm.revert();
   }, [videoUrl]);
 
+  // Handle Video Playback based on viewport visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target.play) {
+              entry.target.play().catch(() => {
+                entry.target.muted = true;
+                entry.target.play().catch(e => console.log("Video play failed:", e));
+              });
+            }
+          } else {
+            if (entry.target.pause) {
+              entry.target.pause();
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // Play when at least 50% is visible
+    );
+
+    if (mediaElementRef.current && mediaElementRef.current.tagName === 'VIDEO') {
+      observer.observe(mediaElementRef.current);
+    }
+    if (heroMediaElementRef.current && heroMediaElementRef.current.tagName === 'VIDEO') {
+      observer.observe(heroMediaElementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [videoUrl, heroMedia, isVideo]);
+
   if (!videoUrl) return null;
 
   return (
@@ -218,7 +250,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
         ref={mediaContainerRef} 
         className="absolute top-1/2 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
       >
-        <video ref={mediaElementRef} src={videoUrl} autoPlay loop playsInline className="w-full h-full object-cover" />
+        <video ref={mediaElementRef} src={videoUrl} loop playsInline className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
       </div>
 
@@ -561,7 +593,7 @@ export default function ProductDetailScreen() {
           className="absolute top-1/2 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
         >
           {isVideo ? (
-             <video ref={heroMediaElementRef} src={heroMedia} autoPlay loop playsInline className="w-full h-full object-cover" />
+             <video ref={heroMediaElementRef} src={heroMedia} loop playsInline className="w-full h-full object-cover" />
           ) : (
              <img ref={heroMediaElementRef} src={heroMedia} alt={product.name} className="w-full h-full object-cover" />
           )}
