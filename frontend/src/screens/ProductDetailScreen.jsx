@@ -218,7 +218,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
         ref={mediaContainerRef} 
         className="absolute top-1/2 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
       >
-        <video ref={mediaElementRef} src={videoUrl} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+        <video ref={mediaElementRef} src={videoUrl} autoPlay loop playsInline className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
       </div>
 
@@ -561,7 +561,7 @@ export default function ProductDetailScreen() {
           className="absolute top-1/2 left-0 w-full h-full z-10 overflow-hidden shadow-2xl"
         >
           {isVideo ? (
-             <video ref={heroMediaElementRef} src={heroMedia} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+             <video ref={heroMediaElementRef} src={heroMedia} autoPlay loop playsInline className="w-full h-full object-cover" />
           ) : (
              <img ref={heroMediaElementRef} src={heroMedia} alt={product.name} className="w-full h-full object-cover" />
           )}

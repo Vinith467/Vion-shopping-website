@@ -126,7 +126,7 @@ const ProductStackingSection = ({ product, index }) => {
                   {isVideo ? (
                     <video 
                       src={mediaUrl} 
-                      autoPlay muted loop playsInline 
+                      autoPlay loop playsInline 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out" 
                     />
                   ) : (
