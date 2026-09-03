@@ -186,7 +186,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
           }
         });
 
-        gsap.set(mediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0 });
+        gsap.set(mediaContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px", x: 0, y: 0, yPercent: -50 });
         gsap.set(contentRef.current, { opacity: 0, x: 0, y: 50 });
 
         tl.to(mediaContainerRef.current, {
