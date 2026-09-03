@@ -523,12 +523,11 @@ export default function AdminEditProduct() {
       ) : (
       <>
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          {/* Save button moved */}
+        <div className="sticky top-0 z-50 bg-[#FDFBF7] -mx-6 px-6 lg:-mx-10 lg:px-10 -mt-6 pt-6 lg:-mt-10 lg:pt-10 pb-4 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 shadow-sm">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => navigate('/admin/inventory')}
-              className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm shrink-0"
             >
               <ChevronLeft size={20} className="text-gray-600" />
             </button>
@@ -538,7 +537,17 @@ export default function AdminEditProduct() {
             </div>
           </div>
           
-          
+          <button 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+            className="bg-[#1A0A08] text-white px-8 py-3.5 rounded-xl text-sm font-bold tracking-wider uppercase hover:bg-[#3E2312] transition-colors shadow-lg disabled:opacity-50 flex items-center gap-2 w-full md:w-auto justify-center shrink-0"
+          >
+            {isSubmitting ? (
+              <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Saving...</>
+            ) : (
+              <><Check size={18} /> Save Changes</>
+            )}
+          </button>
         </div>
 
 
@@ -880,22 +889,8 @@ export default function AdminEditProduct() {
                      </label>
                    </div>
                     </div>
-                    
-                    <hr className="border-gray-100 my-6" />
-                    
-                    <button 
-                      onClick={handleSubmit} 
-                      disabled={isSubmitting}
-                      className="bg-[#1A0A08] text-white w-full justify-center py-3.5 rounded-xl text-sm font-bold tracking-wider uppercase hover:bg-[#3E2312] transition-colors shadow-lg disabled:opacity-50 flex items-center gap-2"
-                    >
-                      {isSubmitting ? (
-                        <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Saving...</>
-                      ) : (
-                        <><Check size={18} /> Save Changes</>
-                      )}
-                    </button>
-                 </div>
-               </div>
+                  </div>
+                </div>
             
           </div>
 
