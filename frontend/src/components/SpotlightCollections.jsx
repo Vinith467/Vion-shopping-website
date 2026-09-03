@@ -70,6 +70,7 @@ const ProductStackingSection = ({ product, index }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            entry.target.muted = false;
             entry.target.play().catch(() => {
               entry.target.muted = true;
               entry.target.play().catch(e => console.log("Video play failed:", e));

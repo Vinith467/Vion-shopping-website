@@ -214,6 +214,7 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (entry.target.play) {
+              entry.target.muted = false;
               entry.target.play().catch(() => {
                 entry.target.muted = true;
                 entry.target.play().catch(e => console.log("Video play failed:", e));
@@ -232,12 +233,9 @@ const ProductShowcaseSection = ({ videoUrl, content }) => {
     if (mediaElementRef.current && mediaElementRef.current.tagName === 'VIDEO') {
       observer.observe(mediaElementRef.current);
     }
-    if (heroMediaElementRef.current && heroMediaElementRef.current.tagName === 'VIDEO') {
-      observer.observe(heroMediaElementRef.current);
-    }
 
     return () => observer.disconnect();
-  }, [videoUrl, heroMedia, isVideo]);
+  }, [videoUrl]);
 
   if (!videoUrl) return null;
 
@@ -544,6 +542,36 @@ export default function ProductDetailScreen() {
 
     return () => mm.revert();
   }, [isLoading, product]);
+
+  // Handle Hero Video Playback based on viewport visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target.play) {
+              entry.target.muted = false;
+              entry.target.play().catch(() => {
+                entry.target.muted = true;
+                entry.target.play().catch(e => console.log("Video play failed:", e));
+              });
+            }
+          } else {
+            if (entry.target.pause) {
+              entry.target.pause();
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // Play when at least 50% is visible
+    );
+
+    if (heroMediaElementRef.current && heroMediaElementRef.current.tagName === 'VIDEO') {
+      observer.observe(heroMediaElementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [heroMedia, isVideo]);
 
   const currentImage = product ? (product.images && product.images.length > 0 ? product.images[0] : (product.image_url ? product.image_url.split(',')[0] : '/images/placeholder.jpg')) : '/images/placeholder.jpg';
 
