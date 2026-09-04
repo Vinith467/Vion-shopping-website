@@ -629,13 +629,13 @@ export default function ProductDetailScreen() {
             ref={topVideoRef} 
             src={product.marketing_content.banner_video_url} 
             loop playsInline 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-contain" 
           />
         ) : product?.marketing_content?.banner_image_url ? (
           <img 
             src={product.marketing_content.banner_image_url} 
             alt={product?.title || "Banner"}
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-contain" 
           />
         ) : (
           <video 
