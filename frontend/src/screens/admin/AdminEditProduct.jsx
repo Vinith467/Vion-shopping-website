@@ -92,6 +92,7 @@ export default function AdminEditProduct() {
   const [productVideo, setProductVideo] = useState(null);
   const [secondaryProductVideo, setSecondaryProductVideo] = useState(null);
   const [bannerProductVideo, setBannerProductVideo] = useState(null);
+  const [bannerProductImage, setBannerProductImage] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -133,6 +134,7 @@ export default function AdminEditProduct() {
     setProductVideo(prod?.video_url ? { type: 'existing', url: prod.video_url } : null);
     setSecondaryProductVideo(prod?.secondary_video_url ? { type: 'existing', url: prod.secondary_video_url } : null);
     setBannerProductVideo(prod?.marketing_content?.banner_video_url ? { type: 'existing', url: prod.marketing_content.banner_video_url } : null);
+    setBannerProductImage(prod?.marketing_content?.banner_image_url ? { type: 'existing', url: prod.marketing_content.banner_image_url } : null);
 
     let urls = [];
     if (prod.images && Array.isArray(prod.images)) {
@@ -197,12 +199,14 @@ export default function AdminEditProduct() {
     if (productVideo && productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
     if (secondaryProductVideo && secondaryProductVideo.type === 'new') URL.revokeObjectURL(secondaryProductVideo.preview);
     if (bannerProductVideo && bannerProductVideo.type === 'new') URL.revokeObjectURL(bannerProductVideo.preview);
+    if (bannerProductImage && bannerProductImage.type === 'new') URL.revokeObjectURL(bannerProductImage.preview);
     Object.values(variationImages).forEach(vArr => {
       vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
     });
     setProductVideo(null);
     setSecondaryProductVideo(null);
     setBannerProductVideo(null);
+    setBannerProductImage(null);
     setShowModal(false);
   };
 
@@ -382,6 +386,29 @@ export default function AdminEditProduct() {
       }
     }
 
+    // Banner Product Image
+    let finalBannerImageUrl = formData.marketing_content?.banner_image_url || null;
+    if (bannerProductImage && bannerProductImage.type === 'new') {
+      try {
+        finalBannerImageUrl = await uploadImage(bannerProductImage.file, 'products/images', 'public-images');
+      } catch (err) {
+        toast.error('Failed to upload banner image');
+        console.error(err);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+    if (bannerProductVideo && bannerProductVideo.type === 'new') {
+      try {
+        finalBannerVideoUrl = await uploadImage(bannerProductVideo.file, 'products/videos', 'public-images');
+      } catch (err) {
+        toast.error('Failed to upload banner video');
+        console.error(err);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     // Variations Images
     const updatedVariations = [...formData.variations];
     for (let i = 0; i < updatedVariations.length; i++) {
@@ -498,7 +525,8 @@ export default function AdminEditProduct() {
       secondary_video_url: finalSecondaryVideoUrl,
       marketing_content: {
         ...formData.marketing_content,
-        banner_video_url: finalBannerVideoUrl
+        banner_video_url: finalBannerVideoUrl,
+        banner_image_url: finalBannerImageUrl
       }
       // Removed new columns temporarily until they are added to DB:
       // spotlight_images: finalSpotlightArray,
@@ -648,8 +676,8 @@ export default function AdminEditProduct() {
                   </div>
                 </div>
 
-                {/* Videos */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Videos & Media */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Banner Video */}
                   <div>
                     <label className="text-xs font-bold text-[#1A0A08] uppercase tracking-wider mb-4 block border-t border-gray-100 pt-6">Banner Video (Top Section)</label>
@@ -705,6 +733,61 @@ export default function AdminEditProduct() {
                           </div>
                           <span className="text-xs font-bold text-gray-500">Upload Banner Video</span>
                           <span className="text-[10px] text-gray-400 mt-1">MP4 format recommended</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Banner Image */}
+                  <div>
+                    <label className="text-xs font-bold text-[#1A0A08] uppercase tracking-wider mb-4 block border-t border-gray-100 pt-6">Banner Image (Top Section)</label>
+                    <div className="p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:border-[#986427] hover:bg-[#986427]/5 transition-colors group relative">
+                      {bannerProductImage && bannerProductImage.type !== 'empty' ? (
+                        <div className="relative">
+                          {bannerProductImage.type === 'existing' ? (
+                            <img src={bannerProductImage.url} className="w-full h-32 object-cover rounded-lg mb-2" />
+                          ) : bannerProductImage.type === 'new' ? (
+                            <img src={bannerProductImage.preview} className="w-full h-32 object-cover rounded-lg mb-2" />
+                          ) : null}
+                          <div className="absolute top-2 right-2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (bannerProductImage.type === 'new') URL.revokeObjectURL(bannerProductImage.preview);
+                                setBannerProductImage({ type: 'empty' });
+                                setFormData(prev => ({ 
+                                  ...prev, 
+                                  marketing_content: {
+                                    ...prev.marketing_content,
+                                    banner_image_url: ''
+                                  } 
+                                }));
+                              }}
+                              className="p-1.5 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition-colors"
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                          <p className="text-[10px] text-gray-500 font-bold text-center mt-2 truncate">{bannerProductImage.type === 'new' ? bannerProductImage.file.name : 'Existing Image'}</p>
+                        </div>
+                      ) : (
+                        <div className="py-6 flex flex-col items-center justify-center">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              if (file) {
+                                setBannerProductImage({ type: 'new', file, preview: URL.createObjectURL(file) });
+                              }
+                            }}
+                          />
+                          <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Plus size={20} className="text-gray-400 group-hover:text-[#986427]" />
+                          </div>
+                          <span className="text-xs font-bold text-gray-500">Upload Banner Image</span>
+                          <span className="text-[10px] text-gray-400 mt-1">High quality image</span>
                         </div>
                       )}
                     </div>

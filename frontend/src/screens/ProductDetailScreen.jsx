@@ -624,13 +624,27 @@ export default function ProductDetailScreen() {
 
       {/* NEW TOP STATIC SECTION (Normal Fullscreen Video) */}
       <div className="w-full h-[100dvh] relative bg-black">
-        <video 
-          ref={topVideoRef} 
-          src={product?.marketing_content?.banner_video_url || product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
-          loop 
-          playsInline 
-          className="w-full h-full object-cover" 
-        />
+        {product?.marketing_content?.banner_video_url ? (
+          <video 
+            ref={topVideoRef} 
+            src={product.marketing_content.banner_video_url} 
+            loop playsInline 
+            className="w-full h-full object-cover" 
+          />
+        ) : product?.marketing_content?.banner_image_url ? (
+          <img 
+            src={product.marketing_content.banner_image_url} 
+            alt={product?.title || "Banner"}
+            className="w-full h-full object-cover" 
+          />
+        ) : (
+          <video 
+            ref={topVideoRef} 
+            src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+            loop playsInline 
+            className="w-full h-full object-cover" 
+          />
+        )}
         {/* Subtle gradient so buttons remain visible */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent pointer-events-none"></div>
       </div>
