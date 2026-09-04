@@ -622,18 +622,8 @@ export default function ProductDetailScreen() {
         </button>
       </div>
 
-      {/* NEW TOP STATIC SECTION (Normal Fullscreen Video) */}
-      <div className="w-full h-[100dvh] relative bg-black overflow-hidden">
-        {/* Ambient Blurred Background for 16:9 media to fill blank space */}
-        {(product?.marketing_content?.banner_image_url || product?.marketing_content?.banner_video_url) && (
-          <div className="absolute inset-0 z-0 opacity-50 blur-3xl scale-110 pointer-events-none">
-            {product?.marketing_content?.banner_image_url ? (
-              <img src={product.marketing_content.banner_image_url} className="w-full h-full object-cover" />
-            ) : (
-              <video src={product.marketing_content.banner_video_url} className="w-full h-full object-cover" autoPlay loop muted playsInline />
-            )}
-          </div>
-        )}
+      {/* NEW TOP STATIC SECTION (Adapts to media size if custom, otherwise fullscreen) */}
+      <div className={`w-full relative bg-black overflow-hidden ${(!product?.marketing_content?.banner_image_url && !product?.marketing_content?.banner_video_url) ? 'h-[100dvh]' : ''}`}>
         
         {/* Foreground Media */}
         <div className="relative z-10 w-full h-full flex items-center justify-center">
@@ -642,20 +632,20 @@ export default function ProductDetailScreen() {
               ref={topVideoRef} 
               src={product.marketing_content.banner_video_url} 
               loop playsInline 
-              className="w-full h-full object-contain" 
+              className="w-full h-auto object-contain block" 
             />
           ) : product?.marketing_content?.banner_image_url ? (
             <img 
               src={product.marketing_content.banner_image_url} 
               alt={product?.title || "Banner"}
-              className="w-full h-full object-contain" 
+              className="w-full h-auto object-contain block" 
             />
           ) : (
             <video 
               ref={topVideoRef} 
               src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
               loop playsInline 
-              className="w-full h-full object-cover" 
+              className="w-full h-full object-cover block" 
             />
           )}
         </div>
