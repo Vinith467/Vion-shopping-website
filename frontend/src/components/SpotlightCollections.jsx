@@ -178,7 +178,7 @@ const ProductStackingSection = ({ product, index }) => {
   );
 };
 
-export default function SpotlightCollections({ products, categoryName }) {
+export default function SpotlightCollections({ products, categoryName, categoryVideo }) {
   const containerRef = useRef(null);
 
   // A premium fashion placeholder image for the collection hero to prevent 403 video errors
@@ -228,11 +228,22 @@ export default function SpotlightCollections({ products, categoryName }) {
       <div className="hero-container relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
         <div className="hero-video-wrapper absolute inset-0 w-full h-[120%] -top-[10%]">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
-          <img 
-            src={heroImage} 
-            alt="Collection Hero"
-            className="w-full h-full object-cover"
-          />
+          {categoryVideo ? (
+            <video 
+              src={categoryVideo}
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img 
+              src={heroImage} 
+              alt="Collection Hero"
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
         
         <div className="absolute inset-0 flex flex-col items-center justify-center z-20 text-white text-center px-6 fade-up">

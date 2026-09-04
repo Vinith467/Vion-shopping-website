@@ -26,6 +26,15 @@ export default function ExploreScreen() {
   const userGender = activeProfile?.gender || tempGender;
   const activeProfileHeight = activeProfile?.height;
 
+  const getCategoryMedia = (url) => {
+    if (!url) return { image: '', video: '' };
+    const parts = url.split('::::');
+    if (parts.length === 2) {
+      return { image: parts[0], video: parts[1] };
+    }
+    return { image: url, video: '' };
+  };
+
   useEffect(() => {
     if (!userGender && !isLoading) {
       // Redirect to select gender if we don't have one
@@ -122,7 +131,7 @@ export default function ExploreScreen() {
                 className="group relative aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all block cursor-pointer"
               >
                 <img 
-                  src={cat.image_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80&auto=format&fit=crop'} 
+                  src={getCategoryMedia(cat.image_url).image || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80&auto=format&fit=crop'} 
                   alt={cat.name} 
                   loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -163,7 +172,11 @@ export default function ExploreScreen() {
           </div>
         ) : (
           <div className="w-full">
-            <SpotlightCollections products={products} categoryName={categoryName} />
+            <SpotlightCollections 
+              products={products} 
+              categoryName={categoryName} 
+              categoryVideo={categoryParam ? getCategoryMedia(categories.find(c => c.id === categoryParam)?.image_url).video : null}
+            />
           </div>
         )}
         </>

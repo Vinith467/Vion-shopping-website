@@ -91,6 +91,7 @@ export default function AdminEditProduct() {
   const [formData, setFormData] = useState(initialForm);
   const [productVideo, setProductVideo] = useState(null);
   const [secondaryProductVideo, setSecondaryProductVideo] = useState(null);
+  const [bannerProductVideo, setBannerProductVideo] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -131,6 +132,7 @@ export default function AdminEditProduct() {
 
     setProductVideo(prod?.video_url ? { type: 'existing', url: prod.video_url } : null);
     setSecondaryProductVideo(prod?.secondary_video_url ? { type: 'existing', url: prod.secondary_video_url } : null);
+    setBannerProductVideo(prod?.marketing_content?.banner_video_url ? { type: 'existing', url: prod.marketing_content.banner_video_url } : null);
 
     let urls = [];
     if (prod.images && Array.isArray(prod.images)) {
@@ -194,11 +196,13 @@ export default function AdminEditProduct() {
     spotlightImages.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
     if (productVideo && productVideo.type === 'new') URL.revokeObjectURL(productVideo.preview);
     if (secondaryProductVideo && secondaryProductVideo.type === 'new') URL.revokeObjectURL(secondaryProductVideo.preview);
+    if (bannerProductVideo && bannerProductVideo.type === 'new') URL.revokeObjectURL(bannerProductVideo.preview);
     Object.values(variationImages).forEach(vArr => {
       vArr.forEach(img => { if (img.type === 'new') URL.revokeObjectURL(img.preview); });
     });
     setProductVideo(null);
     setSecondaryProductVideo(null);
+    setBannerProductVideo(null);
     setShowModal(false);
   };
 
@@ -365,6 +369,19 @@ export default function AdminEditProduct() {
       }
     }
 
+    // Banner Product Video
+    let finalBannerVideoUrl = formData.marketing_content?.banner_video_url || null;
+    if (bannerProductVideo && bannerProductVideo.type === 'new') {
+      try {
+        finalBannerVideoUrl = await uploadImage(bannerProductVideo.file, 'products/videos', 'public-images');
+      } catch (err) {
+        toast.error('Failed to upload banner video');
+        console.error(err);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     // Variations Images
     const updatedVariations = [...formData.variations];
     for (let i = 0; i < updatedVariations.length; i++) {
@@ -479,7 +496,10 @@ export default function AdminEditProduct() {
       images: finalImagesArray,
       video_url: finalVideoUrl,
       secondary_video_url: finalSecondaryVideoUrl,
-      marketing_content: formData.marketing_content
+      marketing_content: {
+        ...formData.marketing_content,
+        banner_video_url: finalBannerVideoUrl
+      }
       // Removed new columns temporarily until they are added to DB:
       // spotlight_images: finalSpotlightArray,
       // craftsmanship_features: finalCraftsmanshipFeatures
@@ -629,7 +649,67 @@ export default function AdminEditProduct() {
                 </div>
 
                 {/* Videos */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Banner Video */}
+                  <div>
+                    <label className="text-xs font-bold text-[#1A0A08] uppercase tracking-wider mb-4 block border-t border-gray-100 pt-6">Banner Video (Top Section)</label>
+                    <div className="p-4 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 hover:border-[#986427] hover:bg-[#986427]/5 transition-colors group relative">
+                      {bannerProductVideo && bannerProductVideo.type !== 'empty' ? (
+                        <div className="relative">
+                          {bannerProductVideo.type === 'existing' && bannerProductVideo.url.endsWith('.mp4') ? (
+                            <video src={bannerProductVideo.url} className="w-full h-32 object-cover rounded-lg mb-2" autoPlay loop muted playsInline />
+                          ) : bannerProductVideo.type === 'new' ? (
+                            <video src={bannerProductVideo.preview} className="w-full h-32 object-cover rounded-lg mb-2" autoPlay loop muted playsInline />
+                          ) : (
+                            <div className="w-full h-32 bg-gray-200 rounded-lg flex flex-col items-center justify-center mb-2">
+                              <Package size={24} className="text-gray-400 mb-2" />
+                              <span className="text-xs text-gray-500 font-bold truncate max-w-full px-2">{bannerProductVideo.url}</span>
+                            </div>
+                          )}
+                          <div className="absolute top-2 right-2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (bannerProductVideo.type === 'new') URL.revokeObjectURL(bannerProductVideo.preview);
+                                setBannerProductVideo({ type: 'empty' });
+                                setFormData(prev => ({ 
+                                  ...prev, 
+                                  marketing_content: {
+                                    ...prev.marketing_content,
+                                    banner_video_url: ''
+                                  } 
+                                }));
+                              }}
+                              className="p-1.5 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition-colors"
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                          <p className="text-[10px] text-gray-500 font-bold text-center mt-2 truncate">{bannerProductVideo.type === 'new' ? bannerProductVideo.file.name : 'Existing Video'}</p>
+                        </div>
+                      ) : (
+                        <div className="py-6 flex flex-col items-center justify-center">
+                          <input
+                            type="file"
+                            accept="video/*"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              if (file) {
+                                setBannerProductVideo({ type: 'new', file, preview: URL.createObjectURL(file) });
+                              }
+                            }}
+                          />
+                          <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Plus size={20} className="text-gray-400 group-hover:text-[#986427]" />
+                          </div>
+                          <span className="text-xs font-bold text-gray-500">Upload Banner Video</span>
+                          <span className="text-[10px] text-gray-400 mt-1">MP4 format recommended</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Primary Video */}
                   <div>
                     <label className="text-xs font-bold text-[#1A0A08] uppercase tracking-wider mb-4 block border-t border-gray-100 pt-6">Primary Video (Hero Section)</label>

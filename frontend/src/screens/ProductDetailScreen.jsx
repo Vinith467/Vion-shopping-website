@@ -626,7 +626,7 @@ export default function ProductDetailScreen() {
       <div className="w-full h-[100dvh] relative bg-black">
         <video 
           ref={topVideoRef} 
-          src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+          src={product?.marketing_content?.banner_video_url || product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
           loop 
           playsInline 
           className="w-full h-full object-cover" 

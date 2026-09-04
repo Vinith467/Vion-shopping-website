@@ -23,11 +23,23 @@ export default function AdminCategories() {
   const [editingId, setEditingId] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
+
+  const getCategoryMedia = (url) => {
+    if (!url) return { image: '', video: '' };
+    const parts = url.split('::::');
+    if (parts.length === 2) {
+      return { image: parts[0], video: parts[1] };
+    }
+    return { image: url, video: '' };
+  };
 
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
     image_url: '',
+    video_url: '',
     parent_id: ''
   });
 
@@ -49,17 +61,21 @@ export default function AdminCategories() {
   const handleOpenModal = (cat = null) => {
     setImageFile(null);
     setImagePreview(null);
+    setVideoFile(null);
+    setVideoPreview(null);
     if (cat) {
+      const media = getCategoryMedia(cat.image_url);
       setEditingId(cat.id);
       setFormData({
         name: cat.name,
         slug: cat.slug,
-        image_url: cat.image_url || '',
+        image_url: media.image || '',
+        video_url: media.video || '',
         parent_id: cat.parent_id || ''
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', slug: '', image_url: '', parent_id: '' });
+      setFormData({ name: '', slug: '', image_url: '', video_url: '', parent_id: '' });
     }
     setShowModal(true);
   };
@@ -84,10 +100,23 @@ export default function AdminCategories() {
       }
     }
 
+    let finalVideoUrl = formData.video_url;
+    if (videoFile) {
+      try {
+        finalVideoUrl = await uploadImage(videoFile, 'categories', 'public-images');
+      } catch (err) {
+        toast.error('Failed to upload video: ' + err.message);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    const combinedUrl = `${finalImageUrl || ''}::::${finalVideoUrl || ''}`;
+
     const payload = {
       name: formData.name,
       slug: formData.slug,
-      image_url: finalImageUrl || null,
+      image_url: combinedUrl,
       parent_id: formData.parent_id || null
     };
 
@@ -192,8 +221,8 @@ export default function AdminCategories() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0 border border-gray-200">
-                            {cat.image_url ? (
-                              <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
+                            {getCategoryMedia(cat.image_url).image ? (
+                              <img src={getCategoryMedia(cat.image_url).image} alt={cat.name} className="w-full h-full object-cover" />
                             ) : (
                               <ImageIcon size={16} className="text-gray-400" />
                             )}
@@ -294,7 +323,7 @@ export default function AdminCategories() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection Image</label>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection Image (Thumbnail)</label>
                   <input 
                     type="file" 
                     accept="image/*"
@@ -311,6 +340,27 @@ export default function AdminCategories() {
                 {(imagePreview || formData.image_url) && (
                   <div className="aspect-video w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
                     <img src={imagePreview || formData.image_url} alt="Preview" className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Collection Banner Video (Hero Section)</label>
+                  <input 
+                    type="file" 
+                    accept="video/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setVideoFile(e.target.files[0]);
+                        setVideoPreview(URL.createObjectURL(e.target.files[0]));
+                      }
+                    }}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 font-medium text-[#1A0A08] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#1A0A08] file:text-white hover:file:bg-gray-800 transition-all cursor-pointer"
+                  />
+                </div>
+                
+                {(videoPreview || formData.video_url) && (
+                  <div className="aspect-video w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-black">
+                    <video src={videoPreview || formData.video_url} autoPlay loop muted playsInline className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
                   </div>
                 )}
 
