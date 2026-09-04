@@ -623,30 +623,42 @@ export default function ProductDetailScreen() {
       </div>
 
       {/* NEW TOP STATIC SECTION (Normal Fullscreen Video) */}
-      <div className="w-full h-[100dvh] relative bg-black">
-        {product?.marketing_content?.banner_video_url ? (
-          <video 
-            ref={topVideoRef} 
-            src={product.marketing_content.banner_video_url} 
-            loop playsInline 
-            className="w-full h-full object-contain" 
-          />
-        ) : product?.marketing_content?.banner_image_url ? (
-          <img 
-            src={product.marketing_content.banner_image_url} 
-            alt={product?.title || "Banner"}
-            className="w-full h-full object-contain" 
-          />
-        ) : (
-          <video 
-            ref={topVideoRef} 
-            src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
-            loop playsInline 
-            className="w-full h-full object-cover" 
-          />
+      <div className="w-full h-[100dvh] relative bg-black overflow-hidden">
+        {/* Ambient Blurred Background for 16:9 media to fill blank space */}
+        {(product?.marketing_content?.banner_image_url || product?.marketing_content?.banner_video_url) && (
+          <div className="absolute inset-0 z-0 opacity-50 blur-3xl scale-110 pointer-events-none">
+            {product?.marketing_content?.banner_image_url ? (
+              <img src={product.marketing_content.banner_image_url} className="w-full h-full object-cover" />
+            ) : (
+              <video src={product.marketing_content.banner_video_url} className="w-full h-full object-cover" autoPlay loop muted playsInline />
+            )}
+          </div>
         )}
-        {/* Subtle gradient so buttons remain visible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent pointer-events-none"></div>
+        
+        {/* Foreground Media */}
+        <div className="relative z-10 w-full h-full flex items-center justify-center">
+          {product?.marketing_content?.banner_video_url ? (
+            <video 
+              ref={topVideoRef} 
+              src={product.marketing_content.banner_video_url} 
+              loop playsInline 
+              className="w-full h-full object-contain" 
+            />
+          ) : product?.marketing_content?.banner_image_url ? (
+            <img 
+              src={product.marketing_content.banner_image_url} 
+              alt={product?.title || "Banner"}
+              className="w-full h-full object-contain" 
+            />
+          ) : (
+            <video 
+              ref={topVideoRef} 
+              src={product?.secondary_video_url || 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-gray-suit-41973-large.mp4'} 
+              loop playsInline 
+              className="w-full h-full object-cover" 
+            />
+          )}
+        </div>
       </div>
 
       {/* ORIGINAL HERO SECTION (Rotating one) */}
