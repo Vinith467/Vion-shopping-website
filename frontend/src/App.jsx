@@ -27,7 +27,7 @@ import BottomNav from './components/BottomNav';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import ScrollToTop from './components/ScrollToTop';
-import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award, Sun, Moon } from "lucide-react";
+import { Compass, Sparkles, ShoppingBag, User, Search, Heart, ChevronDown, Mail, Lock, EyeOff, Diamond, Truck, Headphones, Award, Sun, Moon, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Badge } from 'antd';
 import ConsultantPopup from './components/ConsultantPopup';
@@ -100,6 +100,7 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showBookConsultantModal, setShowBookConsultantModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleNavGenderSelect = async (gender) => {
     try {
@@ -339,29 +340,46 @@ function App() {
 
       {/* Mobile Top Navigation (Visible only on Mobile) */}
       {isMainTab && (
-        <nav className="md:hidden flex items-center justify-between px-5 py-3 sticky top-0 bg-[#0A0A0A] text-white z-50 border-b border-gray-800">
-          <Link to="/home" className="flex flex-col cursor-pointer">
-            <span className="text-lg font-serif font-bold tracking-widest text-white leading-none">
-              VION
-            </span>
-          </Link>
+        <div className="md:hidden sticky top-0 z-50">
+          <nav className="flex items-center justify-between px-5 py-3 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
+            <Link to="/home" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col cursor-pointer">
+              <span className="text-lg font-serif font-bold tracking-widest text-white leading-none">
+                VION
+              </span>
+            </Link>
 
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => navigate('/explore')} 
-              className="text-white hover:text-[#E5B8D9] transition-colors"
-            >
-              <Search size={18} />
-            </button>
-            <button 
-              onClick={() => isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true)} 
-              className="text-white hover:text-[#E5B8D9] transition-colors"
-            >
-              <Heart size={18} />
-            </button>
-
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => { setIsMobileMenuOpen(false); navigate('/explore'); }} 
+                className="text-white hover:text-[#C49A5C] transition-colors"
+              >
+                <Search size={18} />
+              </button>
+              <button 
+                onClick={() => { setIsMobileMenuOpen(false); isLoggedIn ? navigate('/account', { state: { activeTab: 'saved' } }) : setShowSignupModal(true); }} 
+                className="text-white hover:text-[#C49A5C] transition-colors"
+              >
+                <Heart size={18} />
+              </button>
+              <button 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                className="text-white hover:text-[#C49A5C] transition-colors ml-1"
+              >
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </nav>
+          
+          {/* Mobile Dropdown Menu */}
+          <div className={`absolute top-full left-0 w-full bg-[#0A0A0A] flex flex-col overflow-hidden transition-all duration-300 ease-in-out origin-top z-40 ${isMobileMenuOpen ? 'max-h-[300px] opacity-100 border-b border-gray-800 shadow-xl' : 'max-h-0 opacity-0 border-none shadow-none'}`}>
+            <div className="flex flex-col px-6 py-5 gap-5">
+               <button onClick={() => { setIsMobileMenuOpen(false); navigate('/about'); }} className="text-left text-white text-[14px] font-serif uppercase tracking-widest hover:text-[#C49A5C] transition-colors">About Us</button>
+               <button onClick={() => { setIsMobileMenuOpen(false); navigate('/corporate'); }} className="text-left text-white text-[14px] font-serif uppercase tracking-widest flex items-center gap-2 hover:text-[#C49A5C] transition-colors">VION Corporate <span className="bg-white/10 text-white text-[8px] font-sans font-bold px-1.5 py-0.5 rounded-sm tracking-widest">B2B</span></button>
+               <div className="w-full h-px bg-gray-800 my-1"></div>
+               <button onClick={() => { setIsMobileMenuOpen(false); setShowBookConsultantModal(true); }} className="text-left text-[#C49A5C] text-[14px] font-serif font-bold uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors"><Sparkles size={14}/> Book Consultant</button>
+            </div>
           </div>
-        </nav>
+        </div>
       )}
 
       {/* Main Content Area */}
