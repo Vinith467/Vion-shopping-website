@@ -41,15 +41,20 @@ export default function CorporateGlobalCraftsmanship() {
       // Pinning the left text is now handled natively by CSS sticky in the JSX.
       // We removed the GSAP pin because pinning flex items breaks their width/layout.
 
-      // Create a stacking effect for the cards on the right
-      cardsRef.current.forEach((card, index) => {
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
-          endTrigger: containerRef.current,
-          end: "bottom bottom",
-          pin: true,
-          pinSpacing: false,
+      let mm = gsap.matchMedia();
+
+      // Only pin the cards on desktop screens (>=1024px)
+      mm.add("(min-width: 1024px)", () => {
+        // Create a stacking effect for the cards on the right
+        cardsRef.current.forEach((card, index) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
+            endTrigger: containerRef.current,
+            end: "bottom bottom",
+            pin: true,
+            pinSpacing: false,
+          });
         });
       });
 

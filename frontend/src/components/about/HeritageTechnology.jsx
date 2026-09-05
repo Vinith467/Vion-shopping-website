@@ -49,7 +49,7 @@ export default function HeritageTechnology() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 overflow-hidden flex items-center justify-center border-t border-black/5">
+    <section ref={containerRef} className="relative h-[100dvh] w-full bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 overflow-hidden flex items-center justify-center border-t border-black/5">
       
       {/* Center Text (Revealed when doors open) */}
       <div 

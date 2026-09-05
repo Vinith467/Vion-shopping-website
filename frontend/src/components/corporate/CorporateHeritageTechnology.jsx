@@ -49,7 +49,7 @@ export default function CorporateHeritageTechnology() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden flex items-center justify-center">
+    <section ref={containerRef} className="relative h-[100dvh] w-full bg-[#151515] overflow-hidden flex items-center justify-center">
       
       {/* Center Text (Revealed when doors open) */}
       <div 

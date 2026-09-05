@@ -43,7 +43,7 @@ export default function VionManifesto() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+    <section ref={containerRef} className="relative w-full h-[100dvh] flex flex-col items-center justify-center text-center overflow-hidden">
       
       {/* Majestic Parallax Background */}
       <div className="absolute inset-0 z-0">

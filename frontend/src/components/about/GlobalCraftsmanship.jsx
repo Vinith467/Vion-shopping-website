@@ -31,19 +31,23 @@ export default function GlobalCraftsmanship() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      
-      // Create a stacking effect for the cards on the right
-      cardsRef.current.forEach((card, index) => {
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
-          endTrigger: containerRef.current,
-          end: "bottom bottom",
-          pin: true,
-          pinSpacing: false,
+      let mm = gsap.matchMedia();
+
+      // Only pin the cards on desktop screens (>=1024px)
+      mm.add("(min-width: 1024px)", () => {
+        // Create a stacking effect for the cards on the right
+        cardsRef.current.forEach((card, index) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
+            endTrigger: containerRef.current,
+            end: "bottom bottom",
+            pin: true,
+            pinSpacing: false,
+          });
         });
       });
-
+      
     }, containerRef);
     return () => ctx.revert();
   }, []);
@@ -66,8 +70,8 @@ export default function GlobalCraftsmanship() {
               <img src="/New folder/4.png" alt="Global Sourcing" className="w-full h-full object-cover" />
             </div>
 
-            <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-4">Global Sourcing</h3>
-            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h3 className="text-[10px] md:text-[12px] font-bold uppercase tracking-[0.2em] text-[#A87B45] mb-4">Global Sourcing</h3>
+            <h2 className="text-3xl md:text-5xl font-bold uppercase mb-6 md:mb-8 leading-tight text-[#111] dark:text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Crafted Around The World.<br/>Made For You.
             </h2>
             <div className="space-y-5 text-[15px] text-[#555] font-light leading-relaxed">

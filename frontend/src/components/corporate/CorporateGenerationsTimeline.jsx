@@ -58,7 +58,7 @@ export default function CorporateGenerationsTimeline() {
   };
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden">
+    <section ref={containerRef} className="relative h-[100dvh] w-full bg-[#151515] overflow-hidden">
       
       {/* Background Image that reveals and colors up */}
       <div className="absolute inset-0 z-0">
