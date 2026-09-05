@@ -26,12 +26,12 @@ export default function HeritageTechnology() {
 
       // The "Door Opening" effect
       tl.to(leftDoorRef.current, {
-        xPercent: -100, // Move left door completely out
+        xPercent: -120, // Move left door completely out (with overshoot)
         ease: "power2.inOut",
         duration: 1
       }, 0)
       .to(rightDoorRef.current, {
-        xPercent: 100, // Move right door completely out
+        xPercent: 120, // Move right door completely out (with overshoot)
         ease: "power2.inOut",
         duration: 1
       }, 0)
@@ -94,8 +94,8 @@ export default function HeritageTechnology() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-           <h3 className="text-white text-2xl md:text-4xl font-serif tracking-widest uppercase" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Heritage</h3>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
+           <h3 className="text-white text-sm sm:text-base md:text-4xl font-serif tracking-[0.1em] md:tracking-widest uppercase text-center" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Heritage</h3>
         </div>
       </div>
 
@@ -110,8 +110,8 @@ export default function HeritageTechnology() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-           <h3 className="text-white text-2xl md:text-4xl font-serif tracking-widest uppercase" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Technology</h3>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
+           <h3 className="text-white text-sm sm:text-base md:text-4xl font-serif tracking-[0.1em] md:tracking-widest uppercase text-center" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>Technology</h3>
         </div>
       </div>
     </section>

@@ -21,28 +21,24 @@ export default function CorporateOurApproach() {
   useEffect(() => {
     let ctx = gsap.context(() => {
       
-      let mm = gsap.matchMedia();
+      // Calculate how far we need to move the track
+      // It's the full width of the track MINUS the width of the viewport
+      const getScrollAmount = () => {
+        let trackWidth = trackRef.current.scrollWidth;
+        return -(trackWidth - window.innerWidth);
+      };
 
-      mm.add("(min-width: 768px)", () => {
-        // Calculate how far we need to move the track
-        // It's the full width of the track MINUS the width of the viewport
-        const getScrollAmount = () => {
-          let trackWidth = trackRef.current.scrollWidth;
-          return -(trackWidth - window.innerWidth);
-        };
-
-        const tween = gsap.to(trackRef.current, {
-          x: getScrollAmount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: scrollContainerRef.current,
-            start: "top top",
-            end: () => `+=${getScrollAmount() * -1}`, // The scroll distance equals the physical width of the track
-            pin: true,
-            scrub: 1,
-            invalidateOnRefresh: true, // Recalculates on resize
-          }
-        });
+      const tween = gsap.to(trackRef.current, {
+        x: getScrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: scrollContainerRef.current,
+          start: "top top",
+          end: () => `+=${getScrollAmount() * -1}`, // The scroll distance equals the physical width of the track
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true, // Recalculates on resize
+        }
       });
 
     }, containerRef);
@@ -71,7 +67,7 @@ export default function CorporateOurApproach() {
       </section>
 
       {/* Horizontal Scroll Section - Pins and slides */}
-      <section ref={scrollContainerRef} className="md:h-screen flex items-center relative z-10 py-12 md:py-0">
+      <section ref={scrollContainerRef} className="h-[100dvh] md:h-screen flex items-center relative z-10 py-12 md:py-0">
         
         {/* Faint Background Text for texture */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none overflow-hidden">
@@ -80,12 +76,12 @@ export default function CorporateOurApproach() {
 
         <div 
           ref={trackRef} 
-          className="flex gap-8 px-6 md:px-24 flex-nowrap md:w-max items-center h-full overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none no-scrollbar pb-8 md:pb-0"
+          className="flex gap-8 px-6 md:px-24 flex-nowrap w-max items-center h-full"
         >
           {steps.map((step, i) => (
             <div 
               key={i} 
-              className="w-[85vw] md:w-[450px] h-[55vh] md:h-[65vh] shrink-0 rounded-xl overflow-hidden relative group transition-all duration-500 shadow-2xl snap-center"
+              className="w-[90vw] md:w-[450px] h-[60dvh] md:h-[65vh] shrink-0 rounded-xl overflow-hidden relative group transition-all duration-500 shadow-2xl"
             >
               {/* Background Image */}
               <div className="absolute inset-0 z-0">
