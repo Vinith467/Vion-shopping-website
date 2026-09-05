@@ -26,12 +26,12 @@ export default function CorporateHeritageTechnology() {
 
       // The "Door Opening" effect
       tl.to(leftDoorRef.current, {
-        x: "-30vw", // Move left door 30% of screen width out
+        xPercent: -100, // Move left door completely out
         ease: "power2.inOut",
         duration: 1
       }, 0)
       .to(rightDoorRef.current, {
-        x: "30vw", // Move right door 30% out
+        xPercent: 100, // Move right door completely out
         ease: "power2.inOut",
         duration: 1
       }, 0)

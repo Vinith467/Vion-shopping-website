@@ -31,20 +31,15 @@ export default function GlobalCraftsmanship() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      let mm = gsap.matchMedia();
-
-      // Only pin the cards on desktop screens (>=1024px)
-      mm.add("(min-width: 1024px)", () => {
-        // Create a stacking effect for the cards on the right
-        cardsRef.current.forEach((card, index) => {
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
-            endTrigger: containerRef.current,
-            end: "bottom bottom",
-            pin: true,
-            pinSpacing: false,
-          });
+      // Create a stacking effect for the cards on the right
+      cardsRef.current.forEach((card, index) => {
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
         });
       });
       
@@ -104,15 +99,19 @@ export default function GlobalCraftsmanship() {
             <div 
               key={i} 
               ref={addToRefs}
-              className="w-full bg-[#1A1A1A] text-white rounded-2xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col border border-white/10"
+              className="w-full h-[80dvh] lg:h-auto bg-[#1A1A1A] text-white rounded-2xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col border border-white/10 relative"
               style={{ zIndex: i + 1 }}
             >
-              <div className="w-full h-[45vh] overflow-hidden relative">
+              <div className="absolute lg:relative inset-0 lg:inset-auto w-full h-full lg:h-[45vh] overflow-hidden z-0">
                 <img src={pillar.img} alt={pillar.name} className="w-full h-full object-cover opacity-90" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-black/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-[#1A1A1A]/80 lg:via-black/20 to-transparent"></div>
               </div>
-              <div className="p-8 md:p-12 relative -mt-16 z-10">
-                <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-widest mb-4 text-[#E5CDA7]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{pillar.name}</h3>
+              
+              {/* Spacer for mobile to push content to bottom, hidden on desktop */}
+              <div className="flex-grow block lg:hidden"></div>
+
+              <div className="mt-auto lg:mt-0 p-8 lg:p-12 relative lg:-mt-16 z-10">
+                <h3 className="text-2xl lg:text-3xl font-bold uppercase tracking-widest mb-4 text-[#E5CDA7]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{pillar.name}</h3>
                 <div className="w-12 h-[2px] bg-[#E5CDA7] mb-6"></div>
                 <p className="font-sans font-light text-[15px] leading-relaxed text-white/80 max-w-xl">
                   {pillar.desc}

@@ -26,12 +26,12 @@ export default function HeritageTechnology() {
 
       // The "Door Opening" effect
       tl.to(leftDoorRef.current, {
-        x: "-40vw", // Move left door out
+        xPercent: -100, // Move left door completely out
         ease: "power2.inOut",
         duration: 1
       }, 0)
       .to(rightDoorRef.current, {
-        x: "40vw", // Move right door out
+        xPercent: 100, // Move right door completely out
         ease: "power2.inOut",
         duration: 1
       }, 0)

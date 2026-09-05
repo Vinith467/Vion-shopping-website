@@ -41,20 +41,15 @@ export default function CorporateGlobalCraftsmanship() {
       // Pinning the left text is now handled natively by CSS sticky in the JSX.
       // We removed the GSAP pin because pinning flex items breaks their width/layout.
 
-      let mm = gsap.matchMedia();
-
-      // Only pin the cards on desktop screens (>=1024px)
-      mm.add("(min-width: 1024px)", () => {
-        // Create a stacking effect for the cards on the right
-        cardsRef.current.forEach((card, index) => {
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
-            endTrigger: containerRef.current,
-            end: "bottom bottom",
-            pin: true,
-            pinSpacing: false,
-          });
+      // Create a stacking effect for the cards on the right
+      cardsRef.current.forEach((card, index) => {
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
         });
       });
 
@@ -101,14 +96,18 @@ export default function CorporateGlobalCraftsmanship() {
             <div 
               key={i} 
               ref={addToRefs}
-              className="w-full bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col"
+              className="w-full h-[80dvh] lg:h-auto bg-[#151515] text-[#F5F0E8] rounded-xl overflow-hidden shadow-2xl mb-12 origin-top flex flex-col relative"
               style={{ zIndex: i + 1 }}
             >
-              <div className="w-full h-[40vh] overflow-hidden relative">
+              <div className="absolute lg:relative inset-0 lg:inset-auto w-full h-full lg:h-[40vh] overflow-hidden z-0">
                 <img src={loc.img} alt={loc.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-[#151515]/80 lg:via-transparent to-transparent"></div>
               </div>
-              <div className="p-8 md:p-12 relative -mt-16 z-10">
+              
+              {/* Spacer for mobile to push content to bottom, hidden on desktop */}
+              <div className="flex-grow block lg:hidden"></div>
+
+              <div className="mt-auto lg:mt-0 p-8 md:p-12 relative lg:-mt-16 z-10">
                 <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-widest mb-4 text-[#C49A5C]">{loc.name}</h3>
                 <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
                 <p className="font-sans font-light text-sm md:text-base leading-relaxed text-[#F5F0E8]/80 max-w-xl">
