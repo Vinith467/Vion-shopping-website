@@ -623,7 +623,7 @@ export default function ProductDetailScreen() {
       </div>
 
       {/* NEW TOP STATIC SECTION (Adapts to media size if custom, otherwise fullscreen) */}
-      <div className={`w-full relative bg-black overflow-hidden ${(!product?.marketing_content?.banner_image_url && !product?.marketing_content?.banner_video_url) ? 'h-[100dvh]' : 'aspect-video'}`}>
+      <div className={`w-full relative bg-black overflow-hidden ${(!product?.marketing_content?.banner_image_url && !product?.marketing_content?.banner_video_url) ? 'h-[100dvh]' : 'h-[100dvh] md:h-auto md:aspect-video'}`}>
         
         {/* Foreground Media */}
         <div className="relative z-10 w-full h-full flex items-center justify-center">
@@ -632,13 +632,13 @@ export default function ProductDetailScreen() {
               ref={topVideoRef} 
               src={product.marketing_content.banner_video_url} 
               loop playsInline 
-              className="w-full h-auto object-contain block" 
+              className="w-full h-full object-cover md:h-auto md:object-contain block" 
             />
           ) : product?.marketing_content?.banner_image_url ? (
             <img 
               src={product.marketing_content.banner_image_url} 
               alt={product?.title || "Banner"}
-              className="w-full h-auto object-contain block" 
+              className="w-full h-full object-cover md:h-auto md:object-contain block" 
             />
           ) : (
             <video 
