@@ -37,8 +37,8 @@ export default function CorporateQualityAndVision() {
 
         ScrollTrigger.create({
           trigger: text,
-          start: "top center",
-          end: "bottom center",
+          start: "top 65%",
+          end: "bottom 35%",
           onEnter: () => {
             updateImages(i);
             gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
@@ -108,7 +108,7 @@ export default function CorporateQualityAndVision() {
           
           {/* Sticky Image Container (Top on Mobile, Left on Desktop) */}
           <div className="block w-full lg:w-1/2 relative z-0">
-            <div className="sticky top-[10vh] w-full h-[45vh] lg:h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="sticky top-[10vh] lg:top-[10vh] w-[80vw] h-[80vw] mx-auto lg:w-full lg:h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
               {promises.map((promise, index) => (
                 <div 
                   key={index} 
@@ -127,12 +127,12 @@ export default function CorporateQualityAndVision() {
           </div>
 
           {/* Right: Scrolling Promise List */}
-          <div className="w-full lg:w-1/2 flex flex-col py-[10vh] lg:py-[40vh] z-10">
+          <div className="w-full lg:w-1/2 flex flex-col py-[10vh] lg:py-[40vh] z-10 items-center lg:items-start text-center lg:text-left">
             {promises.map((promise, index) => (
               <div 
                 key={index} 
                 ref={addTextRef}
-                className="mb-[50vh] lg:mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh]"
+                className="mb-[40vh] lg:mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh] flex flex-col items-center lg:items-start"
               >
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-xl md:text-2xl font-serif text-[#C49A5C]/80 font-light italic">

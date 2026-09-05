@@ -67,7 +67,7 @@ export default function CorporateOurApproach() {
       </section>
 
       {/* Horizontal Scroll Section - Pins and slides */}
-      <section ref={scrollContainerRef} className="h-[100dvh] md:h-screen flex items-center relative z-10 py-12 md:py-0">
+      <section ref={scrollContainerRef} className="h-[100dvh] md:h-screen flex items-center relative z-10 py-12 md:py-0 overflow-hidden">
         
         {/* Faint Background Text for texture */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none overflow-hidden">
