@@ -106,9 +106,9 @@ export default function QualityAndVision() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
         <div className="flex flex-col lg:flex-row gap-16 relative">
           
-          {/* Left: Sticky Image Container */}
-          <div className="hidden lg:block w-full lg:w-1/2 relative">
-            <div className="sticky top-[10vh] w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
+          {/* Sticky Image Container (Top on Mobile, Left on Desktop) */}
+          <div className="block w-full lg:w-1/2 relative z-0">
+            <div className="sticky top-[10vh] w-full h-[45vh] lg:h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
               {promises.map((promise, index) => (
                 <div 
                   key={index} 
@@ -127,12 +127,12 @@ export default function QualityAndVision() {
           </div>
 
           {/* Right: Scrolling Promise List */}
-          <div className="w-full lg:w-1/2 flex flex-col py-[10vh] lg:py-[40vh]">
+          <div className="w-full lg:w-1/2 flex flex-col py-[10vh] lg:py-[40vh] z-10">
             {promises.map((promise, index) => (
               <div 
                 key={index} 
                 ref={addTextRef}
-                className="mb-[30vh] lg:mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh]"
+                className="mb-[50vh] lg:mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh]"
               >
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-xl md:text-2xl font-serif text-[#C49A5C]/80 font-light italic">
@@ -146,15 +146,6 @@ export default function QualityAndVision() {
                 <p className="text-base md:text-xl font-sans font-light text-[#151515]/70 leading-relaxed max-w-md">
                   {promise.desc}
                 </p>
-
-                {/* Mobile Fallback Image */}
-                <div className="w-full h-[40vh] rounded-xl overflow-hidden mt-8 shadow-xl lg:hidden">
-                  <img 
-                    src={promise.img} 
-                    alt={promise.title} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
               </div>
             ))}
           </div>
