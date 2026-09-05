@@ -11,84 +11,104 @@ export default function CorporateAboutHero() {
   const lineRef = useRef(null);
 
   useEffect(() => {
+    const mm = gsap.matchMedia();
     let ctx = gsap.context(() => {
       
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=150%", // Pin for 1.5x screen height
-          pin: true,
-          scrub: 1, // Smooth scrub
-        }
+      // Desktop: full pin + slide animation
+      mm.add("(min-width: 1024px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "+=150%",
+            pin: true,
+            scrub: 1,
+          }
+        });
+
+        gsap.set(imageContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px" });
+        gsap.set(contentRef.current, { opacity: 0, x: -50 });
+        gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top" });
+
+        tl.to(imageContainerRef.current, {
+          width: "45%",
+          height: "85vh",
+          borderRadius: "16px",
+          x: "50vw",
+          ease: "power2.inOut",
+          duration: 1
+        }, 0)
+        .to(imageRef.current, {
+          scale: 1.1,
+          duration: 1,
+          ease: "power2.inOut"
+        }, 0)
+        .to(overlayTextRef.current, {
+          opacity: 0,
+          y: -100,
+          duration: 0.5,
+          ease: "power2.in"
+        }, 0)
+        .to(contentRef.current, {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "power2.out"
+        }, 0.4)
+        .to(lineRef.current, {
+          scaleY: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        }, 0.8);
       });
 
-      // 1. Initial State: Image is full screen, Content is hidden below
-      gsap.set(imageContainerRef.current, { width: "100%", height: "100vh", borderRadius: "0px" });
-      gsap.set(contentRef.current, { opacity: 0, x: -50 });
-      gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top" });
-
-      // 2. Animation: 
-      // - Image shrinks and moves to right
-      // - Overlay text fades out
-      // - Content fades in and moves right
-      tl.to(imageContainerRef.current, {
-        width: "45%",
-        height: "85vh",
-        borderRadius: "16px",
-        x: "50vw", // Move to right side
-        ease: "power2.inOut",
-        duration: 1
-      }, 0)
-      .to(imageRef.current, {
-        scale: 1.1, // Slight zoom on the image inside the shrinking container
-        duration: 1,
-        ease: "power2.inOut"
-      }, 0)
-      .to(overlayTextRef.current, {
-        opacity: 0,
-        y: -100,
-        duration: 0.5,
-        ease: "power2.in"
-      }, 0)
-      .to(contentRef.current, {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: "power2.out"
-      }, 0.4)
-      .to(lineRef.current, {
-        scaleY: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      }, 0.8);
+      // Mobile: no pin, simple static layout
+      mm.add("(max-width: 1023px)", () => {
+        // Hide the overlay text (we show content directly on mobile)
+        gsap.set(overlayTextRef.current, { opacity: 0 });
+        // Show content immediately
+        gsap.set(contentRef.current, { opacity: 1, x: 0 });
+        gsap.set(lineRef.current, { scaleY: 1, transformOrigin: "top" });
+        // Image container: static, not absolute-positioned for animation
+        gsap.set(imageContainerRef.current, { 
+          width: "100%", 
+          height: "60vw", 
+          borderRadius: "0px",
+          position: "relative",
+          top: "auto",
+          left: "auto",
+          transform: "none"
+        });
+      });
 
     }, containerRef);
-    return () => ctx.revert();
+    return () => {
+      mm.revert();
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-[#151515] overflow-hidden flex items-center">
+    <section ref={containerRef} className="relative lg:h-screen w-full bg-[#151515] overflow-hidden lg:flex lg:items-center">
       
-      {/* The Image (Starts Fullscreen, Shrinks to Right) */}
+      {/* The Image (Starts Fullscreen on desktop, static banner on mobile) */}
       <div 
         ref={imageContainerRef} 
-        className="absolute top-1/2 left-0 -translate-y-1/2 z-10 overflow-hidden shadow-2xl"
+        className="lg:absolute lg:top-1/2 lg:left-0 lg:-translate-y-1/2 z-10 overflow-hidden shadow-2xl w-full h-[60vw] lg:h-auto"
       >
         <img 
           ref={imageRef}
           src="/images/about/vion_hero_generations.jpg" 
           alt="VION Craftsmanship and Technology" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
-        {/* Dark gradient to make text readable when fullscreen */}
         <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
-      {/* Fullscreen Overlay Text (Fades out on scroll) */}
+      {/* Fullscreen Overlay Text (Desktop only, fades out on scroll) */}
       <div 
         ref={overlayTextRef} 
-        className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center pointer-events-none px-4"
+        className="absolute inset-0 z-20 hidden lg:flex flex-col items-center justify-center text-center pointer-events-none px-4"
       >
         <h3 className="text-[#C49A5C] text-sm tracking-[0.3em] uppercase font-bold mb-6">About VION Fashion</h3>
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase text-[#F5F0E8] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -100,9 +120,9 @@ export default function CorporateAboutHero() {
         </div>
       </div>
 
-      {/* The Content (Hidden initially, slides in on left) */}
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-30 flex h-full items-center pointer-events-none">
-        <div ref={contentRef} className="w-full md:w-[45%] pointer-events-auto">
+      {/* The Content */}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-30 lg:flex lg:h-full lg:items-center lg:pointer-events-none py-10 lg:py-0">
+        <div ref={contentRef} className="w-full lg:w-[45%] lg:pointer-events-auto">
           
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold uppercase mb-4 lg:mb-6 leading-tight text-[#F5F0E8]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Three Generations.<br/>One Craft.<br/>A New Vision.

@@ -35,7 +35,7 @@ export default function GlobalCraftsmanship() {
       cardsRef.current.forEach((card, index) => {
         ScrollTrigger.create({
           trigger: card,
-          start: "top " + (40 + index * 40) + "px", // Pinned higher up, standard 40px overlap
+          start: "top " + (20 + index * 60) + "px", // Offset each card by 60px for cleaner stacking
           endTrigger: containerRef.current,
           end: "bottom bottom",
           pin: true,

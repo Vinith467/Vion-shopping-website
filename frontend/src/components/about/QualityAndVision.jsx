@@ -15,49 +15,96 @@ export default function QualityAndVision() {
   const containerRef = useRef(null);
   const leftImagesRef = useRef([]);
   const rightTextsRef = useRef([]);
+  const mobileImagesRef = useRef([]);
+  const mobileTextsRef = useRef([]);
 
   useEffect(() => {
+    const mm = gsap.matchMedia();
     let ctx = gsap.context(() => {
       
-      // Make the first image visible initially
-      gsap.set(leftImagesRef.current[0], { autoAlpha: 1 });
-      
-      // Setup ScrollTriggers for each text block to reveal its corresponding image
-      rightTextsRef.current.forEach((text, i) => {
+      // Desktop: use leftImagesRef and rightTextsRef
+      mm.add("(min-width: 1024px)", () => {
+        if (leftImagesRef.current[0]) {
+          gsap.set(leftImagesRef.current[0], { autoAlpha: 1 });
+        }
         
-        const updateImages = (activeIndex) => {
-          leftImagesRef.current.forEach((img, index) => {
-            if (index === activeIndex) {
-              gsap.to(img, { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
-            } else {
-              gsap.to(img, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+        rightTextsRef.current.forEach((text, i) => {
+          const updateImages = (activeIndex) => {
+            leftImagesRef.current.forEach((img, index) => {
+              if (index === activeIndex) {
+                gsap.to(img, { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
+              } else {
+                gsap.to(img, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+              }
+            });
+          };
+
+          ScrollTrigger.create({
+            trigger: text,
+            start: "top 65%",
+            end: "bottom 35%",
+            onEnter: () => {
+              updateImages(i);
+              gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
+            },
+            onEnterBack: () => {
+              updateImages(i);
+              gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
+            },
+            onLeave: () => {
+              gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
+            },
+            onLeaveBack: () => {
+              gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
             }
           });
-        };
+        });
+      });
 
-        ScrollTrigger.create({
-          trigger: text,
-          start: "top 65%",
-          end: "bottom 35%",
-          onEnter: () => {
-            updateImages(i);
-            gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
-          },
-          onEnterBack: () => {
-            updateImages(i);
-            gsap.to(text, { opacity: 1, x: 20, duration: 0.5, overwrite: "auto" });
-          },
-          onLeave: () => {
-            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
-          },
-          onLeaveBack: () => {
-            gsap.to(text, { opacity: 0.2, x: 0, duration: 0.5, overwrite: "auto" });
-          }
+      // Mobile: use mobileImagesRef and mobileTextsRef
+      mm.add("(max-width: 1023px)", () => {
+        if (mobileImagesRef.current[0]) {
+          gsap.set(mobileImagesRef.current[0], { autoAlpha: 1 });
+        }
+        
+        mobileTextsRef.current.forEach((text, i) => {
+          const updateImages = (activeIndex) => {
+            mobileImagesRef.current.forEach((img, index) => {
+              if (index === activeIndex) {
+                gsap.to(img, { autoAlpha: 1, duration: 0.5, overwrite: "auto" });
+              } else {
+                gsap.to(img, { autoAlpha: 0, duration: 0.5, overwrite: "auto" });
+              }
+            });
+          };
+
+          ScrollTrigger.create({
+            trigger: text,
+            start: "top 70%",
+            end: "bottom 30%",
+            onEnter: () => {
+              updateImages(i);
+              gsap.to(text, { opacity: 1, duration: 0.5, overwrite: "auto" });
+            },
+            onEnterBack: () => {
+              updateImages(i);
+              gsap.to(text, { opacity: 1, duration: 0.5, overwrite: "auto" });
+            },
+            onLeave: () => {
+              gsap.to(text, { opacity: 0.2, duration: 0.5, overwrite: "auto" });
+            },
+            onLeaveBack: () => {
+              gsap.to(text, { opacity: 0.2, duration: 0.5, overwrite: "auto" });
+            }
+          });
         });
       });
 
     }, containerRef);
-    return () => ctx.revert();
+    return () => {
+      mm.revert();
+      ctx.revert();
+    };
   }, []);
 
   const addImageRef = (el) => {
@@ -69,6 +116,18 @@ export default function QualityAndVision() {
   const addTextRef = (el) => {
     if (el && !rightTextsRef.current.includes(el)) {
       rightTextsRef.current.push(el);
+    }
+  };
+
+  const addMobileImageRef = (el) => {
+    if (el && !mobileImagesRef.current.includes(el)) {
+      mobileImagesRef.current.push(el);
+    }
+  };
+
+  const addMobileTextRef = (el) => {
+    if (el && !mobileTextsRef.current.includes(el)) {
+      mobileTextsRef.current.push(el);
     }
   };
 
@@ -104,11 +163,12 @@ export default function QualityAndVision() {
 
       {/* Sticky Image Switcher Section */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
-        <div className="flex flex-col lg:flex-row gap-16 relative">
-          
-          {/* Sticky Image Container (Top on Mobile, Left on Desktop) */}
-          <div className="block w-full lg:w-1/2 relative z-0">
-            <div className="sticky top-[10vh] lg:top-[10vh] w-[80vw] h-[80vw] mx-auto lg:w-full lg:h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
+        
+        {/* Desktop Layout: side by side */}
+        <div className="hidden lg:flex gap-16 relative">
+          {/* Sticky Image Container (Left on Desktop) */}
+          <div className="w-1/2 relative z-0">
+            <div className="sticky top-[10vh] w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl">
               {promises.map((promise, index) => (
                 <div 
                   key={index} 
@@ -127,30 +187,75 @@ export default function QualityAndVision() {
           </div>
 
           {/* Right: Scrolling Promise List */}
-          <div className="w-full lg:w-1/2 flex flex-col py-[10vh] lg:py-[40vh] z-10 items-center lg:items-start text-center lg:text-left">
+          <div className="w-1/2 flex flex-col py-[40vh] z-10 items-start text-left">
             {promises.map((promise, index) => (
               <div 
                 key={index} 
                 ref={addTextRef}
-                className="mb-[40vh] lg:mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh] flex flex-col items-center lg:items-start"
+                className="mb-[60vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh] flex flex-col items-start"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  <span className="text-xl md:text-2xl font-serif text-[#C49A5C]/80 font-light italic">
+                  <span className="text-2xl font-serif text-[#C49A5C]/80 font-light italic">
                     0{index + 1}
                   </span>
-                  <h3 className="text-3xl md:text-5xl font-serif uppercase tracking-widest text-[#151515]">
+                  <h3 className="text-5xl font-serif uppercase tracking-widest text-[#151515]">
                     {promise.title}
                   </h3>
                 </div>
                 <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
-                <p className="text-base md:text-xl font-sans font-light text-[#151515]/70 leading-relaxed max-w-md">
+                <p className="text-xl font-sans font-light text-[#151515]/70 leading-relaxed max-w-md">
                   {promise.desc}
                 </p>
               </div>
             ))}
           </div>
-
         </div>
+
+        {/* Mobile Layout: image sticky inside a single parent wrapper */}
+        <div className="lg:hidden relative">
+          {/* Sticky image centered in viewport - 1:1 square */}
+          <div className="sticky top-[calc(50vh-42.5vw)] z-0 w-[85vw] h-[85vw] mx-auto rounded-2xl overflow-hidden shadow-2xl mb-8">
+            {promises.map((promise, index) => (
+              <div 
+                key={`mobile-img-${index}`} 
+                ref={addMobileImageRef}
+                className="absolute inset-0 w-full h-full invisible opacity-0"
+              >
+                <img 
+                  src={promise.img} 
+                  alt={promise.title} 
+                  className="w-full h-full object-cover" 
+                />
+                <div className="absolute inset-0 bg-black/10"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Scrolling Promise List */}
+          <div className="flex flex-col pt-[25vh] z-10 items-center text-center relative">
+            {promises.map((promise, index) => (
+              <div 
+                key={`mobile-text-${index}`} 
+                ref={addMobileTextRef}
+                className="mb-[45vh] opacity-20 transition-all duration-500 ease-out last:mb-[20vh] flex flex-col items-center bg-[#F5F0E8]/90 dark:bg-[#151515]/90 backdrop-blur-sm rounded-xl p-6"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-xl font-serif text-[#C49A5C]/80 font-light italic">
+                    0{index + 1}
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-serif uppercase tracking-widest text-[#151515]">
+                    {promise.title}
+                  </h3>
+                </div>
+                <div className="w-12 h-[1px] bg-[#C49A5C] mb-6"></div>
+                <p className="text-base font-sans font-light text-[#151515]/70 leading-relaxed max-w-md">
+                  {promise.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );
