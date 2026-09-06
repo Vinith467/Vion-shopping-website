@@ -138,7 +138,7 @@ export default function ExploreScreen() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 
-                <div className="absolute inset-0 flex items-center justify-center p-4 text-center z-10">
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-center p-4 pb-5 text-center z-10">
                    <h3 className="text-white text-xl md:text-2xl tracking-[0.1em] uppercase drop-shadow-lg" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h3>
                 </div>
               </div>

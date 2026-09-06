@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../services/supabaseClient";
 import { useAppContext } from '../context/AppContext';
+import { fetchAllSiteContent, DEFAULT_HOME_HERO, DEFAULT_HOME_BENTO, DEFAULT_HOME_FIT_CARDS, DEFAULT_HOME_JOURNEY, DEFAULT_HOME_TAILORING, DEFAULT_HOME_TRUST_BAR } from '../services/contentService';
 import { Badge } from 'antd';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -18,11 +19,28 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTailoringStep, setActiveTailoringStep] = useState(0);
 
+  // Dynamic site content from Supabase
+  const [hero, setHero] = useState(DEFAULT_HOME_HERO);
+  const [bento, setBento] = useState(DEFAULT_HOME_BENTO);
+  const [fitCards, setFitCards] = useState(DEFAULT_HOME_FIT_CARDS);
+  const [journey, setJourney] = useState(DEFAULT_HOME_JOURNEY);
+  const [tailoring, setTailoring] = useState(DEFAULT_HOME_TAILORING);
+  const [trustBar, setTrustBar] = useState(DEFAULT_HOME_TRUST_BAR);
+
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const { data: catData } = await supabase.from('categories').select('*');
-      setCategories(catData || []);
+      const [catResult, contentResult] = await Promise.all([
+        supabase.from('categories').select('*'),
+        fetchAllSiteContent('home_'),
+      ]);
+      setCategories(catResult.data || []);
+      if (contentResult.home_hero) setHero(contentResult.home_hero);
+      if (contentResult.home_bento) setBento(contentResult.home_bento);
+      if (contentResult.home_fit_cards) setFitCards(contentResult.home_fit_cards);
+      if (contentResult.home_journey) setJourney(contentResult.home_journey);
+      if (contentResult.home_tailoring) setTailoring(contentResult.home_tailoring);
+      if (contentResult.home_trust_bar) setTrustBar(contentResult.home_trust_bar);
       setIsLoading(false);
     }
     loadData();
@@ -85,7 +103,7 @@ export default function HomeScreen() {
         {/* Desktop Background Image (Absolute) */}
         <div className="hidden md:block absolute inset-0 z-0">
            <img 
-             src="/images/herobannerimage/hero banner 2 .png" 
+             src={hero.desktop_image} 
              alt="Fashion Model Background (Desktop)" 
              className="w-full h-full object-cover object-[70%_center]" 
              onError={(e) => { 
@@ -99,7 +117,7 @@ export default function HomeScreen() {
         {/* Mobile Background Image (Stacked naturally at the top) */}
         <div className="w-full relative block md:hidden -mt-16"> {/* Pull up to sit under absolute transparent header */}
            <img 
-             src="/images/herobannerimage/mobile hero banner .png" 
+             src={hero.mobile_image} 
              alt="Fashion Model Background (Mobile)" 
              className="w-full h-auto aspect-[4/5.2] object-cover object-[50%_40%]" 
              style={{ 
@@ -120,11 +138,11 @@ export default function HomeScreen() {
            <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-0 relative z-20">
             <div className="flex items-center gap-3 mb-4">
                <div className="h-[1px] w-8 md:w-12 bg-[#A87B45] dark:bg-[#C49A5C]"></div>
-               <span className="text-[#A87B45] dark:text-[#C49A5C] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">Sartoria Di Lusso</span>
+               <span className="text-[#A87B45] dark:text-[#C49A5C] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">{hero.tagline}</span>
             </div>
             
             <h1 className="mb-4 uppercase text-[2.75rem] leading-none md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '0.02em', color: theme === 'dark' ? '#F5F0E8' : '#1A0F0A' }}>
-              Italian<br/>
+              {hero.heading_line1}<br/>
               <span 
                 className="inline-block mt-2"
                 style={{ 
@@ -137,7 +155,7 @@ export default function HomeScreen() {
                   paddingRight: '0.2em',
                   textShadow: theme === 'dark' ? '0 2px 8px rgba(196, 154, 92, 0.2)' : '0 2px 8px rgba(139, 90, 43, 0.2)'
                 }}>
-                Elegance
+                {hero.heading_line2}
               </span>
             </h1>
             
@@ -146,7 +164,7 @@ export default function HomeScreen() {
               <div className={`hidden md:block absolute -inset-y-4 -inset-x-6 ${theme === 'dark' ? 'bg-[#0A0A0A]/80' : 'bg-[#F5F0E8]/60 dark:bg-[#151515]/60 transition-colors duration-500 '} blur-xl rounded-full z-0`}></div>
               
               <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: theme === 'dark' ? '#E5CDA7' : '#1A0F0A', lineHeight: 1.5, letterSpacing: '0.02em' }}>
-                Timeless style. Unmatched grace. Experience the pinnacle of trusted Italian craftsmanship, tailored flawlessly to elevate your legacy.
+                {hero.description}
               </p>
             </div>
             
@@ -160,7 +178,7 @@ export default function HomeScreen() {
                   boxShadow: '0 2px 12px rgba(0,0,0,0.2)'
                 }}
               >
-                <span className="text-[#E5CDA7] text-[9px] 2xl:text-[10px] font-semibold tracking-[0.16em]" style={{ fontFamily: "'Inter', sans-serif" }}>DISCOVER COLLECTION</span>
+                <span className="text-[#E5CDA7] text-[9px] 2xl:text-[10px] font-semibold tracking-[0.16em]" style={{ fontFamily: "'Inter', sans-serif" }}>{hero.button1_text}</span>
               </button>
               
               <button 
@@ -172,7 +190,7 @@ export default function HomeScreen() {
                   boxShadow: '0 4px 15px rgba(139, 90, 43, 0.35)'
                 }}
               >
-                <span className="text-white text-[9px] 2xl:text-[10px] font-bold tracking-[0.16em] drop-shadow-sm" style={{ fontFamily: "'Inter', sans-serif" }}>BOOK A CONSULTATION</span>
+                <span className="text-white text-[9px] 2xl:text-[10px] font-bold tracking-[0.16em] drop-shadow-sm" style={{ fontFamily: "'Inter', sans-serif" }}>{hero.button2_text}</span>
               </button>
             </div>
 
@@ -184,8 +202,8 @@ export default function HomeScreen() {
                   <img src="https://i.pravatar.cc/100?img=12" className="w-8 h-8 2xl:w-9 2xl:h-9 rounded-full border-2 border-white/80 dark:border-[#C49A5C]/30 object-cover grayscale" alt="User" />
                </div>
                <div>
-                  <h4 className={`text-base 2xl:text-lg leading-none mb-0.5 md:drop-shadow-md ${theme === 'dark' ? 'text-[#F5F0E8]' : 'text-[#1A0F0A] dark:text-[#F5F0E8] md:text-[#F5F0E8]'}`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>10,000+</h4>
-                  <p className={`text-[10px] 2xl:text-[11px] font-medium tracking-wide md:drop-shadow-md ${theme === 'dark' ? 'text-[#C49A5C] md:text-[#C49A5C]' : 'text-[#555] md:text-[#F5F0E8]/90'}`}>Clients trust VION</p>
+                  <h4 className={`text-base 2xl:text-lg leading-none mb-0.5 md:drop-shadow-md ${theme === 'dark' ? 'text-[#F5F0E8]' : 'text-[#1A0F0A] dark:text-[#F5F0E8] md:text-[#F5F0E8]'}`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{hero.client_count}</h4>
+                  <p className={`text-[10px] 2xl:text-[11px] font-medium tracking-wide md:drop-shadow-md ${theme === 'dark' ? 'text-[#C49A5C] md:text-[#C49A5C]' : 'text-[#555] md:text-[#F5F0E8]/90'}`}>{hero.client_label}</p>
                </div>
             </div>
           </div>
@@ -200,56 +218,39 @@ export default function HomeScreen() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* Top Row: Bento Grid */}
+          {(bento.cards || []).map((bentoCard, bentoIdx) => (
           <div 
+            key={bentoIdx}
             onClick={() => navigate('/select-gender')} 
-            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-2 h-[220px] sm:h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+            className={`group cursor-pointer relative overflow-hidden rounded-2xl ${bentoCard.span === 2 ? 'md:col-span-2 h-[220px] sm:h-[260px] md:h-[300px]' : 'md:col-span-1 h-[260px] md:h-[300px]'} shadow-[0_4px_24px_rgba(0,0,0,0.08)]`}
           >
-             <img src="/DISCOVER COLLECTION IMAGE.png" alt="DISCOVER COLLECTION" className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
+             <img src={bentoCard.image} alt={bentoCard.title} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-10">
-                <h4 className="text-[1.5rem] lg:text-[2.2rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>DISCOVER COLLECTION</h4>
-                <p className="text-[11px] md:text-[14px] text-white/90 leading-relaxed font-medium max-w-[90%] md:max-w-[60%] mb-3 md:mb-4">
-                  Explore our curated fashion selections tailored to your unique profile and style.
+                <h4 className={`${bentoCard.span === 2 ? 'text-[1.5rem] lg:text-[2.2rem]' : 'text-[1.4rem] lg:text-[1.7rem]'} tracking-wide text-white mb-2 leading-tight`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{bentoCard.title}</h4>
+                <p className={`text-[11px] md:text-[${bentoCard.span === 2 ? '14' : '12'}px] text-white/90 leading-relaxed font-medium ${bentoCard.span === 2 ? 'max-w-[90%] md:max-w-[60%]' : 'max-w-[95%]'} mb-3 md:mb-4`}>
+                  {bentoCard.description}
                 </p>
                 <button className="cursor-pointer border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-1.5 md:gap-2 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 hover:border-white/80 transition-all">
-                   Book Stylist <ArrowRight size={10} />
+                   {bentoCard.button_text} <ArrowRight size={10} />
                 </button>
              </div>
           </div>
+          ))}
 
-          <div 
-            onClick={() => navigate('/select-gender')} 
-            className="group cursor-pointer relative overflow-hidden rounded-2xl md:col-span-1 h-[260px] md:h-[300px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
-          >
-             <img src="/BOOK A CONSULTATION.png" alt="BOOK A CONSULTATION" className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
-             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-             <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-10">
-                <h4 className="text-[1.4rem] lg:text-[1.7rem] tracking-wide text-white mb-2 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>BOOK A<br/>CONSULTATION</h4>
-                <p className="text-[11px] md:text-[12px] text-white/85 leading-relaxed font-medium max-w-[95%] mb-4">
-                  Schedule a one-on-one session with our experts.
-                </p>
-                <button className="cursor-pointer border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 hover:border-white/80 transition-all">
-                   Book Now <ArrowRight size={9} />
-                </button>
-             </div>
-          </div>
 
           {/* Bottom 3 Cards */}
-          {[
-            { name: "STANDARD FIT", value: "Standard Fit", desc: "Effortless everyday pieces that blend comfort with refined style.", img: "/images/herobannerimage/casual.png", buttonText: "Book Stylist" },
-            { name: "TAILORED FIT", value: "Tailored Fit", desc: "Elevated craftsmanship for life's most meaningful moments.", img: "/images/herobannerimage/exclusive.png", buttonText: "Book Stylist" },
-            { name: "BOOK A STYLIST", value: "Book A Stylist", desc: "Fully bespoke creations crafted exclusively for you.", img: "/images/herobannerimage/exclusiveplus.png", buttonText: "Book Now" }
-          ].map((cat, idx) => (
+          {(fitCards.cards || []).map((cat, idx) => (
             <div key={idx} onClick={() => navigate(`/select-gender?class=${encodeURIComponent(cat.value)}`)} className="group cursor-pointer relative overflow-hidden rounded-2xl h-[220px] md:h-[240px] shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
-               <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
+               <img src={cat.image} alt={cat.name} className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-10">
                   <h4 className="text-[1.4rem] lg:text-[1.6rem] tracking-wide text-white mb-1.5 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>{cat.name}</h4>
                   <p className="text-[11px] text-white/85 leading-relaxed font-medium max-w-[90%] mb-3">
-                    {cat.desc}
+                    {cat.description}
                   </p>
                   <button className="border border-white/40 text-white bg-white/10 dark:bg-[#151515]/10 transition-colors duration-500 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.1em] flex items-center gap-1.5 w-fit hover:bg-white/25 dark:bg-[#151515]/25 transition-colors duration-500 transition-colors">
-                     {cat.buttonText} <ArrowRight size={9} />
+                     {cat.button_text} <ArrowRight size={9} />
                   </button>
                </div>
             </div>
@@ -262,24 +263,19 @@ export default function HomeScreen() {
         <div className="flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12">
           
           <div className="w-full lg:w-[24%] shrink-0 text-center lg:text-left">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-2">The Vion Experience</h4>
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-2">{journey.tagline}</h4>
             <h2 className="mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', lineHeight: 1.08, color: theme === 'dark' ? '#F5F0E8' : '#1A1A1A' }}>
-              Your Personalised<br/>Journey
+              {journey.title}
             </h2>
             <div className="w-[80%] max-w-[200px] h-[2px] bg-gradient-to-r from-[#A87B45] to-[#D5A76B] dark:from-[#C49A5C] dark:to-[#8B5A2B] mb-3 mx-auto lg:mx-0"></div>
             <p className="text-[13px] text-[#555] dark:text-[#E5CDA7] leading-[1.6] max-w-[230px] mx-auto lg:mx-0" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}>
-              A seamless journey from consultation to creation. Thoughtfully designed around you.
+              {journey.description}
             </p>
           </div>
           
           <div className="flex-1 w-full relative pt-6 lg:pt-0 grid grid-cols-2 gap-y-8 lg:flex lg:justify-between lg:items-center lg:gap-0">
             
-            {[
-              { num: "01", title: "SHOPPING FOR?", desc: "Who are you shopping for?" },
-              { num: "02", title: "PROFILE DETAILS", desc: "Tell us about them" },
-              { num: "03", title: "VION COLLECTION", desc: "Your VION Collection" },
-              { num: "04", title: "CONFIDENT SHOPPING", desc: "Shop with Confidence" }
-            ].map((step, idx) => (
+            {(journey.steps || []).map((step, idx) => (
               <div key={idx} className="flex flex-col items-center text-center flex-1 relative group px-2">
                 
                 {/* Connecting arrow */}
@@ -309,24 +305,18 @@ export default function HomeScreen() {
             
             {/* Left Content */}
             <div className="w-full xl:w-[28%] shrink-0">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-3">THE ART OF ITALIAN TAILORING</h4>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A87B45] dark:text-[#C49A5C] mb-3">{tailoring.tagline}</h4>
               <h2 className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 'clamp(2rem, 3vw, 2.6rem)', lineHeight: 1.05, color: theme === 'dark' ? '#F5F0E8' : '#1A1A1A' }}>
-                The Finest Italian Fabrics.<br/>Crafted to Perfection.
+                {tailoring.title}
               </h2>
               <p className={`text-[15px] ${theme === 'dark' ? 'text-gray-300' : 'text-[#222]'} leading-[1.6]`} style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-                Every piece begins with a story. Yours.<br/>
-                From fabric to final stitch, crafted in Italy, exclusively for you.
+                {(tailoring.description || '').split('\n').map((line, i) => <span key={i}>{line}{i < (tailoring.description || '').split('\n').length - 1 && <br/>}</span>)}
               </p>
             </div>
             
             {/* Right Content: 4 Images/Steps */}
             <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mt-6 xl:mt-0">
-              {[
-                { img: "/card image/1.png", num: "01.", title: "PREMIUM MATERIALS", desc: "Sourced from the world's finest mills." },
-                { img: "/card image/2.png", num: "02.", title: "TIMELESS ELEGANCE", desc: "Designed to be worn. Loved for a lifetime." },
-                { img: "/card image/3.png", num: "03.", title: "FINEST CRAFTSMANSHIP", desc: "Handmade by master artisans, always." },
-                { img: "/card image/4.png", num: "04.", title: "PERSONALISED EXPERIENCE", desc: "Crafted around you, in every detail." }
-              ].map((step, idx) => (
+              {(tailoring.cards || []).map((step, idx) => (
                 <div 
                   key={idx} 
                   className="flex flex-col group cursor-pointer"
@@ -351,10 +341,10 @@ export default function HomeScreen() {
           {/* Bottom Section: Dark Glass Trust Bar */}
           <div className="bg-[#1A1A1A]/95 py-6 px-8 lg:px-10 flex flex-wrap items-center justify-between gap-6 border-t border-white/10">
              {[
-               { icon: <Leaf className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: "ETHICALLY MADE", desc: "Conscious production, responsible by choice." },
-               { icon: <div className="w-7 h-7 rounded-full border-[1.5px] border-[#C49A5C] flex items-center justify-center"><BadgeCheck className="w-[18px] h-[18px] text-[#C49A5C]" strokeWidth={1.5} /></div>, title: "AWARD WINNING", desc: "Recognised for design excellence and client satisfaction." },
-               { icon: <Truck className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: "WORLDWIDE DELIVERY", desc: "Complimentary shipping on all orders." },
-               { icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#C49A5C]"><path d="M7 16V9a5 5 0 0 1 10 0v7"/><path d="M5 18l2-2h10l2 2"/><path d="M8 18v2"/><path d="M16 18v2"/></svg>, title: "PRIVATE CLIENT CARE", desc: "Dedicated support for a seamless experience." }
+               { icon: <Leaf className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: (trustBar.items && trustBar.items[0]?.title) || "ETHICALLY MADE", desc: (trustBar.items && trustBar.items[0]?.desc) || "Conscious production, responsible by choice." },
+               { icon: <div className="w-7 h-7 rounded-full border-[1.5px] border-[#C49A5C] flex items-center justify-center"><BadgeCheck className="w-[18px] h-[18px] text-[#C49A5C]" strokeWidth={1.5} /></div>, title: (trustBar.items && trustBar.items[1]?.title) || "AWARD WINNING", desc: (trustBar.items && trustBar.items[1]?.desc) || "Recognised for design excellence and client satisfaction." },
+               { icon: <Truck className="w-7 h-7 text-[#C49A5C]" strokeWidth={1.5} />, title: (trustBar.items && trustBar.items[2]?.title) || "WORLDWIDE DELIVERY", desc: (trustBar.items && trustBar.items[2]?.desc) || "Complimentary shipping on all orders." },
+               { icon: <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#C49A5C]"><path d="M7 16V9a5 5 0 0 1 10 0v7"/><path d="M5 18l2-2h10l2 2"/><path d="M8 18v2"/><path d="M16 18v2"/></svg>, title: (trustBar.items && trustBar.items[3]?.title) || "PRIVATE CLIENT CARE", desc: (trustBar.items && trustBar.items[3]?.desc) || "Dedicated support for a seamless experience." }
              ].map((item, idx, arr) => (
                <div key={idx} className="flex items-center gap-4 flex-1 min-w-[220px] cursor-pointer group">
                  <div className="flex items-start gap-3 flex-1 group-hover:-translate-y-0.5 transition-transform duration-300">

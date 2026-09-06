@@ -9,7 +9,7 @@ export default function CorporateGenerationsTimeline() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -31,16 +31,16 @@ export default function CorporateGenerationsTimeline() {
         duration: 1,
         ease: "power2.out"
       }, 0)
-      .to(cardRef.current, {
-        x: "0%",
-        opacity: 1,
-        duration: 1,
-        ease: "power3.out"
-      }, 0.2);
+        .to(cardRef.current, {
+          x: "0%",
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out"
+        }, 0.2);
 
       // Stagger text elements inside the card
       textElementsRef.current.forEach((el, i) => {
-        tl.fromTo(el, 
+        tl.fromTo(el,
           { y: 30, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
           0.5 + (i * 0.1)
@@ -59,32 +59,32 @@ export default function CorporateGenerationsTimeline() {
 
   return (
     <section ref={containerRef} className="relative h-[100dvh] w-full bg-[#151515] overflow-hidden">
-      
+
       {/* Background Image that reveals and colors up */}
       <div className="absolute inset-0 z-0">
-        <img 
+        <img
           ref={imageRef}
-          src="/images/about/vion_heritage_chalk.jpg" 
-          alt="Master Tailor Chalking Fabric" 
+          src="/images/about/vion_heritage_chalk.jpg"
+          alt="Master Tailor Chalking Fabric"
           className="w-full h-full object-cover origin-center"
         />
       </div>
 
       {/* Glassmorphism Content Card sliding from right */}
       <div className="absolute inset-y-0 right-0 w-full md:w-[55%] lg:w-[45%] z-10 flex items-center p-6 md:p-12">
-        <div 
+        <div
           ref={cardRef}
           data-lenis-prevent="true"
           className="w-full h-auto max-h-[85vh] overflow-y-auto bg-[#151515]/80 backdrop-blur-xl border border-[#F5F0E8]/10 p-8 md:p-12 shadow-2xl custom-scrollbar"
         >
-          <h2 
+          <h2
             ref={addToRefs}
-            className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]" 
+            className="text-4xl md:text-5xl font-bold uppercase mb-8 leading-tight text-[#C49A5C]"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Three Generations of Craft.<br/>One Vision for the Future.
+            Three Generations of Craft.<br />One Vision for the Future.
           </h2>
-          
+
           <div className="space-y-6 text-sm md:text-base text-[#F5F0E8]/90 font-sans font-light leading-relaxed">
             <p ref={addToRefs}>
               VION Fashion is built on three generations of experience in the clothing and tailoring business. For decades, our family has worked with fabrics, tailoring, fit and craftsmanship, developing an understanding of what makes clothing not only look exceptional, but feel exceptional.

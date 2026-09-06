@@ -2,59 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import { fetchSiteContent, DEFAULT_CRAFTSMANSHIP } from '../services/contentService';
 
-const CRAFTSMANSHIP_DATA = [
-  {
-    id: "premium-materials",
-    number: "01.",
-    title: "PREMIUM MATERIALS",
-    subtitle: "Sourced from the world's finest mills.",
-    description: "Our fabrics are the foundation of our legacy. We travel the globe to source the rarest, most exquisite wools, silks, and cashmeres. Each thread is chosen for its unparalleled softness, durability, and drape, ensuring that every VION garment feels as exceptional as it looks. This meticulous selection process is the first step in our commitment to uncompromising quality.",
-    images: [
-      { src: "/images/craftsmanship/craft_01_hero.jpg", alt: "Premium suiting fabrics on a tailoring table", type: "hero" },
-      { src: "/images/craftsmanship/craft_01_macro.jpg", alt: "Macro detail of fabric texture", type: "macro" },
-      { src: "/images/craftsmanship/craft_01_selection.jpg", alt: "Clients selecting fabrics with a master tailor", type: "editorial" },
-    ]
-  },
-  {
-    id: "timeless-elegance",
-    number: "02.",
-    title: "TIMELESS ELEGANCE",
-    subtitle: "Designed to be worn. Loved for a lifetime.",
-    description: "VION designs transcend fleeting trends. We focus on clean lines, perfect proportions, and a silhouette that flatters the individual. Our aesthetic is one of sophisticated understatement, where true luxury is found in the subtle details and the confidence it instills in the wearer. A VION piece is not just for a season; it is an investment in enduring style.",
-    images: [
-      { src: "/images/craftsmanship/craft_02_hero.jpg", alt: "Elegant couple in bespoke formalwear", type: "hero" },
-      { src: "/images/craftsmanship/craft_02_woman.jpg", alt: "Sophisticated woman in a tailored blazer", type: "portrait" },
-      { src: "/images/craftsmanship/craft_02_man.jpg", alt: "Sophisticated man in a deep navy bespoke suit", type: "portrait" },
-    ]
-  },
-  {
-    id: "finest-craftsmanship",
-    number: "03.",
-    title: "FINEST CRAFTSMANSHIP",
-    subtitle: "Handmade by master artisans, always.",
-    description: "Every VION garment is a testament to the art of tailoring. Our master artisans employ time-honored techniques, dedicating countless hours to hand-stitching, pressing, and finishing each piece. From the precise cut of the lapel to the perfect roll of the shoulder, this dedication to handcraftsmanship ensures a fit and feel that machines simply cannot replicate.",
-    images: [
-      { src: "/images/craftsmanship/craft_03_hero.jpg", alt: "Tailor hand-stitching a lapel", type: "hero" },
-      { src: "/images/craftsmanship/craft_03_cutting.jpg", alt: "Tailor cutting fabric", type: "editorial" },
-      { src: "/images/craftsmanship/craft_03_details.jpg", alt: "Macro detail of hand-finished buttonhole", type: "macro" },
-      { src: "/images/craftsmanship/craft_03_artisans.jpg", alt: "Artisans working in the atelier", type: "editorial" },
-    ]
-  },
-  {
-    id: "personalised-experience",
-    number: "04.",
-    title: "PERSONALISED EXPERIENCE",
-    subtitle: "Crafted around you, in every detail.",
-    description: "The VION bespoke experience is an intimate collaboration. We begin by understanding your lifestyle, preferences, and unique physique. Through a series of personalized fittings, we sculpt the garment to your exact measurements, making adjustments until it becomes a second skin. It is a journey of co-creation, resulting in a piece that is unmistakably yours.",
-    images: [
-      { src: "/images/craftsmanship/craft_04_hero.jpg", alt: "Stylist conducting a private consultation", type: "hero" },
-      { src: "/images/craftsmanship/craft_04_measuring.jpg", alt: "Stylist measuring a client", type: "editorial" },
-      { src: "/images/craftsmanship/craft_04_male_fitting.jpg", alt: "Male fitting session", type: "editorial" },
-      { src: "/images/craftsmanship/craft_04_measuring.jpg", alt: "Female fitting session", type: "editorial" }, // Fallback for missing female fitting
-    ]
-  }
-];
+const CRAFTSMANSHIP_DATA = DEFAULT_CRAFTSMANSHIP.sections;
 
 export default function CraftsmanshipScreen() {
   const location = useLocation();
@@ -64,16 +14,19 @@ export default function CraftsmanshipScreen() {
   const [craftsmanshipData, setCraftsmanshipData] = useState(CRAFTSMANSHIP_DATA);
 
   useEffect(() => {
-    // Load dynamic data from admin panel if it exists
-    const savedData = localStorage.getItem('vion_craftsmanship_content');
-    if (savedData) {
+    async function loadContent() {
       try {
-        setCraftsmanshipData(JSON.parse(savedData));
+        const content = await fetchSiteContent('craftsmanship');
+        if (content && content.sections && content.sections.length > 0) {
+          setCraftsmanshipData(content.sections);
+        }
       } catch (e) {
-        console.error("Failed to parse saved craftsmanship data");
+        console.error("Failed to load craftsmanship content from DB");
       }
     }
+    loadContent();
   }, []);
+
 
   useEffect(() => {
     // Check if we need to scroll to a specific section based on navigation state

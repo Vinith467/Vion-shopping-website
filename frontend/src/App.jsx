@@ -300,10 +300,10 @@ function App() {
               </button>
 
               {/* Hover Dropdown */}
-              <div className={`absolute top-full right-0 mt-4 w-40 bg-white dark:bg-[#1A1A1A] border border-gray-100 dark:border-white/10 rounded-xl shadow-xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+              <div className={`absolute top-full right-0 mt-1 w-40 bg-white dark:bg-[#1A1A1A] border border-gray-100 dark:border-white/10 rounded-xl shadow-xl p-1.5 transition-all duration-300 origin-top-right ${isLoginHovered ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-95 invisible pointer-events-none'}`}>
                 
                 {/* Invisible hover bridge to prevent mouseleave when moving from button to popover */}
-                <div className="absolute -top-4 left-0 right-0 h-4 bg-transparent"></div>
+                <div className="absolute -top-1 left-0 right-0 h-1 bg-transparent"></div>
 
                 <div className="flex flex-col gap-1">
                   {isLoggedIn ? (
