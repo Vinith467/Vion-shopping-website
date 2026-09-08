@@ -229,8 +229,7 @@ export default function SpotlightCollections({ products, categoryName, categoryV
       
       {/* Cinematic Hero Image Section */}
       <div className="hero-container relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
-        <div className="hero-video-wrapper absolute inset-0 w-full h-[120%] -top-[10%]">
-          {/* Removed black tint overlay */}
+        <div className="hero-video-wrapper absolute inset-0 w-full h-[120%] top-0">
           {categoryVideo ? (
             <video 
               src={categoryVideo}
@@ -238,7 +237,7 @@ export default function SpotlightCollections({ products, categoryName, categoryV
               loop 
               muted 
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top origin-top scale-[1.05] md:scale-[1.1]"
             />
           ) : (
             <img 

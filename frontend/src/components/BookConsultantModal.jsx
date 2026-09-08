@@ -132,7 +132,7 @@ const MapSearchBox = () => {
 
   return (
     <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] w-[90%] max-w-sm">
-      <form onSubmit={handleSearch} className="flex items-center bg-white/9 dark:bg-[#151515]/9 transition-colors duration-500 5 dark:bg-[#151515]/95 transition-colors duration-500 backdrop-blur-sm rounded-full shadow-lg border border-[#A87B45]/30 overflow-hidden">
+      <form onSubmit={handleSearch} className="flex items-center bg-white/90 dark:bg-[#111]/90 transition-colors duration-500 backdrop-blur-sm rounded-full shadow-lg border border-[#A87B45]/30 overflow-hidden">
         <input 
           type="text" 
           placeholder="Search street, area..." 
@@ -244,16 +244,12 @@ export default function BookConsultantModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div 
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative"
+        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative bg-gradient-to-b from-[#FDFBF7] to-[#F5F0E8] dark:from-[#151515] dark:to-[#0A0A0A] rounded-xl border border-transparent dark:border-[#333] transition-colors duration-500"
         data-lenis-prevent="true"
-        style={{ 
-          background: 'linear-gradient(180deg, #FDFBF7 0%, #F5F0E8 100%)',
-          borderRadius: '12px'
-        }}
       >
         
         {/* Header */}
-        <div className="sticky top-0 z-20 px-8 py-6 border-b border-[#A87B45]/20 flex items-center justify-between bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-[#151515]/60 transition-colors duration-500 backdrop-blur-md rounded-t-xl">
+        <div className="sticky top-0 z-20 px-8 py-6 border-b border-[#A87B45]/20 flex items-center justify-between bg-white/80 dark:bg-[#111]/80 transition-colors duration-500 backdrop-blur-md rounded-t-xl">
           <div className="flex items-center gap-3">
             <div className="h-[1px] w-6 bg-[#A87B45]"></div>
             <h2 className="text-xl md:text-2xl font-serif text-[#1A0F0A] dark:text-[#F5F0E8] font-bold tracking-wide">Book your Stylist</h2>
@@ -322,7 +318,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                             className="absolute opacity-0 w-0 h-0"
                           />
                           <div 
-                            className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-all duration-300 ${formData.collection === col ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}
+                            className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-all duration-300 ${formData.collection === col ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 dark:bg-[#222]/70 group-hover:border-[#8B5A2B]'}`}
                           >
                             {formData.collection === col && <Check size={14} className="text-white" />}
                           </div>
@@ -339,7 +335,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 dark:bg-[#222]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:focus:bg-[#111] rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
                     />
                   </div>
                 </div>
@@ -360,7 +356,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         className={`py-2.5 text-xs font-bold transition-all duration-300 rounded-md border shadow-sm ${
                           formData.time === t 
                             ? 'border-[#8B5A2B] bg-[#8B5A2B] text-white shadow-[0_2px_8px_rgba(139,90,43,0.3)]' 
-                            : 'border-[#A87B45]/30 text-[#4A3320] dark:text-gray-400 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 hover:border-[#8B5A2B] hover:text-[#8B5A2B] hover:bg-white dark:bg-[#151515] transition-colors duration-500 '
+                            : 'border-[#A87B45]/30 text-[#4A3320] dark:text-gray-400 bg-white/70 dark:bg-[#222]/70 hover:border-[#8B5A2B] hover:text-[#8B5A2B] dark:hover:text-[#C49A5C] hover:bg-white dark:hover:bg-[#111] transition-colors duration-300'
                         }`}
                       >
                         {t}
@@ -392,7 +388,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         onChange={() => setFormData({...formData, locationType: 'map'})} 
                         className="absolute opacity-0 w-0 h-0"
                       />
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'map' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'map' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 dark:bg-[#222]/70 group-hover:border-[#8B5A2B]'}`}>
                          {formData.locationType === 'map' && <div className="w-2 h-2 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full"></div>}
                       </div>
                       <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'map' ? 'text-[#1A0F0A] dark:text-[#F5F0E8]' : 'text-[#4A3320] dark:text-gray-400 group-hover:text-[#1A0F0A] dark:text-[#F5F0E8]'}`}>Pick on Map</span>
@@ -405,7 +401,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                         onChange={() => setFormData({...formData, locationType: 'manual'})} 
                         className="absolute opacity-0 w-0 h-0"
                       />
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'manual' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 group-hover:border-[#8B5A2B]'}`}>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${formData.locationType === 'manual' ? 'border-[#8B5A2B] bg-[#8B5A2B] shadow-inner' : 'border-[#A87B45]/50 bg-white/70 dark:bg-[#222]/70 group-hover:border-[#8B5A2B]'}`}>
                          {formData.locationType === 'manual' && <div className="w-2 h-2 bg-white dark:bg-[#151515] transition-colors duration-500 rounded-full"></div>}
                       </div>
                       <span className={`text-[11px] font-bold tracking-widest uppercase transition-colors ${formData.locationType === 'manual' ? 'text-[#1A0F0A] dark:text-[#F5F0E8]' : 'text-[#4A3320] dark:text-gray-400 group-hover:text-[#1A0F0A] dark:text-[#F5F0E8]'}`}>Enter Manually</span>
@@ -546,7 +542,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 dark:bg-[#222]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:focus:bg-[#111] rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8]"
                     />
                   </div>
                   <div>
@@ -555,7 +551,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                       type="email" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 dark:bg-[#222]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:focus:bg-[#111] rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8]"
                     />
                   </div>
                   <div>
@@ -564,7 +560,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
                       type="tel" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/7 dark:bg-[#151515]/7 transition-colors duration-500 0 dark:bg-[#151515]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:bg-[#151515] transition-colors duration-500 rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8] transition-all"
+                      className="w-full border border-[#A87B45]/30 p-3.5 bg-white/70 dark:bg-[#222]/70 transition-colors duration-500 backdrop-blur-sm focus:outline-none focus:border-[#A87B45] focus:bg-white dark:focus:bg-[#111] rounded-md shadow-sm text-[#1A0F0A] dark:text-[#F5F0E8]"
                     />
                   </div>
                 </div>
