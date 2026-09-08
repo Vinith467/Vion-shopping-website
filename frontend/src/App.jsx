@@ -227,13 +227,16 @@ function App() {
               </div>
 
               {/* CTA Button */}
-              <button 
-                onClick={() => setShowBookConsultantModal(true)} 
-                className="ml-2 px-5 py-2 border border-[#111111]/30 dark:border-white/30 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:bg-[#A87B45] dark:hover:bg-[#C49A5C] text-[#111111] dark:text-[#F5F0E8] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm relative"
-              >
-                <Sparkles size={14} className="text-[#A87B45] dark:text-[#C49A5C] group-hover:text-white dark:group-hover:text-[#0A0A0A] transition-colors" />
-                <span className="font-bold">Book Consultant</span>
-              </button>
+              <div className="flex flex-col items-center ml-2">
+                <button 
+                  onClick={() => setShowBookConsultantModal(true)} 
+                  className="px-5 py-2 border border-[#111111]/30 dark:border-white/30 hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:bg-[#A87B45] dark:hover:bg-[#C49A5C] text-[#111111] dark:text-[#F5F0E8] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 text-[15px] rounded-full flex items-center gap-2 group shadow-sm relative mb-0.5"
+                >
+                  <Sparkles size={14} className="text-[#A87B45] dark:text-[#C49A5C] group-hover:text-white dark:group-hover:text-[#0A0A0A] transition-colors" />
+                  <span className="font-bold">Book your Stylist</span>
+                </button>
+                <span className="text-[9px] text-[#A87B45] dark:text-[#C49A5C] uppercase tracking-widest font-bold">No charges applicable</span>
+              </div>
             </div>
           )}
 
@@ -376,7 +379,10 @@ function App() {
                <button onClick={() => { setIsMobileMenuOpen(false); navigate('/about'); }} className="text-left text-white text-[14px] font-serif uppercase tracking-widest hover:text-[#C49A5C] transition-colors">About Us</button>
                <button onClick={() => { setIsMobileMenuOpen(false); navigate('/corporate'); }} className="text-left text-white text-[14px] font-serif uppercase tracking-widest flex items-center gap-2 hover:text-[#C49A5C] transition-colors">VION Corporate <span className="bg-white/10 text-white text-[8px] font-sans font-bold px-1.5 py-0.5 rounded-sm tracking-widest">B2B</span></button>
                <div className="w-full h-px bg-gray-800 my-1"></div>
-               <button onClick={() => { setIsMobileMenuOpen(false); setShowBookConsultantModal(true); }} className="text-left text-[#C49A5C] text-[14px] font-serif font-bold uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors"><Sparkles size={14}/> Book Consultant</button>
+               <button onClick={() => { setIsMobileMenuOpen(false); setShowBookConsultantModal(true); }} className="text-left text-[#C49A5C] text-[14px] font-serif font-bold uppercase tracking-widest flex flex-col items-start gap-1 hover:text-white transition-colors">
+                 <div className="flex items-center gap-2"><Sparkles size={14}/> Book your Stylist</div>
+                 <span className="text-[9px] normal-case tracking-wider opacity-80 font-medium ml-6">No charges applicable</span>
+               </button>
             </div>
           </div>
         </div>

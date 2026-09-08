@@ -235,7 +235,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
       setSuccess(true);
     } catch (error) {
       console.error("Booking Error:", error);
-      alert("Failed to book consultation. Please try again.");
+      alert("Failed to book your stylist. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -256,7 +256,7 @@ export default function BookConsultantModal({ isOpen, onClose }) {
         <div className="sticky top-0 z-20 px-8 py-6 border-b border-[#A87B45]/20 flex items-center justify-between bg-white/6 dark:bg-[#151515]/6 transition-colors duration-500 0 dark:bg-[#151515]/60 transition-colors duration-500 backdrop-blur-md rounded-t-xl">
           <div className="flex items-center gap-3">
             <div className="h-[1px] w-6 bg-[#A87B45]"></div>
-            <h2 className="text-xl md:text-2xl font-serif text-[#1A0F0A] dark:text-[#F5F0E8] font-bold tracking-wide">Book a Consultation</h2>
+            <h2 className="text-xl md:text-2xl font-serif text-[#1A0F0A] dark:text-[#F5F0E8] font-bold tracking-wide">Book your Stylist</h2>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-[#A87B45]/10 rounded-full transition-colors group">
             <X size={20} className="text-[#8B5A2B] group-hover:text-[#1A0F0A] dark:text-[#F5F0E8] transition-colors" />

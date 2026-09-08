@@ -127,10 +127,13 @@ const ProductStackingSection = ({ product, index }) => {
 
             <button 
               onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
-              className="group inline-flex items-center justify-center bg-transparent border border-[#1A1A1A] dark:border-[#C49A5C] text-[#1A1A1A] dark:text-[#C49A5C] px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#1A1A1A] dark:hover:bg-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 w-max overflow-hidden relative shadow-lg"
+              className="group inline-flex flex-col items-center justify-center bg-transparent border border-[#1A1A1A] dark:border-[#C49A5C] text-[#1A1A1A] dark:text-[#C49A5C] px-6 md:px-10 py-3 md:py-4 hover:bg-[#1A1A1A] dark:hover:bg-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] transition-all duration-300 w-max relative shadow-lg"
             >
-              <span className="relative z-10 flex items-center gap-2 md:gap-4">
-                Book Consultant
+              <span className="relative z-10 flex items-center gap-2 md:gap-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em]">
+                Book your Stylist
+              </span>
+              <span className="relative z-10 text-[8px] md:text-[9px] mt-1 normal-case tracking-wider opacity-80 font-medium">
+                No charges applicable
               </span>
             </button>
           </div>
@@ -227,7 +230,7 @@ export default function SpotlightCollections({ products, categoryName, categoryV
       {/* Cinematic Hero Image Section */}
       <div className="hero-container relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
         <div className="hero-video-wrapper absolute inset-0 w-full h-[120%] -top-[10%]">
-          <div className="absolute inset-0 bg-black/40 z-10"></div>
+          {/* Removed black tint overlay */}
           {categoryVideo ? (
             <video 
               src={categoryVideo}
@@ -261,13 +264,46 @@ export default function SpotlightCollections({ products, categoryName, categoryV
       </div>
 
       {/* Intro Header */}
-      <div className="w-full py-24 text-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
-        <h2 className="text-3xl md:text-4xl text-[#1A0A08] dark:text-[#F5F0E8] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
-          {content?.lookbook_title || 'The Editorial Lookbook'}
-        </h2>
-        <p className="text-gray-500 uppercase tracking-widest text-[11px] font-bold max-w-lg mx-auto leading-relaxed whitespace-pre-line">
-          {content?.lookbook_subtitle || 'Scroll to explore the stories behind the silhouettes'}
-        </p>
+      <div className="w-full py-16 md:py-24 px-6 text-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 flex flex-col items-center justify-center relative overflow-hidden">
+        
+        {/* Subtle background decorative elements */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent via-[#A87B45]/30 to-[#A87B45]/30"></div>
+        
+        <div className="fade-up relative z-10 flex flex-col items-center w-full">
+          <span className="text-[#A87B45] dark:text-[#C49A5C] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.25em] mb-2 flex items-center gap-3">
+            <span className="w-6 h-[1px] bg-[#A87B45]/40 inline-block"></span>
+            A Personalized Experience
+            <span className="w-6 h-[1px] bg-[#A87B45]/40 inline-block"></span>
+          </span>
+          
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-[#1A0A08] dark:text-[#F5F0E8] mb-5 max-w-3xl mx-auto leading-[1.15] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
+            {content?.lookbook_title || 'The Editorial Lookbook'}
+          </h2>
+          
+          <div className="w-10 h-[2px] bg-[#A87B45] dark:bg-[#C49A5C] mx-auto mb-6 opacity-70"></div>
+          
+          <p className="text-[#4A3B32] dark:text-[#D4C3B3] text-sm md:text-base lg:text-[17px] font-medium max-w-2xl mx-auto leading-relaxed md:leading-loose mb-8 px-4 text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            {content?.lookbook_subtitle || 'Scroll to explore the stories behind the silhouettes'}
+          </p>
+          
+          <div className="flex flex-col items-center group relative mt-2">
+            {/* Pulsing background effect for the button */}
+            <div className="absolute inset-0 bg-[#A87B45]/20 rounded-full scale-110 opacity-0 group-hover:animate-pulse transition-opacity duration-500"></div>
+            
+            <button 
+              onClick={() => window.dispatchEvent(new Event('openBookConsultantModal'))}
+              className="relative overflow-hidden inline-flex items-center justify-center bg-[#1A0A08] dark:bg-[#151515] text-[#F5F0E8] dark:text-[#C49A5C] border border-[#1A0A08] dark:border-[#C49A5C]/40 px-8 md:px-12 py-3.5 md:py-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#A87B45] dark:hover:bg-[#C49A5C] hover:border-[#A87B45] dark:hover:border-[#C49A5C] hover:text-white dark:hover:text-[#0A0A0A] hover:shadow-[0_8px_30px_rgb(168,123,69,0.2)] transition-all duration-500 w-max mb-3 rounded-full group-hover:-translate-y-1"
+            >
+              <span className="relative flex items-center gap-3 z-10">
+                 Book your Stylist
+                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+            </button>
+            <span className="text-[9px] md:text-[10px] text-[#8B5A2B] dark:text-[#C49A5C] font-bold uppercase tracking-widest opacity-70 group-hover:opacity-100 transition-opacity duration-300">No charges applicable</span>
+          </div>
+        </div>
+        
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#A87B45]/30 to-[#A87B45]/30"></div>
       </div>
 
       {/* Map through products, rendering a Stacking Section for each */}

@@ -78,12 +78,15 @@ export default function ConsultantPopup() {
             Experience the pinnacle of Italian craftsmanship. Book a complimentary, personalized consultation with one of our expert stylists to curate your perfect look.
           </p>
 
-          <button 
-            onClick={handleBookNow}
-            className="w-full bg-[#1A0A08] hover:bg-[#8B6544] text-white py-4 font-bold tracking-widest uppercase text-sm transition-colors"
-          >
-            Book Consultant
-          </button>
+          <div className="flex flex-col items-center w-full">
+            <button 
+              onClick={handleBookNow}
+              className="w-full bg-[#1A0A08] hover:bg-[#8B6544] text-white py-4 font-bold tracking-widest uppercase text-sm transition-colors"
+            >
+              Book your Stylist
+            </button>
+            <span className="text-[10px] text-gray-500 mt-2 font-medium uppercase tracking-widest">No charges applicable</span>
+          </div>
           
           <button 
             onClick={handleClose}

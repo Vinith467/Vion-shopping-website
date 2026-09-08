@@ -161,12 +161,15 @@ export default function CraftsmanshipScreen() {
             <p className="text-white/95 text-lg md:text-xl max-w-xl mx-auto mb-10 drop-shadow-md" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Experience the pinnacle of bespoke tailoring. Book a consultation with our master stylists today.
             </p>
-            <button 
-              onClick={() => navigate('/onboarding')}
-              className="px-8 py-4 bg-[#C49A5C] hover:bg-[#A87B45] cursor-pointer text-white text-xs font-bold uppercase tracking-[0.15em] rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-            >
-              Book a Consultation
-            </button>
+            <div className="flex flex-col items-center">
+              <button 
+                onClick={() => navigate('/onboarding')}
+                className="px-8 py-4 bg-[#C49A5C] hover:bg-[#A87B45] cursor-pointer text-white text-xs font-bold uppercase tracking-[0.15em] rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 mb-2"
+              >
+                Book your Stylist
+              </button>
+              <span className="text-[10px] md:text-[11px] text-[#F5F0E8] font-medium uppercase tracking-widest opacity-90 drop-shadow-md">No charges applicable</span>
+            </div>
          </motion.div>
       </section>
 
