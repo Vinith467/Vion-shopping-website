@@ -178,7 +178,7 @@ const ProductStackingSection = ({ product, index }) => {
   );
 };
 
-export default function SpotlightCollections({ products, categoryName, categoryVideo }) {
+export default function SpotlightCollections({ products, categoryName, categoryVideo, content }) {
   const containerRef = useRef(null);
 
   // A premium fashion placeholder image for the collection hero to prevent 403 video errors
@@ -248,14 +248,14 @@ export default function SpotlightCollections({ products, categoryName, categoryV
         
         <div className="absolute inset-0 flex flex-col items-center justify-center z-20 text-white text-center px-6 fade-up">
           <span className="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] mb-5">
-            Discover The Look
+            {content?.hero_tagline || 'Discover The Look'}
           </span>
           <h1 className="text-5xl md:text-8xl mb-8 drop-shadow-2xl text-white" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
             {categoryName || 'The Collection'}
           </h1>
           <div className="w-16 h-[2px] bg-[#A87B45] mx-auto mb-6"></div>
-          <p className="max-w-xl mx-auto text-white/90 text-sm md:text-base font-light tracking-wide leading-relaxed">
-            Explore our curated selection of masterful designs. Each piece tells a story of global inspiration and Indian craftsmanship.
+          <p className="max-w-xl mx-auto text-white/90 text-sm md:text-base font-light tracking-wide leading-relaxed whitespace-pre-line">
+            {content?.hero_description || 'Explore our curated selection of masterful designs. Each piece tells a story of global inspiration and Indian craftsmanship.'}
           </p>
         </div>
       </div>
@@ -263,10 +263,10 @@ export default function SpotlightCollections({ products, categoryName, categoryV
       {/* Intro Header */}
       <div className="w-full py-24 text-center bg-[#FDFBF7] dark:bg-[#0A0A0A] transition-colors duration-500 ">
         <h2 className="text-3xl md:text-4xl text-[#1A0A08] dark:text-[#F5F0E8] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
-          The Editorial Lookbook
+          {content?.lookbook_title || 'The Editorial Lookbook'}
         </h2>
-        <p className="text-gray-500 uppercase tracking-widest text-[11px] font-bold max-w-lg mx-auto leading-relaxed">
-          Scroll to explore the stories behind the silhouettes
+        <p className="text-gray-500 uppercase tracking-widest text-[11px] font-bold max-w-lg mx-auto leading-relaxed whitespace-pre-line">
+          {content?.lookbook_subtitle || 'Scroll to explore the stories behind the silhouettes'}
         </p>
       </div>
 

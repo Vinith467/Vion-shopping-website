@@ -1,6 +1,6 @@
 import { ArrowRight, Play, User, Palette, Eye, ShoppingBag, ShieldCheck, Leaf, Truck, Diamond, Scissors, ScrollText, Shield, BadgeCheck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "../services/supabaseClient";
 import { useAppContext } from '../context/AppContext';
 import { fetchAllSiteContent, DEFAULT_HOME_HERO, DEFAULT_HOME_BENTO, DEFAULT_HOME_FIT_CARDS, DEFAULT_HOME_JOURNEY, DEFAULT_HOME_TAILORING, DEFAULT_HOME_TRUST_BAR } from '../services/contentService';
@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const [activeTailoringStep, setActiveTailoringStep] = useState(0);
 
   // Dynamic site content from Supabase
-  const [hero, setHero] = useState(DEFAULT_HOME_HERO);
+  const [hero, setHero] = useState(null);
   const [bento, setBento] = useState(DEFAULT_HOME_BENTO);
   const [fitCards, setFitCards] = useState(DEFAULT_HOME_FIT_CARDS);
   const [journey, setJourney] = useState(DEFAULT_HOME_JOURNEY);
@@ -35,7 +35,7 @@ export default function HomeScreen() {
         fetchAllSiteContent('home_'),
       ]);
       setCategories(catResult.data || []);
-      if (contentResult.home_hero) setHero(contentResult.home_hero);
+      setHero(contentResult.home_hero || DEFAULT_HOME_HERO);
       if (contentResult.home_bento) setBento(contentResult.home_bento);
       if (contentResult.home_fit_cards) setFitCards(contentResult.home_fit_cards);
       if (contentResult.home_journey) setJourney(contentResult.home_journey);
@@ -98,6 +98,7 @@ export default function HomeScreen() {
     >
       
       {/* 1. Hero Section */}
+      {hero && (
       <section className="relative w-full max-w-[1983px] mx-auto flex flex-col md:justify-center overflow-hidden">
         
         {/* Desktop Background Image (Absolute) */}
@@ -105,13 +106,15 @@ export default function HomeScreen() {
            <img 
              src={hero.desktop_image} 
              alt="Fashion Model Background (Desktop)" 
-             className="w-full h-full object-cover object-[70%_center]" 
+             className="w-full h-full object-cover object-[80%_center]" 
              onError={(e) => { 
                 e.target.onerror = null; 
                 e.target.style.display = 'none'; 
              }} 
            />
-           <div className={`absolute inset-0 bg-gradient-to-r ${theme === 'dark' ? 'from-[#0A0A0A]/80' : 'from-[#EDE6DC]/60'} via-transparent to-transparent`}></div>
+           <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-r from-[#0A0A0A]/80 to-transparent' : ''}`}></div>
+           {/* Narrow left-edge gradient only for text readability in light mode */}
+           {theme !== 'dark' && <div className="absolute inset-0 bg-gradient-to-r from-[#F5F0E8]/80 via-transparent to-transparent" style={{ width: '45%' }}></div>}
         </div>
 
         {/* Mobile Background Image (Stacked naturally at the top) */}
@@ -132,38 +135,45 @@ export default function HomeScreen() {
         </div>
 
         {/* Hero Content Container */}
-        <div className="relative z-10 w-full px-6 sm:px-8 md:px-12 lg:px-20 2xl:px-24 flex justify-between items-start md:items-center -mt-16 md:mt-0 pt-0 md:pt-4 lg:pt-6 xl:pt-8 pb-16 md:pb-0 h-full md:min-h-[85svh] lg:min-h-0 lg:aspect-[1983/793]">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-6 lg:px-8 2xl:px-12 flex justify-between items-start md:items-center -mt-16 md:mt-0 pt-0 md:pt-4 lg:pt-6 xl:pt-8 pb-16 md:pb-0 h-full md:min-h-[85svh] lg:min-h-0 lg:aspect-[1983/793]">
            
            {/* Left Content */}
            <div className="flex flex-col items-start max-w-xl xl:max-w-2xl mt-0 relative z-20">
             <div className="flex items-center gap-3 mb-4">
                <div className="h-[1px] w-8 md:w-12 bg-[#A87B45] dark:bg-[#C49A5C]"></div>
-               <span className="text-[#A87B45] dark:text-[#C49A5C] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]">{hero.tagline}</span>
+               <span className="text-[#A87B45] dark:text-[#C49A5C] text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em]" style={{ textShadow: theme === 'dark' ? '0 2px 4px rgba(0,0,0,0.8)' : '0 2px 10px rgba(255,255,255,0.9)' }}>{hero.tagline}</span>
             </div>
             
-            <h1 className="mb-4 uppercase text-[2.75rem] leading-none md:text-5xl lg:text-[4.5rem]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '0.02em', color: theme === 'dark' ? '#F5F0E8' : '#1A0F0A' }}>
-              {hero.heading_line1}<br/>
-              <span 
-                className="inline-block mt-2"
-                style={{ 
-                  fontFamily: "'Great Vibes', cursive", 
-                  fontWeight: 600,
-                  fontSize: '1.4em',
-                  lineHeight: 0.85,
-                  color: theme === 'dark' ? '#C49A5C' : '#8B5A2B',
-                  textTransform: 'none',
-                  paddingRight: '0.2em',
-                  textShadow: theme === 'dark' ? '0 2px 8px rgba(196, 154, 92, 0.2)' : '0 2px 8px rgba(139, 90, 43, 0.2)'
-                }}>
-                {hero.heading_line2}
-              </span>
-            </h1>
+            <div className="relative">
+              {/* Glow behind heading for readability */}
+              <div className={`hidden md:block absolute -inset-y-4 -inset-x-6 ${theme === 'dark' ? 'bg-[#0A0A0A]/50' : 'bg-[#F5F0E8]/70 transition-colors duration-500'} blur-2xl rounded-full z-0`}></div>
+              
+              <h1 className="relative z-10 mb-4 uppercase text-4xl md:text-5xl lg:text-[3rem] leading-[1.1] max-w-[280px] md:max-w-[380px] lg:max-w-[480px]" style={{ fontFamily: "'Times New Roman', Times, serif", fontWeight: 700, letterSpacing: '0.02em', color: theme === 'dark' ? '#F5F0E8' : '#0D0906', textShadow: theme === 'dark' ? '0 4px 20px rgba(0,0,0,0.7)' : 'none' }}>
+                {hero.heading_line1}<br/>
+                <span 
+                  className="inline-block mt-2"
+                  style={{ 
+                    fontFamily: "'Times New Roman', Times, serif", 
+                    fontWeight: 700,
+                    fontSize: '1.05em',
+                    lineHeight: 0.85,
+                    color: theme === 'dark' ? '#E8C582' : '#3E2312',
+                    textTransform: 'none',
+                    paddingRight: '0.2em',
+                    textShadow: theme === 'dark' 
+                      ? '0 2px 10px rgba(0, 0, 0, 0.6)' 
+                      : 'none'
+                  }}>
+                  {hero.heading_line2}
+                </span>
+              </h1>
+            </div>
             
             <div className="relative mb-6 md:mb-8 max-w-[26rem]">
               {/* Elegant soft glow behind text for legibility - hidden on mobile to avoid washing out the image */}
               <div className={`hidden md:block absolute -inset-y-4 -inset-x-6 ${theme === 'dark' ? 'bg-[#0A0A0A]/80' : 'bg-[#F5F0E8]/60 dark:bg-[#151515]/60 transition-colors duration-500 '} blur-xl rounded-full z-0`}></div>
               
-              <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: theme === 'dark' ? '#E5CDA7' : '#1A0F0A', lineHeight: 1.5, letterSpacing: '0.02em' }}>
+              <p className="relative z-10 text-[15.5px] md:text-[17px] 2xl:text-[19px]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, color: theme === 'dark' ? '#E5CDA7' : '#0D0906', lineHeight: 1.5, letterSpacing: '0.02em' }}>
                 {hero.description}
               </p>
             </div>
@@ -212,6 +222,7 @@ export default function HomeScreen() {
 
         </div>
       </section>
+      )}
 
       {/* 2. Highlight Actions & Categories */}
       <section className="relative z-20 w-full px-8 lg:px-20 mt-8 lg:mt-16 pb-10 lg:pb-32 max-w-[1350px] mx-auto">

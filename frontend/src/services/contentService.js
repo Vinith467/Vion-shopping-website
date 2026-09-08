@@ -130,6 +130,13 @@ export const DEFAULT_CRAFTSMANSHIP = {
   ],
 };
 
+export const DEFAULT_EXPLORE_CONTENT = {
+  hero_tagline: 'Discover The Look',
+  hero_description: 'Explore our curated selection of masterful designs. Each piece tells a story of global inspiration and Indian craftsmanship.',
+  lookbook_title: 'The Editorial Lookbook',
+  lookbook_subtitle: 'Scroll to explore the stories behind the silhouettes',
+};
+
 // Map of section IDs to their default content
 const DEFAULTS_MAP = {
   home_hero: DEFAULT_HOME_HERO,
@@ -139,6 +146,7 @@ const DEFAULTS_MAP = {
   home_tailoring: DEFAULT_HOME_TAILORING,
   home_trust_bar: DEFAULT_HOME_TRUST_BAR,
   craftsmanship: DEFAULT_CRAFTSMANSHIP,
+  explore: DEFAULT_EXPLORE_CONTENT,
 };
 
 // ─── SUPABASE CRUD ───────────────────────────────────────────────────────────
@@ -153,7 +161,7 @@ export async function fetchSiteContent(sectionId) {
       .from('site_content')
       .select('content')
       .eq('id', sectionId)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       return DEFAULTS_MAP[sectionId] || {};
@@ -162,7 +170,7 @@ export async function fetchSiteContent(sectionId) {
     const defaults = DEFAULTS_MAP[sectionId] || {};
     return { ...defaults, ...data.content };
   } catch (e) {
-    console.error(`Failed to fetch site_content for "${sectionId}":`, e);
+    // Table might not exist yet — silently fall back to defaults
     return DEFAULTS_MAP[sectionId] || {};
   }
 }

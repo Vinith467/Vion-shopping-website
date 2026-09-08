@@ -29,9 +29,9 @@ export function AppProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem('vion_theme');
-      return saved || 'light';
+      return saved || 'dark';
     } catch (e) {
-      return 'light';
+      return 'dark';
     }
   });
 

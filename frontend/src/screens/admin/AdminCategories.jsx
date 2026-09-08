@@ -40,7 +40,8 @@ export default function AdminCategories() {
     slug: '',
     image_url: '',
     video_url: '',
-    parent_id: ''
+    parent_id: '',
+    gender: 'Female'
   });
 
   useEffect(() => {
@@ -71,11 +72,12 @@ export default function AdminCategories() {
         slug: cat.slug,
         image_url: media.image || '',
         video_url: media.video || '',
-        parent_id: cat.parent_id || ''
+        parent_id: cat.parent_id || '',
+        gender: cat.gender || 'Female'
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', slug: '', image_url: '', video_url: '', parent_id: '' });
+      setFormData({ name: '', slug: '', image_url: '', video_url: '', parent_id: '', gender: 'Female' });
     }
     setShowModal(true);
   };
@@ -117,7 +119,8 @@ export default function AdminCategories() {
       name: formData.name,
       slug: formData.slug,
       image_url: combinedUrl,
-      parent_id: formData.parent_id || null
+      parent_id: formData.parent_id || null,
+      gender: formData.gender || 'Female'
     };
 
     if (editingId) {
@@ -204,6 +207,7 @@ export default function AdminCategories() {
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Category</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Slug</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Parent Category</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider">Gender</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider text-center">Order</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-800 uppercase tracking-wider text-right">Actions</th>
                 </tr>
@@ -235,6 +239,11 @@ export default function AdminCategories() {
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600 font-medium">
                         {cat.parent_id ? categories.find(c => c.id === cat.parent_id)?.name || cat.parent_id : '-'}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600 font-medium">
+                        <span className={`px-2 py-1 rounded text-xs font-bold ${cat.gender === 'Male' ? 'bg-blue-100 text-blue-800' : cat.gender === 'Unisex' ? 'bg-purple-100 text-purple-800' : 'bg-pink-100 text-pink-800'}`}>
+                          {cat.gender || 'Female'}
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-1">
@@ -320,6 +329,20 @@ export default function AdminCategories() {
                     placeholder="e.g. dresses"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">Gender *</label>
+                  <select
+                    value={formData.gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-[#986427] outline-none text-sm text-[#1A0A08]"
+                    required
+                  >
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Unisex">Unisex</option>
+                  </select>
                 </div>
 
                 <div>

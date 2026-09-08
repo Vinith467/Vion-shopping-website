@@ -172,7 +172,7 @@ export default function AdminEditProduct() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const { data: catData } = await supabase.from('categories').select('id, name, slug');
+      const { data: catData } = await supabase.from('categories').select('id, name, slug, gender');
       setCategories(catData || []);
 
 
@@ -917,7 +917,7 @@ export default function AdminEditProduct() {
                      >
                        <option value="">Select Category</option>
                        {categories.map(c => (
-                         <option key={c.id} value={c.id}>{c.name}</option>
+                         <option key={c.id} value={c.id}>{c.name} ({c.gender || 'Female'})</option>
                        ))}
                      </select>
                    </div>

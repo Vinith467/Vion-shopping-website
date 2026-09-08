@@ -5,6 +5,7 @@ import { supabase } from '../services/supabaseClient';
 import { useAppContext } from '../context/AppContext';
 import { matchesSizeGroup, findBestMatchingVariation } from '../utils/sizeGroups';
 import SpotlightCollections from '../components/SpotlightCollections';
+import { fetchSiteContent } from '../services/contentService';
 
 export default function ExploreScreen() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +20,7 @@ export default function ExploreScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [categoryName, setCategoryName] = useState('All Products');
   const [categories, setCategories] = useState([]);
+  const [exploreContent, setExploreContent] = useState(null);
   
   // Get active profile info
   const activeProfile = members?.find(m => m.id === selectedConsumerId);
@@ -47,8 +49,13 @@ export default function ExploreScreen() {
     async function loadData() {
       setIsLoading(true);
       
-      const { data: catList } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
-      if (catList) setCategories(catList);
+      const [catListRes, exploreRes] = await Promise.all([
+        supabase.from('categories').select('*').order('created_at', { ascending: true }),
+        fetchSiteContent('explore')
+      ]);
+      
+      if (catListRes.data) setCategories(catListRes.data);
+      setExploreContent(exploreRes);
 
       let query = supabase.from('products').select('*, category:categories(name, slug)');
       
@@ -110,21 +117,14 @@ export default function ExploreScreen() {
       </div>
 
       <div className="w-full">
-        {userGender === 'Male' ? (
-          <div className="max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center justify-center py-32 text-center">
-            <div className="w-24 h-24 bg-gray-50 dark:bg-black/30 rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl text-[#A87B45] dark:text-[#C49A5C]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>V</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl text-[#1A0A08] dark:text-[#F5F0E8] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>
-              Men's Collection
-            </h2>
-            <p className="text-[15px] text-[#555] dark:text-gray-400 max-w-md" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
-              Our exclusive men's collection is currently being crafted by our master artisans. <br/><br/>Coming soon.
-            </p>
-          </div>
-        ) : !categoryParam && categories.length > 0 ? (
+        {!categoryParam && categories.length > 0 ? (
           <div className="max-w-7xl mx-auto px-6 pt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((cat, i) => (
+            {categories
+              .filter(cat => {
+                if (userGender === 'Male') return cat.gender === 'Male' || cat.gender === 'Unisex';
+                return cat.gender === 'Female' || cat.gender === 'Unisex' || !cat.gender;
+              })
+              .map((cat, i) => (
               <div 
                 onClick={() => navigate(`/explore?${classParam ? `class=${classParam}&` : ''}category=${cat.id}`)} 
                 key={cat.id || i} 
@@ -176,6 +176,7 @@ export default function ExploreScreen() {
               products={products} 
               categoryName={categoryName} 
               categoryVideo={categoryParam ? getCategoryMedia(categories.find(c => c.id === categoryParam)?.image_url).video : null}
+              content={exploreContent}
             />
           </div>
         )}

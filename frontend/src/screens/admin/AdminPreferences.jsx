@@ -14,6 +14,7 @@ import {
   DEFAULT_HOME_TAILORING,
   DEFAULT_HOME_TRUST_BAR,
   DEFAULT_CRAFTSMANSHIP,
+  DEFAULT_EXPLORE_CONTENT,
 } from '../../services/contentService';
 
 // ─── Reusable Components ─────────────────────────────────────────────────────
@@ -352,12 +353,15 @@ export default function AdminPreferences() {
   // Craftsmanship page
   const [craftsmanshipContent, setCraftsmanshipContent] = useState({ ...DEFAULT_CRAFTSMANSHIP });
 
+  // Explore page
+  const [exploreContent, setExploreContent] = useState({ ...DEFAULT_EXPLORE_CONTENT });
+
   // Load content from Supabase on mount
   useEffect(() => {
     async function loadAll() {
       setIsLoading(true);
       try {
-        const [hero, bento, fitCards, journey, tailoring, trustBar, craftsmanship] = await Promise.all([
+        const [hero, bento, fitCards, journey, tailoring, trustBar, craftsmanship, explore] = await Promise.all([
           fetchSiteContent('home_hero'),
           fetchSiteContent('home_bento'),
           fetchSiteContent('home_fit_cards'),
@@ -365,6 +369,7 @@ export default function AdminPreferences() {
           fetchSiteContent('home_tailoring'),
           fetchSiteContent('home_trust_bar'),
           fetchSiteContent('craftsmanship'),
+          fetchSiteContent('explore'),
         ]);
         setHomeContent({
           home_hero: hero,
@@ -375,6 +380,7 @@ export default function AdminPreferences() {
           home_trust_bar: trustBar,
         });
         setCraftsmanshipContent(craftsmanship);
+        setExploreContent(explore);
       } catch (e) {
         console.error('Failed to load content:', e);
         toast.error('Failed to load content from database');
@@ -389,8 +395,10 @@ export default function AdminPreferences() {
     try {
       if (activeTab === 'home') {
         await saveMultipleSiteContent(homeContent);
-      } else {
+      } else if (activeTab === 'craftsmanship') {
         await saveSiteContent('craftsmanship', craftsmanshipContent);
+      } else if (activeTab === 'explore') {
+        await saveSiteContent('explore', exploreContent);
       }
       toast.success('Content saved successfully!');
     } catch (e) {
@@ -410,8 +418,10 @@ export default function AdminPreferences() {
         home_tailoring: { ...DEFAULT_HOME_TAILORING },
         home_trust_bar: { ...DEFAULT_HOME_TRUST_BAR },
       });
-    } else {
+    } else if (activeTab === 'craftsmanship') {
       setCraftsmanshipContent({ ...DEFAULT_CRAFTSMANSHIP });
+    } else if (activeTab === 'explore') {
+      setExploreContent({ ...DEFAULT_EXPLORE_CONTENT });
     }
     toast.success('Reset to defaults (save to persist)');
   };
@@ -419,6 +429,7 @@ export default function AdminPreferences() {
   const tabs = [
     { id: 'home', label: 'Home Page', icon: Layout },
     { id: 'craftsmanship', label: 'Craftsmanship', icon: Star },
+    { id: 'explore', label: 'Explore Page', icon: Sparkles },
   ];
 
   if (isLoading) {
@@ -478,9 +489,35 @@ export default function AdminPreferences() {
       {/* Tab Content */}
       {activeTab === 'home' ? (
         <HomePageTab homeContent={homeContent} setHomeContent={setHomeContent} />
-      ) : (
+      ) : activeTab === 'craftsmanship' ? (
         <CraftsmanshipTab craftsmanshipContent={craftsmanshipContent} setCraftsmanshipContent={setCraftsmanshipContent} />
+      ) : (
+        <ExplorePageTab content={exploreContent} setContent={setExploreContent} />
       )}
+    </div>
+  );
+}
+
+function ExplorePageTab({ content, setContent }) {
+  const updateField = (field, value) => {
+    setContent(prev => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <div className="space-y-6">
+      <SectionAccordion title="Hero Section" icon={Sparkles} defaultOpen={true}>
+        <div className="space-y-4">
+          <TextInput label="Tagline" value={content.hero_tagline} onChange={(v) => updateField('hero_tagline', v)} />
+          <TextInput label="Description" value={content.hero_description} onChange={(v) => updateField('hero_description', v)} multiline rows={2} />
+        </div>
+      </SectionAccordion>
+
+      <SectionAccordion title="Lookbook Section" icon={Layout}>
+        <div className="space-y-4">
+          <TextInput label="Title" value={content.lookbook_title} onChange={(v) => updateField('lookbook_title', v)} />
+          <TextInput label="Subtitle" value={content.lookbook_subtitle} onChange={(v) => updateField('lookbook_subtitle', v)} />
+        </div>
+      </SectionAccordion>
     </div>
   );
 }
